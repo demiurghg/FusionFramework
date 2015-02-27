@@ -1,0 +1,150 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{1C1D2349-A235-455B-B1B0-C4D318FE3FAB}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SubmarinesWars</RootNamespace>
+    <AssemblyName>SubmarinesWars</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>true</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Fusion">
+      <HintPath>$(FUSION_BIN)\Fusion.dll</HintPath>
+    </Reference>
+    <Reference Include="BEPUphysics">
+      <HintPath>$(FUSION_BIN)\BEPUphysics.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ConfigService.cs" />
+    <Compile Include="GameFieldService.cs" />
+    <Compile Include="SubmarinesGameLibrary\ArtificialIntelligence\AI.cs" />
+    <Compile Include="SubmarinesGameLibrary\ArtificialIntelligence\AIAction.cs" />
+    <Compile Include="SubmarinesGameLibrary\ArtificialIntelligence\LaunchTorpedo.cs" />
+    <Compile Include="SubmarinesGameLibrary\ArtificialIntelligence\Move.cs" />
+    <Compile Include="SubmarinesGameLibrary\ArtificialIntelligence\PlaceMine.cs" />
+    <Compile Include="SubmarinesGameLibrary\Config.cs" />
+    <Compile Include="SubmarinesGameLibrary\Field\AStar.cs" />
+    <Compile Include="SubmarinesGameLibrary\Field\Cell.cs" />
+    <Compile Include="SubmarinesGameLibrary\Field\GameField.cs" />
+    <Compile Include="SubmarinesGameLibrary\Field\Hsv2Rgb.cs" />
+    <Compile Include="SubmarinesGameLibrary\Field\PerlinNoiseGenerator.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\Action.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\ActionsQueue.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\ActivateMine.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\Bang.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\Check.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\Accident.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\LaunchTorpedo.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\MineDamage.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\ParsePath.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\PlaceMine.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\Reload.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\TorpedoDamage.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Boom.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Aim.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Check.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Circle.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Flag.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Marker.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\XMark.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Torpedo.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\VisibleObject.cs" />
+    <Compile Include="SubmarinesGameLibrary\Interfaces\IAction.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameActions\Move.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Team.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\BaseC.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Entity.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\EntityCollection.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Mine.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\Submarine.cs" />
+    <Compile Include="SubmarinesGameLibrary\GameEntity\SunkSubmarine.cs" />
+    <Compile Include="SubmarinesWars.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="LogicService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\Content.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

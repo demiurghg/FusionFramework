@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAsset xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Asset xsi:type="ImageFileTextureAsset">
+    <AssetPath>debugFont.tga</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <NoMips>false</NoMips>
+    <Fast>false</Fast>
+    <ToNormal>false</ToNormal>
+    <Color>true</Color>
+    <Alpha>false</Alpha>
+    <Normal>false</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>debugFont.tga</SourceFile>
+  </Asset>
+  <Asset xsi:type="UbershaderAsset">
+    <AssetPath>debugRender.hlsl</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <HardwareProfile>HiDef</HardwareProfile>
+    <DisableOptimization>false</DisableOptimization>
+    <OptimizationLevel>1</OptimizationLevel>
+    <AvoidFlowControl>false</AvoidFlowControl>
+    <PreferFlowControl>false</PreferFlowControl>
+    <MatrixPacking>RowMajor</MatrixPacking>
+    <PSEntryPoint>PSMain</PSEntryPoint>
+    <VSEntryPoint>VSMain</VSEntryPoint>
+    <GSEntryPoint>GSMain</GSEntryPoint>
+    <DSEntryPoint>DSMain</DSEntryPoint>
+    <HSEntryPoint>HSMain</HSEntryPoint>
+    <CSEntryPoint>CSMain</CSEntryPoint>
+    <SourceFile>debugRender.hlsl</SourceFile>
+    <ShowPemutations>false</ShowPemutations>
+    <ListingPath>C:\FUSION_ENGINE\FusionSamples\SoundDemo\Content\Temp\0EC7C2D14F65EFBA65B361728EE70CD3.html</ListingPath>
+  </Asset>
+  <Asset xsi:type="UbershaderAsset">
+    <AssetPath>spriteBatch.hlsl</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <HardwareProfile>HiDef</HardwareProfile>
+    <DisableOptimization>false</DisableOptimization>
+    <OptimizationLevel>1</OptimizationLevel>
+    <AvoidFlowControl>false</AvoidFlowControl>
+    <PreferFlowControl>false</PreferFlowControl>
+    <MatrixPacking>RowMajor</MatrixPacking>
+    <PSEntryPoint>PSMain</PSEntryPoint>
+    <VSEntryPoint>VSMain</VSEntryPoint>
+    <GSEntryPoint>GSMain</GSEntryPoint>
+    <DSEntryPoint>DSMain</DSEntryPoint>
+    <HSEntryPoint>HSMain</HSEntryPoint>
+    <CSEntryPoint>CSMain</CSEntryPoint>
+    <SourceFile>spriteBatch.hlsl</SourceFile>
+    <ShowPemutations>false</ShowPemutations>
+    <ListingPath>C:\FUSION_ENGINE\FusionSamples\SoundDemo\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>big_zombie_dying.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>big_zombie_dying.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>bite2.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>bite2.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>break_glass3.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>break_glass3.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>click2.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>click2.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>empty.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>empty.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>explosion.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>explosion.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>hit_flesh.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>hit_flesh.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>hit_wall.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>hit_wall.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>human_dying.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>human_dying.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>laser_shot.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>laser_shot.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>mach_shot.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>mach_shot.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>magnum.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>magnum.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>plasma.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>plasma.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>rfly.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>rfly.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>rpg2.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>rpg2.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>run.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>run.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>saw2.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>saw2.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>saw3.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>saw3.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>spas12_shot2.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>spas12_shot2.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>swarm.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>swarm.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>testSound.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>testSound.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="WaveFileSoundEffectAsset">
+    <AssetPath>zombie_dying.wav</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>zombie_dying.wav</SourceFile>
+  </Asset>
+  <Asset xsi:type="UbershaderAsset">
+    <AssetPath>stereo.hlsl</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <HardwareProfile>HiDef</HardwareProfile>
+    <DisableOptimization>false</DisableOptimization>
+    <OptimizationLevel>1</OptimizationLevel>
+    <AvoidFlowControl>false</AvoidFlowControl>
+    <PreferFlowControl>false</PreferFlowControl>
+    <MatrixPacking>RowMajor</MatrixPacking>
+    <PSEntryPoint>PSMain</PSEntryPoint>
+    <VSEntryPoint>VSMain</VSEntryPoint>
+    <GSEntryPoint>GSMain</GSEntryPoint>
+    <DSEntryPoint>DSMain</DSEntryPoint>
+    <HSEntryPoint>HSMain</HSEntryPoint>
+    <CSEntryPoint>CSMain</CSEntryPoint>
+    <SourceFile>stereo.hlsl</SourceFile>
+    <ShowPemutations>true</ShowPemutations>
+    <ListingPath>C:\FUSION_ENGINE\FusionSamples\SoundDemo\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
+  </Asset>
+</ArrayOfAsset>

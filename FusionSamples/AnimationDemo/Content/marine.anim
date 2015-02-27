@@ -1,0 +1,25 @@
+//	Frame definition:
+pose Run0 0
+pose Run1 1
+pose Run2 2
+pose Run3 3
+pose Walk0 4
+pose Walk1 5
+pose Walk2 6
+pose Walk3 7
+pose Stance 8
+pose JumpGrp 9
+pose WeaponHold 10
+pose WeaponKick 11
+
+//	Action definition:
+action Walk		400ms 	repeat	smooth 	Walk0 Walk1 Walk2 Walk3 sync Run
+action Run 		200ms 	repeat	smooth 	Run0 Run1 Run2 Run3 sync Walk
+action Jump		540ms 	once 	bounce 	Stance JumpGrp Stance 
+action Shoot	150ms 	once	bounce 	WeaponHold [10ms] WeaponKick [140ms] WeaponHold branch Torso
+
+//	IK binding:
+rig LShoulder LArm 0 0 1
+rig RShoulder RArm 0 0 1
+rig LHip LFoor 0 0 -1
+rig RHip RFoot 0 0 -1

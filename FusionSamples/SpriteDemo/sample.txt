@@ -1,0 +1,5 @@
+SpriteBatch Demo
+image: image.jpg
+tags: Graphics Basic Advanced
+docs:
+This sample blah-blah-blah lorem ipsum atis matis animatis

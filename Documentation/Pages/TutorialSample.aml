@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="1d722cfd-12be-454c-8076-442a4e9d0ed2" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!--
+    <summary>
+      <para>Optional summary abstract</para>
+    </summary>
+    -->
+    <introduction>
+      <para><legacyBold>SceneDemo Tutorial</legacyBold></para>
+      <para>This tutorial shows several features of Fusion engine, 
+      one of them is working with fbx files (files that contain 3D models). </para>
+      <para>Here you can see the example of loading scene, adding textures  to scene's elements and camera rotation. </para>
+      <para>In this context the word “scene” has two meanings: the scene as fbx file and the scene  -  
+      as an object of class Scene. The object of class Scene contains meshes, mesh’s textures.  </para>
+    </introduction>
+    <!-- Add one or more top-level section elements.  These are collapsible.
+         If using <autoOutline />, add an address attribute to identify it
+         and specify a title so that it can be jumped to with a hyperlink. -->
+    <section address="Section1">
+      <title>Main functions</title>
+      <content>
+        <!-- Uncomment this to create a sub-section outline
+        <autoOutline /> -->
+        <para>We have three main methods.</para>
+        
+		<list class="ordered">
+  			<listItem><para>Initialize(GameTime gameTime);</para>
+  			<para>This function is called once: when your program is executed. 
+  			In this function we initialize constant buffer (it holds data for shader):</para>
+  			
+			<code language="cs">
+			ConstBuffer = new ConstantBuffer( GraphicsDevice, typeof(CBData) );
+			</code>
+
+  			<para>Next two lines call function LoadContent().</para>
+  			
+			<code language="cs">
+			LoadContent();
+			Reloading += (s,e) => LoadContent();
+			</code>
+
+  			<para>In the second line we assign handler to the reloading event 
+  			(this usually happens when we need to reload resources and textures).</para>
+  			<para>The LoadContent() is important method. In this function we load scene:</para>
+  			
+			<code language="cs">
+			<![CDATA[
+			scene = Content.Load<Scene>(@"Scenes\testScene");
+			]]>
+			</code>
+
+  			<para>Resolve and load mesh’s textures:</para>
+  			
+			<code language="cs">
+			<![CDATA[
+			foreach ( var mesh in scene.Meshes ) {
+					foreach ( var mtrl in mesh.Materials ) {
+							mtrl.Tag = Content.Load<Texture2D>( mtrl.TexturePath );}}
+							]]>
+
+			</code>
+
+  			<para>Load shader with name “render”. This shader will be using for rendering of scene.</para>
+  			
+			<code language="cs">
+			<![CDATA[
+				scene.Bake<VertexColorTextureNormal>( GraphicsDevice, VertexColorTextureNormal.Bake );
+				uberShader = Content.Load<Ubershader>("render2");
+				uberShader.Map( typeof(RenderFlags) );
+
+			]]>
+			</code>
+
+  			</listItem>
+  			
+  			<listItem><para>Update(GameTime gameTime);</para>
+  			<para>This function is called periodically.</para>
+  			</listItem>
+  			
+  			<listItem><para>Draw(GameTime gameTime, StereoEye stereoEye);</para>
+  			<para>Method Draw is called every time we need to draw another frame. Rendering of scene is implemented in this function.</para>
+  			<para>Next line shows the creating a new CBData object, which holds data for const buffer and shader.</para>
+  			
+			<code language="cs">
+			CBData cbData = new CBData();
+			</code>
+
+  			<para> CBData structure was defined earlier. Note that it should match fields defined in shader.</para>
+  			
+			<code language="cs">
+			struct CBData {
+				public Matrix	Projection;
+				public Matrix	View;
+				public Matrix	World;
+				public Vector4   ViewPos;
+			}
+
+			</code>
+  			
+  			<para>Projection, view and world matrixes are needed for correct rendering of 3D model. </para>
+  			<para>Therefore we gain access to the camera service: </para>
+  			
+			<code language="cs">
+			<![CDATA[
+			var cam = GetService<Camera>();
+			]]>
+			</code>
+
+  			<para>Parameters of camera allow to determine position of scene’s object.</para>
+  			<para>Next step is to clear screen. We do this by defining of screen colour:</para>
+  			
+			<code language="cs">
+			GraphicsDevice.ClearBackbuffer( Color.CornflowerBlue, 1, 0 );
+			</code>
+
+  			<para>Also we need to set pixel and vertex shaders to corresponding slot numbers:</para>
+  			
+			<code language="cs">
+			uberShader.SetPixelShader(0);
+			uberShader.SetVertexShader(0);
+			</code>
+
+  			<para>It is necessary to set world matrix for each scene’s object in order to scene to be correctly rendered.</para>
+  			
+			<code language="cs">
+			var worldMatricies = new Matrix[ scene.Nodes.Count ];
+			scene.CopyAbsoluteTransformsTo( worldMatricies );
+			</code>
+			
+			<para>Matrixes are needed to set object’s position relatively of camera. 
+			We go through all nodes and assign matrix to each node. </para>
+			
+			<code language="cs">
+			<![CDATA[
+			for (int j = 0; j<1; j++) {
+				for ( int i=0; i<scene.Nodes.Count; i++ ) {
+				   var node = scene.Nodes[i];
+				   if (node.MeshIndex == -1) {continue;}
+				   var mesh           = scene.Meshes[ node.MeshIndex ];
+				   cbData.Projection  =	cam.ProjMatrix;
+				   cbData.View	    = cam.ViewMatrix;
+				   cbData.World	   = Matrix.RotationYawPitchRoll(j*0.01f,j*0.02f,j*0.03f) * worldMatricies[ i ] * Matrix.Scaling( (float)Math.Pow(0.9,j) );
+				   cbData.ViewPos    = new Vector4( cam.CameraMatrix.TranslationVector, 1 );
+
+			]]>
+			</code>
+
+			<para>Resulting data is sent to constant buffer.</para>
+			
+			<code language="cs">
+			constBuffer.SetData( cbData );
+			</code>
+
+			<para>Set up rendering configuration:</para>
+			
+			<code language="cs">
+			GraphicsDevice.RasterizerState = RasterizerState.CullNone ;
+			GraphicsDevice.DepthStencilState	= DepthStencilState.Default ;
+			GraphicsDevice.BlendState = BlendState.Opaque ;
+			GraphicsDevice.PSConstantBuffers[0] = constBuffer ;
+			GraphicsDevice.VSConstantBuffers[0] = constBuffer ;
+			GraphicsDevice.PSSamplerStates[0]	= SamplerState.AnisotropicWrap ;
+			mesh.SetupVertexInput();
+			</code>
+
+			<para>We assign corresponding material-texture (it was loaded earlier), 
+			coordinates of its polygons for each mesh and draw it. </para>
+  			
+			<code language="cs">
+			foreach ( var subset in mesh.Subsets ) {
+				GraphicsDevice.PSShaderResources[0] = mesh.Materials[subset.MaterialIndex].Tag as Texture2D ;
+				mesh.Draw( subset.StartPrimitive, subset.PrimitiveCount );}}
+			}
+			</code>
+
+  			</listItem>
+		</list>
+      </content>    
+    </section>
+    
+    
+<section address="optionalAddress">
+  <title>Conclusion</title>
+  <content>
+    <para>This feature allows designing of models and textures in 3D editors in order to use it in  your future application.</para>
+  </content>
+</section>
+
+    <relatedTopics>
+      <!-- One or more of the following:
+           - A local link
+           - An external link
+           - A code entity reference
+
+      <link xlink:href="Other Topic's ID"/>
+      <link xlink:href="Other Topic's ID">Link inner text</link>
+
+      <externalLink>
+          <linkText>Link text</linkText>
+          <linkAlternateText>Optional alternate link text</linkAlternateText>
+          <linkUri>URI</linkUri>
+      </externalLink>
+
+      <codeEntityReference>API member ID</codeEntityReference>
+
+      Examples:
+
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+      <externalLink>
+          <linkText>SHFB on CodePlex</linkText>
+          <linkAlternateText>Go to CodePlex</linkAlternateText>
+          <linkUri>http://shfb.codeplex.com</linkUri>
+      </externalLink>
+
+      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+      -->
+    </relatedTopics>
+  </developerConceptualDocument>
+</topic>

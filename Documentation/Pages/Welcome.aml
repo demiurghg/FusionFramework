@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="7bcc4d76-fe36-4834-b240-e6f4c808f8b3" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!--
+    <summary>
+      <para>Optional summary abstract</para>
+    </summary>
+    -->
+    <introduction>
+      <para>Fusion Framework is free and open-source (MIT License) set of managed libraries 
+      devloped in ITMO University at <externalLink><linkText>eScience Research Institute</linkText>
+<linkUri>http://escience.ifmo.ru/</linkUri></externalLink>
+ and desgined 
+      for game and graphics application development based on Microsoft .NET Framework 4.0.</para>
+
+      <para>The overall architecture of Fusion Framework is very close (but incompatible) to 
+      Microsoft XNA and Monogame. It based on <externalLink><linkText>SharpDX</linkText><linkUri>http://sharpdx.org/</linkUri></externalLink> and provides the set of easy to use classes to 
+      gain access to powerful features of DirectX 11 and to use and extend content 
+      processing pipeline</para>
+      
+      <para>Now framework is on early stage of development but already was used 
+      in several goverment projects. If you have any ideas, suggestions, improvements 
+      and features requests fill free to contact us. <legacyBold>Note:</legacyBold> the breaking changes are possible.</para>
+      
+      
+      <!--para>Fusion Framework is licensed is a free and open-source game engine developed by .... The code is written in the C#. 
+      Fusion is designed for DirectX 11. <legacyBold>Something about .NET</legacyBold>.
+      It includes everything for game development from 2D arcades to high-tech shooters. 
+      </para-->
+       <!--para>Here you can find all information about Fusion.</para-->
+      <para>The latest version of Fusion Engine can be downloaded here.
+    	<externalLink>
+          <linkText>Download</linkText>
+          <linkAlternateText>Download</linkAlternateText>
+          <linkUri>http://fusion-lib.googlecode.com</linkUri>
+      	</externalLink>
+    </para>
+    
+      <para>If you here for first time, please read the information below.</para>
+	<autoOutline lead="Select a sub-section:">3</autoOutline>
+    </introduction>
+    
+    
+    <section address="Features">
+      <title>Features</title>
+      <content>
+        <para>
+        The Fusion Framework offers the following features.
+		</para>
+		<para><legacyBold>Graphics</legacyBold></para>
+			<list class="bullet">
+			  <listItem><para>Direct3D 11.</para></listItem>
+			  <listItem><para>Vertex, Hull, Domain, Geometry, Vertex, Pixel and Compute Shaders.</para></listItem>
+			  <listItem><para>2D, 3D and Cube textures.</para></listItem>
+			  <listItem><para>2D and Cube render targets and depth stencil buffers.</para></listItem>
+			  <listItem><para>Ubershaders.</para></listItem>
+			  <listItem><para>Constant, Vertex and Index buffers.</para></listItem>
+			  <listItem><para>Instancing.</para></listItem>
+			  <listItem><para>Stream output.</para></listItem>
+			  <listItem><para>R/W Structured buffers.</para></listItem>
+			  <listItem><para>Scene graph with materials, animations and skinning support.</para></listItem>
+			</list>
+		<para><legacyBold>Stereo Rendering Support</legacyBold></para>
+			<list class="bullet">
+			  <listItem><para>Built in stereo rendering pipeline support.</para></listItem>
+			  <listItem><para>NVIDIA 3D Vision.</para></listItem>
+			  <listItem><para>Dual-Head Stereo (for paired projectors with polarized or Infitec® glasses).</para></listItem>
+			  <listItem><para>Interlaced Stereo (for TVs with passive glasses).</para></listItem>
+			  <listItem><para>Oculus Rift.</para></listItem>
+			</list>
+
+		<para><legacyBold>Audio</legacyBold></para>
+			<list class="bullet">
+			  <listItem><para>2D sounds.</para></listItem>
+			  <listItem><para>3D sounds.</para></listItem>
+			</list>
+		<para><legacyBold>Input</legacyBold></para>
+			<list class="bullet">
+			  <listItem><para>Keyboard.</para></listItem>
+			  <listItem><para>Mouse.</para></listItem>
+			  <listItem><para>Xbox 360 game pad.</para></listItem>
+			  <listItem><para>Oculus Rift head tracking.</para></listItem>
+			</list>
+		<para><legacyBold>Content Pipeline</legacyBold></para>
+			<list class="bullet">
+			  <listItem><para>Dependency and changes tracking.</para></listItem>
+			  <listItem><para>Hot building, rebuilding and reloading.</para></listItem>
+			  <listItem><para>NVidia Texture Tools based texture converter.</para></listItem>
+			  <listItem><para>Texture atlas generator.</para></listItem>
+			  <listItem><para>FBX importer with materials, animation and skinning.</para></listItem>
+			  <listItem><para>Abstract asset types for game object description.</para></listItem>
+			  <listItem><para>Bitmap fonts.</para></listItem>
+			  <listItem><para>Ubershader compiler with pre-generated combinations.</para></listItem>
+			</list>
+		<para><legacyBold>3rd-party libraries</legacyBold></para>
+        <para>
+        The Fusion Framework also includes <externalLink>
+		<linkText>BEPUphysics</linkText><linkUri>https://bepuphysics.codeplex.com/</linkUri></externalLink>
+		 and <externalLink><linkText>Lidgren Network</linkText><linkUri>https://code.google.com/p/lidgren-network-gen3/</linkUri></externalLink>.
+		</para>
+		<para><legacyBold>3rd-party tools and SDKs</legacyBold></para>
+        <para>
+        The Fusion Framework uses Autodesk FBX SDK, BMFont Builder, NVIDIA Texture Tools, FXC.exe.
+		</para>
+      </content>
+    </section>
+      
+    <section address="Issues">
+      <title>Issues and Limitations</title>
+      <content>
+		<list class="bullet">
+		  <listItem><para>Only Feature level 11 is supported.</para></listItem>
+		  <listItem><para>INTEL GPUs may not work.</para></listItem>
+		  <listItem><para>Leaked COM objects (the amount of leaked object is always constant, probably on SharpDX side).</para></listItem>
+		  <listItem><para>Rare crashes on exit.</para></listItem>
+		  <listItem><para>Partial multithreading support (further development is under consideration).</para></listItem>
+		</list>
+      </content>
+    </section>
+    <section address="Future">
+      <title>Future works</title>
+      <content>
+		<list class="bullet">
+		  <listItem><para>Lower feature levels.</para></listItem>
+		  <listItem><para>Support for mobile devices.</para></listItem>
+		  <listItem><para>Standalone content pipeline processing.</para></listItem>
+		  <listItem><para>Own implementation of DirectX wrapper.</para></listItem>
+		  <listItem><para>FMOD Audio support.</para></listItem>
+		  <listItem><para>Wrappers for BEPUphysics and Lidgren network.</para></listItem>
+		  <listItem><para>DirectX 12 support.</para></listItem>
+		  <listItem><para>Better multithreading support.</para></listItem>
+		</list>
+      </content>
+    </section>
+    <!-- Add one or more top-level section elements.  These are collapsible.
+         If using <autoOutline />, add an address attribute to identify it
+         and specify a title so that it can be jumped to with a hyperlink. -->
+    <section address="Section1">
+      <title>Fusion Documentation</title>
+      <content>
+        <para>The main objective of this documentation is to explain how to use Fusion Engine. 
+        This documentation is currently under construction and will be improved with next releases.
+		If you find any mistakes feel free to contact us.
+		</para>
+      </content>
+    </section>
+    <relatedTopics>
+    <link xlink:href="296767b4-f296-41cd-96fb-8f88f1e7ab9e"/>
+    <link xlink:href="7da88aad-88f9-4c9b-b34c-e63947f2f86b"/>
+    <link xlink:href="d7774ee5-b7fe-4b8e-9992-06ecf0a140d9"/>
+    
+      <!-- One or more of the following:
+           - A local link
+           - An external link
+           - A code entity reference
+
+      <link xlink:href="Other Topic's ID"/>
+      <link xlink:href="Other Topic's ID">Link inner text</link>
+
+      <externalLink>
+          <linkText>Link text</linkText>
+          <linkAlternateText>Optional alternate link text</linkAlternateText>
+          <linkUri>URI</linkUri>
+      </externalLink>
+
+      <codeEntityReference>API member ID</codeEntityReference>
+
+      Examples:
+
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+      <externalLink>
+          <linkText>SHFB on CodePlex</linkText>
+          <linkAlternateText>Go to CodePlex</linkAlternateText>
+          <linkUri>http://shfb.codeplex.com</linkUri>
+      </externalLink>
+
+      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+      -->
+    </relatedTopics>
+  </developerConceptualDocument>
+</topic>

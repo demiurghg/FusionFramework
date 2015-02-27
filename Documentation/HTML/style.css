@@ -1,0 +1,55 @@
+﻿body{
+				background-color: #ffffff;
+				color: black;
+				font-family: 'Segoe UI','Lucida Grande',Verdana,Arial,Helvetica,sans-serif;
+				/*background-image:url('images/Nyancat.png');*/
+				
+				/*background-image:url('images/bg.jpg');*/
+				background-repeat:no-repeat;
+				background-position:right bottom;
+				background-attachment:fixed;
+}
+@font-face{
+			font-family:"Joystix Monospace";
+			src: url(source/font.ttf);
+}
+
+div{
+				margin:auto;
+				width: 800px; 
+			    padding: 10px;
+}
+img{
+			margin: 10px;
+			padding: 20px;
+			background-color: #efefef;
+}
+
+.images{
+			text-align:center;
+			font-size: 0.8em;
+}
+
+.notes{
+			border: 1px solid #bbb;
+			
+}
+
+td{
+			padding: 10px;
+}
+
+th{
+			background-color: #efefef;
+			padding: 10px;
+			text-align:left;
+			color: #505050;
+}
+
+.right{
+				vertical-align: text-top;
+				text-align:center;
+}
+.leftCol{
+				width: 250px;
+}

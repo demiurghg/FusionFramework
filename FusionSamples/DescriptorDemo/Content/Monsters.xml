@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfDescriptor xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Descriptor xsi:type="MegaRoboTank">
+    <Path>superTank</Path>
+    <Name>Some RoboTank</Name>
+    <Health>100</Health>
+    <Armor>100</Armor>
+    <Damage>40</Damage>
+    <MeleeDamage>100</MeleeDamage>
+    <RocketDamage>100</RocketDamage>
+    <LaserDamage>150</LaserDamage>
+  </Descriptor>
+  <Descriptor xsi:type="Guard">
+    <Path>Lightguard</Path>
+    <Name>Some Guard</Name>
+    <Health>25</Health>
+    <Armor>0</Armor>
+    <Damage>10</Damage>
+  </Descriptor>
+  <Descriptor xsi:type="RoboTank">
+    <Path>superTank2</Path>
+    <Name>Some RoboTank</Name>
+    <Health>100</Health>
+    <Armor>100</Armor>
+    <Damage>40</Damage>
+    <MeleeDamage>100</MeleeDamage>
+    <RocketDamage>100</RocketDamage>
+  </Descriptor>
+  <Descriptor xsi:type="Monster">
+    <Path>superTank\qoqoqo</Path>
+    <Name>Some Monster</Name>
+    <Health>100</Health>
+    <Armor>50</Armor>
+  </Descriptor>
+</ArrayOfDescriptor>

@@ -1,0 +1,212 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="d7774ee5-b7fe-4b8e-9992-06ecf0a140d9" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!--
+    <summary>
+      <para>Optional summary abstract</para>
+    </summary>
+    -->
+    <introduction>
+      <para>Fusion Framework contains the following samples that help you to understand Fusion Framework API start to create your own games. The samples are sorted from very simple to complex.</para>
+      <!-- Uncomment this to generate an outline of the section and sub-section
+           titles.  Specify a numeric value as the inner text to limit it to
+           a specific number of sub-topics when creating the outline.  Specify
+           zero (0) to limit it to top-level sections only.  -->
+	<autoOutline lead="Select a sub-section:">3</autoOutline>
+      <!--autoOutline>1</autoOutline-->
+    </introduction>
+
+	    <section address="QuadDemo">
+	      <title>Quad Demo</title>
+	      <content>
+	        <para>This sample demonstrates the use of Fusion Framework render colored and textured quad. </para>
+	        <para>Specifically, this sample demonstrates:</para>
+				<list class="bullet">
+				  <listItem><para>Using vertex buffers.</para></listItem>
+				  <listItem><para>Using constant buffers.</para></listItem>
+				  <listItem><para>Using textures.</para></listItem>
+				  <listItem><para>Primitive rendering.</para></listItem>
+				</list>
+	      </content>
+	    </section>
+	
+	    <section address="SpriteDemo">
+	      <title>Sprite Demo</title>
+	      <content>
+	        <para>This sample demonstrates the use of SpriteBatch game service to render images, sprites, beams and high quality text. Also this samples demonstrates using Texture Atlases.</para>
+	      </content>
+	    </section>
+	    
+	    <section address="SceneDemo">
+	      <title>Scene Demo</title>
+	      <content>
+	        <para>This sample demonstrates the use of Fusion Framework render 3D scenes created using content creation tools like Autodesk Maya, Autodesk 3ds Max or Blender. </para>
+	        <para>Specifically, this sample demonstrates:</para>
+				<list class="bullet">
+				  <listItem><para>Loading scenes from Autodesk FBX files.</para></listItem>
+				  <listItem><para>Using ubershaders to render the scene.</para></listItem>
+				  <listItem><para>Using camera to navigate in 3D space.</para></listItem>
+				</list>
+			<mediaLink>
+				<image xlink:href="SceneDemo"/>
+			</mediaLink>
+	      </content>
+	    </section>
+	
+	    <section address="SoundDemo">
+	      <title>Sound Demo</title>
+	      <content>
+	        <para>This sample demonstrates the use of Fusion Framework play 2D and 3D sounds. </para>
+	        <para>Specifically, this sample demonstrates:</para>
+				<list class="bullet">
+				  <listItem><para>Loading and playing 2D sounds.</para></listItem>
+				  <listItem><para>Loading and playing sounds in 3D applying effects of sound intensity decay and Doppler's effects.</para></listItem>
+				  <listItem><para>Using DebugRender game service to render debug lines.</para></listItem>
+				</list>
+	      </content>
+	    </section>
+	
+	    <section address="InputDemo">
+	      <title>Input Demo</title>
+	      <content>
+	        <para>This sample demonstrates how to use various input devices. </para>
+	        <para>Specifically, this sample demonstrates:</para>
+				<list class="bullet">
+				  <listItem><para>Scanning keys (both keyboard and mouse buttons).</para></listItem>
+				  <listItem><para>Using mouse.</para></listItem>
+				  <listItem><para>Using Xbox 360 gamepad.</para></listItem>
+				  <listItem><para>Detecting when game activates and deactivates.</para></listItem>
+				</list>
+	      </content>
+	    </section>
+    
+    
+    <section address="AnimationDemo">
+      <title>Animation Demo</title>
+      <content>
+        <para>This sample demonstrates the use of Scene class to play animation from FBX files.</para>
+        <mediaLink>
+			<image xlink:href="AnimDemo"/>
+		</mediaLink>
+      </content>
+    </section>
+    
+    <section address="SkinningDemo">
+      <title>Skinning Demo</title>
+      <content>
+        <para>This sample demonstrates the use of Scene class to play animation from FBX files and apply skinning effects to mesh.</para>
+        <mediaLink>
+			<image xlink:href="SkinDemo"/>
+		</mediaLink>
+      </content>
+    </section>
+    
+    <section address="InstancingDemo1">
+      <title>Instancing Demo (Structured Buffers)</title>
+      <content>
+        <para>This sample demonstrates how to use of Fusion Framework 
+        to render dozens of objects using instancing via structured 
+        buffers to store properties for each instance (The modern Direct3D 10 and 11 approach). </para>
+        <mediaLink>
+			<image xlink:href="Instancing"/>
+		</mediaLink>
+      </content>
+    </section>
+    
+    <section address="InstancingDemo2">
+      <title>Instancing Demo (Vertex Buffers)</title>
+      <content>
+        <para>This sample demonstrates how to use of Fusion Framework 
+        to render dozens of objects using instancing via multiple vertex buffers 
+        (The good old Direct3D 9 approach). </para>
+        <mediaLink>
+			<image xlink:href="Instancing"/>
+		</mediaLink>
+      </content>
+    </section>
+    
+    <section address="ParticleDemo1">
+      <title>Particles Demo (Compute Shaders)</title>
+      <content>
+        <para>This sample demonstrates how to use of Fusion Framework to simulate and render
+        particles using Compute Shaders and Append Structured Buffers. </para>
+        <mediaLink>
+			<image xlink:href="PrtCS"/>
+		</mediaLink>
+      </content>
+    </section>
+    
+    <section address="ParticleDemo1">
+      <title>Particles Demo (Geometry Shaders)</title>
+      <content>
+        <para>This sample demonstrates how to use of Fusion Framework to simulate and render
+        particles using Geometry Shaders and Stream Output. </para>
+        <mediaLink>
+			<image xlink:href="PrtGS"/>
+		</mediaLink>
+      </content>
+    </section>
+
+    <section address="DescriptorDemo">
+      <title>DescriptorDemo</title>
+      <content>
+        <para>This sample demonstrates how to use of Fusion Framework to store and edit game object properties. </para>
+      </content>
+    </section>
+
+    <section address="DeferredDemo">
+      <title>Tiled Deferred Demo</title>
+      <content>
+        <para>This sample demonstrates how to use of Fusion Framework to render dozens of light using Tiled Deferred Shading technique. </para>
+        <para>Specifically, this sample demonstrates:</para>
+			<list class="bullet">
+			  <listItem><para>Rendering of thousands of omni lights.</para></listItem>
+			  <listItem><para>Rendering spotlight lights with shadow maps.</para></listItem>
+			  <listItem><para>Rendering direct light with cascaded shadow maps.</para></listItem>
+			</list>
+		<mediaLink>
+			<image xlink:href="Deferred" width="400"/>
+		</mediaLink>
+      </content>
+    </section>
+
+
+    <relatedTopics>
+      <!-- One or more of the following:
+           - A local link
+           - An external link
+           - A code entity reference
+
+      <link xlink:href="Other Topic's ID"/>
+      <link xlink:href="Other Topic's ID">Link inner text</link>
+
+      <externalLink>
+          <linkText>Link text</linkText>
+          <linkAlternateText>Optional alternate link text</linkAlternateText>
+          <linkUri>URI</linkUri>
+      </externalLink>
+
+      <codeEntityReference>API member ID</codeEntityReference>
+
+      Examples:
+
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8270" />
+      <link xlink:href="00e97994-e9e6-46e0-b420-5be86b2f8278">Some other topic</link>
+
+      <externalLink>
+          <linkText>SHFB on CodePlex</linkText>
+          <linkAlternateText>Go to CodePlex</linkAlternateText>
+          <linkUri>HTTP://shfb.codeplex.com</linkUri>
+      </externalLink>
+
+      <codeEntityReference>T:TestDoc.TestClass</codeEntityReference>
+      <codeEntityReference>P:TestDoc.TestClass.SomeProperty</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.#ctor(System.String,System.Int32)</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.ToString</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.FirstMethod</codeEntityReference>
+      <codeEntityReference>M:TestDoc.TestClass.SecondMethod(System.Int32,System.String)</codeEntityReference>
+      -->
+    </relatedTopics>
+  </developerConceptualDocument>
+</topic>

@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<topic id="7da88aad-88f9-4c9b-b34c-e63947f2f86b" revisionNumber="1">
+  <developerConceptualDocument xmlns="http://ddue.schemas.microsoft.com/authoring/2003/5" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!--
+    <summary>
+      <para>Optional summary abstract</para>
+    </summary>
+    -->
+    <introduction>
+      <!-- Uncomment this to generate an outline of the section and sub-section
+           titles.  Specify a numeric value as the inner text to limit it to
+           a specific number of sub-topics when creating the outline.  Specify
+           zero (0) to limit it to top-level sections only.  -->
+      <!-- <autoOutline /> -->
+      <para>In Fusion Engine, each game you create is a project. 
+      Projects are self-contained units that hold all of the content and code that make up an individual game. 
+      You can create, maintain, and develop any number of projects. 
+      Thus, developers can work on multiple games on the same time.</para>
+      
+      <autoOutline />
+    </introduction>
+    
+   
+    
+    <section address="Creating">
+              <title>Create a New Project</title>
+              <content>
+                  
+				<list class="ordered">
+  					<listItem><para>Launch the Visual Studio</para></listItem>
+  					<listItem><para>Choose File->New->Project</para></listItem>
+  					<listItem><para>In list of templates find Visual C# and pick FusionGame</para></listItem>
+  					<listItem><para>Write Name, choose Location and click "OK"</para></listItem>
+				</list>				
+              </content>
+    </section>
+    <section address="Running">
+              <title>Running the Build Process</title>
+              <content>
+                <para>You can launch newly created project as well as your game.</para> 
+				<list class="ordered">
+  					<listItem><para>Open your project in Visual Studio or create a new one.</para></listItem>
+  					<listItem><para>Press Start. Make sure, you chose x64 platform in Configuration Manager</para></listItem>
+  					<listItem><para>You will see cmd and Developer's Console, you can change settings before launching.</para></listItem>
+  					<listItem><para>Press Launch to start the project.</para></listItem>
+				</list>
+              </content>
+    </section>
+    <section address="Add">
+           <title>Add Content to the Project</title>
+           <content> 
+				<list class="ordered">
+  					<listItem><para>Launch Developer's Console.</para></listItem>
+  					<listItem><para>Choose ContentBuilder->Create Asset From File...</para></listItem>
+  					<listItem><para>Pick the file and press "Ok"</para></listItem>  					
+				</list>
+				<para>To remove content, click on the item then choose ContentBuilder->Remove Selected Assets</para>
+				<para>For further information about Content, see <legacyBold>Content Pipeline</legacyBold>.</para>
+				<!--link here-->
+			</content>
+    </section>
+    <section address="Samples">
+           <title>Samples</title>
+           <content> 
+				<para>For fully understanding all features of Fusion Engine, 
+				please read the <link xlink:href="d7774ee5-b7fe-4b8e-9992-06ecf0a140d9"/>.</para>
+				
+			</content>
+    </section>
+
+
+  </developerConceptualDocument>
+</topic>

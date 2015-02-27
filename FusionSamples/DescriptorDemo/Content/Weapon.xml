@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfDescriptor xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Descriptor xsi:type="Blaster">
+    <Path>Machinegun</Path>
+    <Damage>15</Damage>
+    <AttackingRate>300</AttackingRate>
+    <OverheatCoolingTime>2500</OverheatCoolingTime>
+  </Descriptor>
+  <Descriptor xsi:type="RocketLauncher">
+    <Path>RPG7</Path>
+    <Damage>100</Damage>
+    <AttackingRate>700</AttackingRate>
+    <ReloadTime>3000</ReloadTime>
+    <AmmoCapacity>5</AmmoCapacity>
+    <Homing>true</Homing>
+  </Descriptor>
+  <Descriptor xsi:type="Blaster">
+    <Path>Hyperblaster</Path>
+    <Damage>15</Damage>
+    <AttackingRate>300</AttackingRate>
+    <OverheatCoolingTime>2500</OverheatCoolingTime>
+  </Descriptor>
+  <Descriptor xsi:type="Machinegun">
+    <Path>AK47</Path>
+    <Damage>15</Damage>
+    <AttackingRate>120</AttackingRate>
+    <ReloadTime>2000</ReloadTime>
+    <AmmoCapacity>30</AmmoCapacity>
+  </Descriptor>
+  <Descriptor xsi:type="Machinegun">
+    <Path>M16</Path>
+    <Damage>15</Damage>
+    <AttackingRate>120</AttackingRate>
+    <ReloadTime>2000</ReloadTime>
+    <AmmoCapacity>30</AmmoCapacity>
+  </Descriptor>
+</ArrayOfDescriptor>
