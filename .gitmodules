@@ -1,3 +1,6 @@
 [submodule "Dependencies/NvApiWrapper"]
 	path = Dependencies/NvApiWrapper
 	url = https://github.com/demiurghg/NvApiWrapper
+[submodule "Dependencies/NvTextureTools"]
+	path = Dependencies/NvTextureTools
+	url = https://github.com/casseveritt/nvidia-texture-tools
