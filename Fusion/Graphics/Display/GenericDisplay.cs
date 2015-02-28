@@ -12,7 +12,7 @@ using D3D = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using System.Windows.Forms;
 using Fusion.Mathematics;
-using Fusion.Native.NvApi;
+using NvApiWrapper;
 
 
 namespace Fusion.Graphics.Display {
@@ -39,8 +39,8 @@ namespace Fusion.Graphics.Display {
 			window	=	CreateForm( parameters, null );
 
 			try {
-				NvApiWrapper.Initialize();
-				NvApiWrapper.Stereo_Disable();
+				NvApi.Initialize();
+				NvApi.Stereo_Disable();
 			}
 			catch (NVException nvex) {
 				Log.Debug(nvex.Message);

@@ -12,7 +12,7 @@ using D3D = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
-using Fusion.Native.NvApi;
+using NvApiWrapper;
 using Device = SharpDX.Direct3D11.Device;
 using System.IO;
 using Fusion.Graphics;

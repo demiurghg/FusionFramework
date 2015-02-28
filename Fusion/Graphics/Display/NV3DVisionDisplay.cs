@@ -11,7 +11,7 @@ using SharpDX.DXGI;
 using D3D = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using System.Windows.Forms;
-using Fusion.Native.NvApi;
+using NvApiWrapper;
 using Fusion.Mathematics;
 
 
@@ -42,9 +42,9 @@ namespace Fusion.Graphics.Display {
 			//
 			//	Init NV API and enable stereo :
 			//	
-			NvApiWrapper.Initialize();
-			NvApiWrapper.Stereo_Enable();
-			NvApiWrapper.Stereo_SetDriverMode( NvStereoDriverMode.Direct );
+			NvApi.Initialize();
+			NvApi.Stereo_Enable();
+			NvApi.Stereo_SetDriverMode( NvStereoDriverMode.Direct );
 
 
 			//
@@ -92,10 +92,10 @@ namespace Fusion.Graphics.Display {
 			//
 
 			try {
-				stereoHandle	=	NvApiWrapper.Stereo_CreateHandleFromIUnknown( d3dDevice.NativePointer );
+				stereoHandle	=	NvApi.Stereo_CreateHandleFromIUnknown( d3dDevice.NativePointer );
 
-				NvApiWrapper.Stereo_Activate( stereoHandle );
-				NvApiWrapper.Stereo_SetActiveEye( stereoHandle, NvStereoActiveEye.Mono );
+				NvApi.Stereo_Activate( stereoHandle );
+				NvApi.Stereo_SetActiveEye( stereoHandle, NvStereoActiveEye.Mono );
 
 			} catch ( NVException ) {
 				SafeDispose( ref d3dDevice );
@@ -149,8 +149,8 @@ namespace Fusion.Graphics.Display {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {				   
-				NvApiWrapper.Stereo_Deactivate( stereoHandle );
-				NvApiWrapper.Stereo_DestroyHandle( stereoHandle );
+				NvApi.Stereo_Deactivate( stereoHandle );
+				NvApi.Stereo_DestroyHandle( stereoHandle );
 
 				SafeDispose( ref backbufferColor );
 				SafeDispose( ref backbufferDepth );
@@ -234,9 +234,9 @@ namespace Fusion.Graphics.Display {
 			}
 			set {
 				targetEye = value;
-				if (targetEye==StereoEye.Mono) NvApiWrapper.Stereo_SetActiveEye( stereoHandle, NvStereoActiveEye.Mono ); else
-				if (targetEye==StereoEye.Left) NvApiWrapper.Stereo_SetActiveEye( stereoHandle, NvStereoActiveEye.Left ); else
-				if (targetEye==StereoEye.Right) NvApiWrapper.Stereo_SetActiveEye( stereoHandle, NvStereoActiveEye.Right ); else
+				if (targetEye==StereoEye.Mono) NvApi.Stereo_SetActiveEye( stereoHandle, NvStereoActiveEye.Mono ); else
+				if (targetEye==StereoEye.Left) NvApi.Stereo_SetActiveEye( stereoHandle, NvStereoActiveEye.Left ); else
+				if (targetEye==StereoEye.Right) NvApi.Stereo_SetActiveEye( stereoHandle, NvStereoActiveEye.Right ); else
 					throw new ArgumentException("value");
 			}
 		}

@@ -387,9 +387,9 @@
     <None Include="fusionSplash.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Fusion.Native.NvApi\NvApiWrapper.vcxproj">
+    <ProjectReference Include="..\Dependencies\NvApiWrapper\NvApiWrapper.vcxproj">
       <Project>{ea4b3afd-02e3-4fa3-9e26-95390f34687f}</Project>
-      <Name>Fusion.Native.NvApi</Name>
+      <Name>NvApiWrapper</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -398,7 +398,8 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>SubWCRev.exe "$(ProjectDir)\..\." "$(ProjectDir)\Properties\AssemblyInfo.tmpl" "$(ProjectDir)\Properties\AssemblyInfo.cs"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
