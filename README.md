@@ -61,6 +61,7 @@ Fusion Framework depends on the following third-party libraries and tools:
 - AngelCode's Bitmap Font Generator.
 
 Issues and Limitations:
+- Only x64 architecture is supported.
 - Only Feature level 11 is supported.
 - INTEL GPUs may not work.
 - Very rare crashes on exit.
