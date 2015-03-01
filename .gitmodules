@@ -1,9 +1,6 @@
 [submodule "Dependencies/NvApiWrapper"]
 	path = Dependencies/NvApiWrapper
 	url = https://github.com/demiurghg/NvApiWrapper
-[submodule "Dependencies/LidgrenNetwork"]
-	path = Dependencies/LidgrenNetwork
-	url = https://github.com/lidgren/lidgren-network-gen3
 [submodule "Dependencies/BEPUphysics"]
 	path = Dependencies/BEPUphysics
 	url = https://github.com/demiurghg/BEPUphysics
