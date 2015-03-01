@@ -44,27 +44,27 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\Dependencies\FbxSdk\include</IncludePath>
-    <LibraryPath>$(ProjectDir)..\Dependencies\FbxSdk\lib\vs2012\x64\debug\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Libs\FbxSdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\Libs\FbxSdk\lib\vs2012\x64\debug\;$(LibraryPath)</LibraryPath>
     <OutDir>$(FUSION_BIN)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(ProjectDir)..\Dependencies\FbxSdk\include</IncludePath>
-    <LibraryPath>$(ProjectDir)..\Dependencies\FbxSdk\lib\vs2012\x64\release\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)..\Libs\FbxSdk\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)..\Libs\FbxSdk\lib\vs2012\x64\release\;$(LibraryPath)</LibraryPath>
     <OutDir>$(FUSION_BIN)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;FBXSDK_SHARED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
@@ -74,12 +74,12 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>WIN32;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;FBXSDK_SHARED;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libfbxsdk.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>
