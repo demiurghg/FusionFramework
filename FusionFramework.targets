@@ -1,0 +1,31 @@
+<Project DefaultTargets="Compile"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <ItemGroup>
+        <FusionOutputFiles Include="$(OutDir)*.dll;$(OutDir)*.exe"/>
+        <ThirdPartyFiles Include="$(SolutionDir)Libs\FbxSdk\lib\vs2012\x64\$(ConfigurationName)\libfbxsdk.dll"/>
+        <ToolBoxFiles Include="$(SolutionDir)Tools\*.com;$(SolutionDir)Tools\*.exe;$(SolutionDir)Tools\*.dll;"/>
+    </ItemGroup>
+
+	<Target Name="AfterBuild">
+		<Exec Command='echo COPY'/>
+		<Copy SourceFiles="@(FusionOutputFiles)" DestinationFolder="$(FUSION_BIN)" SkipUnchangedFiles="false"/>
+		<Copy SourceFiles="@(ThirdPartyFiles)" DestinationFolder="$(FUSION_BIN)" SkipUnchangedFiles="false"/>
+		<Copy SourceFiles="@(ToolBoxFiles)" DestinationFolder="$(FUSION_BIN)" SkipUnchangedFiles="false"/>
+		<Exec Command='echo DONE'/>
+
+		<!--Exec Command='"$(SolutionDir)\Source\Bin\SharpCLI.exe" "$(TargetPath)"'/>
+
+		<GetFrameworkSdkPath>
+		  <Output TaskParameter="Path" PropertyName="FrameworkSdkPath" />
+		</GetFrameworkSdkPath>
+
+		<Exec Command='"$(FrameworkSdkPath)\bin\NETFX 4.5.1 Tools\x64\sn.exe" -Ra $(TargetPath) $(SolutionDir)sharpdx.snk' Condition="'$(SharpDXSign)' == 'true'"/-->
+
+		<!-- Copy back *.dll from bin/Debug|Release to obj/Debug/Release directory -->
+		<!--Copy SourceFiles="@(MainAssembly)" DestinationFolder="$(IntermediateOutputPath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)"/-->
+		<!-- Copy back *.pdb from bin/Debug|Release to obj/Debug/Release directory -->
+		<!--Copy SourceFiles="@(_DebugSymbolsOutputPath)" DestinationFiles="@(_DebugSymbolsIntermediatePath)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="$(OverwriteReadOnlyFiles)" Condition="'$(_DebugSymbolsProduced)'=='true' and '$(SkipCopyingSymbolsToOutputDirectory)' != 'true'"/-->
+
+	</Target>
+</Project>

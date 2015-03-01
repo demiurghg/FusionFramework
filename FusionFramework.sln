@@ -67,8 +67,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SubmarinesWars", "FusionSam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DeferredDemo", "FusionSamples\DeferredDemo\DeferredDemo.csproj", "{4AB51138-3A32-439B-877E-C1C0DDA814DD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{81259856-AF33-4BA3-A125-3D5F87950EA0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnimationDemo", "FusionSamples\AnimationDemo\AnimationDemo.csproj", "{B241CF4A-1C0E-45A2-8750-945975DA2DA8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkinningDemo", "FusionSamples\SkinningDemo\SkinningDemo.csproj", "{80653140-7BAB-4A50-AF19-8D11E8DA7375}"

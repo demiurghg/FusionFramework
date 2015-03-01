@@ -46,13 +46,11 @@
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)..\Libs\FbxSdk\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\Libs\FbxSdk\lib\vs2012\x64\debug\;$(LibraryPath)</LibraryPath>
-    <OutDir>$(FUSION_BIN)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\Libs\FbxSdk\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)..\Libs\FbxSdk\lib\vs2012\x64\release\;$(LibraryPath)</LibraryPath>
-    <OutDir>$(FUSION_BIN)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -114,4 +112,5 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
+  <Import Project="$(SolutionDir)\FusionFramework.targets" />
 </Project>
