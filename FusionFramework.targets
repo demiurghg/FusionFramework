@@ -5,7 +5,7 @@
         <FusionOutputFiles Include="$(OutDir)*.dll;$(OutDir)*.exe"/>
         <ThirdPartyFiles Include="$(SolutionDir)Libs\FbxSdk\lib\vs2012\x64\$(ConfigurationName)\libfbxsdk.dll"/>
         <ToolBoxFiles Include="$(SolutionDir)Tools\*.com;$(SolutionDir)Tools\*.exe;$(SolutionDir)Tools\*.dll;"/>
-        <!--ContentFiles Include="$(SolutionDir)FusionContent\*.*"/!-->
+        <ContentFiles Include="$(SolutionDir)FusionContent\*.*"/>
     </ItemGroup>
 
 	<Target Name="AfterBuild">
@@ -13,7 +13,7 @@
 		<Copy SourceFiles="@(FusionOutputFiles)" DestinationFolder="$(FUSION_BIN)" SkipUnchangedFiles="false"/>
 		<Copy SourceFiles="@(ThirdPartyFiles)" DestinationFolder="$(FUSION_BIN)" SkipUnchangedFiles="false"/>
 		<Copy SourceFiles="@(ToolBoxFiles)" DestinationFolder="$(FUSION_BIN)" SkipUnchangedFiles="false"/>
-		<!--Copy SourceFiles="@(ContentFiles)" DestinationFolder="$(FUSION_CONTENT)" SkipUnchangedFiles="false"/-->
+		<Copy SourceFiles="@(ContentFiles)" DestinationFolder="$(FUSION_CONTENT)" SkipUnchangedFiles="false"/>
 		<Exec Command='echo Done.'/>
 
 		<!--Exec Command='"$(SolutionDir)\Source\Bin\SharpCLI.exe" "$(TargetPath)"'/>

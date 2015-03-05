@@ -56,15 +56,16 @@ Section "Fusion Game Library Core"
   SetOutPath "$INSTDIR\Bin"
   
   ; Binary stuff :
-  File "$%FUSION_BIN%\*.dll"
-  File "$%FUSION_BIN%\*.exe"
-  File /r "..\MiscBin\NVTT"
-  File /r "..\MiscBin\BMFont"
-  File /r "..\MiscBin\*.*"
+  File "..\Fusion\bin\x64\Release\*.dll"
+  File "..\FbxTool\x64\Release\*.exe"
+  File "..\Libs\FbxSdk\lib\vs2012\x64\release\*.dll"
+  File "..\Tools\*.dll"
+  File "..\Tools\*.exe"
+  File "..\Tools\*.com"
 
   ; Content stuff :
   SetOutPath "$INSTDIR\Content"
-  File "..\Fusion.Content\*.*"
+  File "..\FusionContent\*.*"
   
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\FusionGameLib "Install_Dir" "$INSTDIR"

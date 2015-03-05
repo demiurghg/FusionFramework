@@ -39,7 +39,7 @@ namespace Fusion.Content {
 		/// </summary>
 		ICollection<string> FusionContentDirs {
 			get {
-				return FusionContent.Split( new[]{';'}, StringSplitOptions.RemoveEmptyEntries );
+				return new[]{ FusionContent };//FusionContent.Split( new[]{';'}, StringSplitOptions.RemoveEmptyEntries );
 			}
 		}
 
