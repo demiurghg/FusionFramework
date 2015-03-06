@@ -5,6 +5,7 @@
 sharpdxsdk.exe
 fbxsdk.exe
 *.asset
+*.tar
 [Tt]emp/
 
 # User-specific files
