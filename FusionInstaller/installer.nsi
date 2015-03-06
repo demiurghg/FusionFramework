@@ -4,15 +4,18 @@
 ; has uninstall support and (optionally) installs start menu shortcuts.
 ;
 ; It will install example2.nsi into a directory that the user selects,
-
 ;--------------------------------
 
+!include "MUI.nsh"
+  !define MUI_ABORTWARNING
+
+
 ; The name of the installer
-Name "Fusion Game Library (v0.9.$WCREV$)"
+Name "Fusion Game Library (v0.9)"
 XPStyle on
 
 ; The file to write
-OutFile "FusionInstaller-0.9.$WCREV$.exe"
+OutFile "FusionInstaller-0.9.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\FusionGameLib
@@ -39,18 +42,34 @@ Function .onInit
 FunctionEnd
 
 
+  !define MUI_HEADERIMAGE
+  !define MUI_HEADERIMAGE_RIGHT
+  !define MUI_HEADERIMAGE_BITMAP "header-r.bmp" ; optional
+  !define MUI_LICENSEPAGE_CHECKBOX
+  !define MUI_COMPONENTSPAGE_NODESC
+  
+  !insertmacro MUI_PAGE_LICENSE "..\LICENSE"
+  !insertmacro MUI_PAGE_COMPONENTS
+  !insertmacro MUI_PAGE_DIRECTORY
+  !insertmacro MUI_PAGE_INSTFILES
+  
+  !insertmacro MUI_UNPAGE_CONFIRM
+  !insertmacro MUI_UNPAGE_INSTFILES
+  !insertmacro MUI_LANGUAGE "English"  
+  
+; Page components
+; Page directory
+; Page instfiles
 
-Page components
-Page directory
-Page instfiles
-
-UninstPage uninstConfirm
-UninstPage instfiles
+; UninstPage uninstConfirm
+; UninstPage instfiles
 
 
-Section "Fusion Game Library Core"
+	
+Section "Fusion Game Library Core" Section1
 
   SectionIn RO
+  
   
   ; Set output path to the installation directory.
   SetOutPath "$INSTDIR\Bin"
@@ -78,6 +97,8 @@ Section "Fusion Game Library Core"
   WriteUninstaller "uninstall.exe"
   
 SectionEnd
+
+
 
 Section "Fusion Game Library Samples"
 	
@@ -128,10 +149,23 @@ Section "Fusion Game Library Samples"
 
 SectionEnd
 
-Section "Install DirectX End-User Runtime"
-	File /oname=$PLUGINSDIR\dxwebsetup.exe "dxwebsetup.exe"
-	ExecWait '$PLUGINSDIR\dxwebsetup.exe /Q'
+
+  
+Section "Install DirectX End-User Runtimes (June 2010)" Section2
+  SetOutPath "$INSTDIR\DirectX"
+  NSISdl::download /TIMEOUT=30000 "http://download.microsoft.com/download/8/4/A/84A35BF1-DAFE-4AE8-82AF-AD2AE20B6B14/directx_Jun2010_redist.exe" "$INSTDIR\DirectX\dxsetup.exe"
+  Pop $R0
+  StrCmp $R0 success success
+    SetDetailsView show
+    DetailPrint "Download failed : $R0"
+    Abort
+  success:
+    ExecWait "$INSTDIR\DirectX\dxsetup.exe /q /t:$INSTDIR\DirectX\Temp"
+	ExecWait "$INSTDIR\DirectX\Temp\DXSETUP.exe /silent"
+	Delete   "$INSTDIR\DirectX\Temp\*.*"
+	RMDir    "$INSTDIR\DirectX\Temp"
 SectionEnd
+
 
 
 Section "Install Visual Studio Project Template"
