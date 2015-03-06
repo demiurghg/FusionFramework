@@ -30,7 +30,7 @@ namespace Fusion.Content {
 			string resolvedPath		= buildContext.Resolve( SourcePath );	
 
 			//	Launch 'bmfont.com' with temporary output file :
-			buildContext.RunTool( @"BMFont\bmfont.com",  string.Format("-c \"{0}\" -o \"{1}\"", resolvedPath, tempFileNameR ) );
+			buildContext.RunTool( @"bmfont.com",  string.Format("-c \"{0}\" -o \"{1}\"", resolvedPath, tempFileNameR ) );
 
 
 			//	load temporary output :

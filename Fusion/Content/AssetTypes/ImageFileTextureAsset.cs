@@ -125,7 +125,7 @@ namespace Fusion.Content {
 			commandLine += ( " \"" + src + "\"" );
 			commandLine += ( " \"" + dst + "\"" );
 
-			buildContext.RunTool( @"NVTT\nvcompress.exe", commandLine );//*/
+			buildContext.RunTool( @"nvcompress.exe", commandLine );//*/
 		}
 	}
 }

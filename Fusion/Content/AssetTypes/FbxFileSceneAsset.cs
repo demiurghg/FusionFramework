@@ -77,7 +77,7 @@ namespace Fusion.Content {
 				ImportGeometry ? "/geom":"" 
 			);
 
-			buildContext.RunTool( "Fusion.Native.Fbx.exe", cmdLine );
+			buildContext.RunTool( "FbxTool.exe", cmdLine );
 
 			using ( var target = buildContext.TargetStream( this ) ) {
 				buildContext.CopyTo( destPath, target );

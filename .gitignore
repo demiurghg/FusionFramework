@@ -4,6 +4,8 @@
 # Some Fusion Dependencies
 sharpdxsdk.exe
 fbxsdk.exe
+*.asset
+[Tt]emp/
 
 # User-specific files
 *.suo
