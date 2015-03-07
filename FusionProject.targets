@@ -1,0 +1,15 @@
+<Project DefaultTargets="Compile"
+    xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <ItemGroup>
+		<Reference Include="Fusion">
+		  <HintPath>$(FUSION_BIN)\Fusion.dll</HintPath>
+		</Reference>
+		<Reference Include="BEPUphysics">
+		  <HintPath>$(FUSION_BIN)\BEPUphysics.dll</HintPath>
+		</Reference>
+		<Reference Include="BEPUutilities">
+		  <HintPath>$(FUSION_BIN)\BEPUutilities.dll</HintPath>
+		</Reference>
+    </ItemGroup>
+</Project>

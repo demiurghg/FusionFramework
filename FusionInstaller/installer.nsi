@@ -85,6 +85,10 @@ Section "Fusion Game Library Core" Section1
   ; Content stuff :
   SetOutPath "$INSTDIR\Content"
   File "..\FusionContent\*.*"
+
+  ; Build stuff :
+  SetOutPath "$INSTDIR\Build"
+  File "..\FusionProject.targets"
   
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\FusionGameLib "Install_Dir" "$INSTDIR"
@@ -174,8 +178,8 @@ Section "Install Visual Studio Project Template"
 SectionEnd
 
 Section "Add Environment Variables"
-	ExecWait 'setx FUSION_DIR "$INSTDIR" /M'
 	ExecWait 'setx FUSION_BIN "$INSTDIR\Bin" /M'
+	ExecWait 'setx FUSION_BUILD "$INSTDIR\Build" /M'
 	ExecWait 'setx FUSION_CONTENT "$INSTDIR\Content" /M'
 SectionEnd
 
