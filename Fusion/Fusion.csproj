@@ -316,12 +316,6 @@
     </Compile>
     <Compile Include="Graphics\Scene\VertexColorTexture.cs" />
     <Compile Include="Graphics\Scene\VertexColorTextureTBN.cs" />
-    <Compile Include="Rendering\Deferred\LightRendererConfig.cs" />
-    <Compile Include="Rendering\Deferred\DirectLight.cs" />
-    <Compile Include="Rendering\Deferred\EnvLight.cs" />
-    <Compile Include="Rendering\Deferred\LightRenderer.cs" />
-    <Compile Include="Rendering\Deferred\OmniLight.cs" />
-    <Compile Include="Rendering\Deferred\SpotLight.cs" />
     <Compile Include="UserInterface\Config.cs" />
     <Compile Include="UserInterface\Context.cs" />
     <Compile Include="UserInterface\Enums.cs" />

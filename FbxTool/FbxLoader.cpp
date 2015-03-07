@@ -219,6 +219,7 @@ string^ GetTextureFileName ( FbxTexture* pTexture );
 void	AddTextureToDictionaryByProperty( Dictionary<string^, string^> ^dict, FbxProperty pProperty, int pMaterialIndex );
 void	TryGetDiffuseTexture ( string ^%textureName, FbxProperty pProperty, int pMaterialIndex );
 
+#pragma warning (disable: 4996)
 
 /*
 **	Fusion::Fbx::FbxLoader::HandleMesh
