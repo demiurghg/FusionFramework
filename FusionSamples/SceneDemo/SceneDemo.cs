@@ -164,7 +164,8 @@ namespace SceneDemo {
 		{
 			var ds	=	GetService<DebugStrings>();
 
-			ds.Add( Color.Orange, "FPS {0}", gameTime.Fps );
+			ds.Add( Color.Orange, "FPS {0}", gameTime.AverageFrameRate );
+			ds.Add( Color.Orange, "FT  {0}", gameTime.AverageFrameTime );
 			ds.Add( "F1   - show developer console" );
 			ds.Add( "F2   - toggle vsync" );
 			ds.Add( "F5   - build content and reload textures" );

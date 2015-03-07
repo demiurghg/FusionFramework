@@ -125,16 +125,16 @@ namespace Fusion.Graphics {
 			//	
 			PixelShaderResources	=	new ShaderResourceCollection( this, DeviceContext.PixelShader		);
 			VertexShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.VertexShader		);
-			GeometryShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.GeometryShader	);
+			GeometryShaderResources =	new ShaderResourceCollection( this, DeviceContext.GeometryShader	);
 			ComputeShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.ComputeShader		);
 			DomainShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.DomainShader		);
 			HullShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.HullShader		);
 
 			PixelShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.PixelShader		);
-			VertexShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.VertexShader		);
-			GeometryShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.GeometryShader	);
-			ComputeShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.ComputeShader		);
-			DomainShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.DomainShader		);
+			VertexShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.VertexShader		);
+			GeometryShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.GeometryShader	);
+			ComputeShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.ComputeShader		);
+			DomainShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.DomainShader		);
 			HullShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.HullShader		);
 
 			PixelShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.PixelShader		);
@@ -234,10 +234,6 @@ namespace Fusion.Graphics {
 		 *	
 		-----------------------------------------------------------------------------------------*/
 
-		internal bool	vertexInputDirty		= true;
-		internal bool	vertexOutputDirty		= true;
-		internal string vertexShaderSignature	= null;
-
 		D3D.Buffer[]		inputVertexBuffers	= null;
 		D3D.Buffer			inputIndexBuffer	= null;
 		int[]				inputVertexOffsets	= null;
@@ -262,9 +258,57 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		void ApplyVertexStage()
+		void ApplyPipelineStates()
 		{
-			if (vertexOutputDirty) {
+			#if DEFERRED
+			if (PixelShaderResources	.DirtyRegs!=0) 	PixelShaderResources	.Apply();
+			if (VertexShaderResources	.DirtyRegs!=0) 	VertexShaderResources	.Apply();
+			if (GeometryShaderResources	.DirtyRegs!=0) 	GeometryShaderResources	.Apply();
+			if (ComputeShaderResources	.DirtyRegs!=0) 	ComputeShaderResources	.Apply();
+			if (DomainShaderResources	.DirtyRegs!=0) 	DomainShaderResources	.Apply();
+			if (HullShaderResources		.DirtyRegs!=0) 	HullShaderResources		.Apply();
+
+			if (PixelShaderConstants	.DirtyRegs!=0) 	PixelShaderConstants	.Apply();
+			if (VertexShaderConstants	.DirtyRegs!=0) 	VertexShaderConstants	.Apply();
+			if (GeometryShaderConstants	.DirtyRegs!=0) 	GeometryShaderConstants	.Apply();
+			if (ComputeShaderConstants	.DirtyRegs!=0) 	ComputeShaderConstants	.Apply();
+			if (DomainShaderConstants	.DirtyRegs!=0) 	DomainShaderConstants	.Apply();
+			if (HullShaderConstants		.DirtyRegs!=0) 	HullShaderConstants		.Apply();
+
+			if (PixelShaderSamplers		.DirtyRegs!=0) 	PixelShaderSamplers		.Apply();
+			if (VertexShaderSamplers	.DirtyRegs!=0) 	VertexShaderSamplers	.Apply();
+			if (GeometryShaderSamplers	.DirtyRegs!=0) 	GeometryShaderSamplers	.Apply();
+			if (ComputeShaderSamplers	.DirtyRegs!=0) 	ComputeShaderSamplers	.Apply();
+			if (DomainShaderSamplers	.DirtyRegs!=0) 	DomainShaderSamplers	.Apply();
+			if (HullShaderSamplers		.DirtyRegs!=0) 	HullShaderSamplers		.Apply();
+			#endif
+
+
+			if (psDirty) {
+				deviceContext.PixelShader.Set( (ps==null) ? null : ps.Shader );
+				psDirty = false;
+			}
+
+			if (dsDirty) {
+				deviceContext.DomainShader.Set( (ds==null) ? null : ds.Shader );
+				dsDirty = false;
+			}
+
+			if (hsDirty) {
+				deviceContext.HullShader.Set( (hs==null) ? null : hs.Shader );
+				hsDirty = false;
+			}
+
+			if (csDirty) {
+				deviceContext.ComputeShader.Set( (cs==null) ? null : cs.Shader );
+				csDirty=  false;
+			}
+
+
+			if (gsDirty) {
+
+				deviceContext.GeometryShader.Set( (gs==null) ? null : gs.Shader );
+
 				if (outputBinding!=null && outputVertexLayout!=null ) {
 					
 					if (gs==null) {
@@ -283,14 +327,16 @@ namespace Fusion.Graphics {
 					deviceContext.StreamOutput.SetTargets( nullSO );
 				}// */
 
-				vertexOutputDirty	=	false;
+				gsDirty	=	false;
 			}
 
 
-			if (vertexInputDirty) {
+			if (vsDirty) {
+
+				deviceContext.VertexShader.Set( (vs==null) ? null : vs.Shader );
 
 				if (inputVertexBuffers!=null && inputVertexLayout!=null) {
-					deviceContext.InputAssembler.InputLayout	=	inputVertexLayout.GetInputLayout( vertexShaderSignature );
+					deviceContext.InputAssembler.InputLayout	=	inputVertexLayout.GetInputLayout( vs.Bytecode );
 					deviceContext.InputAssembler.SetVertexBuffers( 0, inputVertexBuffers, inputVertexStrides, inputVertexOffsets );
 				} else {
 					deviceContext.InputAssembler.InputLayout	=	null;
@@ -303,7 +349,7 @@ namespace Fusion.Graphics {
 					deviceContext.InputAssembler.SetIndexBuffer( null, Format.Unknown, 0 );
 				}
 
-				vertexInputDirty	=	false;
+				vsDirty	=	false;
 			}
 		}
 
@@ -318,7 +364,7 @@ namespace Fusion.Graphics {
 		/// <param name="signature">Input signature</param>
 		public void SetupVertexInput ( VertexInputLayout layout, VertexBuffer vb, IndexBuffer ib )
 		{
-			vertexInputDirty	=	true;
+			vsDirty	=	true;
 
 			inputVertexLayout	=	layout;
 			inputVertexBuffers	=	vb == null ? null : new[]{ vb.Buffer };
@@ -340,7 +386,7 @@ namespace Fusion.Graphics {
 		/// <param name="vertexType">Vertex type that describes input layout.</param>
 		public void SetupVertexInput ( VertexInputLayout layout, VertexBuffer[] vertexBuffers, int[] offsets, IndexBuffer indexBuffer )
 		{
-			vertexInputDirty	=	true;
+			vsDirty	=	true;
 
 			inputVertexLayout	=	layout;
 
@@ -383,7 +429,7 @@ namespace Fusion.Graphics {
 		/// <param name="offset">Offset where to start writing data. -1 means append.</param>
 		public void SetupVertexOutput ( VertexOutputLayout layout, VertexBuffer[] vertexBuffers, int[] offsets )
 		{
-			vertexOutputDirty	=	true;
+			gsDirty	=	true;
 
 			if (layout==null || vertexBuffers==null || offsets==null ) {
 				outputBinding		=	null;
@@ -433,7 +479,7 @@ namespace Fusion.Graphics {
 		/// <param name="vertexFirstIndex"></param>
 		public void DrawAuto ( Primitive primitive )
 		{									 
-			ApplyVertexStage();
+			ApplyPipelineStates();
 			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 			deviceContext.DrawAuto();
 		}
@@ -447,7 +493,7 @@ namespace Fusion.Graphics {
 		/// <param name="vertexFirstIndex"></param>
 		public void Draw ( Primitive primitive, int vertexCount, int firstIndex )
 		{									 
-			ApplyVertexStage();
+			ApplyPipelineStates();
 			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 			deviceContext.Draw( vertexCount, firstIndex );
 		}
@@ -464,7 +510,7 @@ namespace Fusion.Graphics {
 		/// <param name="startInstanceLocation"></param>
 		public void DrawInstanced ( Primitive primitive, int vertexCountPerInstance, int instanceCount, int startVertexLocation, int startInstanceLocation )
 		{
-			ApplyVertexStage();
+			ApplyPipelineStates();
 			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 			deviceContext.DrawInstanced( vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation );
 		}
@@ -479,7 +525,7 @@ namespace Fusion.Graphics {
 		/// <param name="baseVertexOffset"></param>
 		public void DrawIndexed ( Primitive primitive, int indexCount, int firstIndex, int baseVertexOffset )
 		{
-			ApplyVertexStage();
+			ApplyPipelineStates();
 			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 			deviceContext.DrawIndexed( indexCount, firstIndex,	baseVertexOffset );
 		}
@@ -494,7 +540,7 @@ namespace Fusion.Graphics {
 		/// <param name="baseVertexOffset"></param>
 		public void DrawInstancedIndexed ( Primitive primitive, int indexCountPerInstance, int instanceCount, int startIndexLocation, int baseVertexLocation, int startInstanceLocation )
 		{
-			ApplyVertexStage();
+			ApplyPipelineStates();
 			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 			deviceContext.DrawIndexedInstanced( indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation );
 		}
@@ -514,9 +560,6 @@ namespace Fusion.Graphics {
 			DeviceContext.ClearState();
 			
 			//	Kill cached value :
-			vertexInputDirty	=	false;
-			vertexOutputDirty	=	false;
-
 			blendState	=	null;
 			rasterState	=	null;
 			depthState	=	null;
@@ -528,9 +571,26 @@ namespace Fusion.Graphics {
 			ds	=	null;
 			hs	=	null;
 
-			vertexInputDirty		= true;
-			vertexOutputDirty		= true;
-			vertexShaderSignature	= null;
+			PixelShaderResources	.Clear();
+			VertexShaderResources	.Clear();
+			GeometryShaderResources	.Clear();
+			ComputeShaderResources	.Clear();
+			DomainShaderResources	.Clear();
+			HullShaderResources		.Clear();
+
+			PixelShaderConstants	.Clear();
+			VertexShaderConstants	.Clear();
+			GeometryShaderConstants	.Clear();
+			ComputeShaderConstants	.Clear();
+			DomainShaderConstants	.Clear();
+			HullShaderConstants		.Clear();
+
+			PixelShaderResources	.Clear();
+			VertexShaderResources	.Clear();
+			GeometryShaderResources	.Clear();
+			ComputeShaderResources	.Clear();
+			DomainShaderResources	.Clear();
+			HullShaderResources		.Clear();
 
 			inputVertexBuffers	= null;
 			inputIndexBuffer	= null;
@@ -608,6 +668,13 @@ namespace Fusion.Graphics {
 		}
 
 
+		bool	psDirty = true;
+		bool	vsDirty = true;
+		bool	gsDirty = true;
+		bool	csDirty = true;
+		bool	dsDirty = true;
+		bool	hsDirty = true;
+
 
 		PixelShader		ps;
 		VertexShader	vs;
@@ -619,8 +686,8 @@ namespace Fusion.Graphics {
 		public PixelShader PixelShader {
 			set { 
 				if (ps!=value) { 
-					ps=value; 
-					deviceContext.PixelShader.Set( value==null? null:value.Shader ); 
+					ps = value; 
+					psDirty = true;
 				} 
 			}
 			get { 
@@ -633,14 +700,7 @@ namespace Fusion.Graphics {
 			set { 
 				if (vs!=value) { 
 					vs = value;
-					vertexInputDirty = true;
-					if (value==null) {
-						vertexShaderSignature = null;
-						deviceContext.VertexShader.Set( null );
-					} else {
-						vertexShaderSignature = value.Bytecode;
-						deviceContext.VertexShader.Set( value.Shader ); 
-					}
+					vsDirty = true;
 				} 
 			}
 			get { 
@@ -652,9 +712,8 @@ namespace Fusion.Graphics {
 		public GeometryShader GeometryShader {
 			set { 
 				if (gs!=value) { 
-					gs=value; 
-					vertexOutputDirty = true;
-					deviceContext.GeometryShader.Set( value==null? null:value.Shader ); 
+					gs = value; 
+					gsDirty = true;
 				} 
 			}
 			get { 
@@ -666,8 +725,8 @@ namespace Fusion.Graphics {
 		public ComputeShader ComputeShader {
 			set { 
 				if (cs!=value) { 
-					cs=value; 
-					deviceContext.ComputeShader.Set( value==null? null:value.Shader ); 
+					cs = value; 
+					csDirty = true;
 				} 
 			}
 			get { 
@@ -680,7 +739,7 @@ namespace Fusion.Graphics {
 			set { 
 				if (ds!=value) { 
 					ds=value; 
-					deviceContext.DomainShader.Set( value==null? null:value.Shader ); 
+					dsDirty = true;
 				} 
 			}
 			get { 
@@ -692,8 +751,8 @@ namespace Fusion.Graphics {
 		public HullShader HullShader {
 			set { 
 				if (hs!=value) { 
-					hs=value; 
-					deviceContext.HullShader.Set( value==null? null:value.Shader ); 
+					hs = value; 
+					hsDirty = true;
 				} 
 			}
 			get { 

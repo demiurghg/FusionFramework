@@ -13,9 +13,12 @@ namespace Fusion.Graphics {
 	/// </summary>
 	public sealed class ShaderResourceCollection {
 
-		readonly ShaderResource[]	resources;	
-		readonly CommonShaderStage	stage;
-		readonly GraphicsDevice		device;
+		readonly ShaderResource[]		resources;
+		readonly ShaderResourceView[]	srvs;	
+		readonly CommonShaderStage		stage;
+		readonly GraphicsDevice			device;
+
+		internal int DirtyRegs = 0;
 
 		/// <summary>
 		/// 
@@ -24,8 +27,10 @@ namespace Fusion.Graphics {
 		internal ShaderResourceCollection ( GraphicsDevice device, CommonShaderStage stage )
 		{
 			resources	=	new ShaderResource[ Count ];
+			srvs		=	new ShaderResourceView[ Count ];
 			this.stage	=	stage;
 			this.device	=	device;
+			DirtyRegs	=	Count;
 		}
 
 
@@ -40,6 +45,19 @@ namespace Fusion.Graphics {
 		}
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Clear ()
+		{
+			for (int i=0; i<Count; i++) {
+				resources[i] = null;
+				srvs[i]		 = null;
+			}
+			DirtyRegs = Count;
+		}
+
 		
 
 		
@@ -50,12 +68,35 @@ namespace Fusion.Graphics {
 		/// <returns></returns>
 		public ShaderResource this[int index] {
 			set {
-				resources[ index ] = value;
-				stage.SetShaderResource( index, (value==null) ? null : value.SRV );
+				/*if (index>Count) {	
+					throw new ArgumentOutOfRangeException("index", index, "must be less than " + Count.ToString() );
+				} */
+
+				resources[ index ]	=	value;
+
+				#if DEFERRED
+					srvs[ index ]	=	(value == null) ? null : value.SRV;
+					DirtyRegs		=	Math.Max( DirtyRegs, index + 1 );
+				#else
+					stage.SetShaderResources( index, (value == null) ? null : value.SRV );
+				#endif
 			}
 			get {
 				return resources[ index ];
 			}
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		internal void Apply ()
+		{
+			#if DEFERRED
+				stage.SetShaderResources( 0, DirtyRegs, srvs );
+				DirtyRegs = 0;
+			#endif
 		}
 	}
 }
