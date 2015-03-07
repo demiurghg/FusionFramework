@@ -16,9 +16,10 @@ using D3DComparison		=	SharpDX.Direct3D11.Comparison;
 
 namespace Fusion.Graphics {
 
-	public enum HardwareProfile {
+	public enum GraphicsProfile {
 		HiDef,
 		Reach,
+		Mobile,
 	}
 
 

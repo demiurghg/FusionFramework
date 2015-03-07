@@ -35,6 +35,7 @@ namespace SubmarinesWars
 //				Parameters.UseDebugDevice	=	true;
 #endif
 
+				Parameters.GraphicsProfile = GraphicsProfile.Reach;
                 Parameters.Width = Config.FIELD_WIDTH * Config.HEX_SIZE + Config.HEX_SIZE / 2;
                 Parameters.Height = (int)(Config.FIELD_HEIGHT * Config.HEX_SIZE * (float)Math.Cos(Math.PI / 6)) + (int)(Config.HEX_SIZE * (1 - (float)Math.Cos(Math.PI / 6))) + Config.HEX_SIZE;
 

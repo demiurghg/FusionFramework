@@ -41,7 +41,7 @@ namespace Fusion.Graphics.Display {
 		/// <param name="parameters"></param>
 		public StereoDualHeadDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
 		{
-			var featureLevel	=	HardwareProfileChecker.GetFeatureLevel( parameters.HardwareProfile ); 
+			var featureLevel	=	HardwareProfileChecker.GetFeatureLevel( parameters.GraphicsProfile ); 
 
 			Adapter	adapter;
 			Output leftOut, rightOut;

@@ -106,7 +106,7 @@ namespace Fusion {
 		[Category("Graphics")]
 		[Description("Hardware profile (Reach, HiDef)\r\n/hardware:<value>")]
 		[CmdLineParser.Name("hardware")]
-		public HardwareProfile	HardwareProfile		{ get; set; }
+		public GraphicsProfile	GraphicsProfile		{ get; set; }
 
 
 

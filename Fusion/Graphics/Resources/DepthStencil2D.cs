@@ -52,10 +52,10 @@ namespace Fusion.Graphics {
 			var bindFlags	=	BindFlags.DepthStencil;
 
 			
-			if (device.HardwareProfile==HardwareProfile.HiDef) {
+			if (device.GraphicsProfile==GraphicsProfile.HiDef) {
 				bindFlags	|=	BindFlags.ShaderResource;
 
-			} else if (device.HardwareProfile==HardwareProfile.Reach) {
+			} else if (device.GraphicsProfile==GraphicsProfile.Reach) {
 				if (samples==1) {
 					bindFlags	|=	BindFlags.ShaderResource;
 				}

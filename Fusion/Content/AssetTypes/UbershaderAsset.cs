@@ -26,7 +26,7 @@ namespace Fusion.Content {
 
 		[Category("Shader Compiler Parameters")]
 		[Description("Hardware profile")]
-		public HardwareProfile	HardwareProfile { get; set; }
+		public GraphicsProfile	GraphicsProfile { get; set; }
 			
 		[Category("Shader Compiler Parameters")]
 		[Description("/Od - disable optimizations")]
@@ -80,7 +80,7 @@ namespace Fusion.Content {
 
 		public UbershaderAsset ()
 		{
-			HardwareProfile	=	HardwareProfile.HiDef;
+			GraphicsProfile	=	GraphicsProfile.HiDef;
 			MatrixPacking	=	ShaderMatrixPacking.RowMajor;
 			PSEntryPoint	=	"PSMain";
 			VSEntryPoint	=	"VSMain";
@@ -263,7 +263,7 @@ namespace Fusion.Content {
 			string output			=	binPath;
 			string listing			=	listingPath;
 			string listingHex		=	Path.ChangeExtension(binPath, ".hex");
-			string shaderVersion	=	HardwareProfileChecker.GetShaderVersion( asset.HardwareProfile );
+			string shaderVersion	=	HardwareProfileChecker.GetShaderVersion( asset.GraphicsProfile );
 			//string listing	=	Path.ChangeExtension( item.ResolvedPath, ".html" );
 
 			TargetToProfile ( target, asset, shaderVersion, out profile, out entryPoint, out systemDefine );

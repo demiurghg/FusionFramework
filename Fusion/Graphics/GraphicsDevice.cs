@@ -24,7 +24,7 @@ namespace Fusion.Graphics {
 
 	public partial class GraphicsDevice : DisposableBase {
 
-		public HardwareProfile		HardwareProfile		{ get; private set; }
+		public GraphicsProfile		GraphicsProfile		{ get; private set; }
 
 		public readonly Game		Game;
 		public Rectangle			DisplayBounds	{ get { return new Rectangle(0,0, display.Bounds.Width, display.Bounds.Height); } }
@@ -90,7 +90,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		internal void Initialize ( GameParameters parameters )
 		{
-			this.HardwareProfile	=	parameters.HardwareProfile;
+			this.GraphicsProfile	=	parameters.GraphicsProfile;
 
 			try {
 				if (parameters.StereoMode==StereoMode.Disabled) 	display	=	new GenericDisplay( Game, this, parameters ); else

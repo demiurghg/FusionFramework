@@ -17,7 +17,7 @@
     <AssetPath>debugRender.hlsl</AssetPath>
     <BuildOrder>0</BuildOrder>
     <IgnoreToolChanges>false</IgnoreToolChanges>
-    <HardwareProfile>HiDef</HardwareProfile>
+    <GraphicsProfile>HiDef</GraphicsProfile>
     <DisableOptimization>false</DisableOptimization>
     <OptimizationLevel>1</OptimizationLevel>
     <AvoidFlowControl>false</AvoidFlowControl>
@@ -37,7 +37,7 @@
     <AssetPath>spriteBatch.hlsl</AssetPath>
     <BuildOrder>0</BuildOrder>
     <IgnoreToolChanges>false</IgnoreToolChanges>
-    <HardwareProfile>HiDef</HardwareProfile>
+    <GraphicsProfile>HiDef</GraphicsProfile>
     <DisableOptimization>false</DisableOptimization>
     <OptimizationLevel>1</OptimizationLevel>
     <AvoidFlowControl>false</AvoidFlowControl>
@@ -57,7 +57,7 @@
     <AssetPath>test.hlsl</AssetPath>
     <BuildOrder>0</BuildOrder>
     <IgnoreToolChanges>false</IgnoreToolChanges>
-    <HardwareProfile>HiDef</HardwareProfile>
+    <GraphicsProfile>HiDef</GraphicsProfile>
     <DisableOptimization>false</DisableOptimization>
     <OptimizationLevel>1</OptimizationLevel>
     <AvoidFlowControl>false</AvoidFlowControl>
@@ -77,7 +77,7 @@
     <AssetPath>stereo.hlsl</AssetPath>
     <BuildOrder>0</BuildOrder>
     <IgnoreToolChanges>false</IgnoreToolChanges>
-    <HardwareProfile>HiDef</HardwareProfile>
+    <GraphicsProfile>HiDef</GraphicsProfile>
     <DisableOptimization>false</DisableOptimization>
     <OptimizationLevel>1</OptimizationLevel>
     <AvoidFlowControl>false</AvoidFlowControl>
