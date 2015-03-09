@@ -52,12 +52,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Fusion">
-      <HintPath>$(FUSION_BIN)\Fusion.dll</HintPath>
-    </Reference>
-    <Reference Include="BEPUphysics">
-      <HintPath>$(FUSION_BIN)\BEPUphysics.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -96,7 +90,6 @@
     <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Aim.cs" />
     <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Check.cs" />
     <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Circle.cs" />
-    <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\CustomMarker.cs" />
     <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Flag.cs" />
     <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\Marker.cs" />
     <Compile Include="SubmarinesGameLibrary\GameEntity\Markers\XMark.cs" />
@@ -141,6 +134,7 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(FUSION_BUILD)\FusionProject.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

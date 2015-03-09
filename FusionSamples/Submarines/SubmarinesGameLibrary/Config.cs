@@ -41,12 +41,12 @@ namespace SubmarinesWars.SubmarinesGameLibrary
             }
         }
 
-        static int submarinesInTeam = 5;
+        static int submarinesInTeam = 3;
         internal static int SUBMARINES_IN_TEAM { get { return submarinesInTeam; } set { if ((value >= 1) && (value <= 5)) submarinesInTeam = value; } }
 
-        static int torpedoCount = 15;
+        static int torpedoCount = 50;
         internal static int TORPEDO_COUNT { get { return torpedoCount; } set { if (value >= 1) torpedoCount = value; } }
-        static int minesCount = 15;
+        static int minesCount = 50;
         internal static int MINES_COUNT { get { return minesCount; } set { if (value >= 1) minesCount = value; } }
 
         static double maxNoise = 1600;

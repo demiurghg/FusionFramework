@@ -68,10 +68,8 @@ namespace SubmarinesWars.SubmarinesGameLibrary.Field
 
         internal void createLandscape()
         {
-            //Console.WriteLine(Config.SEED);
+            Console.WriteLine(Config.SEED);
             PerlinNoiseGenerator.Seed = Config.SEED == 0 ? new Random().Next(Int32.MaxValue) : Config.SEED;
-            //Console.WriteLine(PerlinNoiseGenerator.Seed);
-            //Console.WriteLine(Int32.MaxValue);
             for (int i = 0; i < _height; i++)
                 for (int j = 0; j < _width; j++)
                 {
@@ -117,16 +115,14 @@ namespace SubmarinesWars.SubmarinesGameLibrary.Field
         //                }
         //}
 
-        Random rndS = new Random();
-
         Boolean checkField()
         {
             int k = Int16.MaxValue;
             int[,] was = null;
-            
             while (k > (_height * _width / 10))
             {
                 k = 0;
+                Random rndS = new Random();
                 Cell start = field[rndS.Next(_height), rndS.Next(_width)];
                 while (start.Type == CellType.LAND)
                     start = start.Neighbours[rndS.Next(start.Neighbours.Count)];

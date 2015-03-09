@@ -32,7 +32,7 @@ namespace SubmarinesWars.SubmarinesGameLibrary.Field
         public static double Noise(int x, int y)
         {
             //returns -1 to 1
-            //Console.WriteLine(PerlinNoiseGenerator.Seed);
+            Console.WriteLine(PerlinNoiseGenerator.Seed);
             double total = 0.0;
             double freq = PerlinNoiseGenerator.Frequency, amp = PerlinNoiseGenerator.Amplitude;
             for (int i = 0; i < PerlinNoiseGenerator.Octaves; ++i)

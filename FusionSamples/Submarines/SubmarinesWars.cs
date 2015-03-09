@@ -35,6 +35,7 @@ namespace SubmarinesWars
 //				Parameters.UseDebugDevice	=	true;
 #endif
 
+				Parameters.GraphicsProfile = GraphicsProfile.Reach;
                 Parameters.Width = Config.FIELD_WIDTH * Config.HEX_SIZE + Config.HEX_SIZE / 2;
                 Parameters.Height = (int)(Config.FIELD_HEIGHT * Config.HEX_SIZE * (float)Math.Cos(Math.PI / 6)) + (int)(Config.HEX_SIZE * (1 - (float)Math.Cos(Math.PI / 6))) + Config.HEX_SIZE;
 
@@ -152,28 +153,6 @@ namespace SubmarinesWars
                                 Log.Message("Game will be started with defualt value: " + GetService<ConfigService>().cfg.SEED);
                             }
                             break;
-                        case "height":
-                            try
-                            {
-                                GetService<ConfigService>().cfg.FIELD_HEIGHT = Int32.Parse(command[1]);
-                            }
-                            catch (Exception e)
-                            {
-                                Log.Message("\"" + s + "\" - ERROR: " + e.Message);
-                                Log.Message("Game will be started with defualt value: " + GetService<ConfigService>().cfg.FIELD_HEIGHT);
-                            }
-                            break;
-                        case "width":
-                            try
-                            {
-                                GetService<ConfigService>().cfg.FIELD_WIDTH = Int32.Parse(command[1]);
-                            }
-                            catch (Exception e)
-                            {
-                                Log.Message("\"" + s + "\" - ERROR: " + e.Message);
-                                Log.Message("Game will be started with defualt value: " + GetService<ConfigService>().cfg.FIELD_WIDTH);
-                            }
-                            break;
                         case "teamrdll":
                             GetService<LogicService>().cfg.AI_Dll_TeamR = command[1].Replace(" ", "");
                             break;
@@ -194,8 +173,6 @@ namespace SubmarinesWars
                     //s = sr.ReadLine();
                 }
             }
-
-            GraphicsDevice_ViewportChanged(null, null);
 
             //	initialize services :
             base.Initialize();
@@ -264,7 +241,6 @@ namespace SubmarinesWars
         /// <param name="e"></param>
         void FusionGame_Exiting(object sender, EventArgs e)
         {
-            SubmarinesGameLibrary.GameEntity.Markers.CustomMarker.Dispose();
             SaveConfiguration();
         }
 
@@ -279,11 +255,11 @@ namespace SubmarinesWars
             var ds = GetService<DebugStrings>();
 
             ds.Add(Color.Orange, "FPS {0}", gameTime.Fps);
+            ds.Add("F1   - show developer console");
+            ds.Add("F5   - build content and reload textures");
             ds.Add("F12  - make screenshot");
             ds.Add("Speed " + Config.SPEED);
             ds.Add("Step number " + LogicService.stepCount);
-            ds.Add("Pause " + (GetService<LogicService>().IsPaused == true ? "on" : "off"));
-            ds.Add("Step by step mode " + (GetService<LogicService>().IsStepByStep == true ? "on" : "off"));
             ds.Add("ESC  - exit");
 
             base.Update(gameTime);

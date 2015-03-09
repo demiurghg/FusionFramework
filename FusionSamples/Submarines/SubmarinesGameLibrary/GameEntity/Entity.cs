@@ -86,7 +86,6 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
             if (order == _order)
                 Draw(sb, ds, stereoEye);
         }
-        internal override void Delay(double delay) { }
         internal override void GlobalUpdate() { }
     }
 }

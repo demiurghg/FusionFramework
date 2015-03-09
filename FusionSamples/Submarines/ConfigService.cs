@@ -18,12 +18,6 @@ namespace SubmarinesWars
             [Description("Min 4\nMax 60")]
             public int HEX_SIZE { get { return Config.HEX_SIZE; } set { if (Game.Instance.GetService<ConfigService>().acceptably) Config.HEX_SIZE = value; } }
 
-            [Description("Min 16\nMax 128")]
-            public int FIELD_HEIGHT { get { return Config.FIELD_HEIGHT; } set { if (Game.Instance.GetService<ConfigService>().acceptably) Config.FIELD_HEIGHT = value; } }
-
-            [Description("Min 16\nMax 128")]
-            public int FIELD_WIDTH { get { return Config.FIELD_WIDTH; } set { if (Game.Instance.GetService<ConfigService>().acceptably) Config.FIELD_WIDTH = value; } }
-
             [Description("Min 1")]
             public int SUBMARINES_IN_TEAM { get { return Config.SUBMARINES_IN_TEAM; } set { if (Game.Instance.GetService<ConfigService>().acceptably) Config.SUBMARINES_IN_TEAM = value; } }
 

@@ -15,12 +15,9 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
     {
         Cell to;
         float _speed;
-        
-        static int k = 0;
 
         public Move(Entity sub, Cell to, ActionsQueue queue, float speed, double noise) 
         {
-            k++;
             Entity = sub;
             this.to = to;
             ActionsQueue = queue;
@@ -37,18 +34,13 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
         {
             _speed = Config.SPEED;
 
-            
-
-            //Stopwatch timer = new Stopwatch();
-            //timer.Start();
+            Stopwatch timer = new Stopwatch();
+            timer.Start();
             if (First)
             {
                 StartTime = gameTime.Total.TotalSeconds;
                 First = false;
             }
-
-            //Console.WriteLine(k + " - " + StartTime + " - " + gameTime.Total.TotalSeconds);
-
             float factor = (gameTime.Total.TotalSeconds - StartTime) < 1.0f / _speed ? (float)(gameTime.Total.TotalSeconds - StartTime) * _speed / 1.0f : 1.0f;
             Entity.X = lerp(Entity.Cell.X - Config.OffsetX, to.X - Config.OffsetX, factor);
             Entity.Y = lerp(Entity.Cell.Y - Config.OffsetY, to.Y - Config.OffsetY, factor);
@@ -57,11 +49,11 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
                 ActionsQueue.Field.addNewNoise(Entity.Cell, Noise);
                 ActionsQueue.Field.addNewNoise(to, Noise);
                 Entity.Cell = to;
-                //timer.Stop();
+                timer.Stop();
                 //Console.WriteLine("Move. FrameID: " + gameTime.FrameID + ". Time: " + timer.Elapsed);
                 return true;
             }
-            //timer.Stop();
+            timer.Stop();
             //Console.WriteLine("Move. FrameID: " + gameTime.FrameID + ". Time: " + timer.Elapsed);
             return false;
         }
