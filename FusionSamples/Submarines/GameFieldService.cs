@@ -55,12 +55,12 @@ namespace SubmarinesWars
             Game.InputDevice.KeyDown += InputDevice_KeyDown;
         }
 
+        bool isNoiseMap = false;
+
         void InputDevice_KeyDown(object sender, InputDevice.KeyEventArgs e)
         {
-            //if (e.Key == Keys.R)
-            //    if (Game.Instance.GetService<SubmarinesService>().Enabled == false)
-            //        if (Game.Instance.GetService<SubmarinesService>().Submarines.Count == 0) 
-            //            gameField = new GameField();
+            if (e.Key == Keys.S)
+                isNoiseMap = !isNoiseMap;
         }
 
         public override void Update(GameTime gameTime)
@@ -88,55 +88,66 @@ namespace SubmarinesWars
             var sb = Game.GetService<SpriteBatch>();
             sb.Begin();
 
-			sb.Draw( background, new Rectangle(0,0,vp.Width,vp.Height), Color.White);
+            
 
-			//sb.Restart( BlendState.Additive );
+            sb.Draw(background, new Rectangle(0, 0, vp.Width, vp.Height), Color.White);
 
-			float dd = 1.4f;
+            //sb.Restart( BlendState.Additive );
 
-            for (int i = 0; i < Config.FIELD_HEIGHT; i++) {
-                for (int j = 0; j < Config.FIELD_WIDTH; j++)
+            float dd = 1.4f;
+            if (!isNoiseMap)
+            {
+                for (int i = 0; i < Config.FIELD_HEIGHT; i++)
                 {
-                    if (gameField.Field[i, j].Type == CellType.LAND)
-                        sb.Draw(cellLand, gameField.Field[i, j].X - dd - offsetScale, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, ColorLand);
-                    if (gameField.Field[i, j].Type == CellType.SHALLOW)
-                        sb.Draw(cellShallow, gameField.Field[i, j].X - dd, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, ColorShallow);
-                    if (gameField.Field[i, j].Type == CellType.DEEP)
+                    for (int j = 0; j < Config.FIELD_WIDTH; j++)
                     {
-                        //if (stereoEye != StereoEye.Mono)
-                        //    offsetScale -= gameField.Field[i, j].Depth * 0.75f;
-                        sb.Draw(cellDeep, gameField.Field[i, j].X - dd + offsetScale, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, ColorDeep);
+                        if (gameField.Field[i, j].Type == CellType.LAND)
+                            sb.Draw(cellLand, gameField.Field[i, j].X - dd - offsetScale, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, ColorLand);
+                        if (gameField.Field[i, j].Type == CellType.SHALLOW)
+                            sb.Draw(cellShallow, gameField.Field[i, j].X - dd, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, ColorShallow);
+                        if (gameField.Field[i, j].Type == CellType.DEEP)
+                        {
+                            //if (stereoEye != StereoEye.Mono)
+                            //    offsetScale -= gameField.Field[i, j].Depth * 0.75f;
+                            sb.Draw(cellDeep, gameField.Field[i, j].X - dd + offsetScale, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, ColorDeep);
+                        }
                     }
                 }
-			}
+            }
+            else
+            {
 
+                //double noiseMax = -9999990;
+                //double noiseMin = 999999;
 
-			//double noiseMax = -9999990;
-			//double noiseMin = 999999;
+                //sb.Restart( BlendState.Screen );
+                //if (Game.InputDevice.IsKeyDown(Keys.S))
+                //{
 
-			//sb.Restart( BlendState.Screen );
-			if (Game.InputDevice.IsKeyDown(Keys.S)) {
-
-				for (int i = 0; i < Config.FIELD_HEIGHT; i++) {
-					for (int j = 0; j < Config.FIELD_WIDTH; j++) {
-						if (gameField.Field[i, j].Type != CellType.LAND)
-						{
-							float depth = 1;
-							if (gameField.Field[i, j].Type==CellType.DEEP) {
-								depth = 0.9f;
-							}
-							float noise	=	MathUtil.Clamp( (float)gameField.Field[i, j].Noise, 0, (float)Config.MAX_NOISE) / (float)Config.MAX_NOISE;
-							//noise = (float)(Math.Pow(noise, 0.5));
-							//noise = (float)(Math.Round(noise * 16)/16.0f);
-							//var color	=	Hsv2Rgb.HsvToRgb( 240 - noise * 240, 1, 0.5f + noise/2, ((noise < 0.01) ? (byte)0 : (byte)255) );
-							var color	=	Hsv2Rgb.HsvToRgb( 240 - noise * 240, 1, depth*(0.5f + noise/2), 255 );
-                            sb.Draw(cellNoise, gameField.Field[i, j].X - dd + offsetScale, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, color);
-                        } else
-                            sb.Draw(cellNoise, gameField.Field[i, j].X - dd - offsetScale, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, Color.Black);
-					}
-				}
-			}
-
+                    for (int i = 0; i < Config.FIELD_HEIGHT; i++)
+                    {
+                        for (int j = 0; j < Config.FIELD_WIDTH; j++)
+                        {
+                            if (gameField.Field[i, j].Type != CellType.LAND)
+                            {
+                                float depth = 1;
+                                if (gameField.Field[i, j].Type == CellType.DEEP)
+                                {
+                                    depth = 0.9f;
+                                }
+                                float noise = MathUtil.Clamp((float)gameField.Field[i, j].Noise, 0, (float)Config.MAX_NOISE) / (float)Config.MAX_NOISE;
+                                //noise = (float)(Math.Pow(noise, 0.5));
+                                //noise = (float)(Math.Round(noise * 16)/16.0f);
+                                //var color	=	Hsv2Rgb.HsvToRgb( 240 - noise * 240, 1, 0.5f + noise/2, ((noise < 0.01) ? (byte)0 : (byte)255) );
+                                var color = Hsv2Rgb.HsvToRgb(240 - noise * 240, 1, depth * (0.5f + noise / 2), 255);
+                                sb.Draw(cellNoise, gameField.Field[i, j].X - dd + offsetScale, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, color);
+                            }
+                            else
+                                sb.Draw(cellNoise, gameField.Field[i, j].X - dd - offsetScale, gameField.Field[i, j].Y - dd, Config.HEX_SIZE + dd * 2, Config.HEX_SIZE + dd * 2, Color.Black);
+                        }
+                    }
+                //}
+            }
 			/*
             else
             {

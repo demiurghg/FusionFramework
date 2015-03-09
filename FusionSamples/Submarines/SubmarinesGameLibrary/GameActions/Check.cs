@@ -49,9 +49,17 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
                     {
                         if (to == submarine.Cell)
                         {
-                            actionList.Add(new Accident(sub, queue));
-                            actionList.Add(new Accident(submarine, queue));
+                            actionList.Add(new Accident(sub, submarine, queue));
+                            actionList.Add(new Accident(submarine, sub, queue));
                             actionList.Add(new Move(sub, from, queue, speed, noise));
+                            foreach (Mine mine in mines)
+                            {
+                                if (from == mine.Cell)
+                                {
+                                    actionList.Add(new Bang(mine, queue));
+                                    actionList.Add(new MineDamage(sub, queue));
+                                }
+                            }
                             //timer.Stop();
                             //Console.WriteLine("Check. FrameID: " + gameTime.FrameID + ". Time: " + timer.Elapsed);
                             return false;

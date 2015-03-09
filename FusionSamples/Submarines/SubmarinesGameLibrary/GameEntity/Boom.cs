@@ -24,9 +24,21 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
             Order = 6;
         }
 
+        internal override void Delay(double delay)
+        {
+            startedTime += delay;
+        }
+
+        internal override void GlobalUpdate()
+        {
+            if (ToRemove)
+                parent.Remove(this);
+
+        }
+
         internal override void Update(GameTime gameTime)
         {
-            if (gameTime.Total.TotalSeconds - startedTime > 1.0f/Config.SPEED) parent.Remove(this);
+            if (gameTime.Total.TotalSeconds - startedTime > 1.0f / Config.SPEED) ToRemove = true;
         }
 
         internal override void Draw(Fusion.Graphics.SpriteBatch sb, Fusion.Graphics.DebugStrings ds, StereoEye stereoEye)

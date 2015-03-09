@@ -132,8 +132,12 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
 
             foreach (VisibleObject obj in copy.Collection)
                 obj.GlobalUpdate();
+        }
 
-            detectNoise();
+        internal override void Delay(double delay)
+        {
+            foreach (VisibleObject obj in Collection)
+                obj.Delay(delay);
         }
     }
 }
