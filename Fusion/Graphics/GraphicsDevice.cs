@@ -355,6 +355,59 @@ namespace Fusion.Graphics {
 
 
 
+		public class PipelineState {
+			public BlendState			BlendState;
+			public RasterizerState		RasterizerState;
+			public DepthStencilState	DepthStencilState;
+			public SamplerState[]		SamplerStates;
+			
+			public VertexInputLayout	VertexInputLayout;
+			public VertexOutputLayout	VertexOutputLayout;
+
+			public PixelShader			PixelShader		;
+			public VertexShader			VertexShader	;
+			public GeometryShader		GeometryShader	;
+			public HullShader			HullShader		;
+			public DomainShader			DomainShader	;
+			public ComputeShader		ComputeShader	;
+		}
+
+
+		//public void SetConstantBuffers ( ... );
+
+
+		public class ResourceTable {
+			public	ConstantBuffer[]	ConstantBuffer;
+			public	ShaderResource[]	ShaderResources;
+			public	VertexBuffer[]		VertexBuffers;
+			public	int[]				VertexOffsets;
+			public	IndexBuffer			IndexBuffer;
+		}
+
+
+		public class PassDescription {
+			public 	Viewport				Viewport;
+			public	RenderTargetSurface[]	RenderTargets;
+			public	DepthStencilSurface		DepthStencil;
+			public	VertexBuffer[]			VertexOutputTargets;
+			public	int[]					VertexOutputOffsets;
+			public	StructuredBuffer[]		ReadWriteBuffers;
+		}
+
+
+		public void BeginPass ( PassDescription passDesc )
+		{
+		}
+
+
+
+		public void	EndPass ()
+		{
+		}
+		
+
+
+
 		/// <summary>
 		/// Setups vertex input 
 		/// </summary>
