@@ -164,7 +164,10 @@ namespace SceneDemo {
 		{
 			var ds	=	GetService<DebugStrings>();
 
-			ds.Add( Color.Orange, "FPS {0}", gameTime.Fps );
+			GameTime.AveragingFrameCount = 200;
+
+			ds.Add( Color.Orange, "FPS {0}", gameTime.AverageFrameRate );
+			ds.Add( Color.Orange, "FT  {0}", gameTime.AverageFrameTime );
 			ds.Add( "F1   - show developer console" );
 			ds.Add( "F2   - toggle vsync" );
 			ds.Add( "F5   - build content and reload textures" );
@@ -203,7 +206,7 @@ namespace SceneDemo {
 			scene.CopyAbsoluteTransformsTo( worldMatricies );
 
 
-			for (int j = 0; j<1; j++) {
+			for (int j = 0; j<30; j++) {
 				for ( int i=0; i<scene.Nodes.Count; i++ ) {
 
 					var node = scene.Nodes[i];

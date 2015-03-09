@@ -46,7 +46,8 @@ namespace Fusion.Graphics.Display {
 				Log.Debug(nvex.Message);
 			}
 
-			var deviceFlags			=	DeviceCreationFlags.None;
+			//var deviceFlags			=	DeviceCreationFlags.SingleThreaded;
+			var deviceFlags			=	DeviceCreationFlags.SingleThreaded;
 				deviceFlags			|=	parameters.UseDebugDevice ? DeviceCreationFlags.Debug : DeviceCreationFlags.None;
 
 			var driverType			=	DriverType.Hardware;
@@ -67,6 +68,16 @@ namespace Fusion.Graphics.Display {
 
 
 			D3D.Device.CreateWithSwapChain( driverType, deviceFlags, new[]{ featureLevel }, swapChainDesc, out d3dDevice, out swapChain );
+
+			//Log.Message("   compute shaders : {0}", d3dDevice.CheckFeatureSupport(Feature.ComputeShaders) );
+			//Log.Message("   shader doubles  : {0}", d3dDevice.CheckFeatureSupport(Feature.ShaderDoubles) );
+			//Log.Message("   threading       : {0}", d3dDevice.CheckFeatureSupport(Feature.Threading) );
+			bool driverConcurrentCreates;
+			bool driverCommandLists;
+			d3dDevice.CheckThreadingSupport( out driverConcurrentCreates, out driverCommandLists );
+			d3dDevice.GetCounterCapabilities();
+			Log.Message("   Concurrent Creates : {0}", driverConcurrentCreates );
+			Log.Message("   Command Lists      : {0}", driverCommandLists );
 
 
 			var factory		=	swapChain.GetParent<Factory>();

@@ -9,6 +9,11 @@ using Fusion.Mathematics;
 namespace Fusion {
 
 	public class GameTime {
+		
+		/// <summary>
+		/// Averaging frame count.
+		/// </summary>
+		public static int	AveragingFrameCount	=	60;
 
 		Stopwatch		stopWatch;
 		TimeSpan		total;
@@ -18,13 +23,45 @@ namespace Fusion {
 		List<TimeSpan>	timeRecord = new List<TimeSpan>();
 		double			average;
 
-		public	TimeSpan	Total		{ get { return total; }	}
-		public	TimeSpan	Elapsed		{ get { return elapsed; } }
-		public	float		ElapsedSec	{ get { return (float)average; } }
-		public	float		Fps			{ get { return 1 / ElapsedSec; } }
+		/// <summary>
+		/// Total game time since game had been started.
+		/// </summary>
+		public	TimeSpan Total { get { return total; }	}
 
-		public	long		FrameID		{ get; private set; }
-		public	int			SubframeID	{ get; private set; }
+		/// <summary>
+		/// Elapsed time since last frame.
+		/// </summary>
+		public	TimeSpan Elapsed { get { return elapsed; } }
+
+		/// <summary>
+		/// Elapsed time in seconds since last frame.
+		/// </summary>
+		public	float ElapsedSec { get { return (float)elapsed.TotalSeconds; } }
+
+		/// <summary>
+		/// Frames per second.
+		/// </summary>
+		public	float Fps { get { return 1 / ElapsedSec; } }
+
+		/// <summary>
+		/// Average frame time (milliseconds) within AveragingFrameCount frames.
+		/// </summary>
+		public	float AverageFrameTime	{ get { return (float)average; } }
+
+		/// <summary>
+		/// Average frame rate (FPS) within AveragingFrameCount frames.
+		/// </summary>
+		public	float AverageFrameRate	{ get { return 1000.0f / (float)average; } }
+
+		/// <summary>
+		/// Frame count since game had been started.
+		/// </summary>
+		public	long FrameID		{ get; private set; }
+
+		/// <summary>
+		/// Subframe index. For stereo rendering Game.Draw and GameService.Draw are called twice for each eye.
+		/// </summary>
+		public	int	SubframeID	{ get; private set; }
 
 
 		
@@ -65,14 +102,18 @@ namespace Fusion {
 			//	median filter :			
 			#if true
 
-				while ( timeRecord.Count>=51 ) {
+				while ( timeRecord.Count>=AveragingFrameCount ) {
 					timeRecord.RemoveAt(0);
 				}
 
+
+				average	=	timeRecord.Average( t => t.TotalMilliseconds );
+
+				/*timeRecord.Average(
 				average	=	timeRecord
 							.OrderBy( t => t.TotalSeconds )
 							.ElementAt( timeRecord.Count/2 )
-							.TotalSeconds;
+							.TotalSeconds;*/
 
 			#else
 
