@@ -164,6 +164,8 @@ namespace SceneDemo {
 		{
 			var ds	=	GetService<DebugStrings>();
 
+			GameTime.AveragingFrameCount = 200;
+
 			ds.Add( Color.Orange, "FPS {0}", gameTime.AverageFrameRate );
 			ds.Add( Color.Orange, "FT  {0}", gameTime.AverageFrameTime );
 			ds.Add( "F1   - show developer console" );
@@ -204,7 +206,7 @@ namespace SceneDemo {
 			scene.CopyAbsoluteTransformsTo( worldMatricies );
 
 
-			for (int j = 0; j<1; j++) {
+			for (int j = 0; j<30; j++) {
 				for ( int i=0; i<scene.Nodes.Count; i++ ) {
 
 					var node = scene.Nodes[i];
