@@ -15,7 +15,7 @@ namespace SubmarinesWars
         {
             
             using (var game = new SubmarinesWars()) {
-                Console.WriteLine(args.Length);
+                //Console.WriteLine(args.Length);
                 if (args.Length != 0)
                     game.Run(args);
                 else

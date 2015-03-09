@@ -14,6 +14,7 @@ using SubmarinesWars.SubmarinesGameLibrary.ArtificialIntelligence;
 using System.Reflection;
 using System.IO;
 using System.Diagnostics;
+using Fusion.Input;
 
 namespace SubmarinesWars
 {
@@ -127,29 +128,6 @@ namespace SubmarinesWars
             }
         }
 
-        //[Command]
-        //public void Start()
-        //{
-        //    if (Game.Instance.GetService<TestService>().Visible == false)
-        //    {
-        //        Log.Message("Create field firstly");
-        //        return;
-        //    }
-        //
-        //    Game.Instance.GetService<TestService>().Enabled = true;
-        //}
-
-        //[Command]
-        //public void Stop()
-        //{
-        //    if (Game.Instance.GetService<SubmarinesService>().Visible == false)
-        //    {
-        //        Log.Message("Create field firstly");
-        //        return;
-        //    }
-        //    Game.Instance.GetService<SubmarinesService>().Enabled = false;
-        //}
-
         EntityCollection GameCollection;
         ActionsQueue queue;
         bool weHaveAWinner;
@@ -163,6 +141,7 @@ namespace SubmarinesWars
         public void reset()
         {
             weHaveAWinner = false;
+            CustomMarker.GraphicsDevice = Game.GraphicsDevice;
             GameCollection = new EntityCollection();
             queue = new ActionsQueue(GameCollection, Game.GetService<GameFieldService>().GameField);
             Team teamR = new Team(0, LoadAI(0), Game.GetService<GameFieldService>().GameField);
@@ -208,12 +187,43 @@ namespace SubmarinesWars
             winner = Game.Content.Load<Texture2D>(@"Textures\winner");
         }
 
+        double gameTime;
+        double pausedTime;
+
+        bool _isPaused = false;
+        internal bool IsPaused { get { return _isPaused; } }
+
+        bool _isStepByStep = false;
+        bool _nextStep = false;
+        internal bool IsStepByStep { get { return _isStepByStep; } }
+
+        void InputDevice_KeyDown(object sender, Fusion.Input.InputDevice.KeyEventArgs e)
+        {
+            if (e.Key == Keys.P)
+            {
+                if (!_isPaused)
+                    pausedTime = gameTime;
+                else
+                    queue.delay(gameTime - pausedTime);
+                _isPaused = !_isPaused;
+            }
+            if (e.Key == Keys.Q)
+            {
+                _isStepByStep = !_isStepByStep;
+            }
+            if (e.Key == Keys.Space)
+            {
+                _nextStep = true;
+            }
+        }
+
         public override void Initialize()
         {
             LoadContent();
             base.Initialize();
             reset();
             Game.Reloading += (s, e) => LoadContent();
+            Game.InputDevice.KeyDown += InputDevice_KeyDown;
         }
 
         internal static int stepCount = 0;
@@ -247,45 +257,74 @@ namespace SubmarinesWars
             sw.Close();
         }
 
-        bool f = false;
+        bool resultsPrinted = false;
+        bool _waitNextStep = true;
+        Random rnd = new Random();
 
         public override void Update(GameTime gameTime)
         {
+            this.gameTime = gameTime.Total.TotalSeconds;
             if (stepCount < Config.MaxStepCount)
             {
-                GameCollection.Update(gameTime);
-                if ((GameCollection.Winner != null) && (!weHaveAWinner))
+                if (!_isPaused)
                 {
-                    weHaveAWinner = true;
-                    printResults();
-                }
-                if (!weHaveAWinner)
-                    if (queue.Size == 0)
+                    GameCollection.Update(gameTime);
+                    if ((GameCollection.Winner != null) && (!weHaveAWinner))
                     {
-                        stepCount++;
-                        Random rnd = new Random();
-                        Game.GetService<GameFieldService>().GameField.coolNoise();
-                        Game.GetService<GameFieldService>().GameField.calculateNoise();
-                        GameCollection.GlobalUpdate();
-                        List<Submarine> list = GameCollection.getSubmarines();
-                        Submarine sub = list[rnd.Next(list.Count)];
-                        ((Team)sub.Parent).AI.NextAction(sub, Game.GetService<GameFieldService>().GameField).execute(sub, queue);
-                        foreach (Marker marker in sub.Team.AI.Markers)
+                        weHaveAWinner = true;
+                        printResults();
+                    }
+                    if (!weHaveAWinner)
+                    {
+                        if (queue.Size == 0)
                         {
-                            marker.Parent = GameCollection;
-                            GameCollection.addToCollection(marker);
+                            if (_isStepByStep)
+                            {
+                                if (_waitNextStep)
+                                    _nextStep = false;
+                            }
+                            else
+                                _nextStep = true;
+
+                            _waitNextStep = false;
+
+                            if (_nextStep)
+                            {
+                                GameCollection.GlobalUpdate();
+                                _waitNextStep = true;
+                                stepCount++;
+                                List<Submarine> list = GameCollection.getSubmarines();
+                                Submarine sub = list[rnd.Next(list.Count)];
+                                AIAction aiAction = sub.Team.AI.NextAction(sub, Game.GetService<GameFieldService>().GameField);
+                                if (aiAction != null)
+                                    aiAction.execute(sub, queue);
+                                foreach (Marker marker in sub.Team.AI.Markers)
+                                    if (marker != null)
+                                    {
+                                        marker.Parent = GameCollection;
+                                        GameCollection.addToCollection(marker);
+                                    }
+                            }
+                        }
+                        else
+                        {
+                            queue.nextAction(gameTime);
+                            if (queue.Size == 0)
+                            {
+                                Game.GetService<GameFieldService>().GameField.coolNoise();
+                                Game.GetService<GameFieldService>().GameField.calculateNoise();
+                            }
                         }
                     }
-                    else
-                        queue.nextAction(gameTime);
+                }
                 base.Update(gameTime);
             }
             else
             {
-                if (!f)
+                if (!resultsPrinted)
                 {
                     printResults();
-                    f = true;
+                    resultsPrinted = true;
                 }
             }
         }

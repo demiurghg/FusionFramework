@@ -17,7 +17,7 @@
     <AssetPath>debugRender.hlsl</AssetPath>
     <BuildOrder>0</BuildOrder>
     <IgnoreToolChanges>false</IgnoreToolChanges>
-    <GraphicsProfile>Reach</GraphicsProfile>
+    <GraphicsProfile>HiDef</GraphicsProfile>
     <DisableOptimization>false</DisableOptimization>
     <OptimizationLevel>1</OptimizationLevel>
     <AvoidFlowControl>false</AvoidFlowControl>
@@ -31,13 +31,13 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>debugRender.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\Submarines\Content\Temp\0EC7C2D14F65EFBA65B361728EE70CD3.html</ListingPath>
+    <ListingPath>C:\Users\Artem\Documents\GitHub\FusionFramework\FusionSamples\Submarines\Content\Temp\0EC7C2D14F65EFBA65B361728EE70CD3.html</ListingPath>
   </Asset>
   <Asset xsi:type="UbershaderAsset">
     <AssetPath>spriteBatch.hlsl</AssetPath>
     <BuildOrder>0</BuildOrder>
     <IgnoreToolChanges>false</IgnoreToolChanges>
-    <GraphicsProfile>Reach</GraphicsProfile>
+    <GraphicsProfile>HiDef</GraphicsProfile>
     <DisableOptimization>false</DisableOptimization>
     <OptimizationLevel>1</OptimizationLevel>
     <AvoidFlowControl>false</AvoidFlowControl>
@@ -51,7 +51,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>spriteBatch.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\Submarines\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
+    <ListingPath>C:\Users\Artem\Documents\GitHub\FusionFramework\FusionSamples\Submarines\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
   </Asset>
   <Asset xsi:type="ImageFileTextureAsset">
     <AssetPath>win.png</AssetPath>
@@ -369,7 +369,7 @@
     <AssetPath>stereo.hlsl</AssetPath>
     <BuildOrder>0</BuildOrder>
     <IgnoreToolChanges>false</IgnoreToolChanges>
-    <GraphicsProfile>Reach</GraphicsProfile>
+    <GraphicsProfile>HiDef</GraphicsProfile>
     <DisableOptimization>false</DisableOptimization>
     <OptimizationLevel>1</OptimizationLevel>
     <AvoidFlowControl>false</AvoidFlowControl>
@@ -383,7 +383,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>stereo.hlsl</SourceFile>
     <ShowPemutations>true</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\Submarines\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
+    <ListingPath>C:\Users\Artem\Documents\GitHub\FusionFramework\FusionSamples\Submarines\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
   </Asset>
   <Asset xsi:type="ImageFileTextureAsset">
     <AssetPath>textures/winner.png</AssetPath>

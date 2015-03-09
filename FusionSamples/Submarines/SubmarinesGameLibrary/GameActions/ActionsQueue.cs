@@ -82,5 +82,13 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
             //if (timer.Elapsed.Ticks > 100) 
             //    Console.WriteLine("Next action " + timer.Elapsed.Ticks);
         }
+
+        public void delay(double delay)
+        {
+            if (_queue.Count != 0)
+            {
+                _queue[0].StartTime += delay;
+            }
+        }
     }
 }

@@ -126,7 +126,8 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
             }
            _ai.DetectNoise(noiseDetected);
         }
-
+        
+        Random rnd = new Random();
         void createBase(Cell initialCell)
         {
             List<Cell> basePoints = new List<Cell>();
@@ -149,7 +150,7 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
                         temp = queue[0];
                     }
             }
-            Random rnd = new Random();
+            
             basePoints.Add(temp);
             for (int i = 0; i < 2; i++)
             {
@@ -195,12 +196,24 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
                 _lose = true;
         }
 
+        internal override void GlobalUpdate()
+        {
+            base.GlobalUpdate();
+            detectNoise();
+        }
+
         internal override void Draw(SpriteBatch sb, DebugStrings ds, int order, StereoEye stereoEye)
         {
             base.Draw(sb, ds, order, stereoEye);
+            
+            int k = 0;
+            if (Config.HEX_SIZE < 24) k = 1;
 
-            int pinY = (int)Field.Field[Config.FIELD_HEIGHT - 1, Config.FIELD_WIDTH - 1].Y + Config.HEX_SIZE * 11 / 8;
-            int pinX = (int)Field.Field[0, 0].X + TeamId * (int)Field.Field[0, (Config.FIELD_WIDTH - 1) / 2].X;
+            int j = 1;
+            if (Config.HEX_SIZE < 24) j = 0;
+
+            int pinY = ((int)Field.Field[Config.FIELD_HEIGHT - 1, Config.FIELD_WIDTH - 1].Y + Config.HEX_SIZE * 11 / 8) + TeamId * k * Config.HEX_SIZE;
+            int pinX = (int)Field.Field[0, 0].X + TeamId * j * (int)Field.Field[0, (Config.FIELD_WIDTH - 1) / 2].X;
             object[] o = new object[Submarines.Count * 4];
             int i = 0;
             String str = "";

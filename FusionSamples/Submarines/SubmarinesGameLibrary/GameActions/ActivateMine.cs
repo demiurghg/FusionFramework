@@ -18,8 +18,11 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
 
         public override bool execute(GameTime gameTime)
         {
-            Mine mine = Entity as Mine;
-            mine.activate();
+            if (Entity != null)
+            {
+                Mine mine = Entity as Mine;
+                mine.activate();
+            }
             return true;
         }
     }
