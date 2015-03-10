@@ -11,6 +11,7 @@ using Fusion.Content;
 using Fusion.Graphics;
 using Fusion.Input;
 using Fusion.Development;
+using System.Threading;
 
 namespace DeferredDemo {
 
@@ -117,12 +118,24 @@ namespace DeferredDemo {
 
 
 
+		Task loadingTask;
+
 		/// <summary>
 		/// 
 		/// </summary>
 		void LoadContent ()
 		{
-			scene =	Game.Content.Load<Scene>(@"Scenes\testScene");
+			var tempSurfaceShader	=	Game.Content.Load<Ubershader>("surface");
+			tempSurfaceShader.Map( typeof(SurfaceFlags) );
+
+			surfaceShader = tempSurfaceShader;
+
+
+			loadingTask = new Task( LoadingTaskFunc	);
+			loadingTask.Start();
+			
+
+			/*scene =	Game.Content.Load<Scene>(@"Scenes\testScene");
 
 			foreach ( var mtrl in scene.Materials ) {
 
@@ -141,7 +154,40 @@ namespace DeferredDemo {
 			scene.Bake( Game.GraphicsDevice, VertexColorTextureTBN.Bake );
 
 			surfaceShader	=	Game.Content.Load<Ubershader>("surface");
-			surfaceShader.Map( typeof(SurfaceFlags) );
+			surfaceShader.Map( typeof(SurfaceFlags) );*/
+		}
+
+
+
+
+		void LoadingTaskFunc ()
+		{	
+			var tempScene =	Game.Content.Load<Scene>(@"Scenes\testScene");
+
+			foreach ( var mtrl in tempScene.Materials ) {
+
+				var surf		=	new SurfaceProperties();
+				surf.Diffuse	=	defaultDiffuse;
+				surf.Specular	=	defaultSpecular;
+				surf.NormalMap	=	defaultNormalMap;
+				surf.Emission	=	defaultEmission;
+				mtrl.Tag		=	surf;
+			}
+
+			tempScene.Bake( Game.GraphicsDevice, VertexColorTextureTBN.Bake );
+			scene	=	tempScene;
+
+
+			foreach ( var mtrl in tempScene.Materials ) {
+
+				var surf	=	mtrl.Tag as SurfaceProperties;
+
+				surf.Diffuse	=	LoadTexture2D( mtrl.TexturePath, ""			, defaultDiffuse );
+
+				surf.Specular	=	LoadTexture2D( mtrl.TexturePath, "_spec"	, defaultSpecular );
+				surf.NormalMap	=	LoadTexture2D( mtrl.TexturePath, "_local"	, defaultNormalMap );
+				surf.Emission	=	LoadTexture2D( mtrl.TexturePath, "_glow"	, defaultEmission );
+			}
 		}
 
 
@@ -189,6 +235,10 @@ namespace DeferredDemo {
 		/// <param name="normalMap"></param>
 		public void RenderGBuffer ( Matrix view, Matrix projection, DepthStencil2D depthBuffer, RenderTarget2D hdrTarget, RenderTarget2D diffuse, RenderTarget2D specular, RenderTarget2D normals )
 		{
+			if (surfaceShader==null) {
+				return;
+			}
+
 			var device			= Game.GraphicsDevice;
 
 			device.ResetStates();
@@ -256,6 +306,10 @@ namespace DeferredDemo {
 		/// <param name="depthBuffer"></param>
 		public void RenderShadowMapCascade ( LightRenderer.ShadowRenderContext shadowRenderCtxt )
 		{
+			if (surfaceShader==null) {
+				return;
+			}
+
 			var device			= Game.GraphicsDevice;
 
 			var cbData			= new CBSurfaceData();

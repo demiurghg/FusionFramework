@@ -47,7 +47,7 @@ namespace Fusion.Graphics.Display {
 			}
 
 			//var deviceFlags			=	DeviceCreationFlags.SingleThreaded;
-			var deviceFlags			=	DeviceCreationFlags.SingleThreaded;
+			var deviceFlags			=	DeviceCreationFlags.None;
 				deviceFlags			|=	parameters.UseDebugDevice ? DeviceCreationFlags.Debug : DeviceCreationFlags.None;
 
 			var driverType			=	DriverType.Hardware;

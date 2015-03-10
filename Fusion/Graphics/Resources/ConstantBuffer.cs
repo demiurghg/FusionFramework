@@ -1,4 +1,4 @@
-﻿#define USE_DYNAMIC_CB
+﻿//#define USE_DYNAMIC_CB
 
 using System;
 using System.Collections.Generic;
@@ -75,21 +75,6 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="data"></param>
-		/// <returns></returns>
-		public static ConstantBuffer Create<T>( GraphicsDevice device, T data ) where T: struct
-		{
-			var buffer = new ConstantBuffer( device, Marshal.SizeOf( data ) );
-			buffer.SetData( data );
-			return buffer;
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
 		/// <param name="sizeInBytes"></param>
 		void Create ( int sizeInBytes )
 		{
@@ -99,7 +84,7 @@ namespace Fusion.Graphics {
 			#if USE_DYNAMIC_CB
 				buffer = new D3D11.Buffer( device.Device, size, ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0 );
 			#else
-				buffer = D3D11.Buffer( device.Device, Marshal.SizeOf(type), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
+				buffer = new D3D11.Buffer( device.Device, size, ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0 );
 			#endif
 		}
 
@@ -130,7 +115,7 @@ namespace Fusion.Graphics {
 				Marshal.StructureToPtr( value, db.DataPointer, false );
 				device.DeviceContext.UnmapSubresource( buffer, 0 );
 			#else
-				device.DeviceContext.UpdateSubresource( ref data, buffer );
+				device.DeviceContext.UpdateSubresource( ref value, buffer );
 			#endif
 		}
 
@@ -147,7 +132,7 @@ namespace Fusion.Graphics {
 				SharpDX.Utilities.Write( db.DataPointer, data, offset, count );
 				device.DeviceContext.UnmapSubresource( buffer, 0 );
 			#else
-				device.DeviceContext.UpdateSubresource( ref data, buffer );
+				device.DeviceContext.UpdateSubresource( data, buffer );
 			#endif
 		}
 

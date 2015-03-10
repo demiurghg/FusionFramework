@@ -143,7 +143,7 @@ namespace InstancingDemo2D {
 
 			vb			=	new VertexBuffer(device,  typeof(Vertex), 6 );
 			layout		=	new VertexInputLayout(device, typeof(Vertex) );
-			cb			=	ConstantBuffer.Create(GraphicsDevice, cbData);
+			cb			=	new ConstantBuffer(GraphicsDevice, typeof(ConstData) );
 			instDataGpu	=	new StructuredBuffer( device, typeof(InstData), InstanceCount, StructuredBufferFlags.None ); 
 			instDataCpu	=	new InstData[ InstanceCount ];
 

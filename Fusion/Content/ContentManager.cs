@@ -218,13 +218,22 @@ namespace Fusion.Content {
 			//	check for content again and add it.
 			//
 			lock (lockObject) {
-				if (!content.ContainsKey( path )) {
+				Item anotherItem;
+
+				//	content item already loaded in another thread.
+				if ( content.TryGetValue( path, out anotherItem ) ) {
+					if (item.Object is IDisposable) {
+						(item.Object as IDisposable).Dispose();
+					}
+
+					return (T)anotherItem.Object;
+
+				} else {
 					content.Add( path, item );
 					toDispose.Add( item.Object );
+					return (T)item.Object;
 				}
 			}
-
-			return (T)item.Object;
 		}
 
 

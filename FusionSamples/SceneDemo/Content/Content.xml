@@ -31,7 +31,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>debugRender.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\SceneDemo\Content\Temp\0EC7C2D14F65EFBA65B361728EE70CD3.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\SceneDemo\Content\Temp\0EC7C2D14F65EFBA65B361728EE70CD3.html</ListingPath>
   </Asset>
   <Asset xsi:type="UbershaderAsset">
     <AssetPath>spriteBatch.hlsl</AssetPath>
@@ -51,7 +51,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>spriteBatch.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\SceneDemo\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\SceneDemo\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
   </Asset>
   <Asset xsi:type="UbershaderAsset">
     <AssetPath>render.hlsl</AssetPath>
@@ -71,7 +71,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>render.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\SceneDemo\Content\Temp\D2FF2A025CD3CFBBE98E238647ED8262.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\SceneDemo\Content\Temp\D2FF2A025CD3CFBBE98E238647ED8262.html</ListingPath>
   </Asset>
   <Asset xsi:type="FbxFileSceneAsset">
     <AssetPath>Scenes/testScene.fbx</AssetPath>
@@ -308,6 +308,6 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>stereo.hlsl</SourceFile>
     <ShowPemutations>true</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\SceneDemo\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\SceneDemo\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
   </Asset>
 </ArrayOfAsset>

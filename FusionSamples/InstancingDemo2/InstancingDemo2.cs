@@ -161,7 +161,7 @@ namespace InstancingDemo2 {
 			vb			=	new VertexBuffer(device,  typeof(Vertex),   6 );
 			layout		=	new VertexInputLayout(device,  typeof(VertexInstance) );
 			vbi			=	new VertexBuffer(device,  typeof(Instance), InstanceCount );
-			cb			=	ConstantBuffer.Create(GraphicsDevice, cbData);
+			cb			=	new ConstantBuffer(GraphicsDevice, typeof(ConstData) );
 
 			instDataCpu	=	new Instance[ InstanceCount ];
 

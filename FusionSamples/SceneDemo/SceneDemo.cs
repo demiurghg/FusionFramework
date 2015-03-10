@@ -164,7 +164,7 @@ namespace SceneDemo {
 		{
 			var ds	=	GetService<DebugStrings>();
 
-			GameTime.AveragingFrameCount = 200;
+			GameTime.AveragingFrameCount = 60;
 
 			ds.Add( Color.Orange, "FPS {0}", gameTime.AverageFrameRate );
 			ds.Add( Color.Orange, "FT  {0}", gameTime.AverageFrameTime );

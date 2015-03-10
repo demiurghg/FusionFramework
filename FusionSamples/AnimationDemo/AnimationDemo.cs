@@ -43,7 +43,6 @@ namespace AnimationDemo {
 			//	enable object tracking :
 			Parameters.TrackObjects = true;
 			Parameters.MsaaLevel = 4;
-			Parameters.StereoMode	=	StereoMode.Interlaced;
 			//Parameters.FullScreen	=	true;
 
 			//	uncomment to enable debug graphics device:
