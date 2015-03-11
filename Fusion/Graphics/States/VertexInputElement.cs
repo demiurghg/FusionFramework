@@ -58,6 +58,7 @@ namespace Fusion.Graphics {
 		public int			InstanceStepRate;
 
 
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -75,6 +76,92 @@ namespace Fusion.Graphics {
 			InputSlot			=	slot;
 			ByteOffset			=	offset;
 			InstanceStepRate	=	instanceStepRate;
+		}
+
+
+
+		/// <summary>
+		/// Converts array of VertexInputElement to array of InputElement.
+		/// </summary>
+		/// <param name="elements"></param>
+		/// <returns></returns>
+		static internal InputElement[] Convert ( VertexInputElement[] elements )
+		{
+			return	elements.Select( e => new InputElement( 
+						e.SemanticName, 
+						e.SemanticIndex, 
+						Converter.Convert( e.Format ), 
+						e.ByteOffset, 
+						e.InputSlot, 
+						e.InstanceStepRate == 0 ? InputClassification.PerVertexData : InputClassification.PerInstanceData,
+						e.InstanceStepRate )
+					).ToArray();
+		}
+
+
+
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="type"></param>
+		/// <returns></returns>
+		public VertexInputElement[] FromStructure ( Type type )
+		{
+			if (!type.IsStruct()) {
+				throw new ArgumentException("Vertex type must be structure. Got: " + type.ToString() );
+			}
+
+			var	elements	= type
+				.GetFields()
+				.Select( fi => FieldToInputElement( type, fi ) )
+				.ToArray();
+
+			return elements;
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="type"></param>
+		/// <param name="fieldInfo"></param>
+		/// <returns></returns>
+		static VertexInputElement FieldToInputElement ( Type type, FieldInfo fieldInfo )
+		{
+			var fieldType	= fieldInfo.FieldType;
+			var attr		= (VertexAttribute)fieldInfo.GetCustomAttributes(true).FirstOrDefault( a => a is VertexAttribute );
+			var name		= attr.Name.ToUpper();
+			var index		= attr.Index;
+			var slot		= attr.InputSlot;
+			var offset		= (short)Marshal.OffsetOf( type, fieldInfo.Name );
+			var rate		= attr.InstanceStepRate;
+
+			if ( attr==null ) {
+				throw new GraphicsException(string.Format("Field {0}.{1} must be declared with [VertexAttribute]", type.Name, fieldInfo.Name));
+			}
+
+			VertexFormat	format;
+
+			if ( fieldType == typeof( Single	) )	format	=	VertexFormat.Float		; else 
+			if ( fieldType == typeof( Vector2	) )	format	=	VertexFormat.Vector2	; else 
+			if ( fieldType == typeof( Vector3	) )	format	=	VertexFormat.Vector3	; else 
+			if ( fieldType == typeof( Vector4	) )	format	=	VertexFormat.Vector4	; else 
+			if ( fieldType == typeof( Color4	) )	format	=	VertexFormat.Color4		; else 
+			if ( fieldType == typeof( Color		) )	format	=	VertexFormat.Color		; else 
+			if ( fieldType == typeof( Byte4		) )	format	=	VertexFormat.Byte4		; else 
+			if ( fieldType == typeof( Half2		) )	format	=	VertexFormat.Half2		; else 
+			if ( fieldType == typeof( Half4		) )	format	=	VertexFormat.Half4		; else 
+			if ( fieldType == typeof( UInt32	) )	format	=	VertexFormat.UInt		; else 
+			if ( fieldType == typeof( Int3		) )	format	=	VertexFormat.SInt3		; else 
+			if ( fieldType == typeof( Int4		) )	format	=	VertexFormat.SInt4		; else 
+			if ( fieldType == typeof( Double	) )	format	=	VertexFormat.UInt2		; else 
+				throw new GraphicsException(string.Format("Vertex element type {0} is not supported by VertexBuffer", type.ToString()));
+
+			return new VertexInputElement( name, index, format, slot, VertexInputElement.AppendAligned, rate );
 		}
 	}
 }

@@ -265,10 +265,10 @@
     <Compile Include="Graphics\Resources\RenderTarget2D.cs" />
     <Compile Include="Graphics\Resources\RenderTargetCube.cs" />
     <Compile Include="Graphics\Resources\VertexBuffer.cs" />
-    <Compile Include="Graphics\States\BlendState.cs" />
-    <Compile Include="Graphics\States\DepthStencilState.cs" />
-    <Compile Include="Graphics\States\RasterizerState.cs" />
-    <Compile Include="Graphics\States\SamplerState.cs" />
+    <Compile Include="Graphics\States\Old\BlendState.cs" />
+    <Compile Include="Graphics\States\Old\DepthStencilState.cs" />
+    <Compile Include="Graphics\States\Old\RasterizerState.cs" />
+    <Compile Include="Graphics\States\Old\SamplerState.cs" />
     <Compile Include="Input\GamepadButtons.cs" />
     <Compile Include="Input\Gamepad.cs" />
     <Compile Include="Input\OculusRiftSensors.cs" />
