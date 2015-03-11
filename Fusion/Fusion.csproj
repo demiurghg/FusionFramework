@@ -214,8 +214,6 @@
     <Compile Include="Graphics\Display\OculusRiftDisplay.cs" />
     <Compile Include="Graphics\Display\StereoDualHeadDisplay.cs" />
     <Compile Include="Graphics\Display\StereoInterlacedDisplay.cs" />
-    <Compile Include="Graphics\Resources\VertexInputElement.cs" />
-    <Compile Include="Graphics\Resources\VertexOutputElement.cs" />
     <Compile Include="Graphics\Resources\VertexOutputLayout.cs" />
     <Compile Include="Graphics\Resources\VertexInputLayout.cs" />
     <Compile Include="Graphics\Scene\AnimMode.cs" />
@@ -224,6 +222,13 @@
     <Compile Include="Graphics\Scene\VertexColorTextureNormal.cs" />
     <Compile Include="Graphics\Scene\SceneLoader.cs" />
     <Compile Include="Graphics\Scene\MeshSubset.cs" />
+    <Compile Include="Graphics\States\BlendDescription.cs" />
+    <Compile Include="Graphics\States\SamplerDescription.cs" />
+    <Compile Include="Graphics\States\DepthStencilDescription.cs" />
+    <Compile Include="Graphics\States\RasterizerDescription.cs" />
+    <Compile Include="Graphics\States\PipelineState.cs" />
+    <Compile Include="Graphics\States\VertexInputElement.cs" />
+    <Compile Include="Graphics\States\VertexOutputElement.cs" />
     <Compile Include="Graphics\UbershaderException.cs" />
     <Compile Include="Graphics\HardwareProfileChecker.cs" />
     <Compile Include="Graphics\Resources\DepthStencil2D.cs" />
