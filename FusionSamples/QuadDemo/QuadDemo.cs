@@ -62,7 +62,7 @@ namespace QuadDemo2D {
 			LoadContent();
 
 			vb		=	new VertexBuffer( device, typeof(Vertex), 6 );
-			cb		=	ConstantBuffer.Create(GraphicsDevice, cbData);
+			cb		=	new ConstantBuffer(GraphicsDevice, typeof(ConstData));
 			layout	=	new VertexInputLayout( device, typeof(Vertex) );
 
 
