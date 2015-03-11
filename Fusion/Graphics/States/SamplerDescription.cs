@@ -22,7 +22,7 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		internal BlendDescription ( PipelineState pipelineState )
+		internal SamplerDescription ( PipelineState pipelineState )
 		{
 			if (pipelineState==null) {
 				throw new ArgumentNullException("pipelineState");
@@ -31,16 +31,16 @@ namespace Fusion.Graphics {
 		}
 
 
-		public Filter			Filter			{ get { return filter		 ; } set { filter		  = value; } }
-		public AddressMode		AddressU		{ get { return addressU		 ; } set { addressU		  = value; } }
-		public AddressMode		AddressV		{ get { return addressV		 ; } set { addressV		  = value; } }
-		public AddressMode		AddressW		{ get { return addressW		 ; } set { addressW		  = value; } }
-		public int				MaxAnisotropy	{ get { return maxAnisotropy ; } set { maxAnisotropy  = value; } }
-		public int				MaxMipLevel		{ get { return maxMipLevel	 ; } set { maxMipLevel	  = value; } }
-		public int				MinMipLevel		{ get { return minMipLevel	 ; } set { minMipLevel	  = value; } }
-		public float			MipMapBias		{ get { return mipMapBias	 ; } set { mipMapBias	  = value; } }
-		public Color4			BorderColor		{ get { return borderColor	 ; } set { borderColor	  = value; } }
-		public ComparisonFunc	ComparisonFunc	{ get { return compareFunc	 ; } set { compareFunc	  = value; } }
+		public Filter			Filter			{ get { return filter		 ; } set { pipelineState.MakeDirty(); filter		  = value; } }
+		public AddressMode		AddressU		{ get { return addressU		 ; } set { pipelineState.MakeDirty(); addressU		  = value; } }
+		public AddressMode		AddressV		{ get { return addressV		 ; } set { pipelineState.MakeDirty(); addressV		  = value; } }
+		public AddressMode		AddressW		{ get { return addressW		 ; } set { pipelineState.MakeDirty(); addressW		  = value; } }
+		public int				MaxAnisotropy	{ get { return maxAnisotropy ; } set { pipelineState.MakeDirty(); maxAnisotropy  = value; } }
+		public int				MaxMipLevel		{ get { return maxMipLevel	 ; } set { pipelineState.MakeDirty(); maxMipLevel	  = value; } }
+		public int				MinMipLevel		{ get { return minMipLevel	 ; } set { pipelineState.MakeDirty(); minMipLevel	  = value; } }
+		public float			MipMapBias		{ get { return mipMapBias	 ; } set { pipelineState.MakeDirty(); mipMapBias	  = value; } }
+		public Color4			BorderColor		{ get { return borderColor	 ; } set { pipelineState.MakeDirty(); borderColor	  = value; } }
+		public ComparisonFunc	ComparisonFunc	{ get { return compareFunc	 ; } set { pipelineState.MakeDirty(); compareFunc	  = value; } }
 
 		Filter		filter			=	Filter.MinMagMipPoint;
 		AddressMode	addressU		=	AddressMode.Wrap;

@@ -22,7 +22,7 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		internal BlendDescription ( PipelineState pipelineState )
+		internal DepthStencilDescription ( PipelineState pipelineState )
 		{
 			if (pipelineState==null) {
 				throw new ArgumentNullException("pipelineState");
@@ -31,25 +31,25 @@ namespace Fusion.Graphics {
 		}
 
 
-		bool			DepthEnabled				{ get { return depthEnabled				; } set { depthEnabled			 = value; } }
-		bool			DepthWriteEnabled			{ get { return depthWriteEnabled		; } set { depthWriteEnabled		 = value; } }
-		ComparisonFunc	DepthComparison				{ get { return depthComparison			; } set { depthComparison		 = value; } }
-		
-		bool			StencilEnabled				{ get { return stencilEnabled			; } set { stencilEnabled		 = value; } }
-		byte			StencilReadMask				{ get { return stencilReadMask			; } set { stencilReadMask		 = value; } }
-		byte			StencilWriteMask			{ get { return stencilWriteMask			; } set { stencilWriteMask		 = value; } }
+		bool			DepthEnabled				{ get { return depthEnabled				; } set { pipelineState.MakeDirty(); depthEnabled			 = value; } }
+		bool			DepthWriteEnabled			{ get { return depthWriteEnabled		; } set { pipelineState.MakeDirty(); depthWriteEnabled		 = value; } }
+		ComparisonFunc	DepthComparison				{ get { return depthComparison			; } set { pipelineState.MakeDirty(); depthComparison		 = value; } }
+																																						
+		bool			StencilEnabled				{ get { return stencilEnabled			; } set { pipelineState.MakeDirty(); stencilEnabled			 = value; } }
+		byte			StencilReadMask				{ get { return stencilReadMask			; } set { pipelineState.MakeDirty(); stencilReadMask		 = value; } }
+		byte			StencilWriteMask			{ get { return stencilWriteMask			; } set { pipelineState.MakeDirty(); stencilWriteMask		 = value; } }
 
-		StencilOp		FrontFaceFailOp				{ get { return frontFailOp				; } set { frontFailOp			 = value; } }
-		StencilOp		FrontFaceDepthFailOp		{ get { return frontDepthFailOp			; } set { frontDepthFailOp		 = value; } }
-		StencilOp		FrontFacePassOp				{ get { return frontPassOp				; } set { frontPassOp			 = value; } }
-		ComparisonFunc	FrontFaceStencilComparison	{ get { return frontStencilComparison	; } set { frontStencilComparison = value; } }
+		StencilOp		FrontFaceFailOp				{ get { return frontFailOp				; } set { pipelineState.MakeDirty(); frontFailOp			 = value; } }
+		StencilOp		FrontFaceDepthFailOp		{ get { return frontDepthFailOp			; } set { pipelineState.MakeDirty(); frontDepthFailOp		 = value; } }
+		StencilOp		FrontFacePassOp				{ get { return frontPassOp				; } set { pipelineState.MakeDirty(); frontPassOp			 = value; } }
+		ComparisonFunc	FrontFaceStencilComparison	{ get { return frontStencilComparison	; } set { pipelineState.MakeDirty(); frontStencilComparison  = value; } }
 		
-		StencilOp		BackFaceFailOp				{ get { return backFailOp				; } set { backFailOp			 = value; } }
-		StencilOp		BackFaceDepthFailOp			{ get { return backDepthFailOp			; } set { backDepthFailOp		 = value; } }
-		StencilOp		BackFacePassOp				{ get { return backPassOp				; } set { backPassOp			 = value; } }
-		ComparisonFunc	BackFaceStencilComparison	{ get { return backStencilComparison	; } set { backStencilComparison	 = value; } }
+		StencilOp		BackFaceFailOp				{ get { return backFailOp				; } set { pipelineState.MakeDirty(); backFailOp				 = value; } }
+		StencilOp		BackFaceDepthFailOp			{ get { return backDepthFailOp			; } set { pipelineState.MakeDirty(); backDepthFailOp		 = value; } }
+		StencilOp		BackFacePassOp				{ get { return backPassOp				; } set { pipelineState.MakeDirty(); backPassOp				 = value; } }
+		ComparisonFunc	BackFaceStencilComparison	{ get { return backStencilComparison	; } set { pipelineState.MakeDirty(); backStencilComparison	 = value; } }
 
-		int				StencilReference			{ get { return stencilReference			; } set { stencilReference = value; } }
+		int				StencilReference			{ get { return stencilReference			; } set { pipelineState.MakeDirty(); stencilReference = value; } }
 
 
 		bool			depthEnabled			=	false;

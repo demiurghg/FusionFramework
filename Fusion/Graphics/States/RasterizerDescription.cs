@@ -22,7 +22,7 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		internal BlendDescription ( PipelineState pipelineState )
+		internal RasterizerDescription ( PipelineState pipelineState )
 		{
 			if (pipelineState==null) {
 				throw new ArgumentNullException("pipelineState");
