@@ -180,6 +180,8 @@ namespace DeferredDemo {
 
 			foreach ( var mtrl in tempScene.Materials ) {
 
+				Thread.Sleep(100);
+
 				var surf	=	mtrl.Tag as SurfaceProperties;
 
 				surf.Diffuse	=	LoadTexture2D( mtrl.TexturePath, ""			, defaultDiffuse );
