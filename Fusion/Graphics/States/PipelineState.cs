@@ -221,6 +221,14 @@ namespace Fusion.Graphics {
 		/// </summary>
 		void SetupShadersAndLayouts ()
 		{
+			if (PixelShader==null) {
+				throw new InvalidOperationException("PipelineState.PixelShader must be set");
+			}
+
+			if (VertexShader==null) {
+				throw new InvalidOperationException("PipelineState.VertexShader must be set");
+			}
+
 			ps	=	new D3DPixelShader( device.Device, PixelShader.Bytecode );
 			vs	=	new D3DVertexShader( device.Device, VertexShader.Bytecode );
 

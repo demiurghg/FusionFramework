@@ -409,6 +409,19 @@ namespace Fusion.Graphics {
 
 		VertexBufferBinding[] inputVertexBufferBinding = new VertexBufferBinding[16];
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="indexBuffer"></param>
+		/// <param name="vertexBuffer"></param>
+		public void SetupVertexInput ( IndexBuffer indexBuffer, VertexBuffer vertexBuffer )
+		{
+			SetupVertexInput( indexBuffer, new[]{ vertexBuffer }, new[]{ 0 } );
+		}
+
+
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -454,6 +467,66 @@ namespace Fusion.Graphics {
 
 			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 			deviceContext.Draw( vertexCount, firstIndex );
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="vertexCount"></param>
+		/// <param name="vertexFirstIndex"></param>
+		public void DrawAuto ( Primitive primitive )
+		{									 
+			ApplyGpuState();
+			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+			deviceContext.DrawAuto();
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="primitive"></param>
+		/// <param name="vertexCountPerInstance"></param>
+		/// <param name="instanceCount"></param>
+		/// <param name="startVertexLocation"></param>
+		/// <param name="startInstanceLocation"></param>
+		public void DrawInstanced ( Primitive primitive, int vertexCountPerInstance, int instanceCount, int startVertexLocation, int startInstanceLocation )
+		{
+			ApplyGpuState();
+			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+			deviceContext.DrawInstanced( vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="indexCount"></param>
+		/// <param name="firstIndex"></param>
+		/// <param name="baseVertexOffset"></param>
+		public void DrawIndexed ( Primitive primitive, int indexCount, int firstIndex, int baseVertexOffset )
+		{
+			ApplyGpuState();
+			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+			deviceContext.DrawIndexed( indexCount, firstIndex,	baseVertexOffset );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="indexCount"></param>
+		/// <param name="firstIndex"></param>
+		/// <param name="baseVertexOffset"></param>
+		public void DrawInstancedIndexed ( Primitive primitive, int indexCountPerInstance, int instanceCount, int startIndexLocation, int baseVertexLocation, int startInstanceLocation )
+		{
+			ApplyGpuState();
+			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+			deviceContext.DrawIndexedInstanced( indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation );
 		}
 
 
@@ -655,66 +728,6 @@ namespace Fusion.Graphics {
 			deviceContext.Dispatch( threadGroupCountX, threadGroupCountY, threadGroupCountZ ); 
 		}
 
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="vertexCount"></param>
-		/// <param name="vertexFirstIndex"></param>
-		public void DrawAuto ( Primitive primitive )
-		{									 
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.DrawAuto();
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="primitive"></param>
-		/// <param name="vertexCountPerInstance"></param>
-		/// <param name="instanceCount"></param>
-		/// <param name="startVertexLocation"></param>
-		/// <param name="startInstanceLocation"></param>
-		public void DrawInstanced ( Primitive primitive, int vertexCountPerInstance, int instanceCount, int startVertexLocation, int startInstanceLocation )
-		{
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.DrawInstanced( vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation );
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="indexCount"></param>
-		/// <param name="firstIndex"></param>
-		/// <param name="baseVertexOffset"></param>
-		public void DrawIndexed ( Primitive primitive, int indexCount, int firstIndex, int baseVertexOffset )
-		{
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.DrawIndexed( indexCount, firstIndex,	baseVertexOffset );
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="indexCount"></param>
-		/// <param name="firstIndex"></param>
-		/// <param name="baseVertexOffset"></param>
-		public void DrawInstancedIndexed ( Primitive primitive, int indexCountPerInstance, int instanceCount, int startIndexLocation, int baseVertexLocation, int startInstanceLocation )
-		{
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.DrawIndexedInstanced( indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation );
-		}
 
 
 		/*-----------------------------------------------------------------------------------------

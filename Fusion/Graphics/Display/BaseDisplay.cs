@@ -33,6 +33,9 @@ namespace Fusion.Graphics.Display {
 		}
 
 
+		Dictionary<Flags, PipelineState> pipelineStates = new Dictionary<Flags,PipelineState>();
+
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -80,8 +83,6 @@ namespace Fusion.Graphics.Display {
 		/// <param name="mode">Ubershader flag</param>
 		protected void MergeStereoBuffers ( RenderTarget2D left, RenderTarget2D right, RenderTarget2D leftResolved, RenderTarget2D rightResolved, RenderTarget2D destination, Flags flag )
 		{
-			#warning MergeStereoBuffers disabled!
-			#if false
 			device.ResetStates();
 
 			device.SetTargets( null, destination );
@@ -95,10 +96,9 @@ namespace Fusion.Graphics.Display {
 				device.Resolve( right, rightResolved );
 			} 
 
-			stereo.SetVertexShader( 0 );
-			stereo.SetPixelShader( (int)flag );
-			device.RasterizerState		=	RasterizerState.CullNone;
-			device.BlendState			=	BlendState.Opaque;
+
+			device.PipelineState		=	
+
 			device.DepthStencilState	=	DepthStencilState.None;
 
 			device.PixelShaderSamplers[0]	=	SamplerState.LinearClamp;
@@ -107,7 +107,6 @@ namespace Fusion.Graphics.Display {
 
 			device.SetupVertexInput( null, null, null );
 			device.Draw( Primitive.TriangleList, 3, 0 );
-			#endif
 		}
 
 

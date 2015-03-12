@@ -82,12 +82,12 @@ namespace Fusion.Content {
 		{
 			GraphicsProfile	=	GraphicsProfile.HiDef;
 			MatrixPacking	=	ShaderMatrixPacking.RowMajor;
-			PSEntryPoint	=	"PSMain";
-			VSEntryPoint	=	"VSMain";
-			GSEntryPoint	=	"GSMain";
-			DSEntryPoint	=	"DSMain";
-			HSEntryPoint	=	"HSMain";
-			CSEntryPoint	=	"CSMain";
+			PSEntryPoint	=	"PixelShader";
+			VSEntryPoint	=	"VertexShader";
+			GSEntryPoint	=	"GeometryShader";
+			DSEntryPoint	=	"DomainShader";
+			HSEntryPoint	=	"HullShader";
+			CSEntryPoint	=	"ComputeShader";
 		}
 
 			

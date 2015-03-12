@@ -240,7 +240,7 @@ namespace SpriteDemo {
 			GraphicsDevice.Clear( rtMS.Surface, Color4.Black );
 			
 
-			sb.Begin(null,null,null,null, Matrix.OrthoRH(256,256,-1,1));
+			sb.Begin(SpriteBlend.AlphaBlend,null,null, Matrix.OrthoRH(256,256,-1,1));
 				sb.DrawSprite( texture, 0,0,256, angle, Color.White );
 			sb.End();
 
@@ -268,19 +268,19 @@ namespace SpriteDemo {
 					sb.Draw( rt, 256+128*2,  0, 128, 128, Color.Blue	);
 				}
 
-			sb.Restart(null, SamplerState.PointClamp);
+			sb.Restart(SpriteBlend.AlphaBlend, SamplerState.PointClamp);
 				sb.DrawSprite( texture, 576,192,128, angle, Color.White );
 
 
-			sb.Restart(null, SamplerState.LinearClamp);
+			sb.Restart(SpriteBlend.AlphaBlend, SamplerState.LinearClamp);
 				sb.DrawSprite( texture, 704,192,128, angle, Color.White );
 
 
-			sb.Restart(null, SamplerState.PointClamp);
+			sb.Restart(SpriteBlend.AlphaBlend, SamplerState.PointClamp);
 				sb.DrawSprite( texture2, 576,192+128,128, angle, Color.White );
 
 
-			sb.Restart(null, SamplerState.LinearClamp);
+			sb.Restart(SpriteBlend.AlphaBlend, SamplerState.LinearClamp);
 				sb.DrawSprite( texture2, 704,192+128,128, angle, Color.White );
 
 
@@ -302,23 +302,23 @@ namespace SpriteDemo {
 				font2.DrawString( sb, string.Format("{1} sprites -> FPS = {0}", gameTime.Fps, numSprites), 64, 256 + h1+h2*4, Color.White );
 
 
-			sb.Restart( BlendState.Additive, null, null, null, null );
+			sb.Restart( SpriteBlend.Additive );
 				sb.Draw( sb.TextureWhite,   256, 128, 128, 128, Color.Gray	);
 				sb.Draw( texture, 256, 128, 128, 128, Color.Gray	);
 
 
-			sb.Restart( BlendState.AlphaBlend, null, null, null, null );
+			sb.Restart( SpriteBlend.AlphaBlend );
 				sb.Draw( sb.TextureWhite, 256+128, 128, 128, 128, new Color(240,225,160,255)	);
 
 
-			sb.Restart( BlendState.NegMultiply, null, null, null, null );
+			sb.Restart( SpriteBlend.NegMultiply );
 				sb.Draw( texture, 256+128, 128, 128, 128, Color.White	);
 
 
-			sb.Restart(null, SamplerState.AnisotropicWrap);
+			sb.Restart(SpriteBlend.AlphaBlend, SamplerState.AnisotropicWrap);
 				sb.DrawBeam( texture2, new Vector2(350,540), new Vector2(750,415), Color.Yellow, Color.LightYellow, 80, 5.5f, offset );
 
-			sb.Restart(BlendState.AlphaBlend, SamplerState.PointClamp);
+			sb.Restart(SpriteBlend.AlphaBlend, SamplerState.PointClamp);
 				sb.Draw( dynamicTexture, 0,0,256,256,new Color(255,255,255,64) );
 
 				sb.Draw( sb.TextureBlack,	0,0,8,8, Color.White);

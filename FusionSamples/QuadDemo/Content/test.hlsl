@@ -18,6 +18,8 @@ struct PS_IN {
 	float2 tc  : TEXCOORD;
 };
 
+#ubershader +USE_VERTEX_COLOR +USE_TEXTURE
+
 
 #if 0
 $pixel +USE_VERTEX_COLOR +USE_TEXTURE

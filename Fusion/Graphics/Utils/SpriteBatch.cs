@@ -74,9 +74,8 @@ namespace Fusion.Graphics {
 		SpriteVertex[]	vertices		=	new	SpriteVertex[MaxVertices];
 		List<Batch>		batches			=	new	List<Batch>();
 
-		BlendState			blendState;
+		PipelineState		pipelineState;
 		SamplerState		samplerState;
-		RasterizerState		rasterizerState;
 		DepthStencilState	depthStencilState;
 		Texture2D			fontTexture;
 
@@ -100,6 +99,8 @@ namespace Fusion.Graphics {
 			this.device		=	Game.GraphicsDevice;
 		}
 
+
+		Dictionary<SpriteBlend, PipelineState>	pipelineStates = new Dictionary<SpriteBlend,PipelineState>();
 
 
 		/// <summary>
@@ -153,12 +154,48 @@ namespace Fusion.Graphics {
 
 		void LoadContent ()
 		{
+			fontTexture		=	device.Game.Content.Load<Texture2D>( @"debugFont.tga" );
+
  			shader			=	Game.Content.Load<Ubershader>(@"spriteBatch.hlsl");
 			shader.Map( typeof(DrawFlags) );
 
-			fontTexture		=	device.Game.Content.Load<Texture2D>( @"debugFont.tga" );
+
+			DisposePSO();
+
+			foreach (SpriteBlend blend in Enum.GetValues(typeof(SpriteBlend))) {
+
+				var ps = new PipelineState( Game.GraphicsDevice );
+
+				ps.Rasterizer.SetCullNone();
+
+				if (blend==SpriteBlend.Opaque			) ps.Blending.SetOpaque();
+				if (blend==SpriteBlend.AlphaBlend		) ps.Blending.SetAlphaBlend();
+				if (blend==SpriteBlend.AlphaBlendPreMul	) ps.Blending.SetAlphaBlendPreMul();
+				if (blend==SpriteBlend.Additive			) ps.Blending.SetAdditive();
+				if (blend==SpriteBlend.Screen			) ps.Blending.SetScreen();
+				if (blend==SpriteBlend.Multiply			) ps.Blending.SetMultiply();
+				if (blend==SpriteBlend.NegMultiply		) ps.Blending.SetNegMultiply();
+
+				ps.VertexInputElements	=	VertexInputElement.FromStructure( typeof(SpriteVertex) );
+
+				ps.PixelShader	=	shader.GetPixelShader(0);
+				ps.VertexShader	=	shader.GetVertexShader(0);
+
+				pipelineStates.Add( blend, ps );
+								
+			}
+
 		}
 
+
+
+		void DisposePSO()
+		{
+			foreach (var ps in pipelineStates) {
+				ps.Value.Dispose();
+			}
+			pipelineStates.Clear();
+		}
 
 
 		/// <summary>
@@ -167,6 +204,8 @@ namespace Fusion.Graphics {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
+
+				DisposePSO();
 				
 				TextureWhite	.Dispose();
 				TextureBlack	.Dispose();
@@ -187,18 +226,31 @@ namespace Fusion.Graphics {
 
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="spriteBlend"></param>
+		public void Begin ( SpriteBlend spriteBlend = SpriteBlend.AlphaBlend, SamplerState ss = null, DepthStencilState dss = null, Matrix? transform = null, Rectangle? clip = null )
+		{
+			Begin( pipelineStates[ spriteBlend ], ss, dss, transform, clip );
+		}
+
+
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Begin ( BlendState bs = null, SamplerState ss = null, RasterizerState rs = null, DepthStencilState dss = null, Matrix? transform = null, Rectangle? clip = null )
+		public void Begin ( PipelineState ps, SamplerState ss = null, DepthStencilState dss = null, Matrix? transform = null, Rectangle? clip = null )
 		{
-			blendState			=	bs	?? BlendState.AlphaBlend;
+			if (ps==null) {
+				throw new ArgumentNullException("ps");
+			}
+
+			pipelineState		=	ps;
 			samplerState		=	ss	?? SamplerState.LinearWrap;
-			rasterizerState		=	rs	?? RasterizerState.CullNone;
 			depthStencilState	=	dss	?? DepthStencilState.Readonly;
 
-			int	w	=	device. DisplayBounds.Width;
+			int	w	=	device.DisplayBounds.Width;
 			int h	=	device.DisplayBounds.Height;
 			var ofs	=	0.0f;
 
@@ -218,14 +270,19 @@ namespace Fusion.Graphics {
 				clipRect.W = clip.Value.Height;
 			}
 
-			device.BlendState			=	blendState		;
-			device.RasterizerState		=	rasterizerState	;
-			device.DepthStencilState	=	depthStencilState	;
+			device.PipelineState			=	pipelineState;
+			device.DepthStencilState		=	depthStencilState	;
 			device.PixelShaderSamplers[0]	=	samplerState;
 
 			constData.Transform		=	sbTransform;
 			constData.ClipRectangle	=	clipRect;
 			constBuffer.SetData( constData );
+		}
+
+
+		public void Restart ( SpriteBlend spriteBlend = SpriteBlend.AlphaBlend, SamplerState ss = null, DepthStencilState dss = null, Matrix? transform = null, Rectangle? clip = null )
+		{
+			Restart( pipelineStates[ spriteBlend ], ss, dss, transform, clip );
 		}
 
 
@@ -238,10 +295,10 @@ namespace Fusion.Graphics {
 		/// <param name="dss"></param>
 		/// <param name="transform"></param>
 		/// <param name="clip"></param>
-		public void Restart ( BlendState bs = null, SamplerState ss = null, RasterizerState rs = null, DepthStencilState dss = null, Matrix? transform = null, Rectangle? clip = null )
+		public void Restart ( PipelineState ps, SamplerState ss = null, DepthStencilState dss = null, Matrix? transform = null, Rectangle? clip = null )
 		{
 			End();
-			Begin( bs, ss, rs, dss, transform, clip );
+			Begin( ps, ss, dss, transform, clip );
 		} 
 
 
@@ -283,7 +340,7 @@ namespace Fusion.Graphics {
 
 				device.PixelShaderResources[0]	= batch.texture;
 
-				device.SetupVertexInput( inputLayout, vertexBuffer, indexBuffer );
+				device.SetupVertexInput( indexBuffer, vertexBuffer );
 
 				device.DrawIndexed( Primitive.TriangleList, batch.num, batch.start, 0 );
 			}

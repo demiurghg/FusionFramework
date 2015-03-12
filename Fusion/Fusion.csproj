@@ -140,6 +140,7 @@
     <Compile Include="Content\AssetTypes\BMFontSpriteFontAsset.cs" />
     <Compile Include="Content\AssetTypes\AbstractAsset.cs" />
     <Compile Include="Content\AssetTypes\AbstractAssetLoader.cs" />
+    <Compile Include="Content\AssetTypes\UbershaderEnumerator.cs" />
     <Compile Include="Content\AssetTypes\RawFileAsset.cs" />
     <Compile Include="Content\BuildContext.cs" />
     <Compile Include="Content\ContentLoader.cs" />
@@ -206,6 +207,7 @@
     <Compile Include="Graphics\Collections\ConstantBufferCollection.cs" />
     <Compile Include="Graphics\Collections\SamplerStateCollection.cs" />
     <Compile Include="Graphics\Collections\ShaderResourceCollection.cs" />
+    <Compile Include="Graphics\States\StateFactory.cs" />
     <Compile Include="Graphics\UbershaderLoader.cs" />
     <Compile Include="Graphics\Display\BaseDisplay.cs" />
     <Compile Include="Graphics\Display\GenericDisplay.cs" />
@@ -248,6 +250,7 @@
     <Compile Include="Graphics\Resources\Texture2D.cs" />
     <Compile Include="Graphics\Utils\Camera.cs" />
     <Compile Include="Graphics\Utils\CameraConfig.cs" />
+    <Compile Include="Graphics\Utils\SpriteBlend.cs" />
     <Compile Include="Graphics\Utils\DebugRender.cs" />
     <Compile Include="Graphics\Utils\DebugRenderConfig.cs" />
     <Compile Include="Graphics\Utils\DebugStrings.cs" />
