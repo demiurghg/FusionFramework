@@ -355,6 +355,11 @@
     <Compile Include="Utils\CmdLineParser.cs" />
     <Compile Include="Utils\Serializer.cs" />
     <Compile Include="Mathematics\Temperature.cs" />
+    <Compile Include="Utils\TexturePump.cs" />
+    <Compile Include="Utils\TexturePump.Item.cs" />
+    <Compile Include="Utils\TexturePumpConfig.cs" />
+    <Compile Include="Utils\TexturePumpStatus.cs" />
+    <Compile Include="Utils\WebDownloaderService.cs" />
     <Compile Include="Utils\Wildcard.cs" />
   </ItemGroup>
   <ItemGroup>
