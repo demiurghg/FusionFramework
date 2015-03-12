@@ -121,11 +121,6 @@ namespace ShooterDemo2
 			scene = Content.Load<Scene>(@"Scenes\testScene");
 			sceneCube = Content.Load<Scene>(@"Scenes\cube");
 
-            foreach (var mtrl in scene.Materials)
-            {
-                mtrl.Tag = Content.Load<Texture2D>(mtrl.TexturePath);
-            }
-
 			scene.Bake<VertexColorTextureNormal>(GraphicsDevice, VertexColorTextureNormal.Bake);
 			sceneCube.Bake<VertexColorTextureNormal>(GraphicsDevice, VertexColorTextureNormal.Bake);
 
