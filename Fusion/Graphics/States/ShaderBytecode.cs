@@ -13,9 +13,20 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="bytecode">Bytecode</param>
 		public ShaderBytecode ( byte[] bytecode )
 		{
 			this.bytecode	=	bytecode.ToArray();
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="bytecode">Hex string</param>
+		public ShaderBytecode ( string bytecode )
+		{
+			this.bytecode	=	Misc.HexStringToByte( bytecode );
 		}
 
 

@@ -38,5 +38,39 @@ namespace Fusion.Graphics {
 			MultiSampleMask	=	-1;
 			BlendFactor		=	new Color4(0,0,0,0);
 		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="mask"></param>
+		/// <param name="src"></param>
+		/// <param name="dst"></param>
+		/// <param name="srcA"></param>
+		/// <param name="dstA"></param>
+		public void Set ( ColorChannels mask=ColorChannels.All, Blend src = Blend.One, Blend dst = Blend.Zero, Blend srcA = Blend.One, Blend dstA = Blend.Zero )
+		{
+			SrcColor		=	src;
+			DstColor		=	dst;
+			SrcAlpha		=	srcA;
+			DstAlpha		=	dstA;
+			ColorOp			=	BlendOp.Add;
+			AlphaOp			=	BlendOp.Add;
+			WriteMask		=	mask;
+			MultiSampleMask	=	-1;
+			BlendFactor		=	new Color4(0,0,0,0);
+		}
+
+
+
+		public void SetOpaque			 () { Set( ); }
+		public void SetNoWrite			 () { Set( ColorChannels.None ); }
+		public void SetAlphaBlend		 () { Set( ColorChannels.All, Blend.SrcAlpha,		Blend.InvSrcAlpha	);						  }
+		public void SetAlphaBlendPreMul  () { Set( ColorChannels.All, Blend.One,			Blend.InvSrcAlpha	);						  }
+		public void SetAdditive		 	 () { Set( ColorChannels.All, Blend.One,			Blend.One,			Blend.One, Blend.One );	  }
+		public void SetScreen			 () { Set( ColorChannels.All, Blend.InvDstColor,	Blend.One			);						  }
+		public void SetMultiply		 	 () { Set( ColorChannels.All, Blend.Zero,			Blend.SrcColor		);						  }
+		public void SetNegMultiply		 () { Set( ColorChannels.All, Blend.Zero,			Blend.InvSrcColor	);						  }
 	}
 }

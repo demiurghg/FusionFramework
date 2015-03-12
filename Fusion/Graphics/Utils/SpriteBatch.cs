@@ -271,8 +271,9 @@ namespace Fusion.Graphics {
 
 			vertexBuffer.SetData( vertices, 0, vertexPointer );
 
-			shader.SetPixelShader( 0 );
-			shader.SetVertexShader( 0 );
+			#warning FlushQueue disabled
+			//shader.SetPixelShader( 0 );
+			//shader.SetVertexShader( 0 );
 
 			device.VertexShaderConstants[0]	=	constBuffer ;
 			device.PixelShaderConstants[0]	=	constBuffer ;

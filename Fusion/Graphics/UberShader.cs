@@ -19,25 +19,13 @@ namespace Fusion.Graphics {
 
 		protected readonly GraphicsDevice	device;
 
-
-
-		[ContentLoader(typeof(Ubershader))]
-		public class Loader : ContentLoader {
-
-			public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
-			{
-				return new Ubershader( game.GraphicsDevice, stream );
-			}
-		}
-
-
 		Type			combinerEnum	=	null;
-		Dictionary<int, ComputeShader>	computeShaders	=	new Dictionary<int, ComputeShader>();
-		Dictionary<int, GeometryShader>	geometryShaders	=	new Dictionary<int, GeometryShader>();
-		Dictionary<int, PixelShader>	pixelShaders	=	new Dictionary<int, PixelShader>();
-		Dictionary<int, VertexShader>	vertexShaders	=	new Dictionary<int, VertexShader>();
-		Dictionary<int, HullShader>		hullShaders		=	new Dictionary<int, HullShader>();
-		Dictionary<int, DomainShader>	domainShaders	=	new Dictionary<int, DomainShader>();
+		Dictionary<int, ShaderBytecode>	computeShaders	=	new Dictionary<int, ShaderBytecode>();
+		Dictionary<int, ShaderBytecode>	geometryShaders	=	new Dictionary<int, ShaderBytecode>();
+		Dictionary<int, ShaderBytecode>	pixelShaders	=	new Dictionary<int, ShaderBytecode>();
+		Dictionary<int, ShaderBytecode>	vertexShaders	=	new Dictionary<int, ShaderBytecode>();
+		Dictionary<int, ShaderBytecode>	hullShaders		=	new Dictionary<int, ShaderBytecode>();
+		Dictionary<int, ShaderBytecode>	domainShaders	=	new Dictionary<int, ShaderBytecode>();
 
 
 		class UsdbEntry {
@@ -147,7 +135,6 @@ namespace Fusion.Graphics {
 			//
 			//	Create shaders :	
 			//
-
 			foreach ( var entry in database ) {
 				
 				int combination = 0;
@@ -155,31 +142,31 @@ namespace Fusion.Graphics {
 				if ( GetCombinerSet( enumDict, entry.Defines, out combination ) ) {
 
 					if ( entry.Target=="PixelShader" ) {
-						pixelShaders.Add( combination, device.ShaderFactory.GetPixelShader( entry.Bytecode ) );
+						pixelShaders.Add( combination, new ShaderBytecode( entry.Bytecode ) );
 					} else
 
 					if ( entry.Target=="VertexShader" ) {
-						vertexShaders.Add( combination, device.ShaderFactory.GetVertexShader( entry.Bytecode ) );
+						vertexShaders.Add( combination, new ShaderBytecode( entry.Bytecode ) );
 						//var bc = new ShaderBytecode(entry.Bytecode);
 					} else 
 
 					if ( entry.Target=="GeometryShader" ) {
-						geometryShaders.Add( combination, device.ShaderFactory.GetGeometryShader( entry.Bytecode ) );
+						geometryShaders.Add( combination, new ShaderBytecode( entry.Bytecode ) );
 					} else 
 
 					if ( entry.Target=="ComputeShader" ) {
-						computeShaders.Add( combination, device.ShaderFactory.GetComputeShader( entry.Bytecode ) );
+						computeShaders.Add( combination, new ShaderBytecode( entry.Bytecode ) );
 					} else 
 
 					if ( entry.Target=="DomainShader" ) {
-						domainShaders.Add( combination, device.ShaderFactory.GetDomainShader( entry.Bytecode ) );
+						domainShaders.Add( combination, new ShaderBytecode( entry.Bytecode ) );
 					} else 
 
 					if ( entry.Target=="HullShader" ) {
-						hullShaders.Add( combination, device.ShaderFactory.GetHullShader( entry.Bytecode ) );
+						hullShaders.Add( combination, new ShaderBytecode( entry.Bytecode ) );
 					} else {
 
-						throw new GraphicsException("Bad ubershader target: " + entry.Target);
+						throw new InvalidOperationException("Bad ubershader target: " + entry.Target);
 					}
 
 				}
@@ -271,9 +258,9 @@ namespace Fusion.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="combination"></param>
-		public PixelShader GetPixelShader ( int combination )
+		public ShaderBytecode GetPixelShader ( int combination )
 		{ 
-			PixelShader shader;
+			ShaderBytecode shader;
 
 			if ( !pixelShaders.TryGetValue( combination, out shader ) ) {
 				BadCombination( "pixel shader", combination );
@@ -289,9 +276,9 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="combination"></param>
 		/// <param name="signature"></param>
-		public VertexShader GetVertexShader ( int combination )	
+		public ShaderBytecode GetVertexShader ( int combination )	
 		{ 
-			VertexShader shader;
+			ShaderBytecode shader;
 
 			if ( !vertexShaders.TryGetValue( combination, out shader ) ) {
 				BadCombination( "vertex shader", combination );
@@ -306,9 +293,9 @@ namespace Fusion.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="combination"></param>
-		public GeometryShader GetGeometryShader ( int combination )
+		public ShaderBytecode GetGeometryShader ( int combination )
 		{ 
-			GeometryShader shader;
+			ShaderBytecode shader;
 
 			if ( !geometryShaders.TryGetValue( combination, out shader ) ) {
 				BadCombination( "geometry shader", combination );
@@ -323,9 +310,9 @@ namespace Fusion.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="combination"></param>
-		public ComputeShader GetComputeShader ( int combination )
+		public ShaderBytecode GetComputeShader ( int combination )
 		{ 
-			ComputeShader shader;
+			ShaderBytecode shader;
 
 			if ( !computeShaders.TryGetValue( combination, out shader ) ) {
 				BadCombination( "compute shader", combination );
@@ -340,9 +327,9 @@ namespace Fusion.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="combination"></param>
-		public DomainShader GetDomainShader ( int combination )
+		public ShaderBytecode GetDomainShader ( int combination )
 		{ 
-			DomainShader shader;
+			ShaderBytecode shader;
 
 			if ( !domainShaders.TryGetValue( combination, out shader ) ) {
 				BadCombination( "domain shader", combination );
@@ -357,36 +344,15 @@ namespace Fusion.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="combination"></param>
-		public HullShader GetHullShader ( int combination )
+		public ShaderBytecode GetHullShader ( int combination )
 		{ 
-			HullShader shader;
+			ShaderBytecode shader;
 
 			if ( !hullShaders.TryGetValue( combination, out shader ) ) {
 				BadCombination( "hull shader", combination );
 			}
 
 			return	shader;
-		}
-
-
-		public void SetPixelShader		( int combination ) { device.PixelShader	 = GetPixelShader	 ( combination ); }
-		public void SetVertexShader		( int combination ) { device.VertexShader	 = GetVertexShader	 ( combination ); }
-		public void SetGeometryShader	( int combination ) { device.GeometryShader  = GetGeometryShader ( combination ); }
-		public void SetDomainShader		( int combination ) { device.DomainShader	 = GetDomainShader	 ( combination ); }
-		public void SetHullShader		( int combination ) { device.HullShader		 = GetHullShader	 ( combination ); }
-		public void SetComputeShader	( int combination ) { device.ComputeShader	 = GetComputeShader	 ( combination ); }
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="combination"></param>
-		/// <param name="signature"></param>
-		public void SetPixelAndVertexShader ( int combination )
-		{
-			SetPixelShader( combination );
-			SetVertexShader( combination );
 		}
 	}
 }

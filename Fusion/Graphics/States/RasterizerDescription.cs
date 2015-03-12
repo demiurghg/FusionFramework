@@ -36,5 +36,25 @@ namespace Fusion.Graphics {
 			DepthClipEnabled	=	true;
 			ScissorEnabled		=	false;
 		}
+
+
+
+		public void Set ( CullMode cullMode, FillMode fillMode = FillMode.Solid, int depthBias = 0, float slopeDepthBias = 0 )
+		{
+			CullMode			=	cullMode;
+			DepthBias			=	depthBias;
+			SlopeDepthBias		=	slopeDepthBias;
+			MsaaEnabled			=	true;
+			FillMode			=	fillMode;
+			DepthClipEnabled	=	true;
+			ScissorEnabled		=	false;
+		}
+
+
+
+		public void SetCullNone		() { Set( CullMode.CullNone ); }
+		public void SetCullCW		() { Set( CullMode.CullCW ); }
+		public void SetCullCCW		() { Set( CullMode.CullCCW ); }
+		public void SetWireframe	() { Set( CullMode.CullNone, FillMode.Wireframe ); }
 	}
 }

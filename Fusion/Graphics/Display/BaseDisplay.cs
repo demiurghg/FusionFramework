@@ -80,6 +80,8 @@ namespace Fusion.Graphics.Display {
 		/// <param name="mode">Ubershader flag</param>
 		protected void MergeStereoBuffers ( RenderTarget2D left, RenderTarget2D right, RenderTarget2D leftResolved, RenderTarget2D rightResolved, RenderTarget2D destination, Flags flag )
 		{
+			#warning MergeStereoBuffers disabled!
+			#if false
 			device.ResetStates();
 
 			device.SetTargets( null, destination );
@@ -105,6 +107,7 @@ namespace Fusion.Graphics.Display {
 
 			device.SetupVertexInput( null, null, null );
 			device.Draw( Primitive.TriangleList, 3, 0 );
+			#endif
 		}
 
 

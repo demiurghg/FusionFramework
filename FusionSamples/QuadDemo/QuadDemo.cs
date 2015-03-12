@@ -20,12 +20,13 @@ namespace QuadDemo2D {
 			public Matrix Transform;
 		}
 
-		Ubershader			us;
-		VertexBuffer		vb;
-		ConstantBuffer		cb;
-		VertexInputLayout	layout;
-		Texture2D			tex;
+		Ubershader			ubershader;
+		VertexBuffer		vertexBuffer;
+		ConstantBuffer		constBuffer;
+		Texture2D			texture;
 		ConstData			cbData;
+
+		PipelineState		pipelineState;
 
 		enum UberFlags {
 			USE_VERTEX_COLOR = 1,
@@ -46,6 +47,7 @@ namespace QuadDemo2D {
 		/// </summary>
 		public QuadDemo ()
 		{
+			Parameters.UseDebugDevice =	true;
 		}
 
 
@@ -61,10 +63,8 @@ namespace QuadDemo2D {
 
 			LoadContent();
 
-			vb		=	new VertexBuffer( device, typeof(Vertex), 6 );
-			cb		=	new ConstantBuffer( device, typeof(ConstData) );
-			layout	=	new VertexInputLayout( device, typeof(Vertex) );
-
+			vertexBuffer	=	new VertexBuffer( device, typeof(Vertex), 6 );
+			constBuffer		=	new ConstantBuffer( device, typeof(ConstData) );
 
 			Reloading += (s,e) => LoadContent();
 		}
@@ -72,10 +72,18 @@ namespace QuadDemo2D {
 
 		void LoadContent ()
 		{
-			tex		=	Content.Load<Texture2D>("lena.tga" );
+			texture		=	Content.Load<Texture2D>("lena.tga" );
 
-			us		=	Content.Load<Ubershader>("test.hlsl");
-			us.Map( typeof(UberFlags) );
+			ubershader	=	Content.Load<Ubershader>("test.hlsl");
+			ubershader.Map( typeof(UberFlags) );
+
+			pipelineState	=	new PipelineState( GraphicsDevice );
+			pipelineState.Blending		.SetOpaque();
+			pipelineState.Rasterizer	.SetCullNone();
+			pipelineState.VertexInputElements	=	VertexInputElement.FromStructure( typeof( Vertex ) );
+			pipelineState.VertexOutputElements	=	null;
+			pipelineState.PixelShader			=	ubershader.GetPixelShader ( (int)( UberFlags.USE_TEXTURE | UberFlags.USE_VERTEX_COLOR ) );
+			pipelineState.VertexShader			=	ubershader.GetVertexShader( (int)( UberFlags.USE_TEXTURE | UberFlags.USE_VERTEX_COLOR ) );
 		}
 
 
@@ -86,10 +94,11 @@ namespace QuadDemo2D {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
-				SafeDispose( ref us );
-				SafeDispose( ref vb );
-				SafeDispose( ref cb );
-				SafeDispose( ref tex );
+				SafeDispose( ref pipelineState );
+				SafeDispose( ref ubershader );
+				SafeDispose( ref vertexBuffer );
+				SafeDispose( ref constBuffer );
+				SafeDispose( ref texture );
 			}
 
 			base.Dispose(disposing);
@@ -122,13 +131,6 @@ namespace QuadDemo2D {
 			//	Clear back buffer :
 			GraphicsDevice.ClearBackbuffer( new Color4(0,0,0,0) );
 
-			//	Update constant buffer and bound it to pipeline:
-			cbData.Transform	=	Matrix.OrthoRH( 4, 3, -2, 2 );
-			cb.SetData(cbData);
-
-			GraphicsDevice.VertexShaderConstants[0]	= cb;
-			GraphicsDevice.PixelShaderConstants[0]	= cb;
-
 			//	Fill vertex buffer :
 			var v0	=	new Vertex{ Position = new Vector3( -1.0f, -1.0f, 0 ), Color = Color.Red,   TexCoord = new Vector2(0,1) };
 			var v1	=	new Vertex{ Position = new Vector3(  1.0f,  1.0f, 0 ), Color = Color.White, TexCoord = new Vector2(1,0) };
@@ -139,34 +141,27 @@ namespace QuadDemo2D {
 
 			var data = new Vertex[]{ v0, v1, v2, v3, v4, v5 };
 
-			vb.SetData( data, 0, 6 );
+			vertexBuffer.SetData( data, 0, 6 );
 
-			try {
+			//	Update constant buffer and bound it to pipeline:
+			cbData.Transform	=	Matrix.OrthoRH( 4, 3, -2, 2 );
+			constBuffer.SetData(cbData);
 
-				//	Set required ubershader :
-				int flags = 0;
-				if ( InputDevice.IsKeyDown(Keys.D1) ) flags |= (int)UberFlags.USE_VERTEX_COLOR;
-				if ( InputDevice.IsKeyDown(Keys.D2) ) flags |= (int)UberFlags.USE_TEXTURE;
+			GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
+			GraphicsDevice.PixelShaderConstants[0]	= constBuffer;
 
-				us.SetPixelShader( flags );
-				us.SetVertexShader( flags );
+			//	Setup device state :
+			GraphicsDevice.PipelineState			= pipelineState;	
+			GraphicsDevice.DepthStencilState		= DepthStencilState.None ;
+			GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap ;
 
-				//	Set device states :
-				GraphicsDevice.BlendState			= BlendState.Opaque ;
-				GraphicsDevice.RasterizerState		= RasterizerState.CullNone ;
-				GraphicsDevice.DepthStencilState	= DepthStencilState.None ;
-				GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap ;
-
-				//	Setup texture :
-				GraphicsDevice.PixelShaderResources[0]	= tex ;
+			//	Setup texture :
+			GraphicsDevice.PixelShaderResources[0]	= texture ;
 								
-				//	Setup vertex data and draw :			
-				GraphicsDevice.SetupVertexInput( layout, vb, null );
-				GraphicsDevice.Draw( Primitive.TriangleList, 6, 0 );
+			//	Setup vertex data and draw :			
+			GraphicsDevice.SetupVertexInput( null, new[]{vertexBuffer}, new[]{0} );
+			GraphicsDevice.Draw( Primitive.TriangleList, 6, 0 );
 
-			} catch ( UbershaderException uex )	{
-				uex.Report();
-			}
 
 			base.Draw( gameTime, stereoEye );
 		}

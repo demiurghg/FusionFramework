@@ -145,8 +145,9 @@ namespace Fusion.Graphics {
 
 			var dev = Game.GraphicsDevice;
 
-			effect.SetVertexShader(	(int) RenderFlags.NONE	);
-			effect.SetPixelShader(	(int) RenderFlags.NONE	);
+			#warning Shaders disabled!
+			//effect.SetVertexShader(	(int) RenderFlags.NONE	);
+			//effect.SetPixelShader(	(int) RenderFlags.NONE	);
 
 			constData.Transform = View * Projection;
 			constBuffer.SetData(constData);

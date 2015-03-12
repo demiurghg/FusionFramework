@@ -108,7 +108,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="type"></param>
 		/// <returns></returns>
-		public VertexInputElement[] FromStructure ( Type type )
+		public static VertexInputElement[] FromStructure ( Type type )
 		{
 			if (!type.IsStruct()) {
 				throw new ArgumentException("Vertex type must be structure. Got: " + type.ToString() );

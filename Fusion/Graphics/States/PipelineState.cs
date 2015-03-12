@@ -39,19 +39,9 @@ namespace Fusion.Graphics {
 		public BlendDescription Blending { get; private set; }
 
 		/// <summary>
-		/// DepthStencul description. Null value is not acceptable.
-		/// </summary>
-		public DepthStencilDescription DepthStencil { get; private set; }
-
-		/// <summary>
 		/// Rasterizer state description. Null value is not acceptable.
 		/// </summary>
 		public RasterizerDescription Rasterizer { get; private set; }
-
-		/// <summary>
-		/// Sampler state descriptions. Null values are acceptable.
-		/// </summary>
-		public SamplerState[] Samplers { get; private set; }
 
 		/// <summary>
 		/// Pixel shader. Null value is not acceptable.
@@ -105,8 +95,6 @@ namespace Fusion.Graphics {
 		private GraphicsDevice	device;
 		D3DBlendState			blendState;
 		D3DRasterizerState		rasterState;
-		D3DDepthStencilState	depthState;
-		D3DSamplerState[]		samplerStates;
 		InputLayout				inputLayout;
 
 		D3DPixelShader			ps;
@@ -128,6 +116,10 @@ namespace Fusion.Graphics {
 		public PipelineState ( GraphicsDevice device )
 		{	
 			this.device	=	device;
+			Blending	=	new BlendDescription();
+			Rasterizer	=	new RasterizerDescription();
+
+			isReady		=	false;
 		}
 
 
@@ -142,23 +134,18 @@ namespace Fusion.Graphics {
 				DisposeStates();
 			}
 
-			base.Dispose();
+			base.Dispose(disposing);
 		}
 
 
 
+		/// <summary>
+		/// Disposes states.
+		/// </summary>
 		void DisposeStates ()
 		{
 			SafeDispose( ref blendState  );
 			SafeDispose( ref rasterState  );
-			SafeDispose( ref depthState );
-
-			foreach ( var s in samplerStates ) {
-				if (s!=null) {	
-					s.Dispose();
-				}
-				samplerStates = null;
-			}
 
 			SafeDispose( ref ps );
 			SafeDispose( ref vs );
@@ -186,15 +173,19 @@ namespace Fusion.Graphics {
 			device.DeviceContext.OutputMerger.BlendFactor		=	blendFactor;
 			device.DeviceContext.OutputMerger.BlendSampleMask	=	blendMsaaMask;
 
-			//	set depth-stencil :
-			device.DeviceContext.OutputMerger.DepthStencilState		=	depthState;
-			device.DeviceContext.OutputMerger.DepthStencilReference	=	dssReference;
-
 			//	set rasterizer :
 			device.DeviceContext.Rasterizer.State	=	rasterState;
 
-			//	samplers :
-			device.
+			//	shaders :
+			device.DeviceContext.PixelShader	.Set( ps );
+			device.DeviceContext.VertexShader	.Set( vs );
+			device.DeviceContext.GeometryShader	.Set( gs );
+			device.DeviceContext.HullShader		.Set( hs );
+			device.DeviceContext.DomainShader	.Set( ds );
+			device.DeviceContext.ComputeShader	.Set( cs );
+
+			//	layout :
+			device.DeviceContext.InputAssembler.InputLayout	=	inputLayout;
 		}
 
 
@@ -205,7 +196,7 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// Applies changes to this pipeline state.
 		/// <remarks>This method is quite slow because performs a lot of checks and creates new internal states and objects.
-		/// Do not call this method each frame, instead create pipeline state object for each case.</remarks>
+		/// Do not call this method each frame, instead create pipeline state object for each case on init.</remarks>
 		/// </summary>
 		public void ApplyChanges ()
 		{
@@ -216,10 +207,6 @@ namespace Fusion.Graphics {
 				SetupBlendState();
 
 				SetupRasterizerState();
-
-				SetupDepthStencilState();
-
-				SetupSamplerStates();
 
 				SetupShadersAndLayouts();
 
@@ -238,69 +225,6 @@ namespace Fusion.Graphics {
 			vs	=	new D3DVertexShader( device.Device, VertexShader.Bytecode );
 
 			inputLayout	=	new InputLayout( device.Device, VertexShader.Bytecode, VertexInputElement.Convert( VertexInputElements ) );
-		}
-
-
-
-		/// <summary>
-		/// SetupSamplerStates
-		/// </summary>
-		void SetupSamplerStates ()
-		{
-			samplerStates = new D3DSamplerState[ Samplers.Length ];
-
-			for ( int i=0; i<Samplers.Length; i++) {
-
-				var sd = Samplers[i];
-				
-				var ssd = new SamplerStateDescription();
-
-				ssd.ComparisonFunction	=	Converter.Convert( sd.ComparisonFunc );
-				ssd.AddressU			=	Converter.Convert( sd.AddressU );
-				ssd.AddressV			=	Converter.Convert( sd.AddressV );
-				ssd.AddressW			=	Converter.Convert( sd.AddressW );
-				ssd.BorderColor			=	SharpDXHelper.Convert( sd.BorderColor );
-				ssd.Filter				=	Converter.Convert( sd.Filter );
-				ssd.MaximumAnisotropy	=	sd.MaxAnisotropy;
-				ssd.MaximumLod			=	sd.MaxMipLevel;
-				ssd.MinimumLod			=	sd.MinMipLevel;
-				ssd.MipLodBias			=	sd.MipMapBias;
-
-				var ss	=	new D3DSamplerState( device.Device, ssd );
-
-				samplerStates[i] = ss;
-			}
-		}
-
-
-
-		/// <summary>
-		/// SetupDepthStencilState
-		/// </summary>
-		void SetupDepthStencilState ()
-		{
-			var dss	=	new DepthStencilStateDescription();
-
-			dss.DepthComparison		=	Converter.Convert( DepthStencil.DepthComparison );
-			dss.DepthWriteMask		=	DepthStencil.DepthWriteEnabled ? DepthWriteMask.All : DepthWriteMask.Zero;
-			dss.IsDepthEnabled		=	DepthStencil.DepthEnabled;
-			dss.IsStencilEnabled	=	DepthStencil.StencilEnabled;
-			dss.StencilReadMask		=	DepthStencil.StencilReadMask;
-			dss.StencilWriteMask	=	DepthStencil.StencilWriteMask;
-
-			dss.BackFace.Comparison				=	Converter.Convert( DepthStencil.BackFaceStencilComparison	);
-			dss.BackFace.FailOperation			=	Converter.Convert( DepthStencil.BackFaceFailOp				);
-			dss.BackFace.DepthFailOperation		=	Converter.Convert( DepthStencil.BackFaceDepthFailOp			);
-			dss.BackFace.PassOperation			=	Converter.Convert( DepthStencil.BackFacePassOp				);
-
-			dss.FrontFace.Comparison			=	Converter.Convert( DepthStencil.FrontFaceStencilComparison	);
-			dss.FrontFace.FailOperation			=	Converter.Convert( DepthStencil.FrontFaceFailOp				);
-			dss.FrontFace.DepthFailOperation	=	Converter.Convert( DepthStencil.FrontFaceDepthFailOp		);
-			dss.FrontFace.PassOperation			=	Converter.Convert( DepthStencil.FrontFacePassOp				);
-
-			dssReference	=	DepthStencil.StencilReference;
-
-			this.depthState	=	new D3DDepthStencilState( device.Device, dss );
 		}
 
 

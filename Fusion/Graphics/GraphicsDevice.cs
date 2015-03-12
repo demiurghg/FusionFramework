@@ -24,55 +24,213 @@ namespace Fusion.Graphics {
 
 	public partial class GraphicsDevice : DisposableBase {
 
-		public GraphicsProfile		GraphicsProfile		{ get; private set; }
+		/// <summary>
+		/// Current graphics profile.
+		/// </summary>
+		public GraphicsProfile GraphicsProfile { 
+			get; 
+			private set; 
+		}
 
-		public readonly Game		Game;
-		public Rectangle			DisplayBounds	{ get { return new Rectangle(0,0, display.Bounds.Width, display.Bounds.Height); } }
+		/// <summary>
+		///	Game
+		/// </summary>
+		public readonly Game Game;
 
-		public bool					FullScreen  { get { return display.Fullscreen; } set { display.Fullscreen = value; } }
+		/// <summary>
+		/// Gets current display bounds.
+		/// </summary>
+		public Rectangle DisplayBounds	{ 
+			get { 
+				return new Rectangle(0,0, display.Bounds.Width, display.Bounds.Height); 
+			} 
+		}
 
+		/// <summary>
+		/// Sets and gets fullscreen mode.
+		/// <remarks>Not all stereo modes support fullscreen or windowed mode.</remarks>
+		/// </summary>
+		public bool FullScreen  { 
+			get { return display.Fullscreen; } 
+			set { display.Fullscreen = value; } 
+		}
+
+		/// <summary>
+		/// Raises when display bound changes.
+		/// DisplayBounds property is already has actual value when this event raised.
+		/// </summary>
 		public event EventHandler	DisplayBoundsChanged;
+
+		/// <summary>
+		/// Backbuffer color target.
+		/// </summary>
+		public RenderTarget2D	BackbufferColor	{ 
+			get { 
+				return display.BackbufferColor; 
+			} 
+		}
+
+		/// <summary>
+		/// Backbuffer depth stencil surface.
+		/// </summary>
+		public DepthStencil2D	BackbufferDepth	{ 
+			get { 
+				return display.BackbufferDepth; 
+			} 
+		}
+
+
+		#region Samplers
+		/// <summary>
+		/// Pixel shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	PixelShaderSamplers		{ get; private set; }	
+
+		/// <summary>
+		/// Vertex shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	VertexShaderSamplers	{ get; private set; }	
+
+		/// <summary>
+		/// Geometry shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	GeometryShaderSamplers	{ get; private set; }	
+
+		/// <summary>
+		/// Compute shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	ComputeShaderSamplers	{ get; private set; }	
+
+		/// <summary>
+		/// Domain shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	DomainShaderSamplers	{ get; private set; }	
+
+		/// <summary>
+		/// Hull shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	HullShaderSamplers		{ get; private set; }	
+		#endregion
+
+
+		#region Shader Resources
+		/// <summary>
+		/// Pixel shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	PixelShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Vertex shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	VertexShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Geometry shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	GeometryShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Compute shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	ComputeShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Domain shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	DomainShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Hull shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	HullShaderResources		{ get; private set; }	
+		#endregion
+
+
+		#region Constants
+		/// <summary>
+		/// Pixel shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	PixelShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Vertex shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	VertexShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Geometry shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	GeometryShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Compute shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	ComputeShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Domain shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	DomainShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Hull shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	HullShaderConstants		{ get; private set; }	
+		#endregion
+
+
+		PipelineState		pipelineState			=	null;
+		bool				pipelineStateDirty		=	true;
+
+		DepthStencilState	depthStencilState		=	null;	
+		bool				depthStencilStateDirty	=	true;
+
+
+		/// <summary>
+		/// Pipeline state.
+		/// </summary>
+		public PipelineState PipelineState {
+			get {
+				return pipelineState;
+			}
+			set {
+				if (value!=pipelineState) {
+					pipelineState		= value;
+					pipelineStateDirty	= true;
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Depth stencil state.
+		/// </summary>
+		public DepthStencilState DepthStencilState {
+			get {
+				return depthStencilState;
+			}
+			set {
+				if (value!=depthStencilState) {
+					depthStencilState		= value;
+					depthStencilStateDirty	= true;
+				}
+			}
+		}
+
+
+		HashSet<IDisposable>	toDispose = new HashSet<IDisposable>();
+
+		internal ShaderFactory ShaderFactory { get { return shaderFactory; } }
+		ShaderFactory shaderFactory;
 
 		internal Device			Device			{ get { return device; } }			
 		internal DeviceContext	DeviceContext	{ get { return deviceContext; } }	
 		internal BaseDisplay	Display			{ get { return display; } }
-		
 
 		BaseDisplay				display			=	null;
 		Device					device			=	null;
 		DeviceContext			deviceContext	=	null;
 
-		public RenderTarget2D	BackbufferColor	{ get { return display.BackbufferColor; } }
-		public DepthStencil2D	BackbufferDepth	{ get { return display.BackbufferDepth; } }
-
-
-		//LayoutManager			layoutManager	=	null;
-
-		HashSet<IDisposable>	toDispose = new HashSet<IDisposable>();
-
-		public SamplerStateCollection	PixelShaderSamplers		{ get; private set; }	
-		public SamplerStateCollection	VertexShaderSamplers	{ get; private set; }	
-		public SamplerStateCollection	GeometryShaderSamplers	{ get; private set; }	
-		public SamplerStateCollection	ComputeShaderSamplers	{ get; private set; }	
-		public SamplerStateCollection	DomainShaderSamplers	{ get; private set; }	
-		public SamplerStateCollection	HullShaderSamplers		{ get; private set; }	
-
-		public ShaderResourceCollection	PixelShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	VertexShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	GeometryShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	ComputeShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	DomainShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	HullShaderResources		{ get; private set; }	
-
-		public ConstantBufferCollection	PixelShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	VertexShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	GeometryShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	ComputeShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	DomainShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	HullShaderConstants		{ get; private set; }	
-
-		internal ShaderFactory ShaderFactory { get { return shaderFactory; } }
-		ShaderFactory shaderFactory;
 
 		/// <summary>
 		/// 
@@ -125,16 +283,16 @@ namespace Fusion.Graphics {
 			//	
 			PixelShaderResources	=	new ShaderResourceCollection( this, DeviceContext.PixelShader		);
 			VertexShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.VertexShader		);
-			GeometryShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.GeometryShader	);
+			GeometryShaderResources =	new ShaderResourceCollection( this, DeviceContext.GeometryShader	);
 			ComputeShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.ComputeShader		);
 			DomainShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.DomainShader		);
 			HullShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.HullShader		);
 
 			PixelShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.PixelShader		);
-			VertexShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.VertexShader		);
-			GeometryShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.GeometryShader	);
-			ComputeShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.ComputeShader		);
-			DomainShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.DomainShader		);
+			VertexShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.VertexShader		);
+			GeometryShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.GeometryShader	);
+			ComputeShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.ComputeShader		);
+			DomainShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.DomainShader		);
 			HullShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.HullShader		);
 
 			PixelShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.PixelShader		);
@@ -142,7 +300,7 @@ namespace Fusion.Graphics {
 			GeometryShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.GeometryShader	);
 			ComputeShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.ComputeShader		);
 			DomainShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.DomainShader		);
-			HullShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.HullShader		);
+			HullShaderConstants		=	new ConstantBufferCollection( this, DeviceContext.HullShader		);
 		}
 
 
@@ -213,18 +371,91 @@ namespace Fusion.Graphics {
 		/// </summary>
 		internal void Present ()
 		{
-			if (requestScreenShotPath != null ) {
+			lock (DeviceContext) {
+				if (requestScreenShotPath != null ) {
 
-				var path = requestScreenShotPath;
-				requestScreenShotPath = null;
+					var path = requestScreenShotPath;
+					requestScreenShotPath = null;
 
-				BackbufferColor.SaveToFile( path );
+					BackbufferColor.SaveToFile( path );
+				}
+
+				display.SwapBuffers( Game.Parameters.VSyncInterval );
+
+				display.Update();
+			}
+		}
+
+		/*-----------------------------------------------------------------------------------------
+		 * 
+		 * 	Drawing stuff :
+		 *	
+		-----------------------------------------------------------------------------------------*/
+
+		/// <summary>
+		/// Applies all GPU states before draw, dispatch or clear.
+		/// </summary>
+		void ApplyGpuState ()
+		{
+			if (pipelineStateDirty) {
+				pipelineState.Set();
 			}
 
-			display.SwapBuffers( Game.Parameters.VSyncInterval );
-
-			display.Update();
+			if (depthStencilStateDirty) {
+				depthStencilState.Apply( this );
+			}
 		}
+
+
+		VertexBufferBinding[] inputVertexBufferBinding = new VertexBufferBinding[16];
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="indexBuffer"></param>
+		/// <param name="vertexBuffers"></param>
+		/// <param name="offsets"></param>
+		public void SetupVertexInput ( IndexBuffer indexBuffer, VertexBuffer[] vertexBuffers, int[] offsets )
+		{
+			if (indexBuffer!=null) {
+				deviceContext.InputAssembler.SetIndexBuffer( indexBuffer.Buffer, DXGI.Format.R32_UInt, 0 );
+			} else {	
+				deviceContext.InputAssembler.SetIndexBuffer( null, Format.Unknown, 0 );
+			}
+
+
+			if (vertexBuffers==null) {
+				deviceContext.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( null, 0, 0 ) );
+			} else {
+				int count = Math.Min(16, Math.Min( vertexBuffers.Length, offsets.Length ));
+
+				#warning Remove allocation!
+				inputVertexBufferBinding = new VertexBufferBinding[count];
+
+				for (int i=0; i<count; i++) {
+					inputVertexBufferBinding[i].Buffer	=	vertexBuffers[i].Buffer;
+					inputVertexBufferBinding[i].Stride	=	vertexBuffers[i].Stride;
+					inputVertexBufferBinding[i].Offset	=	offsets[i];
+				}
+				deviceContext.InputAssembler.SetVertexBuffers( 0, inputVertexBufferBinding );
+			}
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="vertexCount"></param>
+		/// <param name="vertexFirstIndex"></param>
+		public void Draw ( Primitive primitive, int vertexCount, int firstIndex )
+		{									 
+			ApplyGpuState();
+
+			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+			deviceContext.Draw( vertexCount, firstIndex );
+		}
+
 
 
 
@@ -443,20 +674,6 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="vertexCount"></param>
-		/// <param name="vertexFirstIndex"></param>
-		public void Draw ( Primitive primitive, int vertexCount, int firstIndex )
-		{									 
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.Draw( vertexCount, firstIndex );
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
 		/// <param name="primitive"></param>
 		/// <param name="vertexCountPerInstance"></param>
 		/// <param name="instanceCount"></param>
@@ -586,26 +803,6 @@ namespace Fusion.Graphics {
 				return rasterState;
 			}
 		} 
-
-
-
-		/// <summary>
-		/// Sets and gets depth stencil state.
-		/// </summary>
-		public DepthStencilState DepthStencilState {
-			set {
-				if (value==null) {
-					throw new ArgumentNullException();
-				}
-				if (depthState!=value) {
-					depthState = value;
-					depthState.Apply(this);
-				}
-			}
-			get {
-				return depthState;
-			}
-		}
 
 
 
