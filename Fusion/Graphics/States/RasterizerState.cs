@@ -13,7 +13,7 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// Describes rasterizer state.
 	/// </summary>
-	public class RasterizerState {
+	public sealed class RasterizerState {
 
 		public CullMode	CullMode			{ get; set; }
 		public int		DepthBias			{ get; set; }
@@ -22,6 +22,12 @@ namespace Fusion.Graphics {
 		public FillMode	FillMode			{ get; set; }
 		public bool		DepthClipEnabled	{ get; set; }
 		public bool		ScissorEnabled		{ get; set; }
+
+
+		public static RasterizerState CullNone	{ get; private set; }
+		public static RasterizerState CullCW	{ get; private set; }
+		public static RasterizerState CullCCW	{ get; private set; }
+		public static RasterizerState Wireframe	{ get; private set; }
 
 
 		/// <summary>
@@ -39,22 +45,27 @@ namespace Fusion.Graphics {
 
 
 
-		public void Set ( CullMode cullMode, FillMode fillMode = FillMode.Solid, int depthBias = 0, float slopeDepthBias = 0 )
+		static RasterizerState ()
 		{
-			CullMode			=	cullMode;
-			DepthBias			=	depthBias;
-			SlopeDepthBias		=	slopeDepthBias;
-			MsaaEnabled			=	true;
-			FillMode			=	fillMode;
-			DepthClipEnabled	=	true;
-			ScissorEnabled		=	false;
+			CullNone	=	Create( CullMode.CullNone ); 
+			CullCW		=	Create( CullMode.CullCW ); 
+			CullCCW		=	Create( CullMode.CullCCW ); 
+			Wireframe	=	Create( CullMode.CullNone, FillMode.Wireframe ); 
 		}
 
 
 
-		public void SetCullNone		() { Set( CullMode.CullNone ); }
-		public void SetCullCW		() { Set( CullMode.CullCW ); }
-		public void SetCullCCW		() { Set( CullMode.CullCCW ); }
-		public void SetWireframe	() { Set( CullMode.CullNone, FillMode.Wireframe ); }
+		public static RasterizerState Create ( CullMode cullMode, FillMode fillMode = FillMode.Solid, int depthBias = 0, float slopeDepthBias = 0 )
+		{
+			var rs = new RasterizerState();
+			rs.CullMode			=	cullMode;
+			rs.DepthBias		=	depthBias;
+			rs.SlopeDepthBias	=	slopeDepthBias;
+			rs.MsaaEnabled		=	true;
+			rs.FillMode			=	fillMode;
+			rs.DepthClipEnabled	=	true;
+			rs.ScissorEnabled	=	false;
+			return rs;
+		}
 	}
 }

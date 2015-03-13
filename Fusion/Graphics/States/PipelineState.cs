@@ -29,7 +29,7 @@ namespace Fusion.Graphics {
 	/// Pipeline state represents all GPU states as single object.
 	/// 
 	/// </summary>
-	public class PipelineState : DisposableBase {
+	public sealed class PipelineState : DisposableBase {
 
 		public int SamplersCount { get { return CommonShaderStage.SamplerRegisterCount; } }
 
@@ -105,7 +105,6 @@ namespace Fusion.Graphics {
 		D3DComputeShader		cs;
 		RawColor4				blendFactor;
 		int						blendMsaaMask;
-		int						dssReference;
 
 
 

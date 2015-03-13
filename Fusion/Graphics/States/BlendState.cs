@@ -14,7 +14,7 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// Describes blending state.
 	/// </summary>
-	public class BlendState {
+	public sealed class BlendState {
 
 		public	Blend			SrcColor		{ get; set; }
 		public	Blend			DstColor		{ get; set; }

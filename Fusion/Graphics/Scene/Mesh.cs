@@ -12,7 +12,7 @@ using Fusion.Mathematics;
 
 namespace Fusion.Graphics {
 
-	public sealed partial class Mesh : DisposableBase, IEquatable<Mesh> {
+	public sealed partial class Mesh : IEquatable<Mesh> {
 
 		public List<MeshVertex>		Vertices		{ get; private set; }	
 		public List<MeshTriangle>	Triangles		{ get; private set; }	
@@ -26,24 +26,6 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public	object  Tag { get; set; }
 
-		/// <summary>
-		/// Mesh vertex buffer. Only accessable after calling Bake<>.
-		/// </summary>
-		public VertexBuffer	VertexBuffer { get; private set; }
-
-		/// <summary>
-		/// Mesh index buffer. Only accessable after calling Bake<>.
-		/// </summary>
-		public IndexBuffer	IndexBuffer	 { get; private set; }
-
-
-		/// <summary>
-		/// Mesh vertex input layout. Only accessable after calling Bake<>.
-		/// </summary>
-		public VertexInputLayout InputLayout { get; private set; }
-
-		GraphicsDevice	device;
-	
 
 
 		/// <summary>
@@ -54,8 +36,6 @@ namespace Fusion.Graphics {
 			Vertices		=	new List<MeshVertex>();
 			Triangles		=	new List<MeshTriangle>();
 			Subsets			=	new List<MeshSubset>();
-			VertexBuffer	=	null;
-			IndexBuffer		=	null;
 		}
 
 
@@ -130,8 +110,6 @@ namespace Fusion.Graphics {
 			if ( this.IndexCount		!= other.IndexCount		) return false;
 			if ( this.Subsets.Count		!= other.Subsets.Count	) return false;
 			//if ( this.Materials.Count	!= other.Materials.Count) return false;
-			if ( this.VertexBuffer		!= other.VertexBuffer	) return false;
-			if ( this.IndexBuffer		!= other.IndexBuffer	) return false;
 			
 			if ( !this.Vertices .SequenceEqual( other.Vertices  ) ) return false;
 			if ( !this.Triangles.SequenceEqual( other.Triangles ) ) return false;
@@ -530,118 +508,5 @@ namespace Fusion.Graphics {
 			writer.Write( Subsets.Count );
 			writer.Write( Subsets.ToArray() );
 		}
-
-
-		/*-----------------------------------------------------------------------------------------
-		 * 
-		 *	GPU stuff
-		 * 
-		-----------------------------------------------------------------------------------------*/
-
-		
-		/// <summary>
-		/// Bakes mesh to GPU vertex and index buffer
-		/// </summary>
-		public void Bake<T> ( GraphicsDevice device, Func<MeshVertex,T> bakeFunc ) where T : struct
-		{
-			Unbake();
-
-			this.device		=	device;
-
-			InputLayout		=	new VertexInputLayout( device, typeof(T) );
-			VertexBuffer	=	new VertexBuffer( device, typeof(T), VertexCount );
-			IndexBuffer		=	new IndexBuffer( device, IndexCount );
-
-			var vData		=	new T[ VertexCount ];
-			var	iData		=	GetIndices();
-
-			for ( int i=0; i<VertexCount; i++) {
-				vData[i]	=	bakeFunc( Vertices[i] );
-			}
-
-			IndexBuffer.SetData( iData );
-			VertexBuffer.SetData( vData, 0, VertexCount );
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public void Unbake ()
-		{
-			if (InputLayout!=null) {
-				InputLayout.Dispose();
-				InputLayout = null;
-			}
-			if (VertexBuffer!=null) {
-				VertexBuffer.Dispose();
-				VertexBuffer = null;
-			}
-			if (IndexBuffer!=null) {
-				IndexBuffer.Dispose();
-				IndexBuffer = null;
-			}
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="disposing"></param>
-		protected override void Dispose ( bool disposing )
-		{
-			if (disposing) {
-				Unbake();
-			}
-
-			base.Dispose( disposing );
-		}
-
-
-
-		/// <summary>
-		/// Sets vertex buffer, index buffer and layout signature 
-		/// </summary>
-		/// <param name="signature"></param>
-		[Obsolete]
-		public void SetupVertexInput ()
-		{
-			//device.SetupVertexInput( InputLayout, VertexBuffer, IndexBuffer );
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public void Draw ()
-		{
-			device.DrawIndexed( Primitive.TriangleList, IndexCount, 0, 0 );
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public void DrawInstanced ( int count )
-		{
-			device.DrawInstancedIndexed( Primitive.TriangleList, IndexCount, count, 0, 0, 0 );
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="startTriangle"></param>
-		/// <param name="triangleCount"></param>
-		public void Draw ( int startTriangle, int triangleCount )
-		{
-			device.DrawIndexed( Primitive.TriangleList, triangleCount * 3, startTriangle * 3, 0 );
-		}
-
 	}
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fusion.Graphics {
 
-	public class ShaderBytecode {
+	public sealed class ShaderBytecode {
 
 		byte[] bytecode;
 

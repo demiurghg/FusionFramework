@@ -206,6 +206,7 @@
     <Compile Include="Graphics\Collections\ConstantBufferCollection.cs" />
     <Compile Include="Graphics\Collections\SamplerStateCollection.cs" />
     <Compile Include="Graphics\Collections\ShaderResourceCollection.cs" />
+    <Compile Include="Graphics\Scene\SceneDrawer.cs" />
     <Compile Include="Graphics\States\StateFactory.cs" />
     <Compile Include="Graphics\UbershaderLoader.cs" />
     <Compile Include="Graphics\Display\BaseDisplay.cs" />

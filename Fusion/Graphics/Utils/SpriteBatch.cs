@@ -12,7 +12,7 @@ using Fusion.Mathematics;
 
 namespace Fusion.Graphics {
 
-	public class SpriteBatch : GameService {
+	public sealed class SpriteBatch : GameService {
 
 		const int MaxQuads		=	1024;
 		const int MaxVertices	=	MaxQuads * 4;
@@ -157,7 +157,6 @@ namespace Fusion.Graphics {
 			fontTexture		=	device.Game.Content.Load<Texture2D>( @"debugFont.tga" );
 
  			shader			=	Game.Content.Load<Ubershader>(@"spriteBatch.hlsl");
-			#warning shader.Map( typeof(DrawFlags) );
 
 			DisposePSO();
 
@@ -165,7 +164,7 @@ namespace Fusion.Graphics {
 
 				var ps = new PipelineState( Game.GraphicsDevice );
 
-				ps.Rasterizer.SetCullNone();
+				ps.Rasterizer	=	RasterizerState.CullNone;
 
 				if (blend==SpriteBlend.Opaque			) ps.Blending	=	BlendState.Opaque;
 				if (blend==SpriteBlend.AlphaBlend		) ps.Blending	=	BlendState.AlphaBlend;
@@ -326,10 +325,6 @@ namespace Fusion.Graphics {
 
 
 			vertexBuffer.SetData( vertices, 0, vertexPointer );
-
-			#warning FlushQueue disabled
-			//shader.SetPixelShader( 0 );
-			//shader.SetVertexShader( 0 );
 
 			device.VertexShaderConstants[0]	=	constBuffer ;
 			device.PixelShaderConstants[0]	=	constBuffer ;

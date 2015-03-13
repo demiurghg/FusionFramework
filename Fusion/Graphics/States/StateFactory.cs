@@ -17,7 +17,7 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class StateFactory : DisposableBase {
+	public sealed class StateFactory : DisposableBase {
 
 		GraphicsDevice	device;
 		Ubershader		ubershader;

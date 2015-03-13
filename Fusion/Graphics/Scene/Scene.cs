@@ -14,7 +14,7 @@ using Fusion.Content;
 
 
 namespace Fusion.Graphics {
-	public sealed class Scene : DisposableBase {
+	public class Scene {
 
 		List<Node>			nodes		= new List<Node>();
 		List<Mesh>			meshes		= new List<Mesh>();
@@ -117,56 +117,11 @@ namespace Fusion.Graphics {
 		}
 
 
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="disposing"></param>
-		protected override void Dispose ( bool disposing )
-		{
-			if (disposing) {
-				Unbake();
-			}
-
-			base.Dispose( disposing );
-		}
-
-
 		/*---------------------------------------------------------------------
 		 * 
 		 *	Topology stuff :
 		 *	
 		---------------------------------------------------------------------*/
-
-		/// <summary>
-		/// Bakes entire scene to GPU
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="device"></param>
-		/// <param name="?"></param>
-		public void Bake<T>( GraphicsDevice device, Func<MeshVertex,T> bakeFunc ) where T: struct
-		{
-			foreach ( var mesh in Meshes ) {
-				mesh.Bake( device, bakeFunc ); 
-			}
-		}
-
-
-
-		/// <summary>
-		/// Disposes all baket to VB in IB stuff.
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="device"></param>
-		/// <param name="?"></param>
-		public void Unbake()
-		{
-			foreach ( var mesh in Meshes ) {
-				mesh.Unbake(); 
-			}
-		}
-
-
 
 		/// <summary>
 		/// Copies absolute transform to provided array.
