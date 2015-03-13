@@ -12,5 +12,12 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity.Markers
         public Aim(Cell cell)
             : base(LogicService.aim, cell)
         { }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            Marker marker = new Aim(Cell);
+            marker.Parent = (EntityCollection)parent;
+            return marker;
+        }
     }
 }

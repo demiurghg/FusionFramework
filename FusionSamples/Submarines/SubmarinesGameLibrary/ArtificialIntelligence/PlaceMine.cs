@@ -12,7 +12,7 @@ namespace SubmarinesWars.SubmarinesGameLibrary.ArtificialIntelligence
         public PlaceMine(List<Cell> path)
         {
             this.path = new List<Cell>();
-            if (path!= null)
+            if (path != null)
                 this.path.AddRange(path);
             if (this.path.Count > 2)
                 this.path.RemoveRange(2, path.Count - 2);

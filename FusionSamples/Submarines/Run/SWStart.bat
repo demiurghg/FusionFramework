@@ -1,2 +1,2 @@
-SubmarinesWars.exe teamRdll=default teamRai=default teamLdll=default teamLai=default
+SubmarinesWars.exe teamRdll=default teamRai=default teamLdll=default teamLai=default replay=".\Replay\SubmarinesWars.SubmarinesGameLibrary.ArtificialIntelligence.AI\SubmarinesWars.SubmarinesGameLibrary.ArtificialIntelligence.AI\0"
 pause

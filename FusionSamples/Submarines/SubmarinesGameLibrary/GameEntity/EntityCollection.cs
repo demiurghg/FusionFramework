@@ -139,5 +139,13 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
             foreach (VisibleObject obj in Collection)
                 obj.Delay(delay);
         }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            EntityCollection newEC = new EntityCollection();
+            foreach (VisibleObject obj in Collection)
+                newEC.addToCollection(obj.Copy(newEC));
+            return newEC;
+        }
     }
 }

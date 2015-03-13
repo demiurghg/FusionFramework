@@ -50,6 +50,7 @@ namespace SubmarinesWars
             AddService(new ConfigService(this), true, true, 1, 1);
             AddService(new GameFieldService(this), true, true, 2, 2);
             AddService(new LogicService(this), true, true, 3, 3);
+            AddService(new ReplayService(this), false, false, 4, 4);
 
             //	load configuration for each service :
             LoadConfiguration();
@@ -58,7 +59,7 @@ namespace SubmarinesWars
             Exiting += FusionGame_Exiting;
         }
 
-
+        bool replay = false;
         /// <summary>
         /// Add services :
         /// </summary>
@@ -186,6 +187,17 @@ namespace SubmarinesWars
                         case "teamlai":
                             GetService<LogicService>().cfg.AI_Class_TeamL = command[1].Replace(" ", "");
                             break;
+                        case "replay":
+                            GetService<LogicService>().Enabled = false;
+                            GetService<LogicService>().Visible = false;
+                            GetService<ReplayService>().Enabled = true;
+                            GetService<ReplayService>().Visible = true;
+                            GetService<ReplayService>().initReplayManager(command[1]);
+                            replay = true;
+                            break;
+                        case "startfrom":
+                            ReplayService.k = Int32.Parse(command[1]);
+                            break;
                         default:
                             Log.Message("\"" + s + "\" - ERROR");
                             Exit();
@@ -195,6 +207,8 @@ namespace SubmarinesWars
                 }
             }
 
+            //this.GetService<ReplayService>().initReplayManager(@"C:\Users\Artem\Documents\GitHub\FusionFramework\FusionSamples\Submarines\bin\x64\Release\Replay\SubmarinesWars.SubmarinesGameLibrary.ArtificialIntelligence.AI\SubmarinesWars.SubmarinesGameLibrary.ArtificialIntelligence.AI\28");
+            
             GraphicsDevice_ViewportChanged(null, null);
 
             //	initialize services :
@@ -204,6 +218,9 @@ namespace SubmarinesWars
             InputDevice.KeyDown += InputDevice_KeyDown;
 
             GraphicsDevice.DisplayBoundsChanged += GraphicsDevice_ViewportChanged;
+
+            if (!replay)
+                GetService<LogicService>().rmSet();
         }
         
 
@@ -264,6 +281,8 @@ namespace SubmarinesWars
         /// <param name="e"></param>
         void FusionGame_Exiting(object sender, EventArgs e)
         {
+            if (!replay)
+                GetService<LogicService>().rmEnd();
             SubmarinesGameLibrary.GameEntity.Markers.CustomMarker.Dispose();
             SaveConfiguration();
         }
@@ -281,9 +300,17 @@ namespace SubmarinesWars
             ds.Add(Color.Orange, "FPS {0}", gameTime.Fps);
             ds.Add("F12  - make screenshot");
             ds.Add("Speed " + Config.SPEED);
-            ds.Add("Step number " + LogicService.stepCount);
-            ds.Add("Pause " + (GetService<LogicService>().IsPaused == true ? "on" : "off"));
-            ds.Add("Step by step mode " + (GetService<LogicService>().IsStepByStep == true ? "on" : "off"));
+            if (replay)
+            {
+                ds.Add("Step number " + (ReplayService.k - 1));
+                ds.Add("Pause " + (GetService<ReplayService>().pause == true ? "on" : "off"));
+            }
+            else
+            {
+                ds.Add("Step number " + LogicService.stepCount);
+                ds.Add("Pause " + (GetService<LogicService>().IsPaused == true ? "on" : "off"));
+                ds.Add("Step by step mode " + (GetService<LogicService>().IsStepByStep == true ? "on" : "off"));
+            }
             ds.Add("ESC  - exit");
 
             base.Update(gameTime);

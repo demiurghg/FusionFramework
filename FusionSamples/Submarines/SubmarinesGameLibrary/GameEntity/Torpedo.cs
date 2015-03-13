@@ -64,5 +64,10 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
                 sb.Draw(path, cell.X - offsetScale, cell.Y, Config.HEX_SIZE, Config.HEX_SIZE, color);
             sb.Draw(Texture, currentX - offsetScale, currentY, Config.HEX_SIZE, Config.HEX_SIZE, color);
         }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            return this;
+        }
     }
 }

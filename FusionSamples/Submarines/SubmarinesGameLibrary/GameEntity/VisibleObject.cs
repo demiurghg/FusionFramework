@@ -18,5 +18,6 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
         internal abstract bool Intersection(VisibleObject obj);
         internal abstract void Remove(VisibleObject obj);
         internal abstract void Delay(double delay);
+        internal abstract VisibleObject Copy(VisibleObject parent);
     }
 }

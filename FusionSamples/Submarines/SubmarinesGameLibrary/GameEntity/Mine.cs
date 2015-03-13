@@ -27,11 +27,20 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
             internal set { base.Parent = (EntityCollection)value; }
         }
 
-        public Mine(Submarine sub)
+        internal Mine(Submarine sub)
         {
             Texture = LogicService.mine;
             Parent = sub.Parent;
             Cell = sub.Cell;
+            _noise = Config.NOISE_BOOM_MINE;
+            Order = 3;
+        }
+
+        internal Mine(Cell cell, Team team)
+        {
+            Texture = LogicService.mine;
+            Parent = team;
+            Cell = cell;
             _noise = Config.NOISE_BOOM_MINE;
             Order = 3;
         }
@@ -41,11 +50,6 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
             activated = true;
         }
 
-        internal override void Update(GameTime gameTime)
-        {
-            //throw new NotImplementedException();
-        }
-
         internal override void Draw(Fusion.Graphics.SpriteBatch sb, Fusion.Graphics.DebugStrings ds, StereoEye stereoEye)
         {
             float offsetScale = 0;
@@ -53,8 +57,14 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
                 offsetScale = -Config.offsetScale;
             if (stereoEye == StereoEye.Right)
                 offsetScale = Config.offsetScale;
-
             sb.Draw(Texture, Cell.X - offsetScale, Cell.Y, Config.HEX_SIZE, Config.HEX_SIZE, Team.Color); 
+        }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            Mine mine = new Mine(Cell, (Team)parent);
+            mine.activate();
+            return mine;
         }
     }
 }

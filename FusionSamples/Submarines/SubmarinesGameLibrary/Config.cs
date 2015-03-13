@@ -62,7 +62,7 @@ namespace SubmarinesWars.SubmarinesGameLibrary
 
         internal static float NOISE_NORM = (float)MAX_NOISE / 240;
 
-        static float speed = 1;
+        static float speed = 100;
         internal static float SPEED { get { return speed; } set { if ((value >= 0.1) && (value <= 100)) speed = value; } }
         static int maxStepCount = 500;
         internal static int MaxStepCount { get { return maxStepCount; } set { if (value > 0) maxStepCount = value; } }

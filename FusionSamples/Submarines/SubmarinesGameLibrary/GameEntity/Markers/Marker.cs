@@ -34,5 +34,12 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity.Markers
         {
             sb.Draw(Texture, Cell.X - 1.4f, Cell.Y - 1.4f, Config.HEX_SIZE + 2.8f, Config.HEX_SIZE + 2.8f, Color.White);
         }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            Marker marker = new Marker(Texture, Cell);
+            marker.Parent = (EntityCollection)parent;
+            return marker;
+        }
     }
 }

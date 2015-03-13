@@ -76,6 +76,20 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
                 createSubmarine(submarineTexture);
         }
 
+        internal void InitForReplay(EntityCollection parent)
+        {
+            Parent = parent;
+            switch (_teamId)
+            {
+                case 0:
+                    _color = Color.Red;
+                    break;
+                case 1:
+                    _color = Color.Yellow;
+                    break;
+            }
+        }
+
         void createSubmarine(Texture2D submarineTexture)
         {
             List<BaseC> baseCell = new List<BaseC>();
@@ -182,7 +196,7 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
                 if (obj is Submarine)
                 {
                     Submarine sub = obj as Submarine;
-                    ((EntityCollection)Parent).addToCollection(new SunkSubmarine(sub.Cell, this));
+                    ((EntityCollection)Parent).addToCollection(new SunkSubmarine(sub.Cell, this.Color));
                 }
                 Collection.Remove(obj);
             }
@@ -266,6 +280,15 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
         public List<BaseC> Bases
         {
             get { return getBases(); }
+        }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            Team newTeam = new Team(TeamId, AI, Field);
+            newTeam.InitForReplay((EntityCollection)parent);
+            foreach (VisibleObject obj in Collection)
+                newTeam.addToCollection(obj.Copy(newTeam));
+            return newTeam;
         }
     }
 }

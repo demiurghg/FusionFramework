@@ -12,5 +12,12 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity.Markers
         public Circle(Cell cell)
             : base(LogicService.circle, cell)
         { }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            Marker marker = new Circle(Cell);
+            marker.Parent = (EntityCollection)parent;
+            return marker;
+        }
     }
 }

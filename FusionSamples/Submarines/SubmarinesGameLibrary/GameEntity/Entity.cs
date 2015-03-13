@@ -88,5 +88,9 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
         }
         internal override void Delay(double delay) { }
         internal override void GlobalUpdate() { }
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            return this;
+        }
     }
 }

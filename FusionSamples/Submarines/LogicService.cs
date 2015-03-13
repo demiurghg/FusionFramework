@@ -130,6 +130,7 @@ namespace SubmarinesWars
 
         EntityCollection GameCollection;
         ActionsQueue queue;
+        ReplayManager rm;
         bool weHaveAWinner;
         
         public LogicService(Game game)
@@ -138,14 +139,30 @@ namespace SubmarinesWars
             cfg = new SubmarinesConfig();
         }
 
+        public void rmEnd()
+        {
+            rm.End();
+        }
+
+        public void rmSet()
+        {
+            rm = new ReplayManager(ail.GetType().ToString(), air.GetType().ToString());
+            rm.InitPos(GameCollection);
+        }
+
+        AI air;
+        AI ail;
+
         public void reset()
         {
             weHaveAWinner = false;
             CustomMarker.GraphicsDevice = Game.GraphicsDevice;
             GameCollection = new EntityCollection();
             queue = new ActionsQueue(GameCollection, Game.GetService<GameFieldService>().GameField);
-            Team teamR = new Team(0, LoadAI(0), Game.GetService<GameFieldService>().GameField);
-            Team teamL = new Team(1, LoadAI(1), Game.GetService<GameFieldService>().GameField);
+            air = LoadAI(0);
+            ail = LoadAI(1);
+            Team teamL = new Team(0, air, Game.GetService<GameFieldService>().GameField);
+            Team teamR = new Team(1, ail, Game.GetService<GameFieldService>().GameField);
             GameCollection.addToCollection(teamR);
             GameCollection.addToCollection(teamL);
             teamR.Initialize(GameCollection, submarineR);
@@ -296,14 +313,17 @@ namespace SubmarinesWars
                                 List<Submarine> list = GameCollection.getSubmarines();
                                 Submarine sub = list[rnd.Next(list.Count)];
                                 AIAction aiAction = sub.Team.AI.NextAction(sub, Game.GetService<GameFieldService>().GameField);
-                                if (aiAction != null)
-                                    aiAction.execute(sub, queue);
                                 foreach (Marker marker in sub.Team.AI.Markers)
                                     if (marker != null)
                                     {
                                         marker.Parent = GameCollection;
                                         GameCollection.addToCollection(marker);
                                     }
+                                if (aiAction != null)
+                                {
+                                    rm.saveStep(GameCollection, aiAction, sub);
+                                    aiAction.execute(sub, queue);
+                                }
                             }
                         }
                         else

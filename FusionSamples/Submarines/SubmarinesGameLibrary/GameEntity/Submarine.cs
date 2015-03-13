@@ -62,6 +62,21 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
             _minesCount = Config.MINES_COUNT;
         }
 
+        internal Submarine(Cell cell, Team team, Texture2D texture, int number, int health, int tCount, int mCount)
+        {
+            this.Cell = cell;
+            this.X = cell.X - Config.OffsetX;
+            this.Y = cell.Y - Config.OffsetY;
+            this.Parent = team;
+            this._healths = health;
+            this.Texture = texture;
+            this._health = LogicService.health;
+            Order = 5;
+            _number = number;
+            _torpedoCount = tCount;
+            _minesCount = mCount;
+        }
+
         internal void damage()
         {
             _healths--;
@@ -148,6 +163,11 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
                 sb.Draw(_health, x - offsetScale, y + Config.HEX_SIZE / 3, starSize, starSize, ((Team)Parent).Color);
                 x += starSize * 55 / 100 + 1;
             }
+        }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            return new Submarine(Cell, (Team)parent, Texture, Number, Health, TorpedoCount, MinesCount);
         }
     }
 }

@@ -13,10 +13,11 @@ namespace SubmarinesWars.SubmarinesGameLibrary.ArtificialIntelligence
     {
         public Move(List<Cell> path)
         {
+            this.path = new List<Cell>();
             if (path != null)
-                this.path = path;
-            else
-                this.path = new List<Cell>();
+                this.path.AddRange(path);
+            if (this.path.Count > 4)
+                this.path.RemoveRange(4, path.Count - 4);
         }
 
         internal override void execute(Submarine sub, ActionsQueue queue)

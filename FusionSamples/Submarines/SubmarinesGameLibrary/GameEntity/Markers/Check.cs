@@ -12,5 +12,12 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity.Markers
         public Check(Cell cell)
             : base(LogicService.check, cell)
         { }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            Marker marker = new Check(Cell);
+            marker.Parent = (EntityCollection)parent;
+            return marker;
+        }
     }
 }

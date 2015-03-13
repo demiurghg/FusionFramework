@@ -12,10 +12,12 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
 {
     internal class SunkSubmarine : Entity
     {
-        public SunkSubmarine(Cell cell, Team team)
+        internal Color color;
+
+        public SunkSubmarine(Cell cell, Color color)
         {
             Texture = LogicService.sunk;
-            Parent = team;
+            this.color = color;
             this.Cell = cell;
             Order = 2;
         }
@@ -33,7 +35,12 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
             if (stereoEye == StereoEye.Right)
                 offsetScale = Config.offsetScale;
             if (Cell.Type == CellType.SHALLOW) offsetScale = 0;
-            sb.Draw(Texture, Cell.X + offsetScale, Cell.Y, Config.HEX_SIZE, Config.HEX_SIZE, ((Team)Parent).Color);
+            sb.Draw(Texture, Cell.X + offsetScale, Cell.Y, Config.HEX_SIZE, Config.HEX_SIZE, color);
+        }
+
+        internal override VisibleObject Copy(VisibleObject parent)
+        {
+            return new SunkSubmarine(Cell, color);
         }
     }
 }

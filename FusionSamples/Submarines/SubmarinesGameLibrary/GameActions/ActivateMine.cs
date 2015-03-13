@@ -11,9 +11,16 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
 {
     class ActivateMine : Action
     {
-        public ActivateMine(Entity mine)
+        private List<Submarine> submarines;
+        internal void setSubs(List<Submarine> submarines)
+        {
+            this.submarines = submarines;
+        }
+
+        public ActivateMine(Entity mine, ActionsQueue queue)
         {
             Entity = mine;
+            ActionsQueue = queue;
         }
 
         public override bool execute(GameTime gameTime)
@@ -22,7 +29,13 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
             {
                 Mine mine = Entity as Mine;
                 mine.activate();
-            }
+                foreach (Submarine sub in submarines)
+                    if (mine.Cell == sub.Cell)
+                    {
+                        ActionsQueue.addAction(new Bang(mine, ActionsQueue));
+                        ActionsQueue.addAction(new MineDamage(sub, ActionsQueue));
+                    }
+            }                                  
             return true;
         }
     }

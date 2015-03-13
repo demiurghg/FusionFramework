@@ -33,7 +33,6 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
         {
             if (ToRemove)
                 parent.Remove(this);
-
         }
 
         internal override void Update(GameTime gameTime)
@@ -48,7 +47,6 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity
                 offsetScale = -Config.offsetScale;
             if (stereoEye == StereoEye.Right)
                 offsetScale = Config.offsetScale;
-
             sb.Draw(Texture, Cell.X - offsetScale, Cell.Y, Config.HEX_SIZE, Config.HEX_SIZE, new Color(255, 255, 128, 255));
         }
     }

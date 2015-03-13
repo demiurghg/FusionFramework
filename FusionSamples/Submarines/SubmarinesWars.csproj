@@ -69,6 +69,7 @@
   <ItemGroup>
     <Compile Include="ConfigService.cs" />
     <Compile Include="GameFieldService.cs" />
+    <Compile Include="ReplayService.cs" />
     <Compile Include="SubmarinesGameLibrary\ArtificialIntelligence\AI.cs" />
     <Compile Include="SubmarinesGameLibrary\ArtificialIntelligence\AIAction.cs" />
     <Compile Include="SubmarinesGameLibrary\ArtificialIntelligence\LaunchTorpedo.cs" />
@@ -111,6 +112,9 @@
     <Compile Include="SubmarinesGameLibrary\GameEntity\Mine.cs" />
     <Compile Include="SubmarinesGameLibrary\GameEntity\Submarine.cs" />
     <Compile Include="SubmarinesGameLibrary\GameEntity\SunkSubmarine.cs" />
+    <Compile Include="SubmarinesGameLibrary\ReplayAction.cs" />
+    <Compile Include="SubmarinesGameLibrary\ReplayManager.cs" />
+    <Compile Include="SubmarinesGameLibrary\ReplayStep.cs" />
     <Compile Include="SubmarinesWars.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

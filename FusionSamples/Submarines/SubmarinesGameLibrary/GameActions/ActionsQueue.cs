@@ -20,6 +20,7 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
         public EntityCollection GameCollection
         {
             get { return _gameCollection; }
+            internal set { _gameCollection = value; }
         }
 
         public GameField Field
@@ -56,7 +57,7 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
             List<Action> copy = new List<Action>();
             copy.AddRange(_queue);
             for (int i = 1; i < _queue.Count; i++)
-                if (copy[i].Entity == entity)
+                //if (copy[i].Entity == entity)
                     _queue.Remove(copy[i]);
             _size = _queue.Count;
         }
@@ -81,6 +82,12 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
             //timer.Stop();
             //if (timer.Elapsed.Ticks > 100) 
             //    Console.WriteLine("Next action " + timer.Elapsed.Ticks);
+        }
+
+        public void clear()
+        {
+            _queue.Clear();
+            _size = 0;
         }
 
         public void delay(double delay)

@@ -27,7 +27,9 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
                 sub.Team.placedMines++;
                 Mine mine = new Mine(sub);
                 sub.Parent.addToCollection(mine);
-                ActionsQueue.addAction(new ActivateMine(mine));
+                ActivateMine act = new ActivateMine(mine, ActionsQueue);
+                act.setSubs(((EntityCollection)sub.Team.Parent).getSubmarines());
+                ActionsQueue.addAction(act);
             }
             return true;
         }
