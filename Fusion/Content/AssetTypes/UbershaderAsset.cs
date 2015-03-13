@@ -100,45 +100,31 @@ namespace Fusion.Content {
 		}
 
 
-		#if false
-			Expression	::=		'$pixel'|'$vertex'|'$geometry'|'$compute'|'$domain'|'$hull' ' ' Combination
-			Combination	::=		Sequence (' '+ Sequence)*
-			Sequence	::=		Exclusion ('..' Exclusion)*
-			Exclusion	::=		Factor ('|' Factor)*
-			Factor		::=		[-] Definition | Factor
-			Definition	::=		IdentChar+
-		#endif
-
-
-		enum Target {
-			None,
-			PixelShader,
-			VertexShader,
-			GeometryShader,
-			DomainShader,
-			HullShader,
-			ComputeShader,
-		}
-
 
 		class UsdbEntry {
-			public UsdbEntry ( Target target, string defines, byte[] bytecode, string listingPath, string binPath ) {
-				Target		= target;
-				Defines		= defines;
-				Bytecode	= bytecode;
-				ListingPath	= listingPath;
-				BinPath		= binPath;
-			}
 
-			public Target Target;
 			public string Defines;
-			public byte[] Bytecode;
+			public byte[] PSBytecode;
+			public byte[] VSBytecode;
+			public byte[] GSBytecode;
+			public byte[] HSBytecode;
+			public byte[] DSBytecode;
+			public byte[] CSBytecode;
 
-			public string ListingPath;
-			public string BinPath;
+			public UsdbEntry ( string defines, byte[] ps, byte[] vs, byte[] gs, byte[] hs, byte[] ds, byte[] cs ) 
+			{
+				this.Defines	=	defines;
+				this.PSBytecode	=	ps;
+				this.VSBytecode	=	vs;
+				this.GSBytecode	=	gs;
+				this.HSBytecode	=	hs;
+				this.DSBytecode	=	ds;
+				this.CSBytecode	=	cs;
+			}
 		}
 
 	
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -150,6 +136,188 @@ namespace Fusion.Content {
 
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="buildContext"></param>
+		public override void Build ( BuildContext buildContext )
+		{
+			//
+			//	Get combinations :
+			//
+			var combDecl	=	File.ReadAllLines( buildContext.Resolve( SourceFile ) )
+									.Where( line0 => line0.Trim().StartsWith("$ubershader") )
+									.ToList();
+
+			var defineList = new List<string>();
+
+			foreach ( var comb in combDecl ) {
+				var ue = new UbershaderEnumerator( comb.Trim(), "$ubershader" );
+				defineList.AddRange( ue.DefineList );
+			}
+
+
+			//
+			//	Start listing builder :
+			//	
+			ListingPath	=	buildContext.GetTempFileName( AssetPath, ".html", true );
+			var htmlBuilder = new StringBuilder();
+
+			htmlBuilder.AppendFormat("<pre>");
+			htmlBuilder.AppendLine("<b>Ubershader assembly listing</b>");
+			htmlBuilder.AppendLine("");
+			htmlBuilder.AppendLine("<b>Source:</b> <i>" + AssetPath + "</i>" );
+			htmlBuilder.AppendLine("");
+			htmlBuilder.AppendLine("<b>Declarations:</b>");
+
+			foreach ( var comb in combDecl ) {
+				htmlBuilder.AppendLine("  <i>" + comb + "</i>");
+			}
+			htmlBuilder.AppendLine("");
+
+
+			var usdb = new List<UsdbEntry>();
+
+			//
+			//	Build all :
+			//
+			foreach ( var defines in defineList ) {
+
+				var id		=	defineList.IndexOf( defines );
+
+				var psbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".PS.dxbc", true );
+				var vsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".VS.dxbc", true );
+				var gsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".GS.dxbc", true );
+				var hsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".HS.dxbc", true );
+				var dsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".DS.dxbc", true );
+				var csbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".CS.dxbc", true );
+
+				var pshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".PS.html", true );
+				var vshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".VS.html", true );
+				var gshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".GS.html", true );
+				var hshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".HS.html", true );
+				var dshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".DS.html", true );
+				var cshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".CS.html", true );
+
+				var ps = RunFxc( buildContext, SourceFile, "ps_5_0", PSEntryPoint, defines, psbc, pshtm );
+				var vs = RunFxc( buildContext, SourceFile, "vs_5_0", VSEntryPoint, defines, vsbc, vshtm );
+				var gs = RunFxc( buildContext, SourceFile, "gs_5_0", GSEntryPoint, defines, gsbc, gshtm );
+				var hs = RunFxc( buildContext, SourceFile, "hs_5_0", HSEntryPoint, defines, hsbc, hshtm );
+				var ds = RunFxc( buildContext, SourceFile, "ds_5_0", DSEntryPoint, defines, dsbc, dshtm );
+				var cs = RunFxc( buildContext, SourceFile, "cs_5_0", CSEntryPoint, defines, csbc, cshtm );
+				
+
+				htmlBuilder.AppendFormat( (ps==null) ? ".. " : "<a href=\"{0}\">ps</a> ", Path.GetFileName(pshtm) );
+				htmlBuilder.AppendFormat( (vs==null) ? ".. " : "<a href=\"{0}\">vs</a> ", Path.GetFileName(vshtm) );
+				htmlBuilder.AppendFormat( (gs==null) ? ".. " : "<a href=\"{0}\">gs</a> ", Path.GetFileName(gshtm) );
+				htmlBuilder.AppendFormat( (hs==null) ? ".. " : "<a href=\"{0}\">hs</a> ", Path.GetFileName(hshtm) );
+				htmlBuilder.AppendFormat( (ds==null) ? ".. " : "<a href=\"{0}\">ds</a> ", Path.GetFileName(dshtm) );
+				htmlBuilder.AppendFormat( (cs==null) ? ".. " : "<a href=\"{0}\">cs</a> ", Path.GetFileName(cshtm) );
+
+				htmlBuilder.Append( "[" + defines + "]<br>" );
+
+				usdb.Add( new UsdbEntry( defines, ps, vs, gs, hs, ds, cs ) );
+			}
+
+			File.WriteAllText( buildContext.GetTempFileName(AssetPath, ".html", true), htmlBuilder.ToString() );
+
+
+			//
+			//	Write ubershader :
+			//
+			using ( var fs = buildContext.TargetStream( this ) ) {
+
+				using ( var bw = new BinaryWriter( fs ) ) {
+
+					bw.Write( new[]{'U','S','D','B'});
+
+					bw.Write( usdb.Count );
+
+					foreach ( var entry in usdb ) {
+
+						bw.Write( entry.Defines );
+
+						bw.Write( new[]{'P','S','B','C'});
+						bw.Write( entry.PSBytecode.Length );
+						bw.Write( entry.PSBytecode );
+
+						bw.Write( new[]{'V','S','B','C'});
+						bw.Write( entry.VSBytecode.Length );
+						bw.Write( entry.VSBytecode );
+
+						bw.Write( new[]{'G','S','B','C'});
+						bw.Write( entry.GSBytecode.Length );
+						bw.Write( entry.GSBytecode );
+
+						bw.Write( new[]{'H','S','B','C'});
+						bw.Write( entry.HSBytecode.Length );
+						bw.Write( entry.HSBytecode );
+
+						bw.Write( new[]{'D','S','B','C'});
+						bw.Write( entry.DSBytecode.Length );
+						bw.Write( entry.DSBytecode );
+
+						bw.Write( new[]{'C','S','B','C'});
+						bw.Write( entry.CSBytecode.Length );
+						bw.Write( entry.CSBytecode );
+					}
+				}
+			}
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sourceFile"></param>
+		/// <param name="profile"></param>
+		/// <param name="entryPoint"></param>
+		/// <param name="defines"></param>
+		/// <returns></returns>
+		byte[] RunFxc ( BuildContext buildContext, string sourceFile, string profile, string entryPoint, string defines, string output, string listing )
+		{
+			StringBuilder sb = new StringBuilder();
+
+			sb.Append("/Cc" + " ");
+			sb.Append("/T" + profile + " ");
+			sb.Append("/E" + entryPoint + " ");
+			sb.Append("/Fo\"" + output + "\" ");
+			sb.Append("/Fc\"" + listing + "\" ");
+			sb.Append("/nologo" + " ");
+			sb.Append("/O" + OptimizationLevel.ToString() + " ");
+
+			if ( DisableOptimization)	sb.Append("/Od ");
+			if ( PreferFlowControl)	sb.Append("/Gfp ");
+			if ( AvoidFlowControl)	sb.Append("/Gfa ");
+
+			if ( MatrixPacking==ShaderMatrixPacking.ColumnMajor )	sb.Append("/Zpc ");
+			if ( MatrixPacking==ShaderMatrixPacking.RowMajor )	sb.Append("/Zpr ");
+
+			foreach ( var def in defines.Split(new[]{' ','\t'}, StringSplitOptions.RemoveEmptyEntries) ) {
+				sb.AppendFormat("/D{0}=1 ", def);
+			}
+
+			sb.Append("\"" + buildContext.Resolve( sourceFile ) + "\"");
+
+			try {
+				
+				buildContext.RunTool("fxc.exe", sb.ToString());
+
+			} catch ( ToolException tx ) {
+				///	entry point not fount - that is ok.
+				if (tx.Message.Contains("error X3501")) {
+					return new byte[0];
+				}
+
+				throw;
+			}
+
+			return File.ReadAllBytes( output );
+		}
+
+
+	#if false
 		public override void Build ( BuildContext buildContext )
 		{
 			var combDecl	=	File.ReadAllLines( buildContext.Resolve( SourceFile ) )
@@ -336,5 +504,6 @@ namespace Fusion.Content {
 
 			return bytecode;
 		}
+	#endif
 	}
 }

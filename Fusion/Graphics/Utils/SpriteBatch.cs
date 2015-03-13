@@ -157,7 +157,7 @@ namespace Fusion.Graphics {
 			fontTexture		=	device.Game.Content.Load<Texture2D>( @"debugFont.tga" );
 
  			shader			=	Game.Content.Load<Ubershader>(@"spriteBatch.hlsl");
-			shader.Map( typeof(DrawFlags) );
+			#warning shader.Map( typeof(DrawFlags) );
 
 
 			DisposePSO();
@@ -178,8 +178,8 @@ namespace Fusion.Graphics {
 
 				ps.VertexInputElements	=	VertexInputElement.FromStructure( typeof(SpriteVertex) );
 
-				ps.PixelShader	=	shader.GetPixelShader(0);
-				ps.VertexShader	=	shader.GetVertexShader(0);
+				#warning ps.PixelShader	=	shader.GetPixelShader(0);
+				#warning ps.VertexShader	=	shader.GetVertexShader(0);
 
 				pipelineStates.Add( blend, ps );
 								

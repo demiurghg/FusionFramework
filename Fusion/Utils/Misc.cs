@@ -82,6 +82,20 @@ namespace Fusion {
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="?"></param>
+		/// <param name="magic"></param>
+		public static void ExpectMagic ( this BinaryReader reader, string magic, string fileType )
+		{
+			if (!reader.CheckMagic(magic)) {
+				throw new IOException("Bad '" + fileType + "' file: reader expects '" + magic + "' word in binary stream");
+			}
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <param name="reader"></param>
 		/// <param name="magic"></param>
 		/// <returns></returns>

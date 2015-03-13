@@ -76,7 +76,7 @@ namespace Fusion.Graphics {
 			var dev		= Game.GraphicsDevice;
 
 			effect		= Game.Content.Load<Ubershader>("debugRender.hlsl");
-			effect.Map( typeof(RenderFlags) );
+			#warning seffect.Map( typeof(RenderFlags) );
 
 			constData	= new ConstData();
 			constBuffer = new ConstantBuffer(dev, typeof(ConstData));

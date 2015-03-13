@@ -19,31 +19,40 @@ namespace Fusion.Graphics {
 
 		protected readonly GraphicsDevice	device;
 
-		Type			combinerEnum	=	null;
-		Dictionary<int, ShaderBytecode>	computeShaders	=	new Dictionary<int, ShaderBytecode>();
-		Dictionary<int, ShaderBytecode>	geometryShaders	=	new Dictionary<int, ShaderBytecode>();
-		Dictionary<int, ShaderBytecode>	pixelShaders	=	new Dictionary<int, ShaderBytecode>();
-		Dictionary<int, ShaderBytecode>	vertexShaders	=	new Dictionary<int, ShaderBytecode>();
-		Dictionary<int, ShaderBytecode>	hullShaders		=	new Dictionary<int, ShaderBytecode>();
-		Dictionary<int, ShaderBytecode>	domainShaders	=	new Dictionary<int, ShaderBytecode>();
-
-
 		class UsdbEntry {
-			public UsdbEntry ( string target, string defines, string bytecode, byte[] bytecodeRaw ) {
-				Target		= target;
-				Defines		= defines;
-				Bytecode	= bytecode;
-				BytecodeRaw	= bytecodeRaw;
+
+			public string Defines;
+			public ShaderBytecode PixelShader;
+			public ShaderBytecode VertexShader;
+			public ShaderBytecode GeometryShader;
+			public ShaderBytecode HullShader;
+			public ShaderBytecode DomainShader;
+			public ShaderBytecode ComputeShader;
+
+
+			public UsdbEntry ( string defines, byte[] ps, byte[] vs, byte[] gs, byte[] hs, byte[] ds, byte[] cs ) 
+			{
+				this.Defines		=	defines;
+				this.PixelShader	=	NullOrShaderBytecode( ps );
+				this.VertexShader	=	NullOrShaderBytecode( vs );
+				this.GeometryShader	=	NullOrShaderBytecode( gs );
+				this.HullShader		=	NullOrShaderBytecode( hs );
+				this.DomainShader	=	NullOrShaderBytecode( ds );
+				this.ComputeShader	=	NullOrShaderBytecode( cs );
 			}
 
-			public string Target;
-			public string Defines;
-			public string Bytecode;
-			public byte[] BytecodeRaw;
+
+			ShaderBytecode NullOrShaderBytecode ( byte[] array )
+			{
+				if (array.Length==0) {
+					return null;
+				}
+				return new ShaderBytecode( array );;
+			}
 		}
 
 
-		List<UsdbEntry>	database = new List<UsdbEntry>();
+		Dictionary<string,UsdbEntry>	database = new Dictionary<string,UsdbEntry>();
 
 
 		/// <summary>
@@ -70,6 +79,7 @@ namespace Fusion.Graphics {
 
 			using ( var br = new BinaryReader( stream ) ) {
 
+				br.ExpectMagic("USDB", "ubershader");
 				if (!br.CheckMagic("USDB")) {
 					throw new IOException("Bad ubershader database file");
 				}
@@ -77,27 +87,132 @@ namespace Fusion.Graphics {
 				var count = br.ReadInt32();
 
 				for (int i=0; i<count; i++) {
-					var profile		=	br.ReadString();
-					var defList		=	br.ReadString();
-					var length		=	br.ReadInt32();
-					var bytecodeRaw	=	br.ReadBytes( length );
-					var bytecode	=	Misc.MakeStringSignature( bytecodeRaw );	
+					var defines		=	br.ReadString();
+					int length;
+
+					br.ExpectMagic("PSBC", "ubershader");
+					length	=	br.ReadInt32();
+					var ps	=	br.ReadBytes( length );
+
+					br.ExpectMagic("VSBC", "ubershader");
+					length	=	br.ReadInt32();
+					var vs	=	br.ReadBytes( length );
+
+					br.ExpectMagic("GSBC", "ubershader");
+					length	=	br.ReadInt32();
+					var gs	=	br.ReadBytes( length );
+
+					br.ExpectMagic("HSBC", "ubershader");
+					length	=	br.ReadInt32();
+					var hs	=	br.ReadBytes( length );
+
+					br.ExpectMagic("DSBC", "ubershader");
+					length	=	br.ReadInt32();
+					var ds	=	br.ReadBytes( length );
+
+					br.ExpectMagic("CSBC", "ubershader");
+					length	=	br.ReadInt32();
+					var cs	=	br.ReadBytes( length );
 
 					//Log.Message("{0}", profile );
 					//PrintSignature( bytecode, "ISGN" );
 					//PrintSignature( bytecode, "OSGN" );
 					//PrintSignature( bytecode, "OSG5" );
 
-					database.Add( new UsdbEntry( profile, defList, bytecode, bytecodeRaw ) );
+					database.Add( defines, new UsdbEntry( defines, ps, vs, gs, hs, ds, cs ) );
 				}
-			}
-
-			if (combinerEnum!=null) {
-				Map(combinerEnum);
 			}
 		}
 
 
+
+		/// <summary>
+		/// Gets all defines
+		/// </summary>
+		public ICollection<string>	Defines {
+			get {
+				return database.Select( dbe => dbe.Key ).ToArray();
+			}
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		public ShaderBytecode GetPixelShader( string key )
+		{
+			return ( database[key].PixelShader );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		public ShaderBytecode GetVertexShader( string key )
+		{
+			return ( database[key].VertexShader );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		public ShaderBytecode GetGeometryShader( string key )
+		{
+			return ( database[key].GeometryShader );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		public ShaderBytecode GetHullShader( string key )
+		{
+			return ( database[key].HullShader );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		public ShaderBytecode GetDomainShader( string key )
+		{
+			return ( database[key].DomainShader );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="key"></param>
+		/// <returns></returns>
+		public ShaderBytecode GetComputeShader( string key )
+		{
+			return ( database[key].ComputeShader );
+		}
+
+
+
+
+
+
+		#if false
 
 		/// <summary>
 		/// 
@@ -181,7 +296,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="delList"></param>
 		/// <returns></returns>
-		bool GetCombinerSet ( Dictionary<string,int>  enumDict, string defList, out int combination )
+		bool GetCombinerSet ( Dictionary<string,int> enumDict, string defList, out int combination )
 		{				
 			var defs	=	defList.Split( new[]{' ','\t'}, StringSplitOptions.RemoveEmptyEntries );
 			combination	=	0;
@@ -354,5 +469,6 @@ namespace Fusion.Graphics {
 
 			return	shader;
 		}
+		#endif
 	}
 }

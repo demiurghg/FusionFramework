@@ -25,10 +25,10 @@ namespace QuadDemo2D {
 		ConstantBuffer		constBuffer;
 		Texture2D			texture;
 		ConstData			cbData;
-
-		PipelineState		pipelineState;
+		StateFactory		factory;
 
 		enum UberFlags {
+			NONE = 0,
 			USE_VERTEX_COLOR = 1,
 			USE_TEXTURE = 2,
 		}
@@ -72,18 +72,11 @@ namespace QuadDemo2D {
 
 		void LoadContent ()
 		{
+			SafeDispose( ref factory );
+
 			texture		=	Content.Load<Texture2D>("lena.tga" );
-
 			ubershader	=	Content.Load<Ubershader>("test.hlsl");
-			ubershader.Map( typeof(UberFlags) );
-
-			pipelineState	=	new PipelineState( GraphicsDevice );
-			pipelineState.Blending		.SetOpaque();
-			pipelineState.Rasterizer	.SetCullNone();
-			pipelineState.VertexInputElements	=	VertexInputElement.FromStructure( typeof( Vertex ) );
-			pipelineState.VertexOutputElements	=	null;
-			pipelineState.PixelShader			=	ubershader.GetPixelShader ( (int)( UberFlags.USE_TEXTURE | UberFlags.USE_VERTEX_COLOR ) );
-			pipelineState.VertexShader			=	ubershader.GetVertexShader( (int)( UberFlags.USE_TEXTURE | UberFlags.USE_VERTEX_COLOR ) );
+			factory		=	new StateFactory( GraphicsDevice, ubershader, typeof(UberFlags) );
 		}
 
 
@@ -94,8 +87,6 @@ namespace QuadDemo2D {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
-				SafeDispose( ref pipelineState );
-				SafeDispose( ref ubershader );
 				SafeDispose( ref vertexBuffer );
 				SafeDispose( ref constBuffer );
 				SafeDispose( ref texture );
@@ -143,6 +134,10 @@ namespace QuadDemo2D {
 
 			vertexBuffer.SetData( data, 0, 6 );
 
+			UberFlags flags = UberFlags.NONE;
+			if (InputDevice.IsKeyDown(Keys.D1) ) flags |= UberFlags.USE_TEXTURE;
+			if (InputDevice.IsKeyDown(Keys.D2) ) flags |= UberFlags.USE_VERTEX_COLOR;
+
 			//	Update constant buffer and bound it to pipeline:
 			cbData.Transform	=	Matrix.OrthoRH( 4, 3, -2, 2 );
 			constBuffer.SetData(cbData);
@@ -151,7 +146,7 @@ namespace QuadDemo2D {
 			GraphicsDevice.PixelShaderConstants[0]	= constBuffer;
 
 			//	Setup device state :
-			GraphicsDevice.PipelineState			= pipelineState;	
+			GraphicsDevice.PipelineState			= factory[ (int)flags ];
 			GraphicsDevice.DepthStencilState		= DepthStencilState.None ;
 			GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap ;
 

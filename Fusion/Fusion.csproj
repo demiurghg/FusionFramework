@@ -146,7 +146,6 @@
     <Compile Include="Content\ContentLoader.cs" />
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\ContentUtils.cs" />
-    <Compile Include="Content\AssetTypes\UbershaderAsset.Parser.cs" />
     <Compile Include="Content\AssetTypes\WaveFileSoundEffectAsset.cs" />
     <Compile Include="Content\AssetTypes\AssembledCubeTextureAsset.cs" />
     <Compile Include="Content\Asset.cs" />

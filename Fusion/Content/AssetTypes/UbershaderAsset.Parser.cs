@@ -155,26 +155,6 @@ namespace Fusion.Content {
 		}
 
 
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="Parse"></param>
-		void TargetToProfile ( Target target, UbershaderAsset asset, string version, out string profile, out string entryPoint, out string systemDefine )
-		{
-			profile = null;
-			entryPoint = null;
-			systemDefine = "";
-			if ( target == Target.PixelShader	 ) { profile = "ps_" + version; entryPoint = asset.PSEntryPoint; systemDefine = "__PIXEL_SHADER__"		; }	
-			if ( target == Target.VertexShader	 ) { profile = "vs_" + version; entryPoint = asset.VSEntryPoint; systemDefine = "__VERTEX_SHADER__"		; }
-			if ( target == Target.GeometryShader ) { profile = "gs_" + version; entryPoint = asset.GSEntryPoint; systemDefine = "__GEOMETRY_SHADER__"	; }	
-			if ( target == Target.DomainShader	 ) { profile = "ds_" + version; entryPoint = asset.DSEntryPoint; systemDefine = "__DOMAIN_SHADER__"		; }
-			if ( target == Target.HullShader	 ) { profile = "hs_" + version; entryPoint = asset.HSEntryPoint; systemDefine = "__HULL_SHADER__"		; }	
-			if ( target == Target.ComputeShader	 ) { profile = "cs_" + version; entryPoint = asset.CSEntryPoint; systemDefine = "__COMPUTE_SHADER__"	; }
-	
-		}
-
-
 		
 		/// <summary>
 		/// 

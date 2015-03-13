@@ -67,7 +67,7 @@ namespace Fusion.Graphics.Display {
 		void LoadContent ()
 		{
 			stereo	=	Game.Content.Load<Ubershader>("stereo");
-			stereo.Map( typeof(Flags) );
+			#warning stereo.Map( typeof(Flags) );
 		}
 
 
@@ -85,6 +85,7 @@ namespace Fusion.Graphics.Display {
 		{
 			device.ResetStates();
 
+			#if false
 			device.SetTargets( null, destination );
 
 			//device.Clear( backbufferColor.Surface, Color4.White );
@@ -97,7 +98,7 @@ namespace Fusion.Graphics.Display {
 			} 
 
 
-			device.PipelineState		=	
+			//device.PipelineState		=	
 
 			device.DepthStencilState	=	DepthStencilState.None;
 
@@ -107,6 +108,7 @@ namespace Fusion.Graphics.Display {
 
 			device.SetupVertexInput( null, null, null );
 			device.Draw( Primitive.TriangleList, 3, 0 );
+			#endif
 		}
 
 
