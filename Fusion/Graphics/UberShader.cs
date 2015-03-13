@@ -80,9 +80,6 @@ namespace Fusion.Graphics {
 			using ( var br = new BinaryReader( stream ) ) {
 
 				br.ExpectMagic("USDB", "ubershader");
-				if (!br.CheckMagic("USDB")) {
-					throw new IOException("Bad ubershader database file");
-				}
 
 				var count = br.ReadInt32();
 

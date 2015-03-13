@@ -76,7 +76,7 @@ namespace QuadDemo2D {
 
 			texture		=	Content.Load<Texture2D>("lena.tga" );
 			ubershader	=	Content.Load<Ubershader>("test.hlsl");
-			factory		=	new StateFactory( GraphicsDevice, ubershader, typeof(UberFlags) );
+			factory		=	new StateFactory( GraphicsDevice, typeof(UberFlags), ubershader, VertexInputElement.FromStructure(typeof(Vertex) ) );
 		}
 
 

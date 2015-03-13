@@ -31,12 +31,12 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="ubershader"></param>
-		public StateFactory ( GraphicsDevice device, Ubershader ubershader, Type enumType )
+		public StateFactory ( GraphicsDevice device, Type enumType, Ubershader ubershader, VertexInputElement[] vertexInputElements )
 		{
 			this.device			= device;
 			this.ubershader		= ubershader;
 
-			Enumerate( enumType, ubershader, (ps,i) => {} );
+			Enumerate( enumType, ubershader, (ps,i) => { ps.VertexInputElements = vertexInputElements; } );
 		}
 
 
@@ -95,6 +95,8 @@ namespace Fusion.Graphics {
 		/// <param name="?"></param>
 		void Enumerate ( Type enumType, Ubershader ubershader, Action<PipelineState,int> enumAction )
 		{
+			pipelineStates	=	new Dictionary<int,PipelineState>();
+
 			combinerEnum	=	enumType;
 
 			//
