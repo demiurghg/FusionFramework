@@ -224,14 +224,8 @@
     <Compile Include="Graphics\Scene\VertexColorTextureNormal.cs" />
     <Compile Include="Graphics\Scene\SceneLoader.cs" />
     <Compile Include="Graphics\Scene\MeshSubset.cs" />
-    <Compile Include="Graphics\States\BlendDescription.cs" />
-    <Compile Include="Graphics\States\Old\BlendState.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graphics\States\Old\RasterizerState.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Graphics\States\RasterizerDescription.cs" />
+    <Compile Include="Graphics\States\BlendState.cs" />
+    <Compile Include="Graphics\States\RasterizerState.cs" />
     <Compile Include="Graphics\States\PipelineState.cs" />
     <Compile Include="Graphics\States\ShaderBytecode.cs" />
     <Compile Include="Graphics\States\VertexInputElement.cs" />
@@ -408,6 +402,7 @@
       <Name>NvApiWrapper</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

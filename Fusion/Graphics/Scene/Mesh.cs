@@ -605,9 +605,10 @@ namespace Fusion.Graphics {
 		/// Sets vertex buffer, index buffer and layout signature 
 		/// </summary>
 		/// <param name="signature"></param>
+		[Obsolete]
 		public void SetupVertexInput ()
 		{
-			device.SetupVertexInput( InputLayout, VertexBuffer, IndexBuffer );
+			//device.SetupVertexInput( InputLayout, VertexBuffer, IndexBuffer );
 		}
 
 

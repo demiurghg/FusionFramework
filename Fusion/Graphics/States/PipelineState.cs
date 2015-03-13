@@ -36,12 +36,12 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// Blend description. Null value is not acceptable.
 		/// </summary>
-		public BlendDescription Blending { get; private set; }
+		public BlendState Blending { get; set; }
 
 		/// <summary>
 		/// Rasterizer state description. Null value is not acceptable.
 		/// </summary>
-		public RasterizerDescription Rasterizer { get; private set; }
+		public RasterizerState Rasterizer { get; set; }
 
 		/// <summary>
 		/// Pixel shader. Null value is not acceptable.
@@ -116,8 +116,8 @@ namespace Fusion.Graphics {
 		public PipelineState ( GraphicsDevice device )
 		{	
 			this.device	=	device;
-			Blending	=	new BlendDescription();
-			Rasterizer	=	new RasterizerDescription();
+			Blending	=	new BlendState();
+			Rasterizer	=	new RasterizerState();
 
 			isReady		=	false;
 		}
@@ -229,10 +229,16 @@ namespace Fusion.Graphics {
 				throw new InvalidOperationException("PipelineState.VertexShader must be set");
 			}
 
+			
 			ps	=	new D3DPixelShader( device.Device, PixelShader.Bytecode );
 			vs	=	new D3DVertexShader( device.Device, VertexShader.Bytecode );
 
-			inputLayout	=	new InputLayout( device.Device, VertexShader.Bytecode, VertexInputElement.Convert( VertexInputElements ) );
+
+			if (VertexInputElements==null) {
+				inputLayout =	null ;
+			} else {
+				inputLayout	=	new InputLayout( device.Device, VertexShader.Bytecode, VertexInputElement.Convert( VertexInputElements ) );
+			}
 		}
 
 

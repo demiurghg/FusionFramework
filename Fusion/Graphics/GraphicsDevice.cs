@@ -319,9 +319,7 @@ namespace Fusion.Graphics {
 				SafeDispose( ref display );
 
 				SamplerState.DisposeStates();
-				RasterizerState.DisposeStates();
 				DepthStencilState.DisposeStates();
-				BlendState.DisposeStates();
 			}
 
 			base.Dispose(disposing);
@@ -531,6 +529,20 @@ namespace Fusion.Graphics {
 
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="threadGroupCountX"></param>
+		/// <param name="threadGroupCountY"></param>
+		/// <param name="threadGroupCountZ"></param>
+		public void Dispatch( int threadGroupCountX, int threadGroupCountY = 1, int threadGroupCountZ = 1 )
+		{
+			ApplyGpuState();
+			deviceContext.Dispatch( threadGroupCountX, threadGroupCountY, threadGroupCountZ ); 
+		}
+
+
+
 
 		/*-----------------------------------------------------------------------------------------
 		 * 
@@ -566,50 +578,6 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		void ApplyVertexStage()
-		{
-			if (vertexOutputDirty) {
-				if (outputBinding!=null && outputVertexLayout!=null ) {
-					
-					if (gs==null) {
-						deviceContext.StreamOutput.SetTargets( nullSO );
-						throw new InvalidOperationException("Geometry shader must be set to use vertex output.");
-					} else {
-						deviceContext.StreamOutput.SetTargets( outputBinding );
-						outputBinding = outputBindingAppend;
-						DeviceContext.GeometryShader.Set( outputVertexLayout.GetStreamOutputGeometryShader(gs) );
-					}
-
-				} else {
-					var oldGS = GeometryShader;
-					GeometryShader = null;
-					GeometryShader = oldGS;
-					deviceContext.StreamOutput.SetTargets( nullSO );
-				}// */
-
-				vertexOutputDirty	=	false;
-			}
-
-
-			if (vertexInputDirty) {
-
-				if (inputVertexBuffers!=null && inputVertexLayout!=null) {
-					deviceContext.InputAssembler.InputLayout	=	inputVertexLayout.GetInputLayout( vertexShaderSignature );
-					deviceContext.InputAssembler.SetVertexBuffers( 0, inputVertexBuffers, inputVertexStrides, inputVertexOffsets );
-				} else {
-					deviceContext.InputAssembler.InputLayout	=	null;
-					deviceContext.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( null, 0, 0 ) );
-				}
-
-				if (inputIndexBuffer!=null) {
-					deviceContext.InputAssembler.SetIndexBuffer( inputIndexBuffer, DXGI.Format.R32_UInt, 0 );
-				} else {	
-					deviceContext.InputAssembler.SetIndexBuffer( null, Format.Unknown, 0 );
-				}
-
-				vertexInputDirty	=	false;
-			}
-		}
 
 
 
@@ -620,7 +588,7 @@ namespace Fusion.Graphics {
 		/// <param name="ib">Index buffer, can be null</param>
 		/// <param name="primitive">Primitive to draw</param>
 		/// <param name="signature">Input signature</param>
-		public void SetupVertexInput ( VertexInputLayout layout, VertexBuffer vb, IndexBuffer ib )
+		public void SetupVertexInputOLD ( VertexInputLayout layout, VertexBuffer vb, IndexBuffer ib )
 		{
 			vertexInputDirty	=	true;
 
@@ -642,7 +610,7 @@ namespace Fusion.Graphics {
 		/// Null means that all instance rates are zero.</param>
 		/// <param name="indexBuffer">Index buffer to bind. Null means no IB to bind.</param>
 		/// <param name="vertexType">Vertex type that describes input layout.</param>
-		public void SetupVertexInput ( VertexInputLayout layout, VertexBuffer[] vertexBuffers, int[] offsets, IndexBuffer indexBuffer )
+		public void SetupVertexInputOLD ( VertexInputLayout layout, VertexBuffer[] vertexBuffers, int[] offsets, IndexBuffer indexBuffer )
 		{
 			vertexInputDirty	=	true;
 
@@ -673,9 +641,9 @@ namespace Fusion.Graphics {
 		/// <param name="layout"></param>
 		/// <param name="vertexBuffer"></param>
 		/// <param name="offset"></param>
-		public void SetupVertexOutput ( VertexOutputLayout layout, VertexBuffer vertexBuffer, int offset )
+		public void SetupVertexOutputOLD ( VertexOutputLayout layout, VertexBuffer vertexBuffer, int offset )
 		{
-			SetupVertexOutput( layout, new[]{ vertexBuffer }, new[]{ offset } );
+			SetupVertexOutputOLD( layout, new[]{ vertexBuffer }, new[]{ offset } );
 		}
 
 
@@ -685,7 +653,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="vertexBuffers">Vertex buffer to write data.</param>
 		/// <param name="offset">Offset where to start writing data. -1 means append.</param>
-		public void SetupVertexOutput ( VertexOutputLayout layout, VertexBuffer[] vertexBuffers, int[] offsets )
+		public void SetupVertexOutputOLD ( VertexOutputLayout layout, VertexBuffer[] vertexBuffers, int[] offsets )
 		{
 			vertexOutputDirty	=	true;
 
@@ -717,18 +685,6 @@ namespace Fusion.Graphics {
 
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="threadGroupCountX"></param>
-		/// <param name="threadGroupCountY"></param>
-		/// <param name="threadGroupCountZ"></param>
-		public void Dispatch( int threadGroupCountX, int threadGroupCountY = 1, int threadGroupCountZ = 1 )
-		{
-			deviceContext.Dispatch( threadGroupCountX, threadGroupCountY, threadGroupCountZ ); 
-		}
-
-
 
 		/*-----------------------------------------------------------------------------------------
 		 * 
@@ -739,177 +695,12 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// Resets all? including RTs and DS
 		/// </summary>
+		[Obsolete]
 		public void ResetStates ()
 		{
 			DeviceContext.ClearState();
-			
-			//	Kill cached value :
-			vertexInputDirty	=	false;
-			vertexOutputDirty	=	false;
-
-			blendState	=	null;
-			rasterState	=	null;
-			depthState	=	null;
-
-			ps	=	null;
-			vs	=	null;
-			gs	=	null;
-			cs	=	null;
-			ds	=	null;
-			hs	=	null;
-
-			vertexInputDirty		= true;
-			vertexOutputDirty		= true;
-			vertexShaderSignature	= null;
-
-			inputVertexBuffers	= null;
-			inputIndexBuffer	= null;
-			inputVertexOffsets	= null;
-			inputVertexStrides	= null;
-			inputVertexLayout	= null;
-
-			outputBinding		= null;
 		}
 
-
-
-		BlendState			blendState	=	null;
-		RasterizerState		rasterState	=	null;
-		DepthStencilState	depthState	=	null;
-
-
-
-		/// <summary>
-		/// Sets and gets blend state.
-		/// </summary>
-		public BlendState BlendState {
-			set {
-				if (value==null) {
-					throw new ArgumentNullException();
-				}
-				if (blendState!=value) {
-					blendState = value;
-					blendState.Apply( this );
-				}
-			} 
-			get {
-				return blendState;
-			}
-		}
-
-
-
-		/// <summary>
-		/// Sets and gets rasterizer state.
-		/// </summary>
-		public RasterizerState RasterizerState {
-			set {
-				if (value==null) {
-					throw new ArgumentNullException();
-				}
-				if (rasterState!=value) {
-					rasterState = value;
-					rasterState.Apply( this );
-				}
-			}
-			get {
-				return rasterState;
-			}
-		} 
-
-
-
-		PixelShader		ps;
-		VertexShader	vs;
-		GeometryShader	gs;
-		ComputeShader	cs;
-		DomainShader	ds;
-		HullShader		hs;
-
-		public PixelShader PixelShader {
-			set { 
-				if (ps!=value) { 
-					ps=value; 
-					deviceContext.PixelShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return ps; 
-			}
-		}
-
-
-		public VertexShader VertexShader {
-			set { 
-				if (vs!=value) { 
-					vs = value;
-					vertexInputDirty = true;
-					if (value==null) {
-						vertexShaderSignature = null;
-						deviceContext.VertexShader.Set( null );
-					} else {
-						vertexShaderSignature = value.Bytecode;
-						deviceContext.VertexShader.Set( value.Shader ); 
-					}
-				} 
-			}
-			get { 
-				return vs; 
-			}
-		}
-
-
-		public GeometryShader GeometryShader {
-			set { 
-				if (gs!=value) { 
-					gs=value; 
-					vertexOutputDirty = true;
-					deviceContext.GeometryShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return gs; 
-			}
-		}
-
-
-		public ComputeShader ComputeShader {
-			set { 
-				if (cs!=value) { 
-					cs=value; 
-					deviceContext.ComputeShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return cs; 
-			}
-		}
-
-
-		public DomainShader DomainShader {
-			set { 
-				if (ds!=value) { 
-					ds=value; 
-					deviceContext.DomainShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return ds; 
-			}
-		}
-
-
-		public HullShader HullShader {
-			set { 
-				if (hs!=value) { 
-					hs=value; 
-					deviceContext.HullShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return hs; 
-			}
-		}
 
 
 		/*-----------------------------------------------------------------------------------------

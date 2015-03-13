@@ -159,7 +159,6 @@ namespace Fusion.Graphics {
  			shader			=	Game.Content.Load<Ubershader>(@"spriteBatch.hlsl");
 			#warning shader.Map( typeof(DrawFlags) );
 
-
 			DisposePSO();
 
 			foreach (SpriteBlend blend in Enum.GetValues(typeof(SpriteBlend))) {
@@ -168,18 +167,18 @@ namespace Fusion.Graphics {
 
 				ps.Rasterizer.SetCullNone();
 
-				if (blend==SpriteBlend.Opaque			) ps.Blending.SetOpaque();
-				if (blend==SpriteBlend.AlphaBlend		) ps.Blending.SetAlphaBlend();
-				if (blend==SpriteBlend.AlphaBlendPreMul	) ps.Blending.SetAlphaBlendPreMul();
-				if (blend==SpriteBlend.Additive			) ps.Blending.SetAdditive();
-				if (blend==SpriteBlend.Screen			) ps.Blending.SetScreen();
-				if (blend==SpriteBlend.Multiply			) ps.Blending.SetMultiply();
-				if (blend==SpriteBlend.NegMultiply		) ps.Blending.SetNegMultiply();
+				if (blend==SpriteBlend.Opaque			) ps.Blending	=	BlendState.Opaque;
+				if (blend==SpriteBlend.AlphaBlend		) ps.Blending	=	BlendState.AlphaBlend;
+				if (blend==SpriteBlend.AlphaBlendPreMul	) ps.Blending	=	BlendState.AlphaBlendPreMul;
+				if (blend==SpriteBlend.Additive			) ps.Blending	=	BlendState.Additive;
+				if (blend==SpriteBlend.Screen			) ps.Blending	=	BlendState.Screen;
+				if (blend==SpriteBlend.Multiply			) ps.Blending	=	BlendState.Multiply;
+				if (blend==SpriteBlend.NegMultiply		) ps.Blending	=	BlendState.NegMultiply;
 
 				ps.VertexInputElements	=	VertexInputElement.FromStructure( typeof(SpriteVertex) );
 
-				#warning ps.PixelShader	=	shader.GetPixelShader(0);
-				#warning ps.VertexShader	=	shader.GetVertexShader(0);
+				ps.PixelShader	=	shader.GetPixelShader("");
+				ps.VertexShader	=	shader.GetVertexShader("");
 
 				pipelineStates.Add( blend, ps );
 								

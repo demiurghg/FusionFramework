@@ -13,7 +13,7 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// Describes rasterizer state.
 	/// </summary>
-	public class RasterizerDescription {
+	public class RasterizerState {
 
 		public CullMode	CullMode			{ get; set; }
 		public int		DepthBias			{ get; set; }
@@ -27,7 +27,7 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		public RasterizerDescription () {
+		public RasterizerState () {
 			CullMode			=	CullMode.CullNone;
 			DepthBias			=	0;
 			SlopeDepthBias		=	0;

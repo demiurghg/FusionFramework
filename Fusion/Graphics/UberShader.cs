@@ -139,7 +139,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
-		public ShaderBytecode GetPixelShader( string key )
+		public ShaderBytecode GetPixelShader( string key = "" )
 		{
 			return ( database[key].PixelShader );
 		}
@@ -151,7 +151,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
-		public ShaderBytecode GetVertexShader( string key )
+		public ShaderBytecode GetVertexShader( string key = "" )
 		{
 			return ( database[key].VertexShader );
 		}
@@ -163,7 +163,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
-		public ShaderBytecode GetGeometryShader( string key )
+		public ShaderBytecode GetGeometryShader( string key = "" )
 		{
 			return ( database[key].GeometryShader );
 		}
@@ -175,7 +175,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
-		public ShaderBytecode GetHullShader( string key )
+		public ShaderBytecode GetHullShader( string key = "" )
 		{
 			return ( database[key].HullShader );
 		}
@@ -187,7 +187,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
-		public ShaderBytecode GetDomainShader( string key )
+		public ShaderBytecode GetDomainShader( string key = "" )
 		{
 			return ( database[key].DomainShader );
 		}
@@ -199,7 +199,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
-		public ShaderBytecode GetComputeShader( string key )
+		public ShaderBytecode GetComputeShader( string key = "" )
 		{
 			return ( database[key].ComputeShader );
 		}

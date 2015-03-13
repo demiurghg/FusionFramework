@@ -23,6 +23,7 @@ namespace Fusion.Graphics.Display {
 		public 		D3D.Device d3dDevice = null;
 
 		protected Ubershader	stereo;
+		protected StateFactory	factory;
 
 		protected enum Flags {
 			VERTICAL_LR		=	0x0001,
@@ -32,8 +33,6 @@ namespace Fusion.Graphics.Display {
 			OCULUS_RIFT		=	0x0010,
 		}
 
-
-		Dictionary<Flags, PipelineState> pipelineStates = new Dictionary<Flags,PipelineState>();
 
 
 		/// <summary>
@@ -67,7 +66,7 @@ namespace Fusion.Graphics.Display {
 		void LoadContent ()
 		{
 			stereo	=	Game.Content.Load<Ubershader>("stereo");
-			#warning stereo.Map( typeof(Flags) );
+			factory	=	new StateFactory( device, typeof(Flags), stereo, null );
 		}
 
 
@@ -85,10 +84,7 @@ namespace Fusion.Graphics.Display {
 		{
 			device.ResetStates();
 
-			#if false
 			device.SetTargets( null, destination );
-
-			//device.Clear( backbufferColor.Surface, Color4.White );
 
 			if (leftResolved!=null) {
 				device.Resolve( left, leftResolved );
@@ -98,8 +94,7 @@ namespace Fusion.Graphics.Display {
 			} 
 
 
-			//device.PipelineState		=	
-
+			device.PipelineState		=	factory[ (int)flag ];
 			device.DepthStencilState	=	DepthStencilState.None;
 
 			device.PixelShaderSamplers[0]	=	SamplerState.LinearClamp;
@@ -108,7 +103,6 @@ namespace Fusion.Graphics.Display {
 
 			device.SetupVertexInput( null, null, null );
 			device.Draw( Primitive.TriangleList, 3, 0 );
-			#endif
 		}
 
 
@@ -120,6 +114,7 @@ namespace Fusion.Graphics.Display {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
+				SafeDispose( ref factory );
 				SafeDispose( ref d3dDevice );
 			}
 			base.Dispose( disposing );
