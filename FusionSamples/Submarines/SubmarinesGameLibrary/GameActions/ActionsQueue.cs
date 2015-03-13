@@ -57,7 +57,7 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
             List<Action> copy = new List<Action>();
             copy.AddRange(_queue);
             for (int i = 1; i < _queue.Count; i++)
-                //if (copy[i].Entity == entity)
+                if ((copy[i] is Bang) || (copy[i] is MineDamage))
                     _queue.Remove(copy[i]);
             _size = _queue.Count;
         }
