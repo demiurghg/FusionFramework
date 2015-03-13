@@ -55,7 +55,7 @@ PS_IN VSMain( VS_IN input )
 	float4	normal	=	mul( float4(input.Normal,0),  Batch.World 		);
 	
 	output.Position = pPos;
-	output.Color 	= 1;
+	output.Color 	= input.Color;
 	output.TexCoord	= input.TexCoord;
 	output.WNormal	= normalize(normal);
 	
@@ -69,7 +69,7 @@ float4 PSMain( PS_IN input ) : SV_Target
 	float3 amb = float3(100,149,237) / 256.0f / 2;
 	float3 sun = float3(255,240,120) / 256.0f * 1;
 	float3 light = (0.2 + 0.8*dot( input.WNormal, normalize(float3(2,3,1)))) * sun + amb;
-	return float4(light * Texture.Sample( Sampler, input.TexCoord ), 1);
+	return float4(light * input.Color, 1);
 }
 
 
