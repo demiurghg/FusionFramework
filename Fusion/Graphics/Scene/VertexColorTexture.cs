@@ -15,6 +15,12 @@ namespace Fusion.Graphics {
 		[Vertex("COLOR")]		public Color	Color	;
 		[Vertex("TEXCOORD")]	public Vector2	TexCoord;
 
+		static public VertexInputElement[] Elements {
+			get {
+				return VertexInputElement.FromStructure( typeof(VertexColorTexture) );
+			}
+		}
+
 		public static VertexColorTexture Bake ( MeshVertex meshVertex )
 		{
 			VertexColorTexture v;

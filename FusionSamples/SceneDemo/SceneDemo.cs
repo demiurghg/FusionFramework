@@ -43,9 +43,22 @@ namespace SceneDemo {
 		}
 
 
+
+		class Material {
+			public Texture2D	Texture;
+		}
+
+		class Context {
+			public Matrix	View;
+			public Matrix	Projection;
+			public Vector4	ViewPosition;
+		}
+
 		Scene		scene;
+		SceneDrawer<VertexColorTextureNormal, Material, Context>	sceneDrawer;
 		ConstantBuffer	constBuffer;
-		Ubershader	uberShader;
+		Ubershader		uberShader;
+		StateFactory	factory;
 
 
 		struct CBData {
@@ -82,16 +95,23 @@ namespace SceneDemo {
 		/// </summary>
 		public void LoadContent ()
 		{
+			SafeDispose( ref sceneDrawer );
+			SafeDispose( ref factory );
+
+			//	load scene :
 			scene =	Content.Load<Scene>(@"Scenes\testScene");
 
-			foreach ( var mtrl in scene.Materials ) {
-				mtrl.Tag	=	Content.Load<Texture2D>( mtrl.TexturePath );
-			}
-
-			scene.Bake<VertexColorTextureNormal>( GraphicsDevice, VertexColorTextureNormal.Bake );
+			//	create scene drawer :
+			sceneDrawer	=	new SceneDrawer<VertexColorTextureNormal,Material,Context>( 
+						GraphicsDevice, 
+						scene, 
+						VertexColorTextureNormal.Bake, 
+						(m)=> new Material(){ Texture = Content.Load<Texture2D>( m.TexturePath ) } );
 
 			uberShader	=	Content.Load<Ubershader>("render");
-			uberShader.Map( typeof(RenderFlags) );
+			factory		=	new StateFactory( GraphicsDevice, typeof(RenderFlags), uberShader, VertexColorTextureNormal.Elements );
+
+
 
 			Log.Message("{0}", scene.Nodes.Count( n => n.MeshIndex >= 0 ) );
 		}
@@ -189,17 +209,83 @@ namespace SceneDemo {
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="context"></param>
+		Context Prepare ( GameTime gameTime, StereoEye stereoEye )
+		{
+			var cam		=	GetService<Camera>();
+			var ctxt	=	new Context();
+
+			ctxt.View			=	cam.GetViewMatrix( stereoEye );
+			ctxt.Projection		=	cam.GetProjectionMatrix( stereoEye );
+			ctxt.ViewPosition	=	new Vector4( cam.GetCameraMatrix( stereoEye ).TranslationVector, 1 );
+
+			return ctxt;
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		bool MeshPrepare ( Context context, Node node, Mesh mesh, VertexBuffer vertexBuffer, IndexBuffer indexBuffer, Matrix worldMatrix )
+		{
+			var cbData	=	new CBData();
+
+			cbData.View			=	context.View;
+			cbData.Projection	=	context.Projection;
+			cbData.ViewPos		=	context.ViewPosition;
+			cbData.World		=	worldMatrix;
+
+			constBuffer.SetData( cbData );
+
+			GraphicsDevice.VertexShaderConstants[0]	=	constBuffer;
+			GraphicsDevice.PixelShaderConstants[0]	=	constBuffer;
+			GraphicsDevice.PipelineState			=	factory[ 0 ];
+			GraphicsDevice.PixelShaderSamplers[0]	=	SamplerState.LinearWrap;
+			GraphicsDevice.DepthStencilState		=	DepthStencilState.Default;
+
+			GraphicsDevice.SetupVertexInput( indexBuffer, vertexBuffer );
+
+			return true;
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="meshSubset"></param>
+		/// <param name="material"></param>
+		void SubsetDraw ( Context context, MeshSubset meshSubset, Material material )
+		{
+			GraphicsDevice.PixelShaderResources[ 0 ]	=	material.Texture;
+
+			GraphicsDevice.DrawIndexed( Primitive.TriangleList, meshSubset.PrimitiveCount*3, meshSubset.StartPrimitive*3, 0 );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <param name="gameTime"></param>
 		/// <param name="stereoEye"></param>
 		protected override void Draw ( GameTime gameTime, StereoEye stereoEye )
 		{
-			CBData cbData = new CBData();
 			var cam	=	GetService<Camera>();
 
 			GraphicsDevice.ClearBackbuffer( Color.CornflowerBlue, 1, 0 );
 
 
-			uberShader.SetPixelShader(0);
+			sceneDrawer.EvaluateScene();
+
+			for (int j = 0; j<30; j++) {
+				sceneDrawer.Draw( gameTime, stereoEye, Prepare, MeshPrepare, SubsetDraw );
+			}
+
+
+			/*uberShader.SetPixelShader(0);
 			uberShader.SetVertexShader(0);
 
 			var worldMatricies = new Matrix[ scene.Nodes.Count ];
@@ -239,7 +325,7 @@ namespace SceneDemo {
 						mesh.Draw( subset.StartPrimitive, subset.PrimitiveCount );
 					}
 				}
-			}
+			}	 */
 
 			base.Draw( gameTime, stereoEye );
 		}

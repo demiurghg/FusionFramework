@@ -397,6 +397,7 @@ namespace Fusion.Graphics {
 		{
 			if (pipelineStateDirty) {
 				pipelineState.Set();
+				pipelineStateDirty = false;
 			}
 
 			if (depthStencilStateDirty) {
