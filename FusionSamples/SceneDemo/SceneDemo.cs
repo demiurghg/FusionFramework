@@ -55,7 +55,7 @@ namespace SceneDemo {
 		}
 
 		Scene		scene;
-		SceneDrawer<VertexColorTextureNormal, Material, Context>	sceneDrawer;
+		SceneDrawer<VertexColorTextureNormal, Material>	sceneDrawer;
 		ConstantBuffer	constBuffer;
 		Ubershader		uberShader;
 		StateFactory	factory;
@@ -102,7 +102,7 @@ namespace SceneDemo {
 			scene =	Content.Load<Scene>(@"Scenes\testScene");
 
 			//	create scene drawer :
-			sceneDrawer	=	new SceneDrawer<VertexColorTextureNormal,Material,Context>( 
+			sceneDrawer	=	new SceneDrawer<VertexColorTextureNormal,Material>( 
 						GraphicsDevice, 
 						scene, 
 						VertexColorTextureNormal.Bake, 

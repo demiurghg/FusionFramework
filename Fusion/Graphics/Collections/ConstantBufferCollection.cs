@@ -36,7 +36,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public int Count { 
 			get { 
-				return CommonShaderStage.ConstantBufferRegisterCount;
+				return CommonShaderStage.ConstantBufferApiSlotCount;
 			}
 		}
 

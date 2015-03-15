@@ -30,13 +30,35 @@ namespace Fusion.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="device"></param>
+		/// <param name="enumType"></param>
 		/// <param name="ubershader"></param>
+		/// <param name="vertexInputElements"></param>
+		/// <param name="blendState"></param>
+		/// <param name="rasterizerState"></param>
 		public StateFactory ( GraphicsDevice device, Type enumType, Ubershader ubershader, VertexInputElement[] vertexInputElements )
 		{
 			this.device			= device;
 			this.ubershader		= ubershader;
 
 			Enumerate( enumType, ubershader, (ps,i) => { ps.VertexInputElements = vertexInputElements; } );
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="device"></param>
+		/// <param name="ubershader"></param>
+		public StateFactory ( GraphicsDevice device, Type enumType, Ubershader ubershader, VertexInputElement[] vertexInputElements, BlendState blendState, RasterizerState rasterizerState )
+		{
+			this.device			= device;
+			this.ubershader		= ubershader;
+
+			Enumerate( enumType, ubershader, (ps,i) => { 
+					ps.VertexInputElements = vertexInputElements; 
+					ps.Blending			=	blendState;
+					ps.Rasterizer		=	rasterizerState;
+				} );
 		}
 
 

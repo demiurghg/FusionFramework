@@ -15,7 +15,7 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class SceneDrawer<TVertex, TMaterial, TContext> : DisposableBase where TVertex: struct {
+	public class SceneDrawer<TVertex, TMaterial> : DisposableBase where TVertex: struct {
 
 		GraphicsDevice device;
 
@@ -26,7 +26,6 @@ namespace Fusion.Graphics {
 		Matrix[] worldMatricies;
 
 		TMaterial[]	materials;
-		TContext	context;
 
 		/// <summary>
 		/// 
@@ -142,7 +141,7 @@ namespace Fusion.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="context"></param>
-		public delegate TContext Prepare ( GameTime gameTime, StereoEye stereoEye );
+		public delegate TContext Prepare<TContext> ( GameTime gameTime, StereoEye stereoEye );
 
 
 		/// <summary>
@@ -155,7 +154,7 @@ namespace Fusion.Graphics {
 		/// <param name="indexBuffer">Index buffer with mesh data</param>
 		/// <param name="worldMatrix">Evaluates world matrix</param>
 		/// <returns>Whether this node or mesh should be rendered</returns>
-		public delegate bool MeshPrepare ( TContext context, Node node, Mesh mesh, VertexBuffer vertexBuffer, IndexBuffer indexBuffer, Matrix worldMatrix );
+		public delegate bool MeshPrepare<TContext> ( TContext context, Node node, Mesh mesh, VertexBuffer vertexBuffer, IndexBuffer indexBuffer, Matrix worldMatrix );
 
 
 		/// <summary>
@@ -163,16 +162,16 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="meshSubset">Mesh subset to render</param>
 		/// <param name="material">Material to render</param>
-		public delegate void SubsetDraw ( TContext context, MeshSubset meshSubset, TMaterial material );
+		public delegate void SubsetDraw<TContext> ( TContext context, MeshSubset meshSubset, TMaterial material );
 
 
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Draw ( GameTime gameTime, StereoEye stereoEye, Prepare prepare, MeshPrepare meshPrepare, SubsetDraw subsetDraw )
+		public void Draw<TContext> ( GameTime gameTime, StereoEye stereoEye, Prepare<TContext> prepare, MeshPrepare<TContext> meshPrepare, SubsetDraw<TContext> subsetDraw )
 		{
-			context = prepare( gameTime, stereoEye );
+			var context = prepare( gameTime, stereoEye );
 
 			for (int i=0; i<scene.Nodes.Count; i++) {
 

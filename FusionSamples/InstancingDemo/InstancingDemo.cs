@@ -36,19 +36,18 @@ namespace InstancingDemo2D {
 
 		Ubershader			us;
 		VertexBuffer		vb;
-		VertexInputLayout	layout;
 		ConstantBuffer		cb;
 		InstData[]			instDataCpu;
 		StructuredBuffer	instDataGpu;
 		Texture2D			tex;
 		ConstData			cbData;
+		StateFactory		factory;
 
 
 
 
 		enum UberFlags {
-			USE_VERTEX_COLOR = 1,
-			USE_TEXTURE = 2,
+			NONE,
 		}
 
 
@@ -142,7 +141,6 @@ namespace InstancingDemo2D {
 			base.Initialize();
 
 			vb			=	new VertexBuffer(device,  typeof(Vertex), 6 );
-			layout		=	new VertexInputLayout(device, typeof(Vertex) );
 			cb			=	new ConstantBuffer(GraphicsDevice, typeof(ConstData) );
 			instDataGpu	=	new StructuredBuffer( device, typeof(InstData), InstanceCount, StructuredBufferFlags.None ); 
 			instDataCpu	=	new InstData[ InstanceCount ];
@@ -171,9 +169,10 @@ namespace InstancingDemo2D {
 		/// <param name="e"></param>
 		void InstancingDemo_Reloading ( object sender, EventArgs e )
 		{
-			us	=	Content.Load<Ubershader>("test");
-			us.Map( typeof(UberFlags) );
-			tex	=	Content.Load<Texture2D>("block" );
+			SafeDispose( ref factory );
+			us		=	Content.Load<Ubershader>("test");
+			factory	=	new StateFactory( GraphicsDevice, typeof(UberFlags), us, VertexInputElement.FromStructure( typeof(Vertex) ), BlendState.Additive, RasterizerState.CullNone );
+			tex		=	Content.Load<Texture2D>("block" );
 		}
 
 
@@ -184,12 +183,10 @@ namespace InstancingDemo2D {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {			
-				us.Dispose();
-				vb.Dispose();
-				cb.Dispose();
-				tex.Dispose();
-				layout.Dispose();
-				instDataGpu.Dispose();
+				SafeDispose( ref factory );
+				SafeDispose( ref vb );
+				SafeDispose( ref cb );
+				SafeDispose( ref instDataGpu );
 			}
 
 			base.Dispose( disposing );
@@ -268,12 +265,9 @@ namespace InstancingDemo2D {
 			vb.SetData( data, 0, 6 );
 
 			//	Set required ubershader :
-			us.SetPixelShader( 0 );
-			us.SetVertexShader( 0 );
 
 			//	Set device states :
-			GraphicsDevice.BlendState			= BlendState.Additive ;
-			GraphicsDevice.RasterizerState		= RasterizerState.CullNone ;
+			GraphicsDevice.PipelineState		= factory[0];
 			GraphicsDevice.DepthStencilState	= DepthStencilState.None ;
 			GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap ;
 
@@ -282,7 +276,7 @@ namespace InstancingDemo2D {
 			GraphicsDevice.VertexShaderResources[1]	= instDataGpu ;
 					
 			//	Setup vertex data and draw :			
-			GraphicsDevice.SetupVertexInput( layout, vb, null );
+			GraphicsDevice.SetupVertexInput( null, vb );
 
 			GraphicsDevice.DrawInstanced( Primitive.TriangleList, 6, InstanceCount, 0, 0 );
 

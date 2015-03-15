@@ -40,8 +40,7 @@ SamplerState	Sampler		: 	register(s0);
 Texture2D		Texture 	: 	register(t0);
 
 #if 0
-$pixel +NEGATIVE
-$vertex 
+$ubershader
 #endif
 
 

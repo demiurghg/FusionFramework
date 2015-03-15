@@ -23,6 +23,8 @@ namespace Fusion.Graphics {
 		readonly	GraphicsDevice	device;
 		internal	D3D11.Buffer	buffer;
 
+		int bufferSizeInBytes;
+
 		
 		/// <summary>
 		/// Constructor
@@ -79,7 +81,16 @@ namespace Fusion.Graphics {
 		void Create ( int sizeInBytes )
 		{
 			int size 	=	sizeInBytes;
-			size		=	size % 16 == 0 ? size : (size/16 * 16) + 16;
+
+			int padSize	=	size % 16 == 0 ? size : (size/16 * 16) + 16;
+
+			if (size!=padSize) {
+				throw new ArgumentException(string.Format("Size of constant buffer in bytes must be padded by 16 bytes ({0} instead of {1})", padSize, size));
+			}
+
+			size	=	padSize;
+
+			bufferSizeInBytes	=	size;
 
 			#if USE_DYNAMIC_CB
 				buffer = new D3D11.Buffer( device.Device, size, ResourceUsage.Dynamic, BindFlags.ConstantBuffer, CpuAccessFlags.Write, ResourceOptionFlags.None, 0 );
@@ -115,27 +126,13 @@ namespace Fusion.Graphics {
 				Marshal.StructureToPtr( value, db.DataPointer, false );
 				device.DeviceContext.UnmapSubresource( buffer, 0 );
 			#else
-				device.DeviceContext.UpdateSubresource( ref value, buffer );
+				lock (device.DeviceContext) {
+					device.DeviceContext.UpdateSubresource( ref value, buffer );
+				}
 			#endif
 		}
 
 		
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <param name="?"></param>
-		public void SetData<T> ( T[] data, int offset, int count ) where T: struct
-		{
-			#if USE_DYNAMIC_CB
-				var db = device.DeviceContext.MapSubresource( buffer, 0, MapMode.WriteDiscard, D3D11.MapFlags.None );
-				SharpDX.Utilities.Write( db.DataPointer, data, offset, count );
-				device.DeviceContext.UnmapSubresource( buffer, 0 );
-			#else
-				device.DeviceContext.UpdateSubresource( data, buffer );
-			#endif
-		}
-
 
 
 		/// <summary>
@@ -145,7 +142,13 @@ namespace Fusion.Graphics {
 		/// <param name="?"></param>
 		public void SetData<T> ( T[] data ) where T: struct
 		{
-			SetData<T>( data, 0, data.Length );
+			if ( bufferSizeInBytes!=Marshal.SizeOf(typeof(T)) * data.Length ) {
+				throw new ArgumentException("Size of argument data must be equal to constant buffer size");
+			}
+
+			lock (device.DeviceContext) {
+				device.DeviceContext.UpdateSubresource( data, buffer );
+			}
 		}
 
 	}

@@ -100,6 +100,16 @@ namespace Fusion.Graphics {
 
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
+		public static VertexInputElement[] FromStructure<T> () where T: struct
+		{
+			return FromStructure( typeof(T) );
+		}
+
 
 
 

@@ -21,6 +21,8 @@ namespace SkinningDemo {
 		ConstantBuffer	constBuffer;
 		ConstantBuffer	constBufferBones;
 		Ubershader		uberShader;
+		StateFactory	factory;
+		SceneDrawer<VertexColorSkin, object>	sceneDrawer;
 
 
 		struct CBData {
@@ -115,12 +117,16 @@ namespace SkinningDemo {
 		/// </summary>
 		public void LoadContent ()
 		{
+			SafeDispose( ref sceneDrawer );
+			SafeDispose( ref factory );
+
 			scene =	Content.Load<Scene>(@"tube");
 
-			scene.Bake<VertexColorSkin>( GraphicsDevice, VertexColorSkin.Bake );
-
 			uberShader	=	Content.Load<Ubershader>("render");
-			uberShader.Map( typeof(RenderFlags) );
+			factory		=	new StateFactory( GraphicsDevice, typeof(RenderFlags), uberShader, VertexInputElement.FromStructure<VertexColorSkin>() );
+
+			sceneDrawer	=	new SceneDrawer<VertexColorSkin,object>( GraphicsDevice, scene,
+								VertexColorSkin.Bake, (m)=>null );
 
 			Log.Message("{0}", scene.Nodes.Count( n => n.MeshIndex >= 0 ) );
 		}
@@ -136,6 +142,8 @@ namespace SkinningDemo {
 			if (disposing) {
 				//	dispose disposable stuff here
 				//	Do NOT dispose objects loaded using ContentManager.
+				SafeDispose( ref sceneDrawer );
+				SafeDispose( ref factory );
 				SafeDispose( ref constBuffer );
 				SafeDispose( ref constBufferBones );
 			}
@@ -208,6 +216,8 @@ namespace SkinningDemo {
 
 			dr.DrawGrid(10);
 
+			frame += 0.1f;
+
 			base.Update( gameTime );
 		}
 
@@ -228,74 +238,57 @@ namespace SkinningDemo {
 			GraphicsDevice.ClearBackbuffer( Color.CornflowerBlue, 1, 0 );
 
 
-			uberShader.SetPixelShader(0);
-			uberShader.SetVertexShader(0);
-
 			var dr	=	GetService<DebugRender>();
 
 			
 			var localMatricies = new Matrix[ scene.Nodes.Count ];
 			var worldMatricies = new Matrix[ scene.Nodes.Count ];
-			var boneMatricies = new Matrix[ scene.Nodes.Count ];
+			var boneMatricies = new Matrix[ BoneCount ];
 			scene.CopyAbsoluteTransformsTo( worldMatricies );
 
 			//	Animate :
-			/*frame++;
-			if (frame>scene.LastFrame) {
-				frame = scene.FirstFrame;
-			}
-			if (frame<scene.FirstFrame) {
-				frame = scene.FirstFrame;
-			} */
-			frame += 0.1f;
-
 			scene.GetAnimSnapshot( frame, scene.FirstFrame, scene.LastFrame, AnimationMode.Repeat, localMatricies );
 			scene.ComputeAbsoluteTransforms( localMatricies, worldMatricies );
 			scene.ComputeBoneTransforms( localMatricies, boneMatricies );
 
+			constBufferBones.SetData( boneMatricies );
 
-			for (int j=1; j<worldMatricies.Length; j++) {
-				dr.DrawLine( worldMatricies[j-1].TranslationVector, worldMatricies[j].TranslationVector, Color.LightYellow );
-			}
-			foreach ( var wm in worldMatricies ) {
-				dr.DrawBasis( wm, 0.3f );
-			}
+			sceneDrawer.EvaluateScene();
 
-			for (int j = 0; j<1; j++) {
-				for ( int i=0; i<scene.Nodes.Count; i++ ) {
+			sceneDrawer.Draw( gameTime, stereoEye, 
 
-					var node = scene.Nodes[i];
-				
-					if (node.MeshIndex==-1) {
-						continue;
-					}
+				(time,eye) => new { 
+					View = cam.GetViewMatrix(eye), 
+					Projection = cam.GetProjectionMatrix(eye),
+					ViewPos = cam.GetCameraPosition4(eye),
+				},
 
-					var mesh = scene.Meshes[ node.MeshIndex ];
+				(ctxt,node,mesh,vb,ib,w) => {
 
-					cbData.Projection	=	cam.GetProjectionMatrix( stereoEye );
-					cbData.View			=	cam.GetViewMatrix( stereoEye );
-					cbData.World		=	Matrix.RotationYawPitchRoll(j*0.01f,j*0.02f,j*0.03f) * worldMatricies[ i ] * Matrix.Scaling( (float)Math.Pow(0.9,j) );
-					cbData.ViewPos		=	new Vector4( cam.GetCameraMatrix( stereoEye ).TranslationVector, 1 );
-
+					cbData.Projection	=	ctxt.Projection;
+					cbData.View			=	ctxt.View;
+					cbData.World		=	w;
+					cbData.ViewPos		=	ctxt.ViewPos;
 					constBuffer.SetData( cbData );
-					constBufferBones.SetData( boneMatricies ); 
 
-					GraphicsDevice.RasterizerState		= RasterizerState.CullCW ;
+					GraphicsDevice.PipelineState		= factory[0];
 					GraphicsDevice.DepthStencilState	= DepthStencilState.Default ;
-					GraphicsDevice.BlendState			= BlendState.Opaque ;
-					GraphicsDevice.PixelShaderConstants[0]	= constBuffer ;
-					GraphicsDevice.VertexShaderConstants[0]	= constBuffer ;
-					GraphicsDevice.VertexShaderConstants[1]	= constBufferBones ;
+
+					GraphicsDevice.VertexShaderConstants[0] = constBuffer;
+					GraphicsDevice.VertexShaderConstants[1] = constBufferBones;
+					GraphicsDevice.PixelShaderConstants[0] = constBuffer;
+
 					GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.AnisotropicWrap ;
 
-					mesh.SetupVertexInput();
+					GraphicsDevice.SetupVertexInput( ib, vb );
 
-					foreach ( var subset in mesh.Subsets ) {
-						//GraphicsDevice.PSShaderResources[0]	=	mesh.Materials[ subset.MaterialIndex ].Tag as Texture2D ;
-						mesh.Draw( subset.StartPrimitive, subset.PrimitiveCount );
-					}
+					return true;
+				},
+
+				(ctxt,subset,mtrl) => {
+					GraphicsDevice.DrawIndexed( Primitive.TriangleList, subset.PrimitiveCount*3, subset.StartPrimitive*3, 0);
 				}
-			}
+			);
 
 			base.Draw( gameTime, stereoEye );
 		}

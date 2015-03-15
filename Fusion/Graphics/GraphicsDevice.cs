@@ -760,7 +760,9 @@ namespace Fusion.Graphics {
 					deviceContext.OutputMerger.SetTargets( dsv, rtvs );
 				}
 
-				SetViewport( 0, 0, w, h );
+				if (w>0 && h>0) {
+					SetViewport( 0, 0, w, h );
+				}
 			}
 		}
 

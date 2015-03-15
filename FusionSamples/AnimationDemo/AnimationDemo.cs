@@ -28,7 +28,7 @@ namespace AnimationDemo {
 		ConstantBuffer	constBuffer;
 		Ubershader		uberShader;
 		StateFactory	factory;
-		SceneDrawer<VertexColorTextureNormal, Material, Context>	sceneDrawer;
+		SceneDrawer<VertexColorTextureNormal, Material>	sceneDrawer;
 
 
 		struct CBData {
@@ -106,7 +106,7 @@ namespace AnimationDemo {
 			SafeDispose( ref sceneDrawer );
 
 			scene		=	Content.Load<Scene>(@"test");
-			sceneDrawer	=	new SceneDrawer<VertexColorTextureNormal,Material,Context>( 
+			sceneDrawer	=	new SceneDrawer<VertexColorTextureNormal,Material>( 
 							GraphicsDevice, scene, 
 							VertexColorTextureNormal.Bake, 
 							(m) => new Material() );
