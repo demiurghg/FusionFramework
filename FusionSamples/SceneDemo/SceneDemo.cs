@@ -242,7 +242,7 @@ namespace SceneDemo {
 			GraphicsDevice.VertexShaderConstants[0]	=	constBuffer;
 			GraphicsDevice.PixelShaderConstants[0]	=	constBuffer;
 			GraphicsDevice.PipelineState			=	factory[ 0 ];
-			GraphicsDevice.PixelShaderSamplers[0]	=	SamplerState.LinearWrap;
+			GraphicsDevice.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
 			GraphicsDevice.DepthStencilState		=	DepthStencilState.Default;
 
 			GraphicsDevice.SetupVertexInput( indexBuffer, vertexBuffer );

@@ -1,6 +1,6 @@
 
 #if 0
-$compute
+$ubershader
 #endif
 
 #define BLOCK_SIZE	256

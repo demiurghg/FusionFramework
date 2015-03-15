@@ -220,17 +220,22 @@ namespace Fusion.Graphics {
 		/// </summary>
 		void SetupShadersAndLayouts ()
 		{
-			if (PixelShader==null) {
-				throw new InvalidOperationException("PipelineState.PixelShader must be set");
-			}
+			ps	=	PixelShader		== null ? null : new D3DPixelShader		( device.Device, PixelShader	.Bytecode );
+			vs	=	VertexShader	== null ? null : new D3DVertexShader	( device.Device, VertexShader	.Bytecode );
+			gs	=	GeometryShader	== null ? null : new D3DGeometryShader	( device.Device, GeometryShader	.Bytecode );
+			hs	=	HullShader		== null ? null : new D3DHullShader		( device.Device, HullShader		.Bytecode );
+			ds	=	DomainShader	== null ? null : new D3DDomainShader	( device.Device, DomainShader	.Bytecode );
+			cs	=	ComputeShader	== null ? null : new D3DComputeShader	( device.Device, ComputeShader	.Bytecode );
 
-			if (VertexShader==null) {
-				throw new InvalidOperationException("PipelineState.VertexShader must be set");
+			if (cs!=null) {
+				if ( ps!=null || vs!=null || gs!=null || hs!=null || ds!=null ) {
+					throw new InvalidOperationException("If ComputeShader is set, other shader must be set null.");
+				}
+			} else {
+				if ( vs==null ) {
+					throw new InvalidOperationException("Vertex shader must be set.");
+				}
 			}
-
-			
-			ps	=	new D3DPixelShader( device.Device, PixelShader.Bytecode );
-			vs	=	new D3DVertexShader( device.Device, VertexShader.Bytecode );
 
 
 			if (VertexInputElements==null) {

@@ -23,7 +23,7 @@ namespace Fusion.Graphics {
 		IndexBuffer[] ibs;
 		VertexBuffer[] vbs;
 		VertexInputElement[] vie;
-		Matrix[] matricies;
+		Matrix[] worldMatricies;
 
 		TMaterial[]	materials;
 		TContext	context;
@@ -71,7 +71,7 @@ namespace Fusion.Graphics {
 				vbs[i].SetData( vdata );
 			}
 
-			matricies	=	new Matrix[ scene.Nodes.Count ];
+			worldMatricies	=	new Matrix[ scene.Nodes.Count ];
 		}
 
 
@@ -111,12 +111,31 @@ namespace Fusion.Graphics {
 			if (scene.Materials.Count!=materials.Length) {
 				throw new InvalidOperationException("Scene had been changed: scene material count does not equal to material count.");
 			}
-			if (scene.Nodes.Count!=matricies.Length) {
+			if (scene.Nodes.Count!=worldMatricies.Length) {
 				throw new InvalidOperationException("Scene had been changed: scene node count does not equal to global matricies count.");
 			}
 
-			scene.CopyAbsoluteTransformsTo( matricies );
+			scene.CopyAbsoluteTransformsTo( worldMatricies );
 		}
+
+
+
+
+		public void EvaluateScene ( float frame, int firstFrame, int lastFrame, AnimationMode animMode )
+		{
+			EvaluateScene();
+
+			scene.GetAnimSnapshot( frame, firstFrame, lastFrame, AnimationMode.Repeat, worldMatricies );
+			scene.ComputeAbsoluteTransforms( worldMatricies, worldMatricies );
+		}
+
+
+
+		public void EvaluateScene ( float frame, AnimationMode animMode )
+		{
+			EvaluateScene( frame, scene.FirstFrame, scene.LastFrame, animMode );
+		}
+
 
 
 		/// <summary>
@@ -167,7 +186,7 @@ namespace Fusion.Graphics {
 				var mesh	=	scene.Meshes[ meshId ];
 				var vb		=	vbs[ meshId ];
 				var ib		=	ibs[ meshId ];
-				var wm		=	matricies[ i ];
+				var wm		=	worldMatricies[ i ];
 
 				bool draw	=	meshPrepare( context, node, mesh, vb, ib, wm );
 

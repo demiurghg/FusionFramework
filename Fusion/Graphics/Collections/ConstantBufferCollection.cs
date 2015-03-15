@@ -43,6 +43,19 @@ namespace Fusion.Graphics {
 
 		
 		/// <summary>
+		/// 
+		/// </summary>
+		public void Clear ()
+		{
+			for (int i=0; i<Count; i++) {
+				this[i] = null;
+			}
+		}
+
+
+		
+
+		/// <summary>
 		/// Sets and gets sampler state to given shader stage.
 		/// </summary>
 		/// <param name="index"></param>
