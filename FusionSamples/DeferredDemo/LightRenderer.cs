@@ -138,6 +138,7 @@ namespace DeferredDemo {
 
 
 		Ubershader		lightingShader;
+		StateFactory	factory;
 		ConstantBuffer	lightingCB;
 
 		
@@ -179,8 +180,9 @@ namespace DeferredDemo {
 		/// </summary>
 		void LoadContent ()
 		{
+			SafeDispose( ref factory );
 			lightingShader	=	Game.Content.Load<Ubershader>("lighting");
-			lightingShader.Map( typeof( LightingFlags ) );
+			factory			=	new StateFactory( lightingShader, typeof(LightingFlags), VertexInputElement.Empty );
 		}
 
 
@@ -234,6 +236,7 @@ namespace DeferredDemo {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
+				SafeDispose( ref factory );
 				SafeDispose( ref csmDepth );
 				SafeDispose( ref csmColor );
 				SafeDispose( ref spotDepth );
@@ -313,7 +316,9 @@ namespace DeferredDemo {
 			//	Setup compute shader parameters and states :
 			//
 			try {
-				lightingShader.SetComputeShader((int)flags);
+				device.PipelineState	=	factory[ (int)flags ];
+
+				//lightingShader.SetComputeShader((int)flags);
 
 				var cbData	=	new LightingParams();
 				var invView	=	Matrix.Invert( view );
@@ -385,7 +390,7 @@ namespace DeferredDemo {
 
 			var sb = Game.GetService<SpriteBatch>();
 
-			sb.Begin( BlendState.Additive );
+			sb.Begin( SpriteBlend.Additive );
 
 				sb.Draw( lightAccumBuffer, 0, 0, lightAccumBuffer.Width, lightAccumBuffer.Height, Color.White ); 
 

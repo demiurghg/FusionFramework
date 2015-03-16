@@ -27,6 +27,7 @@ namespace DeferredDemo {
 
 		RenderTarget2D	bloom0;
 		RenderTarget2D	bloom1;
+		StateFactory	factory;
 
 
 		Texture2D		bloomMask;
@@ -102,8 +103,10 @@ namespace DeferredDemo {
 		/// </summary>
 		void LoadContent ()
 		{
+			SafeDispose( ref factory );
+
 			shader	=	Game.Content.Load<Ubershader>("hdr");
-			shader.Map( typeof(Flags) );
+			factory	=	new StateFactory( shader, typeof(Flags), VertexInputElement.Empty );
 
 			bloomMask	=	Game.Content.Load<Texture2D>("bloomMask");
 		}
@@ -117,6 +120,7 @@ namespace DeferredDemo {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
+				SafeDispose( ref factory );
 				SafeDispose( ref bloom0 );
 				SafeDispose( ref bloom1 );
 				SafeDispose( ref averageLum	 );
@@ -145,7 +149,7 @@ namespace DeferredDemo {
 			//
 			//	Rough downsampling of source HDR-image :
 			//
-			filter.StretchRect( averageLum.Surface, hdrImage, BlendState.Opaque );
+			filter.StretchRect( averageLum.Surface, hdrImage );
 			averageLum.BuildMipmaps();
 
 			//
@@ -183,8 +187,7 @@ namespace DeferredDemo {
 			device.PixelShaderResources[1]	=	measuredOld;
 			device.DepthStencilState	=	DepthStencilState.None;
 
-			shader.SetPixelShader ( (int)Flags.MEASURE_ADAPT );
-			shader.SetVertexShader( (int)Flags.MEASURE_ADAPT );
+			device.PipelineState		=	factory[ (int)(Flags.MEASURE_ADAPT) ];
 				
 			device.Draw( Primitive.TriangleList, 3, 0 );
 
@@ -206,8 +209,7 @@ namespace DeferredDemo {
 			if (Config.TonemappingOperator==TonemappingOperator.Linear)   { op = Flags.LINEAR;	 }
 			if (Config.TonemappingOperator==TonemappingOperator.Reinhard) { op = Flags.REINHARD; }
 
-			shader.SetPixelShader ( (int)(Flags.TONEMAPPING|op) );
-			shader.SetVertexShader( (int)(Flags.TONEMAPPING|op) );
+			device.PipelineState		=	factory[ (int)(Flags.TONEMAPPING|op) ];
 				
 			device.Draw( Primitive.TriangleList, 3, 0 );
 			

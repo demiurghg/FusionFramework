@@ -54,9 +54,10 @@ namespace DeferredDemo
 			[FieldOffset(4)]	public	float	linearizeDepthB;        
 		}
 
-		Ubershader shaders;
-		ConstantBuffer gaussWeightsCB;
-		ConstantBuffer bufLinearizeDepth;
+		Ubershader		shaders;
+		StateFactory	factory;
+		ConstantBuffer	gaussWeightsCB;
+		ConstantBuffer	bufLinearizeDepth;
 		
 		public Filter( Game game ) : base( game )
 		{
@@ -86,8 +87,9 @@ namespace DeferredDemo
 		/// </summary>
 		void LoadContent ()
 		{
+			SafeDispose( ref factory );
 			shaders = Game.Content.Load<Ubershader>( "filter" );
-			shaders.Map( typeof( ShaderFlags ) );
+			factory	= new StateFactory( shaders, typeof(ShaderFlags), VertexInputElement.Empty );
 		}
 
 
@@ -99,6 +101,7 @@ namespace DeferredDemo
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing) {
+				SafeDispose( ref factory );
 				SafeDispose( ref gaussWeightsCB );
 				SafeDispose( ref bufLinearizeDepth );
 			}
@@ -114,7 +117,6 @@ namespace DeferredDemo
 		void SetDefaultRenderStates()
 		{
 			rs.ResetStates();
-			rs.RasterizerState		= RasterizerState.CullNone ;
 			rs.DepthStencilState	= DepthStencilState.None ;
 		}
 
@@ -130,19 +132,19 @@ namespace DeferredDemo
 		/// <param name="dst"></param>
 		/// <param name="src"></param>
 		/// <param name="blendState"></param>
-		public void StretchRect( RenderTargetSurface dst, ShaderResource src, BlendState blendState = null )
+		public void StretchRect( RenderTargetSurface dst, ShaderResource src, SamplerState filter = null )
 		{
 			SetDefaultRenderStates();
 
-			blendState = blendState ?? BlendState.Opaque;
-
 			using( new PixEvent() ) {
-				shaders.SetPixelAndVertexShader( (int)ShaderFlags.DOWNSAMPLE_2_2x2 );
+
 				SetViewport(dst);
 				rs.SetTargets( null, dst );
-				rs.VertexShaderResources[0] = src;
-				rs.PixelShaderResources[0] = src;
-				rs.PixelShaderSamplers[0] =  SamplerState.LinearPointClamp;
+
+				rs.PipelineState			=	factory[ (int)ShaderFlags.DOWNSAMPLE_2_2x2 ];
+				rs.VertexShaderResources[0] =	src;
+				rs.PixelShaderResources[0]	=	src;
+				rs.PixelShaderSamplers[0]	=  filter ?? SamplerState.LinearPointClamp;
 
 				rs.Draw( Primitive.TriangleList, 3, 0 );
 			}
@@ -151,20 +153,20 @@ namespace DeferredDemo
 
 
 
-		public void StretchRect4x4( RenderTargetSurface dst, RenderTarget2D src, BlendState blendState = null )
+		public void StretchRect4x4( RenderTargetSurface dst, RenderTarget2D src, SamplerState filter = null )
 		{
 			SetDefaultRenderStates();
 
-			blendState = blendState ?? BlendState.Opaque;
 
 			using( new PixEvent() ) {
-				shaders.SetPixelAndVertexShader( (int)ShaderFlags.DOWNSAMPLE_2_4x4 );
 
-				SetViewport(dst);
 				rs.SetTargets( null, dst );
-				rs.VertexShaderResources[0] = src;
-				rs.PixelShaderResources[0] = src;
-				rs.PixelShaderSamplers[0] =  SamplerState.LinearPointClamp;
+				SetViewport(dst);
+				
+				rs.PipelineState			=	factory[ (int)ShaderFlags.DOWNSAMPLE_2_4x4 ];
+				rs.VertexShaderResources[0] =	src;
+				rs.PixelShaderResources[0]	=	src;
+				rs.PixelShaderSamplers[0]	=	filter ?? SamplerState.LinearPointClamp;
 
 				rs.Draw( Primitive.TriangleList, 3, 0 );
 			}
@@ -178,15 +180,14 @@ namespace DeferredDemo
 			SetDefaultRenderStates();
 
 			using( new PixEvent() ) {
-				shaders.SetPixelShader( (int)ShaderFlags.DOWNSAMPLE_4 );
-				shaders.SetVertexShader( (int)ShaderFlags.DOWNSAMPLE_4 );
 
 				dst.SetViewport();
 				rs.SetTargets( null, dst );
 
-				rs.VertexShaderResources[0] = src;
-				rs.PixelShaderResources[0] = src;
-				rs.PixelShaderSamplers[0] =  SamplerState.LinearPointClamp;
+				rs.PipelineState			=	factory[ (int)ShaderFlags.DOWNSAMPLE_4 ];
+				rs.VertexShaderResources[0] =	src;
+				rs.PixelShaderResources[0]	=	src;
+				rs.PixelShaderSamplers[0]	=	SamplerState.LinearPointClamp;
 
 				rs.Draw( Primitive.TriangleList, 3, 0 );
 			}
@@ -250,8 +251,6 @@ namespace DeferredDemo
 			SetDefaultRenderStates();
 
 			using( new PixEvent() ) {
-				shaders.SetPixelShader( (int)ShaderFlags.COPY );
-				shaders.SetVertexShader( (int)ShaderFlags.COPY );
 
 				if(dst == null) {
 					rs.RestoreBackbuffer();
@@ -260,7 +259,8 @@ namespace DeferredDemo
 					rs.SetTargets( null, dst );
 				}
 
-				rs.PixelShaderResources[0] = src;
+				rs.PipelineState			=	factory[ (int)ShaderFlags.COPY ];
+				rs.PixelShaderResources[0]	= src;
 
 				rs.Draw( Primitive.TriangleList, 3, 0 );
 			}
@@ -279,8 +279,6 @@ namespace DeferredDemo
 			SetDefaultRenderStates();
 
 			using( new PixEvent() ) {
-				shaders.SetPixelShader( (int)ShaderFlags.FXAA );
-				shaders.SetVertexShader( (int)ShaderFlags.FXAA );
 
 				if(dst == null) {
 					rs.RestoreBackbuffer();
@@ -289,9 +287,10 @@ namespace DeferredDemo
 					rs.SetTargets( null, dst );
 				}
 
-				rs.VertexShaderResources[0] = src;
-				rs.PixelShaderResources[0] = src;
-				rs.PixelShaderSamplers[0] =  SamplerState.LinearPointClamp;
+				rs.PipelineState			=	factory[ (int)ShaderFlags.FXAA ];
+				rs.VertexShaderResources[0] =	src;
+				rs.PixelShaderResources[0]	=	src;
+				rs.PixelShaderSamplers[0]	=	SamplerState.LinearPointClamp;
 
 				rs.Draw( Primitive.TriangleList, 3, 0 );
 			}
@@ -305,7 +304,7 @@ namespace DeferredDemo
 		/// </summary>
 		/// <param name="srcDst">source and destination target</param>
 		/// <param name="temporary">temporaru target for two pass filter</param>
-		public void GaussBlur3x3( RenderTarget2D srcDst, RenderTarget2D temporary )
+		/*public void GaussBlur3x3( RenderTarget2D srcDst, RenderTarget2D temporary )
 		{
 			SetDefaultRenderStates();
 
@@ -313,6 +312,7 @@ namespace DeferredDemo
 				srcDst.SetViewport();
 				rs.PixelShaderSamplers[0] = SamplerState.LinearPointClamp;
 
+				rs.PipelineState			=	factory[ (int)ShaderFlags.GAUSS_BLUR_3x3 ];
                 shaders.SetPixelShader( (int)(ShaderFlags.GAUSS_BLUR_3x3) );
                 shaders.SetVertexShader( (int)(ShaderFlags.GAUSS_BLUR_3x3) );
 
@@ -332,7 +332,7 @@ namespace DeferredDemo
                 rs.Draw( Primitive.TriangleList, 3, 0 );
 			}
 			rs.ResetStates();
-		}
+		}	*/
 
 
 
@@ -353,37 +353,34 @@ namespace DeferredDemo
 
 			using( new PixEvent() ) {
 
-				shaders.SetPixelShader( (int)(ShaderFlags.GAUSS_BLUR | ShaderFlags.PASS1) );
-				shaders.SetVertexShader( (int)(ShaderFlags.GAUSS_BLUR | ShaderFlags.PASS1) );
 
 				SetViewport(temporary.GetSurface(mipLevel));
 				rs.SetTargets( null, temporary.GetSurface(mipLevel) );
-				rs.VertexShaderResources[0] = srcDst;
-				rs.PixelShaderResources[0] = srcDst;
-				rs.PixelShaderConstants[0] = gaussWeightsCB;
+
+				rs.PipelineState			=	factory[ (int)(ShaderFlags.GAUSS_BLUR | ShaderFlags.PASS1) ];
+				rs.VertexShaderResources[0]	=	srcDst;
+				rs.PixelShaderResources[0]	=	srcDst;
+				rs.PixelShaderConstants[0]	=	gaussWeightsCB;
 				
-				rs.PixelShaderSamplers[0] = SamplerState.LinearPointClamp;
-				rs.DepthStencilState = DepthStencilState.None;
+				rs.PixelShaderSamplers[0]	=	SamplerState.LinearPointClamp;
+				rs.DepthStencilState		=	DepthStencilState.None;
 
 				rs.Draw( Primitive.TriangleList, 3, 0 );
 
 
-
-				shaders.SetPixelShader((int)(ShaderFlags.GAUSS_BLUR | ShaderFlags.PASS2 ) );
-				shaders.SetVertexShader((int)(ShaderFlags.GAUSS_BLUR | ShaderFlags.PASS2 ) );
-
-				rs.VertexShaderResources[0] = null;
-				rs.PixelShaderResources[0] = null;
+				rs.VertexShaderResources[0] =	null;
+				rs.PixelShaderResources[0]	=	null;
 
 				SetViewport(srcDst.GetSurface(mipLevel));
 				rs.SetTargets( null, srcDst.GetSurface(mipLevel) );
 
-				rs.VertexShaderResources[0] = temporary;
-				rs.PixelShaderResources[0] = temporary;
-				rs.PixelShaderConstants[0] = gaussWeightsCB;
+				rs.PipelineState			=	factory[ (int)(ShaderFlags.GAUSS_BLUR | ShaderFlags.PASS2) ];
+				rs.VertexShaderResources[0] =	temporary;
+				rs.PixelShaderResources[0]	=	temporary;
+				rs.PixelShaderConstants[0]	=	gaussWeightsCB;
 
-				rs.PixelShaderSamplers[0] = SamplerState.LinearPointClamp;
-				rs.DepthStencilState = DepthStencilState.None;
+				rs.PixelShaderSamplers[0]	=	SamplerState.LinearPointClamp;
+				rs.DepthStencilState		=	DepthStencilState.None;
 
 				rs.Draw( Primitive.TriangleList, 3, 0 );
 			}

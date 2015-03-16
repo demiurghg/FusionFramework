@@ -26,7 +26,8 @@ namespace DeferredDemo {
 		}
 
 
-		Ubershader	shader;
+		Ubershader		shader;
+		StateFactory	factory;
 		ConstantBuffer	paramsCB;
 		RenderTarget2D	downsampledDepth;
 		RenderTarget2D	downsampledNormals;
@@ -109,8 +110,9 @@ namespace DeferredDemo {
 		/// </summary>
 		void LoadContent ()
 		{
+			SafeDispose( ref factory );
 			shader	=	Game.Content.Load<Ubershader>("ssao");
-			shader.Map( typeof(Flags) );
+			factory	=	new StateFactory( shader, typeof(Flags), VertexInputElement.Empty, BlendState.Opaque, RasterizerState.CullNone ); 
 		}
 
 
@@ -122,6 +124,7 @@ namespace DeferredDemo {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
+				SafeDispose( ref factory );
 				SafeDispose( ref downsampledNormals );
 				SafeDispose( ref downsampledDepth );
 				SafeDispose( ref occlusionMap0 );
@@ -173,11 +176,9 @@ namespace DeferredDemo {
 			device.PixelShaderResources[1]	=	downsampledNormals;
 			device.PixelShaderResources[2]	=	randomDir;
 			device.PixelShaderSamplers[0]	=	SamplerState.LinearClamp;
-			device.BlendState				=	BlendState.Opaque;
 			device.DepthStencilState		=	DepthStencilState.None;
+			device.PipelineState			=	factory[ (int)Flags.HBAO ];
 
-			shader.SetPixelShader ( (int)Flags.HBAO );
-			shader.SetVertexShader( (int)Flags.HBAO );
 				
 			device.Draw( Primitive.TriangleList, 3, 0 );
 			
