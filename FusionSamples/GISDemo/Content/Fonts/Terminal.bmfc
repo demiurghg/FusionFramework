@@ -1,0 +1,55 @@
+# AngelCode Bitmap Font Generator configuration file
+fileVersion=1
+
+# font settings
+fontName=Terminal
+fontFile=
+charSet=255
+fontSize=18
+aa=1
+scaleH=100
+useSmoothing=0
+isBold=0
+isItalic=0
+useUnicode=0
+disableBoxChars=1
+outputInvalidCharGlyph=0
+dontIncludeKerningPairs=0
+useHinting=1
+renderFromOutline=0
+useClearType=1
+
+# character alignment
+paddingDown=2
+paddingUp=2
+paddingRight=2
+paddingLeft=2
+spacingHoriz=2
+spacingVert=2
+useFixedHeight=1
+forceZero=0
+
+# output file
+outWidth=512
+outHeight=256
+outBitDepth=32
+fontDescFormat=1
+fourChnlPacked=0
+textureFormat=tga
+textureCompression=0
+alphaChnl=2
+redChnl=0
+greenChnl=0
+blueChnl=0
+invA=0
+invR=0
+invG=0
+invB=0
+
+# outline
+outlineThickness=1
+
+# selected chars
+chars=32-126,128,130-140,142,145-156,158-255
+
+# imported icon images

@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{BA1582B7-BAE5-4395-93E3-86328FD099CA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Fusion.GIS</RootNamespace>
+    <AssemblyName>Fusion.GIS</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(FUSION_BIN)</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>$(FUSION_BIN)</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Triangle">
+      <HintPath>..\Misc\Triangle.NET\bin\Triangle.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataSystem\GeoObjectsSources\OpenStreetMapSource.cs" />
+    <Compile Include="DataSystem\GeoObjectsSources\Triangulator.cs" />
+    <Compile Include="DataSystem\GeoObjectsSources\WikiMapiaSource.API.cs" />
+    <Compile Include="DataSystem\GeoObjectsSources\WikiMapiaSource.cs" />
+    <Compile Include="DataSystem\GeoObjectsSources\WikiMapiaSource.Keys.cs" />
+    <Compile Include="DataSystem\MapSources\BaseMapSource.cs" />
+    <Compile Include="DataSystem\MapSources\GoogleMaps\BaseGoogleMapSource.cs" />
+    <Compile Include="DataSystem\MapSources\GoogleMaps\GoogleSatelliteMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapBox\BaseMapBoxMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapBox\PencilMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapBox\PirateMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapBox\SpaceStationMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapTile.cs" />
+    <Compile Include="DataSystem\MapSources\OpenStreetMaps\BaseOpenStreetMap.cs" />
+    <Compile Include="DataSystem\MapSources\Projections\MapProjection.cs" />
+    <Compile Include="DataSystem\MapSources\Projections\MercatorProjection.cs" />
+    <Compile Include="DataSystem\MapSources\Projections\MercatorProjectionYandex.cs" />
+    <Compile Include="DataSystem\MapSources\YandexMaps\BaseYandexMap.cs" />
+    <Compile Include="DataSystem\MapSources\YandexMaps\YandexSatelliteMap.cs" />
+    <Compile Include="DataSystem\WebDownloader.cs" />
+    <Compile Include="GeoHelper.cs" />
+    <Compile Include="GlobeMath\DMathUtil.cs" />
+    <Compile Include="GlobeMath\DMatrix.cs" />
+    <Compile Include="GlobeMath\DQuaternion.cs" />
+    <Compile Include="GlobeMath\DVector2.cs" />
+    <Compile Include="GlobeMath\DVector4.cs" />
+    <Compile Include="GlobeMath\Matrix3x3.cs" />
+    <Compile Include="HeatMap.cs" />
+    <Compile Include="LayerService.cs" />
+    <Compile Include="LayerServiceConfig.cs" />
+    <Compile Include="LayerSpace\BaseLayer.cs" />
+    <Compile Include="LayerSpace\Layers\ElevationLayer.cs" />
+    <Compile Include="LayerSpace\Layers\GeoObjectsLayer.cs" />
+    <Compile Include="LayerSpace\Layers\GeoObjectsLayer.MunicipalDivision.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Atmosphere.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Buildings.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Dots.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Grid.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.HeatMap.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Lines.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.MunicipalDivision.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Tile.cs" />
+    <Compile Include="LayerSpace\Layers\MapLayer.cs" />
+    <Compile Include="LayerSpace\Layers\MapLayer.MapSources.cs" />
+    <Compile Include="LayerSpace\Layers\SimpleBuildings.cs" />
+    <Compile Include="GlobeMath\DVector3.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CLAVIRESystem\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Fusion\Fusion.csproj">
+      <Project>{085c9e62-cddf-4b95-994d-085c74fa90fc}</Project>
+      <Name>Fusion</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Charts.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
