@@ -77,7 +77,7 @@ namespace Fusion.Graphics {
 			var dev		= Game.GraphicsDevice;
 
 			effect		= Game.Content.Load<Ubershader>("debugRender.hlsl");
-			factory		= new StateFactory( dev, typeof(RenderFlags), effect, VertexInputElement.FromStructure( typeof(LineVertex) ) );
+			factory		= new StateFactory( effect, typeof(RenderFlags), VertexInputElement.FromStructure( typeof(LineVertex) ) );
 
 			constData	= new ConstData();
 			constBuffer = new ConstantBuffer(dev, typeof(ConstData));

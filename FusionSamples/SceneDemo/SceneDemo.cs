@@ -109,7 +109,7 @@ namespace SceneDemo {
 						(m)=> new Material(){ Texture = Content.Load<Texture2D>( m.TexturePath ) } );
 
 			uberShader	=	Content.Load<Ubershader>("render");
-			factory		=	new StateFactory( GraphicsDevice, typeof(RenderFlags), uberShader, VertexColorTextureNormal.Elements );
+			factory		=	new StateFactory( uberShader, typeof(RenderFlags), VertexColorTextureNormal.Elements );
 
 
 

@@ -207,11 +207,11 @@ namespace Fusion.Content {
 				var cs = RunFxc( buildContext, SourceFile, "cs_5_0", CSEntryPoint, defines, csbc, cshtm );
 				
 
-				htmlBuilder.AppendFormat( (ps.Length==0) ? ".. " : "<a href=\"{0}\">ps</a> ", Path.GetFileName(pshtm) );
 				htmlBuilder.AppendFormat( (vs.Length==0) ? ".. " : "<a href=\"{0}\">vs</a> ", Path.GetFileName(vshtm) );
-				htmlBuilder.AppendFormat( (gs.Length==0) ? ".. " : "<a href=\"{0}\">gs</a> ", Path.GetFileName(gshtm) );
+				htmlBuilder.AppendFormat( (ps.Length==0) ? ".. " : "<a href=\"{0}\">ps</a> ", Path.GetFileName(pshtm) );
 				htmlBuilder.AppendFormat( (hs.Length==0) ? ".. " : "<a href=\"{0}\">hs</a> ", Path.GetFileName(hshtm) );
 				htmlBuilder.AppendFormat( (ds.Length==0) ? ".. " : "<a href=\"{0}\">ds</a> ", Path.GetFileName(dshtm) );
+				htmlBuilder.AppendFormat( (gs.Length==0) ? ".. " : "<a href=\"{0}\">gs</a> ", Path.GetFileName(gshtm) );
 				htmlBuilder.AppendFormat( (cs.Length==0) ? ".. " : "<a href=\"{0}\">cs</a> ", Path.GetFileName(cshtm) );
 
 				htmlBuilder.Append( "[" + defines + "]<br>" );

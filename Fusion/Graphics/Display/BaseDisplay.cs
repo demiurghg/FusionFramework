@@ -66,7 +66,7 @@ namespace Fusion.Graphics.Display {
 		void LoadContent ()
 		{
 			stereo	=	Game.Content.Load<Ubershader>("stereo");
-			factory	=	new StateFactory( device, typeof(Flags), stereo, null );
+			factory	=	new StateFactory( stereo, typeof(Flags), VertexInputElement.Empty );
 		}
 
 

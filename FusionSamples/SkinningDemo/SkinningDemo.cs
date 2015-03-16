@@ -123,7 +123,7 @@ namespace SkinningDemo {
 			scene =	Content.Load<Scene>(@"tube");
 
 			uberShader	=	Content.Load<Ubershader>("render");
-			factory		=	new StateFactory( GraphicsDevice, typeof(RenderFlags), uberShader, VertexInputElement.FromStructure<VertexColorSkin>() );
+			factory		=	new StateFactory( uberShader, typeof(RenderFlags), VertexInputElement.FromStructure<VertexColorSkin>() );
 
 			sceneDrawer	=	new SceneDrawer<VertexColorSkin,object>( GraphicsDevice, scene,
 								VertexColorSkin.Bake, (m)=>null );

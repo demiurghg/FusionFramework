@@ -103,6 +103,17 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
+		public static VertexInputElement[] Empty {
+			get {
+				return null;
+			}
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
 		public static VertexInputElement[] FromStructure<T> () where T: struct

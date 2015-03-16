@@ -19,6 +19,13 @@ namespace Fusion.Graphics {
 
 		protected readonly GraphicsDevice	device;
 
+		public GraphicsDevice Device {
+			get {
+				return device;
+			}
+		}
+
+
 		class UsdbEntry {
 
 			public string Defines;

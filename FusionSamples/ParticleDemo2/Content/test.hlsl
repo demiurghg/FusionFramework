@@ -1,8 +1,6 @@
 
 #if 0
-$geometry INJECTION|SIMULATION|EXPANSION
-$pixel
-$vertex
+$ubershader INJECTION|SIMULATION|RENDER
 #endif
 
 struct IN_PARTICLE {
@@ -34,8 +32,8 @@ cbuffer CB1 : register(b0) {
 	PARAMS Params; 
 };
 
-SamplerState						Sampler				: 	register(s0);
-Texture2D							Texture 			: 	register(t0);
+SamplerState	Sampler				: 	register(s0);
+Texture2D		Texture 			: 	register(t0);
 
 
 
@@ -49,7 +47,7 @@ struct GSOutput {
 	float4	Color     : COLOR0;
 };
 
-
+#if (defined SIMULATION) || (defined INJECTION) || (defined RENDER)
 OUT_PARTICLE VSMain( IN_PARTICLE p, uint id : SV_VertexID )
 {
 	OUT_PARTICLE op;
@@ -62,6 +60,7 @@ OUT_PARTICLE VSMain( IN_PARTICLE p, uint id : SV_VertexID )
 	
 	return op;
 }
+#endif
 
 
 float Ramp(float f_in, float f_out, float t) 
@@ -106,7 +105,7 @@ void GSMain( point OUT_PARTICLE inputPoint[1], inout PointStream<OUT_PARTICLE> o
 
 
 
-#ifdef EXPANSION
+#ifdef RENDER
 [maxvertexcount(6)]
 void GSMain( point OUT_PARTICLE inputPoint[1], inout TriangleStream<GSOutput> outputStream )
 {
@@ -156,13 +155,11 @@ void GSMain( point OUT_PARTICLE inputPoint[1], inout TriangleStream<GSOutput> ou
 
 	outputStream.RestartStrip();
 }
-#endif
-
 
 
 float4 PSMain( GSOutput input ) : SV_Target
 {
 	return Texture.Sample( Sampler, input.TexCoord ) * float4(input.Color.rgb,1);
 }
-
+#endif
 

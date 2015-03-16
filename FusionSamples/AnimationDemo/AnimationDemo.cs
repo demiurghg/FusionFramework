@@ -112,7 +112,7 @@ namespace AnimationDemo {
 							(m) => new Material() );
 
 			uberShader	=	Content.Load<Ubershader>("render");
-			factory		=	new StateFactory( GraphicsDevice, typeof(RenderFlags), uberShader, VertexColorTextureNormal.Elements );
+			factory		=	new StateFactory( uberShader, typeof(RenderFlags), VertexColorTextureNormal.Elements );
 
 			Log.Message("{0}", scene.Nodes.Count( n => n.MeshIndex >= 0 ) );
 		}

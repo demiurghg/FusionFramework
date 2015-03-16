@@ -89,6 +89,13 @@ namespace Fusion.Graphics {
 			set; 
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
+		public int RasterizedStream { 
+			get;
+			set;
+		}
 
 		bool					isReady	=	false;
 
@@ -117,6 +124,7 @@ namespace Fusion.Graphics {
 			this.device	=	device;
 			Blending	=	new BlendState();
 			Rasterizer	=	new RasterizerState();
+			RasterizedStream	=	-1;
 
 			isReady		=	false;
 		}
@@ -238,10 +246,32 @@ namespace Fusion.Graphics {
 			}
 
 
+			
 			if (VertexInputElements==null) {
 				inputLayout =	null ;
 			} else {
 				inputLayout	=	new InputLayout( device.Device, VertexShader.Bytecode, VertexInputElement.Convert( VertexInputElements ) );
+			}
+
+
+
+			if (VertexOutputElements!=null) {
+
+				if (GeometryShader==null) {
+					throw new InvalidOperationException("Geometry shader is required for vertex output.");
+				}
+
+				var outputElements	=	VertexOutputElement.Convert( VertexOutputElements );
+				int maxBuffers		=	outputElements.Max( oe => oe.OutputSlot ) + 1;
+				var bufferedStrides	=	new int[ maxBuffers ];
+
+				for (int i=0; i<maxBuffers; i++) {
+					bufferedStrides[i] = outputElements	
+										.Where( oe1 => oe1.OutputSlot==i )
+										.Sum( oe2 => oe2.ComponentCount	) * 4;
+				}
+
+				gs	=	new D3DGeometryShader( device.Device, GeometryShader.Bytecode, outputElements, bufferedStrides, RasterizedStream ); 
 			}
 		}
 

@@ -86,7 +86,7 @@ namespace Fusion.Graphics {
 
 			if (size!=padSize) {
 				throw new ArgumentException(string.Format("Size of constant buffer in bytes must be padded by 16 bytes ({0} instead of {1})", padSize, size));
-			}
+			}// */
 
 			size	=	padSize;
 

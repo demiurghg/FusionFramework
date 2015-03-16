@@ -12,8 +12,9 @@ namespace ParticleDemo2 {
 	public class ParticleSystemGS : GameService {
 
 
-		Texture2D	texture;
-		Ubershader	shader;
+		Texture2D		texture;
+		Ubershader		shader;
+		StateFactory	factory;
 
 		const int BlockSize				=	512;
 		const int MaxInjectingParticles	=	1024;
@@ -26,21 +27,20 @@ namespace ParticleDemo2 {
 		VertexBuffer		injectionVB;
 		VertexBuffer		simulationSrcVB;
 		VertexBuffer		simulationDstVB;
-		VertexInputLayout	inputLayout;
-		VertexOutputLayout	outputLayout;
-
+		
 
 		enum Flags {
 			INJECTION	=	0x1,
 			SIMULATION	=	0x2,
-			EXPANSION	=	0x4,
+			RENDER		=	0x4,
 		}
 
+		[StructLayout(LayoutKind.Explicit, Size=144)]
 		struct Params {
-			public Matrix	View;
-			public Matrix	Projection;
-			public int		MaxParticles;
-			public float	DeltaTime;
+			[FieldOffset(  0)] public Matrix	View;
+			[FieldOffset( 64)] public Matrix	Projection;
+			[FieldOffset(128)] public int		MaxParticles;
+			[FieldOffset(132)] public float		DeltaTime;
 		} 
 
 		Random rand = new Random();
@@ -81,6 +81,24 @@ namespace ParticleDemo2 {
 
 			Game.Reloading += Game_Reloading;
 			Game_Reloading( this, EventArgs.Empty );
+		}
+
+
+
+		void Game_Reloading ( object sender, EventArgs e )
+		{
+			SafeDispose( ref factory );
+
+			texture		=	Game.Content.Load<Texture2D>("particle2");
+			shader		=	Game.Content.Load<Ubershader>("test");
+			factory		=	new StateFactory( shader, typeof(Flags), (ps,i) => EnumAction( ps, (Flags)i ) );
+		}
+
+
+
+		void EnumAction ( PipelineState ps, Flags flag )
+		{
+			ps.VertexInputElements	=	VertexInputElement.FromStructure<ParticleVertex>();
 
 			var outputElements = new[]{
 				new VertexOutputElement("SV_POSITION", 0, 0, 4),
@@ -91,19 +109,16 @@ namespace ParticleDemo2 {
 				new VertexOutputElement("TEXCOORD"	 , 2, 0, 4),
 			};
 
-			outputLayout	=	new VertexOutputLayout( Game.GraphicsDevice, outputElements );
-			inputLayout		=	new VertexInputLayout( Game.GraphicsDevice, typeof(ParticleVertex) );
+
+			if (flag==Flags.INJECTION || flag==Flags.SIMULATION) {
+				ps.VertexOutputElements	=	outputElements;
+			}
+
+			if (flag==Flags.RENDER) {
+				ps.Blending	=	BlendState.Screen;
+				ps.Rasterizer	=	RasterizerState.CullNone;
+			}
 		}
-
-
-
-		void Game_Reloading ( object sender, EventArgs e )
-		{
-			texture		=	Game.Content.Load<Texture2D>("particle2");
-			shader		=	Game.Content.Load<Ubershader>("test");
-			shader.Map( typeof(Flags) );
-		}
-
 
 
 		/// <summary>
@@ -177,14 +192,13 @@ namespace ParticleDemo2 {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
+				SafeDispose( ref factory );
+
 				paramsCB.Dispose();
 
 				injectionVB.Dispose();
 				simulationSrcVB.Dispose();
 				simulationDstVB.Dispose();
-
-				inputLayout.Dispose();
-				outputLayout.Dispose();
 			}
 			base.Dispose( disposing );
 		}
@@ -260,12 +274,10 @@ namespace ParticleDemo2 {
 			//
 			//	Simulate :
 			//
-			shader.SetGeometryShader( (int)Flags.SIMULATION );
-			shader.SetVertexShader( 0 );
-			device.PixelShader	= null;
+			device.PipelineState	=	factory[ (int)Flags.SIMULATION ];
 
-			device.SetupVertexInput( inputLayout, simulationSrcVB, null );
-			device.SetupVertexOutput( outputLayout, simulationDstVB, 0 );
+			device.SetupVertexInput( null, simulationSrcVB );
+			device.SetupVertexOutput( simulationDstVB, 0 );
 		
 			device.DrawAuto( Primitive.PointList );
 
@@ -274,12 +286,10 @@ namespace ParticleDemo2 {
 			//
 			injectionVB.SetData( injectionBufferCPU );
 
-			shader.SetGeometryShader( (int)Flags.INJECTION );
-			shader.SetVertexShader( 0 );
-			device.PixelShader	= null;
+			device.PipelineState	=	factory[ (int)Flags.INJECTION ];
 
-			device.SetupVertexInput( inputLayout, injectionVB, null );
-			//device.SetupVertexOutput( outputLayout, simulationDstVB, -1 );
+			device.SetupVertexInput( null, injectionVB );
+			device.SetupVertexOutput( simulationDstVB, -1 );
 		
 			device.Draw( Primitive.PointList, injectionCount, 0 );
 
@@ -288,23 +298,18 @@ namespace ParticleDemo2 {
 			//
 			//	Render
 			//
-
 			paramsCB.SetData( param );
 			device.VertexShaderConstants[0]		= paramsCB ;
 			device.GeometryShaderConstants[0]	= paramsCB ;
 			device.PixelShaderConstants[0]		= paramsCB ;
 
-			shader.SetVertexShader( 0 );
-			shader.SetPixelShader( 0 );
-			shader.SetGeometryShader( (int)Flags.EXPANSION );
+			device.PipelineState	=	factory[ (int)Flags.RENDER ];
 
 			device.PixelShaderResources[0]	=	texture ;
-			device.RasterizerState		=	RasterizerState.CullNone ;
-			device.BlendState			=	BlendState.Screen ;
 			device.DepthStencilState	=	DepthStencilState.None ;
 
-			device.SetupVertexInput( inputLayout, simulationSrcVB, null );
-			device.SetupVertexOutput( null, null, 0 );
+			device.SetupVertexOutput( null, 0 );
+			device.SetupVertexInput( null, simulationSrcVB );
 
 			//device.Draw( Primitive.PointList, injectionCount, 0 );
 

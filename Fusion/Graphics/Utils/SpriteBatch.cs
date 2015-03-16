@@ -47,7 +47,6 @@ namespace Fusion.Graphics {
 
 		public Rectangle	Clip { get; set; }
 		
-		VertexInputLayout	inputLayout;
 		VertexBuffer		vertexBuffer;
 		IndexBuffer			indexBuffer;
 		Ubershader			shader;
@@ -132,7 +131,6 @@ namespace Fusion.Graphics {
 
 			vertices		=	new SpriteVertex[MaxVertices];
 			constBuffer		=	new ConstantBuffer(Game.GraphicsDevice, typeof(ConstData));
-			inputLayout		=	new VertexInputLayout( Game.GraphicsDevice, typeof(SpriteVertex) );
 
 			TextureWhite	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false );
 			TextureBlack	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false );
@@ -210,8 +208,6 @@ namespace Fusion.Graphics {
 				TextureRed		.Dispose();
 				TextureGreen	.Dispose();
 				TextureBlue		.Dispose();
-
-				inputLayout.Dispose();
 
 				vertexBuffer.Dispose();
 				indexBuffer.Dispose();

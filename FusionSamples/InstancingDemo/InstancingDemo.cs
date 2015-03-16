@@ -171,7 +171,7 @@ namespace InstancingDemo2D {
 		{
 			SafeDispose( ref factory );
 			us		=	Content.Load<Ubershader>("test");
-			factory	=	new StateFactory( GraphicsDevice, typeof(UberFlags), us, VertexInputElement.FromStructure( typeof(Vertex) ), BlendState.Additive, RasterizerState.CullNone );
+			factory	=	new StateFactory( us, typeof(UberFlags), VertexInputElement.FromStructure( typeof(Vertex) ), BlendState.Additive, RasterizerState.CullNone );
 			tex		=	Content.Load<Texture2D>("block" );
 		}
 

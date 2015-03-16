@@ -29,15 +29,31 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="ubershader"></param>
+		/// <param name="enumType"></param>
+		/// <param name="enumAction"></param>
+		public StateFactory ( Ubershader ubershader, Type enumType, Action<PipelineState,int> enumAction )
+		{
+			this.device			= ubershader.Device;
+			this.ubershader		= ubershader;
+
+			Enumerate( enumType, ubershader, enumAction );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="enumType"></param>
 		/// <param name="ubershader"></param>
 		/// <param name="vertexInputElements"></param>
 		/// <param name="blendState"></param>
 		/// <param name="rasterizerState"></param>
-		public StateFactory ( GraphicsDevice device, Type enumType, Ubershader ubershader, VertexInputElement[] vertexInputElements )
+		public StateFactory ( Ubershader ubershader, Type enumType, VertexInputElement[] vertexInputElements )
 		{
-			this.device			= device;
+			this.device			= ubershader.Device;
 			this.ubershader		= ubershader;
 
 			Enumerate( enumType, ubershader, (ps,i) => { ps.VertexInputElements = vertexInputElements; } );
@@ -49,9 +65,9 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="ubershader"></param>
-		public StateFactory ( GraphicsDevice device, Type enumType, Ubershader ubershader, VertexInputElement[] vertexInputElements, BlendState blendState, RasterizerState rasterizerState )
+		public StateFactory ( Ubershader ubershader, Type enumType, VertexInputElement[] vertexInputElements, BlendState blendState, RasterizerState rasterizerState )
 		{
-			this.device			= device;
+			this.device			= ubershader.Device;
 			this.ubershader		= ubershader;
 
 			Enumerate( enumType, ubershader, (ps,i) => { 

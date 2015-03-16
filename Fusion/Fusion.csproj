@@ -218,8 +218,6 @@
     <Compile Include="Graphics\Display\OculusRiftDisplay.cs" />
     <Compile Include="Graphics\Display\StereoDualHeadDisplay.cs" />
     <Compile Include="Graphics\Display\StereoInterlacedDisplay.cs" />
-    <Compile Include="Graphics\Resources\VertexOutputLayout.cs" />
-    <Compile Include="Graphics\Resources\VertexInputLayout.cs" />
     <Compile Include="Graphics\Scene\AnimMode.cs" />
     <Compile Include="Graphics\ShaderFactory.cs" />
     <Compile Include="Graphics\Resources\TextureAtlas.cs" />
