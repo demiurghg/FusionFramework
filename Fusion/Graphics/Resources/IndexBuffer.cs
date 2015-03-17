@@ -53,6 +53,21 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="device"></param>
+		/// <param name="indices"></param>
+		/// <returns></returns>
+		public static IndexBuffer Create ( GraphicsDevice device, int[] indices )
+		{
+			var ib = new IndexBuffer( device, indices.Length );
+			ib.SetData( indices );
+			return ib;
+		}
+
+
+
+		/// <summary>
 		/// Immediately releases the unmanaged resources used by this object. 
 		/// </summary>
 		protected override void Dispose(bool disposing)

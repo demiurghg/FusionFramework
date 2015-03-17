@@ -302,11 +302,12 @@ namespace Fusion.Content {
 
 			try {
 				
-				buildContext.RunTool("fxc.exe", sb.ToString());
+				buildContext.RunTool("fxc_1.exe", sb.ToString());
 
 			} catch ( ToolException tx ) {
 				///	entry point not fount - that is ok.
 				if (tx.Message.Contains("error X3501")) {
+					Log.Debug("No entry point '{0}'. That is ok.", entryPoint );
 					return new byte[0];
 				}
 

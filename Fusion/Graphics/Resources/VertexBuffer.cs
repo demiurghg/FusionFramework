@@ -85,6 +85,22 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="TVertex"></typeparam>
+		/// <param name="device"></param>
+		/// <param name="vertexData"></param>
+		/// <returns></returns>
+		public static VertexBuffer Create<TVertex> ( GraphicsDevice device, TVertex[] vertexData ) where TVertex: struct
+		{
+			var vb = new VertexBuffer( device, typeof(TVertex), vertexData.Length );
+			vb.SetData( vertexData );
+			return vb;
+		}
+
+
+
+		/// <summary>
 		/// Immediately releases the unmanaged resources used by this object. 
 		/// </summary>
 		protected override void Dispose( bool disposing )

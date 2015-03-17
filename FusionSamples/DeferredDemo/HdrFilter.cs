@@ -32,13 +32,18 @@ namespace DeferredDemo {
 
 		Texture2D		bloomMask;
 
-
+		//	float AdaptationRate;          // Offset:    0
+		//	float LuminanceLowBound;       // Offset:    4
+		//	float LuminanceHighBound;      // Offset:    8
+		//	float KeyValue;                // Offset:   12
+		//	float BloomAmount;             // Offset:   16
+		[StructLayout(LayoutKind.Explicit, Size=32)]
 		struct Params {
-			public	float	AdaptationRate;
-			public	float 	LuminanceLowBound;
-			public	float	LuminanceHighBound;
-			public	float	KeyValue;
-			public	float	BloomAmount;
+			[FieldOffset( 0)]	public	float	AdaptationRate;
+			[FieldOffset( 4)]	public	float 	LuminanceLowBound;
+			[FieldOffset( 8)]	public	float	LuminanceHighBound;
+			[FieldOffset(12)]	public	float	KeyValue;
+			[FieldOffset(16)]	public	float	BloomAmount;
 		}
 
 

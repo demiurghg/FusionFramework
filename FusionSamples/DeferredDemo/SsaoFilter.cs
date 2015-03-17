@@ -36,6 +36,7 @@ namespace DeferredDemo {
 		Texture2D		randomDir;
 
 
+		#pragma warning disable 649
 		struct Params {
 			public	Matrix	ProjMatrix;
 			public	Matrix	View;
@@ -43,6 +44,8 @@ namespace DeferredDemo {
 			public	Matrix	InvViewProj;
 			public	float	TraceStep;
 			public	float	DecayRate;
+			public float	dummy0;
+			public float	dummy1;
 		}
 
 

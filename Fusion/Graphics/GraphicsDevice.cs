@@ -637,6 +637,8 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public void ResetStates ()
 		{
+			deviceContext.ClearState();
+
 			DepthStencilState	=	DepthStencilState.Default;
 
 			PixelShaderResources	.Clear();

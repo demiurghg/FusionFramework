@@ -20,6 +20,7 @@ namespace DeferredDemo {
 		Scene			scene;
 		ConstantBuffer	constBuffer;
 		Ubershader		surfaceShader;
+		StateFactory	factory;
 
 		Texture2D		defaultDiffuse	;
 		Texture2D		defaultSpecular	;
@@ -42,6 +43,12 @@ namespace DeferredDemo {
 			public Texture2D	Specular;
 			public Texture2D	NormalMap;
 			public Texture2D	Emission;
+		}
+
+
+		class RendMesh {
+			public VertexBuffer	VertexBuffer;
+			public IndexBuffer	IndexBuffer;
 		}
 
 
@@ -125,14 +132,14 @@ namespace DeferredDemo {
 		/// </summary>
 		void LoadContent ()
 		{
-			var tempSurfaceShader	=	Game.Content.Load<Ubershader>("surface");
-			tempSurfaceShader.Map( typeof(SurfaceFlags) );
-
-			surfaceShader = tempSurfaceShader;
+			surfaceShader	=	Game.Content.Load<Ubershader>("surface");
+			factory			=	new StateFactory( surfaceShader, typeof(SurfaceFlags), VertexInputElement.FromStructure<VertexColorTextureTBN>() );
 
 
-			loadingTask = new Task( LoadingTaskFunc	);
-			loadingTask.Start();
+			LoadingTaskFunc();
+
+			/*loadingTask = new Task( LoadingTaskFunc	);
+			loadingTask.Start();*/
 			
 
 			/*scene =	Game.Content.Load<Scene>(@"Scenes\testScene");
@@ -164,6 +171,16 @@ namespace DeferredDemo {
 		{	
 			var tempScene =	Game.Content.Load<Scene>(@"Scenes\testScene");
 
+			foreach ( var mesh in tempScene.Meshes ) {
+				
+				var rmesh = new RendMesh() {
+					IndexBuffer		=	IndexBuffer.Create( Game.GraphicsDevice, mesh.GetIndices() ),
+					VertexBuffer	=	VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTextureTBN.Bake( v ) ).ToArray() ),
+				};
+
+				mesh.Tag	=	rmesh;
+			}
+
 			foreach ( var mtrl in tempScene.Materials ) {
 
 				var surf		=	new SurfaceProperties();
@@ -174,9 +191,7 @@ namespace DeferredDemo {
 				mtrl.Tag		=	surf;
 			}
 
-			tempScene.Bake( Game.GraphicsDevice, VertexColorTextureTBN.Bake );
 			scene	=	tempScene;
-
 
 			foreach ( var mtrl in tempScene.Materials ) {
 
@@ -253,8 +268,7 @@ namespace DeferredDemo {
 			device.SetTargets( depthBuffer.Surface, hdrTarget.Surface, diffuse.Surface, specular.Surface, normals.Surface );
 
 
-			surfaceShader.SetPixelShader((int)SurfaceFlags.GBUFFER);
-			surfaceShader.SetVertexShader(0);
+			device.PipelineState	=	factory[ (int)SurfaceFlags.GBUFFER ];
 
 			for ( int i=0; i<scene.Nodes.Count; i++ ) {
 
@@ -273,25 +287,23 @@ namespace DeferredDemo {
 
 				constBuffer.SetData( cbData );
 
-				device.RasterizerState		= RasterizerState.CullNone ;
 				device.DepthStencilState	= DepthStencilState.Default ;
-				device.BlendState			= BlendState.Opaque ;
 				device.PixelShaderConstants[0]	= constBuffer ;
 				device.VertexShaderConstants[0]	= constBuffer ;
 				device.PixelShaderSamplers[0]	= SamplerState.AnisotropicWrap ;
 
-				mesh.SetupVertexInput();
+				device.SetupVertexInput( (mesh.Tag as RendMesh).IndexBuffer, (mesh.Tag as RendMesh).VertexBuffer );
 
 				foreach ( var subset in mesh.Subsets ) {
 
 					var surf = scene.Materials[ subset.MaterialIndex ].Tag as SurfaceProperties;
-
+					
 					device.PixelShaderResources[0]	=	surf.Diffuse.SRgb;
 					device.PixelShaderResources[1]	=	surf.Specular;
 					device.PixelShaderResources[2]	=	surf.NormalMap;
 					device.PixelShaderResources[3]	=	surf.Emission.SRgb;
 
-					mesh.Draw( subset.StartPrimitive, subset.PrimitiveCount );
+					device.DrawIndexed( Primitive.TriangleList, subset.PrimitiveCount * 3, subset.StartPrimitive * 3, 0 );
 				}
 			}
 		}
@@ -321,12 +333,9 @@ namespace DeferredDemo {
 			device.SetTargets( shadowRenderCtxt.DepthBuffer, shadowRenderCtxt.ColorBuffer );
 			device.SetViewport( shadowRenderCtxt.ShadowViewport );
 
-			surfaceShader.SetPixelShader((int)SurfaceFlags.SHADOW);
-			surfaceShader.SetVertexShader(0);
+			device.PipelineState	=	factory[ (int)SurfaceFlags.SHADOW ];
 
-			device.RasterizerState			= RasterizerState.CullNone ;
 			device.DepthStencilState		= DepthStencilState.Default ;
-			device.BlendState				= BlendState.Opaque ;
 			device.PixelShaderConstants[0]	= constBuffer ;
 			device.VertexShaderConstants[0]	= constBuffer ;
 			device.PixelShaderSamplers[0]	= SamplerState.AnisotropicWrap ;
@@ -351,8 +360,8 @@ namespace DeferredDemo {
 
 				constBuffer.SetData( cbData );
 
-				mesh.SetupVertexInput();
-				mesh.Draw();
+				device.SetupVertexInput( (mesh.Tag as RendMesh).IndexBuffer, (mesh.Tag as RendMesh).VertexBuffer );
+				device.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
 			}
 		}
 		

@@ -41,8 +41,7 @@ Texture2D		NormalMapTexture 	: 	register(t2);
 Texture2D		EmissionTexture 	: 	register(t3);
 
 #if 0
-$pixel GBUFFER|SHADOW
-$vertex 
+$ubershader GBUFFER|SHADOW
 #endif
  
 /*-----------------------------------------------------------------------------
