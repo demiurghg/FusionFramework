@@ -28,7 +28,6 @@ namespace AnimationDemo {
 		ConstantBuffer	constBuffer;
 		Ubershader		uberShader;
 		StateFactory	factory;
-		SceneDrawer<VertexColorTextureNormal, Material>	sceneDrawer;
 
 
 		struct CBData {

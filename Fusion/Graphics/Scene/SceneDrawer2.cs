@@ -15,7 +15,10 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class SceneDrawer<TVertex, TMaterial> : DisposableBase where TVertex: struct {
+	public abstract class SceneDrawer2<TContext, TMaterial, TVertex> : DisposableBase where TVertex: struct {
+
+		public Game Game { get; private set; }
+		public GraphicsDevice GraphicsDevice  { get { return device; } }
 
 		GraphicsDevice device;
 
@@ -32,8 +35,9 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="scene"></param>
 		/// <param name="bakeFunc"></param>
-		public SceneDrawer ( GraphicsDevice device, Scene scene, Func<MeshVertex,TVertex> vertexFunc, Func<MeshMaterial,TMaterial> materialFunc )
-		{
+		public SceneDrawer2 ( GraphicsDevice device, Scene scene )
+		{								
+			Game		=	device.Game;
 			this.device	=	device;
 			this.scene	=	scene;
 
@@ -47,7 +51,7 @@ namespace Fusion.Graphics {
 
 			//	convert materials :
 			for ( int i=0; i<scene.Materials.Count; i++ ) {
-				materials[i] = materialFunc( scene.Materials[i] );
+				materials[i] = Convert( scene.Materials[i] );
 			}
 
 			//	convert meshes to vb in ib :
@@ -64,7 +68,7 @@ namespace Fusion.Graphics {
 				var vdata = new TVertex[ mesh.VertexCount ];
 
 				for (int j=0; j<mesh.VertexCount; j++) {
-					vdata[j] = vertexFunc( mesh.Vertices[j] );
+					vdata[j] = Convert( mesh.Vertices[j] );
 				}
 
 				vbs[i].SetData( vdata );
@@ -121,7 +125,13 @@ namespace Fusion.Graphics {
 
 
 
-
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="frame"></param>
+		/// <param name="firstFrame"></param>
+		/// <param name="lastFrame"></param>
+		/// <param name="animMode"></param>
 		public void EvaluateScene ( float frame, int firstFrame, int lastFrame, AnimationMode animMode )
 		{
 			EvaluateScene();
@@ -132,6 +142,11 @@ namespace Fusion.Graphics {
 
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="frame"></param>
+		/// <param name="animMode"></param>
 		public void EvaluateScene ( float frame, AnimationMode animMode )
 		{
 			EvaluateScene( frame, scene.FirstFrame, scene.LastFrame, animMode );
@@ -142,70 +157,67 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="nodeIndex"></param>
+		/// <param name="vertex"></param>
 		/// <returns></returns>
-		public Matrix GetWorldTransform( int nodeIndex )
-		{
-			return worldMatricies[nodeIndex];
-		}
-
-
-
+		public abstract TVertex Convert ( MeshVertex vertex );
 
 
 
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="context"></param>
-		public delegate TContext Prepare<TContext> ( GameTime gameTime, StereoEye stereoEye );
-
-
-		/// <summary>
-		/// Mesh preparation function.
-		/// Usually this method sets up vertex and index buffer, binds per node constant buffers, performs frustum culling.
-		/// </summary>
-		/// <param name="vertexBuffer">Vertex buffer with mesh data</param>
-		/// <param name="indexBuffer">Index buffer with mesh data</param>
-		/// <returns>Whether this node or mesh should be rendered</returns>
-		public delegate bool MeshPrepare<TContext> ( TContext context, VertexBuffer vertexBuffer, IndexBuffer indexBuffer );
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <typeparam name="TContext"></typeparam>
-		/// <param name="context"></param>
-		/// <param name="node"></param>
-		/// <param name="worldMatrix"></param>
+		/// <param name="material"></param>
 		/// <returns></returns>
-		public delegate bool NodePrepare<TContext> ( TContext context, Node node, Matrix worldMatrix );
-
-
-
-
-		/// <summary>
-		/// Subset draw function.
-		/// </summary>
-		/// <param name="meshSubset">Mesh subset to render</param>
-		/// <param name="material">Material to render</param>
-		public delegate void SubsetDraw<TContext> ( TContext context, MeshSubset meshSubset, TMaterial material );
+		public abstract TMaterial Convert ( MeshMaterial material );
 
 
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Draw<TContext> ( 
-			GameTime gameTime, 
-			StereoEye stereoEye, 
-			Prepare<TContext> prepare, 
-			MeshPrepare<TContext> meshPrepare, 
-			NodePrepare<TConrtext> nodePrepare, 
-			SubsetDraw<TContext> subsetDraw )
+		/// <param name="gameTime"></param>
+		/// <param name="stereoEye"></param>
+		/// <returns></returns>
+		public abstract TContext Prepare( GameTime gameTime, StereoEye stereoEye );
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="gameTime"></param>
+		/// <param name="stereoEye"></param>
+		/// <returns></returns>
+		public abstract void PrepareMesh ( TContext context, Mesh mesh, VertexBuffer vb, IndexBuffer ib );
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="gameTime"></param>
+		/// <param name="stereoEye"></param>
+		/// <returns></returns>
+		public abstract bool PrepareNode ( TContext context, Node node, Matrix worldMatrix );
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="gameTime"></param>
+		/// <param name="stereoEye"></param>
+		/// <returns></returns>
+		public abstract void DrawSubset ( TContext context, MeshSubset subset, TMaterial material );
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Draw ( GameTime gameTime, StereoEye stereoEye )
 		{
-			var context = prepare( gameTime, stereoEye );
+			var context = Prepare( gameTime, stereoEye );
 
 			for (int i=0; i<scene.Nodes.Count; i++) {
 
@@ -221,20 +233,20 @@ namespace Fusion.Graphics {
 				var ib		=	ibs[ meshId ];
 				var wm		=	worldMatricies[ i ];
 
-				bool draw	=	meshPrepare( context, node, mesh, vb, ib, wm );
+				PrepareMesh( context, mesh, vb, ib );
 
-				if (!draw) {
-					continue;
+				bool vis	=	PrepareNode ( context, scene.Nodes[i], wm );
+
+				if (!vis) {
+					return;
 				}
-
 
 				for ( int j=0; j<mesh.Subsets.Count; j++) {
 					
 					var mtrlId	=	mesh.Subsets[j].MaterialIndex;
 
-					subsetDraw( context, mesh.Subsets[j], materials[ mtrlId ] );
+					DrawSubset( context, mesh.Subsets[j], materials[ mtrlId ] );
 				}
-
 			}
 		}
 	}
