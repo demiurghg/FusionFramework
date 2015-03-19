@@ -104,54 +104,54 @@ SectionEnd
 
 
 
-; Section "Fusion Game Library Samples"
+Section "Fusion Game Library Samples"
 	
-	; SetOutPath "$INSTDIR\Samples"
-	; File /r /x bin /x obj "..\FusionSamples\FusionSamples.sln"
+	SetOutPath "$INSTDIR\Samples"
+	File /r /x bin /x obj "..\FusionSamples\FusionSamples.sln"
 
-	; SetOutPath "$INSTDIR\Samples\AnimationDemo"
-	; File /r /x bin /x obj "..\FusionSamples\AnimationDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\AnimationDemo"
+	File /r /x bin /x obj "..\FusionSamples\AnimationDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\ComputeDemo"
-	; File /r /x bin /x obj "..\FusionSamples\ComputeDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\ComputeDemo"
+	File /r /x bin /x obj "..\FusionSamples\ComputeDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\DeferredDemo"
-	; File /r /x bin /x obj "..\FusionSamples\DeferredDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\DeferredDemo"
+	File /r /x bin /x obj "..\FusionSamples\DeferredDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\DescriptorDemo"
-	; File /r /x bin /x obj "..\FusionSamples\DescriptorDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\DescriptorDemo"
+	File /r /x bin /x obj "..\FusionSamples\DescriptorDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\InputDemo"
-	; File /r /x bin /x obj "..\FusionSamples\InputDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\InputDemo"
+	File /r /x bin /x obj "..\FusionSamples\InputDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\SpriteDemo"
-	; File /r /x bin /x obj "..\FusionSamples\SpriteDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\SpriteDemo"
+	File /r /x bin /x obj "..\FusionSamples\SpriteDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\QuadDemo"
-	; File /r /x bin /x obj "..\FusionSamples\QuadDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\QuadDemo"
+	File /r /x bin /x obj "..\FusionSamples\QuadDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\InstancingDemo"
-	; File /r /x bin /x obj "..\FusionSamples\InstancingDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\InstancingDemo"
+	File /r /x bin /x obj "..\FusionSamples\InstancingDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\InstancingDemo2"
-	; File /r /x bin /x obj "..\FusionSamples\InstancingDemo2\*.*"
+	SetOutPath "$INSTDIR\Samples\InstancingDemo2"
+	File /r /x bin /x obj "..\FusionSamples\InstancingDemo2\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\SoundDemo"
-	; File /r /x bin /x obj "..\FusionSamples\SoundDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\SoundDemo"
+	File /r /x bin /x obj "..\FusionSamples\SoundDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\SkinningDemo"
-	; File /r /x bin /x obj "..\FusionSamples\SkinningDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\SkinningDemo"
+	File /r /x bin /x obj "..\FusionSamples\SkinningDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\SceneDemo"
-	; File /r /x bin /x obj "..\FusionSamples\SceneDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\SceneDemo"
+	File /r /x bin /x obj "..\FusionSamples\SceneDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\ParticleDemo"
-	; File /r /x bin /x obj "..\FusionSamples\ParticleDemo\*.*"
+	SetOutPath "$INSTDIR\Samples\ParticleDemo"
+	File /r /x bin /x obj "..\FusionSamples\ParticleDemo\*.*"
 
-	; SetOutPath "$INSTDIR\Samples\ParticleDemo2"
-	; File /r /x bin /x obj "..\FusionSamples\ParticleDemo2\*.*"
+	SetOutPath "$INSTDIR\Samples\ParticleDemo2"
+	File /r /x bin /x obj "..\FusionSamples\ParticleDemo2\*.*"
 
-; SectionEnd
+SectionEnd
 
 
   
