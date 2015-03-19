@@ -26,9 +26,32 @@ namespace Fusion.Graphics {
 		IndexBuffer[] ibs;
 		VertexBuffer[] vbs;
 		VertexInputElement[] vie;
+		Matrix[] localMatricies;
 		Matrix[] worldMatricies;
+		Matrix[] boneMatricies;
 
 		TMaterial[]	materials;
+
+
+		/// <summary>
+		/// Gets global evaluates world matricies.
+		/// </summary>
+		public Matrix[] WorldMatricies {
+			get {
+				return worldMatricies;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets bone matricies for skinning with applied bind-pose transform.
+		/// </summary>
+		public Matrix[] BoneMatricies {
+			get {
+				return boneMatricies;
+			}
+		}
+
 
 		/// <summary>
 		/// 
@@ -74,7 +97,9 @@ namespace Fusion.Graphics {
 				vbs[i].SetData( vdata );
 			}
 
-			worldMatricies	=	new Matrix[ scene.Nodes.Count ];
+			localMatricies	=	new Matrix[ scene.Nodes.Count ];
+			worldMatricies	=	new Matrix[ scene.Nodes.Count ];	
+			boneMatricies	=	new Matrix[ scene.Nodes.Count ];
 
 			EvaluateScene();
 		}
@@ -121,6 +146,8 @@ namespace Fusion.Graphics {
 			}
 
 			scene.CopyAbsoluteTransformsTo( worldMatricies );
+			scene.CopyLocalTransformsTo( localMatricies );
+			scene.ComputeBoneTransforms( localMatricies, boneMatricies );
 		}
 
 
@@ -136,8 +163,9 @@ namespace Fusion.Graphics {
 		{
 			EvaluateScene();
 
-			scene.GetAnimSnapshot( frame, firstFrame, lastFrame, AnimationMode.Repeat, worldMatricies );
-			scene.ComputeAbsoluteTransforms( worldMatricies, worldMatricies );
+			scene.GetAnimSnapshot( frame, firstFrame, lastFrame, AnimationMode.Repeat, localMatricies );
+			scene.ComputeBoneTransforms( localMatricies, boneMatricies );
+			scene.ComputeAbsoluteTransforms( localMatricies, worldMatricies );
 		}
 
 
@@ -152,6 +180,18 @@ namespace Fusion.Graphics {
 			EvaluateScene( frame, scene.FirstFrame, scene.LastFrame, animMode );
 		}
 
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="destination"></param>
+		public void CopyBoneTransformsTo ( Matrix[] destination )
+		{
+			int count = Math.Min( destination.Length, boneMatricies.Length );
+
+			Array.Copy( boneMatricies, destination, count );
+		}
 
 
 		/// <summary>

@@ -127,6 +127,21 @@ namespace Fusion.Graphics {
 		/// Copies absolute transform to provided array.
 		/// </summary>
 		/// <param name="destination"></param>
+		public void CopyLocalTransformsTo ( Matrix[] destination )
+		{
+			for ( int i=0; i<Nodes.Count; i++) {
+				
+				var node = Nodes[i];
+				var transform = node.Transform;
+
+				destination[i] = transform;
+			}
+		}
+
+		/// <summary>
+		/// Copies absolute transform to provided array.
+		/// </summary>
+		/// <param name="destination"></param>
 		public void CopyAbsoluteTransformsTo ( Matrix[] destination )
 		{
 			for ( int i=0; i<Nodes.Count; i++) {

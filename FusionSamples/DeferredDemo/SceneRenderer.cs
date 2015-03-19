@@ -27,6 +27,10 @@ namespace DeferredDemo {
 		Texture2D		defaultNormalMap;
 		Texture2D		defaultEmission	;
 
+		VertexBuffer[]		vertexBuffers;
+		IndexBuffer[]		indexBuffers;
+		SurfaceProperties[]	surfaceProps;
+
 
 		struct CBSurfaceData {
 			public Matrix	Projection;
@@ -43,12 +47,6 @@ namespace DeferredDemo {
 			public Texture2D	Specular;
 			public Texture2D	NormalMap;
 			public Texture2D	Emission;
-		}
-
-
-		class RendMesh {
-			public VertexBuffer	VertexBuffer;
-			public IndexBuffer	IndexBuffer;
 		}
 
 
@@ -125,84 +123,38 @@ namespace DeferredDemo {
 
 
 
-		Task loadingTask;
-
 		/// <summary>
 		/// 
 		/// </summary>
 		void LoadContent ()
 		{
+			SafeDispose( ref factory );
+			SafeDispose( ref vertexBuffers );
+			SafeDispose( ref indexBuffers );
+
 			surfaceShader	=	Game.Content.Load<Ubershader>("surface");
 			factory			=	new StateFactory( surfaceShader, typeof(SurfaceFlags), VertexInputElement.FromStructure<VertexColorTextureTBN>() );
 
 
-			LoadingTaskFunc();
+			scene =	Game.Content.Load<Scene>(@"Scenes\testScene");
 
-			/*loadingTask = new Task( LoadingTaskFunc	);
-			loadingTask.Start();*/
-			
+			vertexBuffers	=	scene.Meshes
+							.Select( mesh => VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTextureTBN.Bake( v ) ).ToArray() ) )
+							.ToArray();
 
-			/*scene =	Game.Content.Load<Scene>(@"Scenes\testScene");
-
-			foreach ( var mtrl in scene.Materials ) {
-
-				Log.Message( "...{0} {1}", mtrl.Name, mtrl.TexturePath );
-
-				var surf		=	new SurfaceProperties();
-				surf.Diffuse	=	LoadTexture2D( mtrl.TexturePath, ""			, defaultDiffuse );
-
-				surf.Specular	=	LoadTexture2D( mtrl.TexturePath, "_spec"	, defaultSpecular );
-				surf.NormalMap	=	LoadTexture2D( mtrl.TexturePath, "_local"	, defaultNormalMap );
-				surf.Emission	=	LoadTexture2D( mtrl.TexturePath, "_glow"	, defaultEmission );
-
-				mtrl.Tag		=	surf;
-			}
-
-			scene.Bake( Game.GraphicsDevice, VertexColorTextureTBN.Bake );
-
-			surfaceShader	=	Game.Content.Load<Ubershader>("surface");
-			surfaceShader.Map( typeof(SurfaceFlags) );*/
-		}
+			indexBuffers	=	scene.Meshes
+							.Select( mesh => IndexBuffer.Create( Game.GraphicsDevice, mesh.GetIndices() ) )
+							.ToArray();
 
 
-
-
-		void LoadingTaskFunc ()
-		{	
-			var tempScene =	Game.Content.Load<Scene>(@"Scenes\testScene");
-
-			foreach ( var mesh in tempScene.Meshes ) {
-				
-				var rmesh = new RendMesh() {
-					IndexBuffer		=	IndexBuffer.Create( Game.GraphicsDevice, mesh.GetIndices() ),
-					VertexBuffer	=	VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTextureTBN.Bake( v ) ).ToArray() ),
-				};
-
-				mesh.Tag	=	rmesh;
-			}
-
-			foreach ( var mtrl in tempScene.Materials ) {
-
-				var surf		=	new SurfaceProperties();
-				surf.Diffuse	=	defaultDiffuse;
-				surf.Specular	=	defaultSpecular;
-				surf.NormalMap	=	defaultNormalMap;
-				surf.Emission	=	defaultEmission;
-				mtrl.Tag		=	surf;
-			}
-
-			scene	=	tempScene;
-
-			foreach ( var mtrl in tempScene.Materials ) {
-
-				var surf	=	mtrl.Tag as SurfaceProperties;
-
-				surf.Diffuse	=	LoadTexture2D( mtrl.TexturePath, ""			, defaultDiffuse );
-
-				surf.Specular	=	LoadTexture2D( mtrl.TexturePath, "_spec"	, defaultSpecular );
-				surf.NormalMap	=	LoadTexture2D( mtrl.TexturePath, "_local"	, defaultNormalMap );
-				surf.Emission	=	LoadTexture2D( mtrl.TexturePath, "_glow"	, defaultEmission );
-			}
+			surfaceProps	=	scene.Materials
+							.Select( mtrl => new SurfaceProperties() {
+								Diffuse		=	LoadTexture2D( mtrl.TexturePath, ""			, defaultDiffuse ),
+								Specular	=	LoadTexture2D( mtrl.TexturePath, "_spec"	, defaultSpecular ),
+								NormalMap	=	LoadTexture2D( mtrl.TexturePath, "_local"	, defaultNormalMap ),
+								Emission	=	LoadTexture2D( mtrl.TexturePath, "_glow"	, defaultEmission ),
+							} )
+							.ToArray();
 		}
 
 
@@ -214,6 +166,10 @@ namespace DeferredDemo {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
+
+				SafeDispose( ref vertexBuffers );
+				SafeDispose( ref indexBuffers );
+
 				SafeDispose( ref defaultDiffuse		);
 				SafeDispose( ref defaultSpecular	);
 				SafeDispose( ref defaultNormalMap	);
@@ -292,11 +248,11 @@ namespace DeferredDemo {
 				device.VertexShaderConstants[0]	= constBuffer ;
 				device.PixelShaderSamplers[0]	= SamplerState.AnisotropicWrap ;
 
-				device.SetupVertexInput( (mesh.Tag as RendMesh).IndexBuffer, (mesh.Tag as RendMesh).VertexBuffer );
+				device.SetupVertexInput( indexBuffers[ node.MeshIndex ], vertexBuffers[ node.MeshIndex ] );
 
 				foreach ( var subset in mesh.Subsets ) {
 
-					var surf = scene.Materials[ subset.MaterialIndex ].Tag as SurfaceProperties;
+					var surf = surfaceProps[ subset.MaterialIndex ];
 					
 					device.PixelShaderResources[0]	=	surf.Diffuse.SRgb;
 					device.PixelShaderResources[1]	=	surf.Specular;
@@ -360,7 +316,7 @@ namespace DeferredDemo {
 
 				constBuffer.SetData( cbData );
 
-				device.SetupVertexInput( (mesh.Tag as RendMesh).IndexBuffer, (mesh.Tag as RendMesh).VertexBuffer );
+				device.SetupVertexInput( indexBuffers[ node.MeshIndex ], vertexBuffers[ node.MeshIndex ] );
 				device.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
 			}
 		}
