@@ -18,9 +18,7 @@ namespace SkinningDemo {
 		const int BoneCount	=	128;
 
 		Scene			scene;
-		ConstantBuffer	constBuffer;
-		ConstantBuffer	constBufferBones;
-		Ubershader		uberShader;
+		MySceneDrawer	sceneDrawer;
 
 
 		struct CBData {
@@ -44,7 +42,7 @@ namespace SkinningDemo {
 			[Vertex("BLENDINDICES")]	public Int4		BoneIndices;
 			[Vertex("BLENDWEIGHT")]		public Vector4	BoneWeights;
 
-			public static VertexColorSkin Bake ( MeshVertex meshVertex )
+			public static VertexColorSkin Convert ( MeshVertex meshVertex )
 			{
 				VertexColorSkin v;
 				v.Position		=	meshVertex.Position;
@@ -55,6 +53,112 @@ namespace SkinningDemo {
 				return v;
 			}
 		}
+
+
+		class Material {
+		}
+
+
+		class Context {
+			public Matrix	View;
+			public Matrix	Projection;
+			public Vector4	ViewPosition;
+		}
+
+
+
+		class MySceneDrawer : SceneDrawer<Context,Material,VertexColorSkin> {
+													
+			ConstantBuffer	constBuffer;
+			ConstantBuffer	constBufferBones;
+			Ubershader		uberShader;
+			StateFactory	factory;
+			
+			CBData			constData;
+
+			Matrix[]		boneTransforms;
+
+
+			public MySceneDrawer ( GraphicsDevice device, Scene scene ) : base(device, scene)
+			{
+				constBuffer			=	new ConstantBuffer( GraphicsDevice, typeof(CBData) );
+				constBufferBones	=	new ConstantBuffer( GraphicsDevice, typeof(Matrix), BoneCount );
+				uberShader			=	Game.Content.Load<Ubershader>("render");
+				factory				=	new StateFactory( uberShader, typeof(RenderFlags), VertexInputElement.FromStructure<VertexColorSkin>() );
+
+				boneTransforms		=	new Matrix[ BoneCount ];
+			}
+
+
+			protected override void Dispose ( bool disposing )
+			{
+				if (disposing) {
+					SafeDispose( ref factory );
+					SafeDispose( ref constBuffer );
+					SafeDispose( ref constBufferBones );
+				}
+				base.Dispose( disposing );
+			}
+
+
+			public override Material Convert ( MeshMaterial material )
+			{
+				return new Material();
+			}
+
+
+			public override VertexColorSkin Convert ( MeshVertex vertex )
+			{
+				return VertexColorSkin.Convert( vertex );
+			}
+
+
+			public override Context Prepare ( GameTime gameTime, StereoEye stereoEye )
+			{
+				var cam = Game.GetService<Camera>();
+
+				CopyBoneTransformsTo( boneTransforms );
+				constBufferBones.SetData( boneTransforms );
+
+				return new Context() {
+					View			=	cam.GetViewMatrix( stereoEye ),
+					Projection		=	cam.GetProjectionMatrix( stereoEye ),
+					ViewPosition	=	cam.GetCameraPosition4( stereoEye )
+				};
+			}
+
+
+			public override void PrepareMesh ( Context context, Mesh mesh, VertexBuffer vb, IndexBuffer ib )
+			{
+				GraphicsDevice.SetupVertexInput( vb, ib );
+			}
+
+
+			public override bool PrepareNode ( Context context, Node node, Matrix worldMatrix )
+			{
+				constData.View			=	context.View;
+				constData.Projection	=	context.Projection;
+				constData.ViewPos		=	context.ViewPosition;
+				constData.World			=	worldMatrix;
+
+				constBuffer.SetData( constData );
+
+				GraphicsDevice.PipelineState			=	factory[0];
+				GraphicsDevice.DepthStencilState		=	DepthStencilState.Default;
+				GraphicsDevice.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
+				GraphicsDevice.VertexShaderConstants[0]	=	constBuffer;
+				GraphicsDevice.VertexShaderConstants[1]	=	constBufferBones;
+
+				return true;
+			}
+
+
+			public override void DrawSubset ( Context context, MeshSubset subset, Material material )
+			{
+				GraphicsDevice.DrawIndexed( Primitive.TriangleList, subset.PrimitiveCount * 3, subset.StartPrimitive, 0 );
+			}
+		}
+
 
 
 		/// <summary>
@@ -99,9 +203,6 @@ namespace SkinningDemo {
 			InputDevice.KeyDown += InputDevice_KeyDown;
 
 			//	load content & create graphics and audio resources here:
-			constBuffer			=	new ConstantBuffer( GraphicsDevice, typeof(CBData) );
-			constBufferBones	=	new ConstantBuffer( GraphicsDevice, typeof(Matrix), BoneCount );
-
 			LoadContent();
 			Reloading += (s,e) => LoadContent();
 
@@ -115,14 +216,10 @@ namespace SkinningDemo {
 		/// </summary>
 		public void LoadContent ()
 		{
+			SafeDispose( ref sceneDrawer );
+
 			scene =	Content.Load<Scene>(@"tube");
-
-			scene.Bake<VertexColorSkin>( GraphicsDevice, VertexColorSkin.Bake );
-
-			uberShader	=	Content.Load<Ubershader>("render");
-			uberShader.Map( typeof(RenderFlags) );
-
-			Log.Message("{0}", scene.Nodes.Count( n => n.MeshIndex >= 0 ) );
+			sceneDrawer	=	new MySceneDrawer( GraphicsDevice, scene );
 		}
 
 
@@ -136,8 +233,7 @@ namespace SkinningDemo {
 			if (disposing) {
 				//	dispose disposable stuff here
 				//	Do NOT dispose objects loaded using ContentManager.
-				SafeDispose( ref constBuffer );
-				SafeDispose( ref constBufferBones );
+				SafeDispose( ref sceneDrawer );
 			}
 			base.Dispose( disposing );
 		}
@@ -208,6 +304,8 @@ namespace SkinningDemo {
 
 			dr.DrawGrid(10);
 
+			frame += 0.1f;
+
 			base.Update( gameTime );
 		}
 
@@ -221,81 +319,10 @@ namespace SkinningDemo {
 		/// <param name="stereoEye"></param>
 		protected override void Draw ( GameTime gameTime, StereoEye stereoEye )
 		{
-			CBData cbData = new CBData();
-			var cam	=	GetService<Camera>();
-
-			//GraphicsDevice.ClearBackbuffer( Color.DarkGray, 1, 0 );
 			GraphicsDevice.ClearBackbuffer( Color.CornflowerBlue, 1, 0 );
 
-
-			uberShader.SetPixelShader(0);
-			uberShader.SetVertexShader(0);
-
-			var dr	=	GetService<DebugRender>();
-
-			
-			var localMatricies = new Matrix[ scene.Nodes.Count ];
-			var worldMatricies = new Matrix[ scene.Nodes.Count ];
-			var boneMatricies = new Matrix[ scene.Nodes.Count ];
-			scene.CopyAbsoluteTransformsTo( worldMatricies );
-
-			//	Animate :
-			/*frame++;
-			if (frame>scene.LastFrame) {
-				frame = scene.FirstFrame;
-			}
-			if (frame<scene.FirstFrame) {
-				frame = scene.FirstFrame;
-			} */
-			frame += 0.1f;
-
-			scene.GetAnimSnapshot( frame, scene.FirstFrame, scene.LastFrame, AnimationMode.Repeat, localMatricies );
-			scene.ComputeAbsoluteTransforms( localMatricies, worldMatricies );
-			scene.ComputeBoneTransforms( localMatricies, boneMatricies );
-
-
-			for (int j=1; j<worldMatricies.Length; j++) {
-				dr.DrawLine( worldMatricies[j-1].TranslationVector, worldMatricies[j].TranslationVector, Color.LightYellow );
-			}
-			foreach ( var wm in worldMatricies ) {
-				dr.DrawBasis( wm, 0.3f );
-			}
-
-			for (int j = 0; j<1; j++) {
-				for ( int i=0; i<scene.Nodes.Count; i++ ) {
-
-					var node = scene.Nodes[i];
-				
-					if (node.MeshIndex==-1) {
-						continue;
-					}
-
-					var mesh = scene.Meshes[ node.MeshIndex ];
-
-					cbData.Projection	=	cam.GetProjectionMatrix( stereoEye );
-					cbData.View			=	cam.GetViewMatrix( stereoEye );
-					cbData.World		=	Matrix.RotationYawPitchRoll(j*0.01f,j*0.02f,j*0.03f) * worldMatricies[ i ] * Matrix.Scaling( (float)Math.Pow(0.9,j) );
-					cbData.ViewPos		=	new Vector4( cam.GetCameraMatrix( stereoEye ).TranslationVector, 1 );
-
-					constBuffer.SetData( cbData );
-					constBufferBones.SetData( boneMatricies ); 
-
-					GraphicsDevice.RasterizerState		= RasterizerState.CullCW ;
-					GraphicsDevice.DepthStencilState	= DepthStencilState.Default ;
-					GraphicsDevice.BlendState			= BlendState.Opaque ;
-					GraphicsDevice.PixelShaderConstants[0]	= constBuffer ;
-					GraphicsDevice.VertexShaderConstants[0]	= constBuffer ;
-					GraphicsDevice.VertexShaderConstants[1]	= constBufferBones ;
-					GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.AnisotropicWrap ;
-
-					mesh.SetupVertexInput();
-
-					foreach ( var subset in mesh.Subsets ) {
-						//GraphicsDevice.PSShaderResources[0]	=	mesh.Materials[ subset.MaterialIndex ].Tag as Texture2D ;
-						mesh.Draw( subset.StartPrimitive, subset.PrimitiveCount );
-					}
-				}
-			}
+			sceneDrawer.EvaluateScene( frame, AnimationMode.Repeat );
+			sceneDrawer.Draw( gameTime, stereoEye );
 
 			base.Draw( gameTime, stereoEye );
 		}

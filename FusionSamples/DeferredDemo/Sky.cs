@@ -32,7 +32,7 @@ namespace DeferredDemo
 		//	float Turbidity;                   // Offset:   96 Size:     4 [unused]
 		//	float3 Temperature;                // Offset:  100 Size:    12
 		//	float SkyIntensity;                // Offset:  112 Size:     4
-		[StructLayout(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit, Size=128)]
 		struct SkyConsts {
 			[FieldOffset(  0)] public Matrix 	MatrixWVP;
 			[FieldOffset( 64)] public Vector3	SunPosition;
@@ -47,6 +47,7 @@ namespace DeferredDemo
 		Ubershader		sky;
 		ConstantBuffer	skyConstsCB;
 		SkyConsts		skyConstsData;
+		StateFactory	factory;
 
 		public Vector3	SkyAmbientLevel { get; protected set; }
 
@@ -177,6 +178,10 @@ namespace DeferredDemo
 		Random	rand = new Random();
 
 
+		VertexBuffer[]	vertexBuffers;
+		IndexBuffer[]	indexBuffers;
+
+
 
 		/// <summary>
 		/// Constructor
@@ -222,11 +227,21 @@ namespace DeferredDemo
 		/// </summary>
 		void LoadContent ()
 		{
-			skySphere	=	Game.Content.Load<Scene>("skySphere");
-			skySphere.Bake( Game.GraphicsDevice, VertexColorTexture.Bake );
+			SafeDispose( ref factory );
 
-			sky			=	Game.Content.Load<Ubershader>("sky");
-			sky.Map( typeof(SkyFlags) );
+			skySphere	=	Game.Content.Load<Scene>("skySphere");
+
+
+			vertexBuffers	=	skySphere.Meshes
+							.Select( mesh => VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTexture.Convert( v ) ).ToArray() ) )
+							.ToArray();
+
+			indexBuffers	=	skySphere.Meshes
+							.Select( mesh => IndexBuffer.Create( Game.GraphicsDevice, mesh.GetIndices() ) )
+							.ToArray();
+
+			sky		=	Game.Content.Load<Ubershader>("sky");
+			factory	=	new StateFactory( sky, typeof(SkyFlags), VertexInputElement.FromStructure<VertexColorTexture>() );
 		}
 
 
@@ -237,6 +252,7 @@ namespace DeferredDemo
 		protected override void Dispose( bool disposing )
 		{
 			if( disposing ) {
+				SafeDispose( ref factory );
 				SafeDispose( ref sky );
 				SafeDispose( ref skyCube );
 				SafeDispose( ref skyConstsCB );
@@ -269,11 +285,7 @@ namespace DeferredDemo
 			var projection	=	MathUtil.ComputeCubemapProjectionMatrixLH( 0.125f, 10.0f );
 			var cubeWVPS	=	MathUtil.ComputeCubemapViewMatriciesLH( Vector3.Zero, rotation, projection );
 				
-			sky.SetVertexShader( (int)(SkyFlags.FOG) );
-			sky.SetPixelShader( (int)(SkyFlags.FOG) );
-
-			rs.RasterizerState	 = RasterizerState.CullNone ;
-			rs.BlendState		 = BlendState.Opaque ;
+			rs.PipelineState	=	factory[(int)(SkyFlags.FOG)];
 			rs.DepthStencilState = DepthStencilState.None ;
 
 			skyConstsData.SunPosition	= sunPos;
@@ -293,9 +305,12 @@ namespace DeferredDemo
 				rs.VertexShaderConstants[0] = skyConstsCB;
 				rs.PixelShaderConstants[0] = skyConstsCB;
 
-				foreach ( var mesh in skySphere.Meshes ) {
-					mesh.SetupVertexInput();
-					mesh.Draw();
+
+				for ( int j=0; j<skySphere.Meshes.Count; j++) {
+					var mesh = skySphere.Meshes[j];
+
+					rs.SetupVertexInput( vertexBuffers[j], indexBuffers[j] );
+				rs.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
 				}
 			}
 
@@ -323,8 +338,6 @@ namespace DeferredDemo
 
 			rs.ResetStates();
 
-			rs.RasterizerState	 = RasterizerState.CullNone ;
-			rs.BlendState		 = BlendState.Opaque ;
 			rs.DepthStencilState = depthBuffer==null? DepthStencilState.None : DepthStencilState.Default ;
 
 			rs.SetViewport( 0, 0, hdrTarget.Width, hdrTarget.Height );
@@ -345,13 +358,13 @@ namespace DeferredDemo
 			rs.VertexShaderConstants[0] = skyConstsCB;
 			rs.PixelShaderConstants[0] = skyConstsCB;
 
-			sky.SetVertexShader( (int)SkyFlags.PROCEDURAL_SKY );
-			sky.SetPixelShader( (int)SkyFlags.PROCEDURAL_SKY );
+			rs.PipelineState	=	factory[(int)SkyFlags.PROCEDURAL_SKY];
+						
+			for ( int j=0; j<skySphere.Meshes.Count; j++) {
+				var mesh = skySphere.Meshes[j];
 
-			
-			foreach ( var mesh in skySphere.Meshes ) {
-				mesh.SetupVertexInput();
-				mesh.Draw();
+				rs.SetupVertexInput( vertexBuffers[j], indexBuffers[j] );
+				rs.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
 			}
 
 			rs.ResetStates();

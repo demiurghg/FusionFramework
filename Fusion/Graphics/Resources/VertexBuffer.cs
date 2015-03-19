@@ -85,6 +85,22 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="TVertex"></typeparam>
+		/// <param name="device"></param>
+		/// <param name="vertexData"></param>
+		/// <returns></returns>
+		public static VertexBuffer Create<TVertex> ( GraphicsDevice device, TVertex[] vertexData ) where TVertex: struct
+		{
+			var vb = new VertexBuffer( device, typeof(TVertex), vertexData.Length );
+			vb.SetData( vertexData );
+			return vb;
+		}
+
+
+
+		/// <summary>
 		/// Immediately releases the unmanaged resources used by this object. 
 		/// </summary>
 		protected override void Dispose( bool disposing )
@@ -107,11 +123,13 @@ namespace Fusion.Graphics {
 				throw new GraphicsException("Vertex buffer created with enabled vertex output can not be written.");
 			}
 
-			var dataBox = device.DeviceContext.MapSubresource( vertexBuffer, 0, MapMode.WriteDiscard, D3D11.MapFlags.None );
+			lock (device.DeviceContext) {
+				var dataBox = device.DeviceContext.MapSubresource( vertexBuffer, 0, MapMode.WriteDiscard, D3D11.MapFlags.None );
 
-			SharpDX.Utilities.Write( dataBox.DataPointer, data, offset, count );
+				SharpDX.Utilities.Write( dataBox.DataPointer, data, offset, count );
 
-			device.DeviceContext.UnmapSubresource( vertexBuffer, 0 );
+				device.DeviceContext.UnmapSubresource( vertexBuffer, 0 );
+			}
 		}
 
 

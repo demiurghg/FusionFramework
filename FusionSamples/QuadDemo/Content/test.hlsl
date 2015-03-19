@@ -2,6 +2,7 @@
 	Sprite batch shader :
 -----------------------------------------------------------------------------*/
 
+
 struct BATCH {
 	float4x4	Transform		;
 };
@@ -20,8 +21,7 @@ struct PS_IN {
 
 
 #if 0
-$pixel +USE_VERTEX_COLOR +USE_TEXTURE
-$vertex +USE_VERTEX_COLOR +USE_TEXTURE
+$ubershader +USE_VERTEX_COLOR +USE_TEXTURE
 #endif
 
 cbuffer 		CBBatch 	: 	register(b0) { BATCH Batch : packoffset( c0 ); }	
@@ -40,7 +40,6 @@ PS_IN VSMain( VS_IN input )
 	output.pos = mul( float4(input.pos,1), Batch.Transform);
 	output.col = input.col;
 	output.tc  = input.tc;
-	float er3 = float2(12.121231313213,3);
 	return output;
 }
 

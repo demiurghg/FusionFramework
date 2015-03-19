@@ -95,5 +95,25 @@ namespace Fusion.Graphics {
 			this.ComponentCount	=	componentCount	;
 			this.OutputSlot		=	0		;
 		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="elements"></param>
+		/// <returns></returns>
+		static internal StreamOutputElement[] Convert ( VertexOutputElement[] elements )
+		{
+			return elements.Select( e => new StreamOutputElement() {
+					ComponentCount	=	e.ComponentCount,
+					OutputSlot		=	e.OutputSlot,
+					SemanticIndex	=	e.SemanticIndex,
+					SemanticName	=	e.SemanticName,
+					StartComponent	=	e.StartComponent,
+					Stream			=	e.Stream
+				} ).ToArray();
+		}
+
 	}
 }

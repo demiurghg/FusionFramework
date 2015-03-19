@@ -1,10 +1,7 @@
 
 
 #if 0
-
-$pixel 	HBAO
-$vertex	HBAO
- 
+$ubershader 	HBAO
 #endif
 
 struct PARAMS {

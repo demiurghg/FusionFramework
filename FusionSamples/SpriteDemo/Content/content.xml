@@ -76,7 +76,7 @@
     <HSEntryPoint>HSMain</HSEntryPoint>
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>spriteBatch.hlsl</SourceFile>
-    <ShowPemutations>false</ShowPemutations>
+    <ShowPemutations>true</ShowPemutations>
     <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\SpriteDemo\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
   </Asset>
   <Asset xsi:type="BMFontSpriteFontAsset">

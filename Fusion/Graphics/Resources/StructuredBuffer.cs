@@ -193,13 +193,15 @@ namespace Fusion.Graphics {
 			//
 			//	Write data
 			//
-			var db = device.DeviceContext.MapSubresource( bufferStaging, 0, MapMode.Write, D3D11.MapFlags.None );
+			lock (device.DeviceContext ) {
+				var db = device.DeviceContext.MapSubresource( bufferStaging, 0, MapMode.Write, D3D11.MapFlags.None );
 
-			SharpDX.Utilities.Write( db.DataPointer, data, 0, data.Length );
+				SharpDX.Utilities.Write( db.DataPointer, data, 0, data.Length );
 
-			device.DeviceContext.UnmapSubresource( bufferStaging, 0 );
+				device.DeviceContext.UnmapSubresource( bufferStaging, 0 );
 
-			device.DeviceContext.CopyResource( bufferStaging, bufferGpu );
+				device.DeviceContext.CopyResource( bufferStaging, bufferGpu );
+			}
 		}
 
 
@@ -239,13 +241,15 @@ namespace Fusion.Graphics {
 			//
 			//	Read data
 			//	
-			device.DeviceContext.CopyResource( bufferGpu, bufferStaging );
+			lock (device.DeviceContext) {
+				device.DeviceContext.CopyResource( bufferGpu, bufferStaging );
 
-			var db = device.DeviceContext.MapSubresource( bufferStaging, 0, MapMode.Read, D3D11.MapFlags.None );
+				var db = device.DeviceContext.MapSubresource( bufferStaging, 0, MapMode.Read, D3D11.MapFlags.None );
 
-			SharpDX.Utilities.Read( db.DataPointer, data, 0, data.Length );
+				SharpDX.Utilities.Read( db.DataPointer, data, 0, data.Length );
 
-			device.DeviceContext.UnmapSubresource( bufferStaging, 0 );
+				device.DeviceContext.UnmapSubresource( bufferStaging, 0 );
+			}
 		}
 
 

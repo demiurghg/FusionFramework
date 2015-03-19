@@ -17,7 +17,13 @@ namespace Fusion.Graphics {
 		[Vertex("NORMAL")]		public Vector3	Normal;
 
 
-		public static VertexColorTextureNormal Bake ( MeshVertex meshVertex )
+		static public VertexInputElement[] Elements {
+			get {
+				return VertexInputElement.FromStructure( typeof(VertexColorTextureNormal) );
+			}
+		}
+
+		public static VertexColorTextureNormal Convert ( MeshVertex meshVertex )
 		{
 			VertexColorTextureNormal v;
 			v.Position	=	meshVertex.Position;

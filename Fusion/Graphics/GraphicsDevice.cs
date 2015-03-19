@@ -24,55 +24,217 @@ namespace Fusion.Graphics {
 
 	public partial class GraphicsDevice : DisposableBase {
 
-		public GraphicsProfile		GraphicsProfile		{ get; private set; }
+		/// <summary>
+		/// Current graphics profile.
+		/// </summary>
+		public GraphicsProfile GraphicsProfile { 
+			get; 
+			private set; 
+		}
 
-		public readonly Game		Game;
-		public Rectangle			DisplayBounds	{ get { return new Rectangle(0,0, display.Bounds.Width, display.Bounds.Height); } }
+		/// <summary>
+		///	Game
+		/// </summary>
+		public readonly Game Game;
 
-		public bool					FullScreen  { get { return display.Fullscreen; } set { display.Fullscreen = value; } }
+		/// <summary>
+		/// Gets current display bounds.
+		/// </summary>
+		public Rectangle DisplayBounds	{ 
+			get { 
+				return new Rectangle(0,0, display.Bounds.Width, display.Bounds.Height); 
+			} 
+		}
 
+		/// <summary>
+		/// Sets and gets fullscreen mode.
+		/// <remarks>Not all stereo modes support fullscreen or windowed mode.</remarks>
+		/// </summary>
+		public bool FullScreen  { 
+			get { return display.Fullscreen; } 
+			set { 
+				lock (deviceContext) {
+					display.Fullscreen = value; 
+				}
+			} 
+		}
+
+		/// <summary>
+		/// Raises when display bound changes.
+		/// DisplayBounds property is already has actual value when this event raised.
+		/// </summary>
 		public event EventHandler	DisplayBoundsChanged;
+
+		/// <summary>
+		/// Backbuffer color target.
+		/// </summary>
+		public RenderTarget2D	BackbufferColor	{ 
+			get { 
+				return display.BackbufferColor; 
+			} 
+		}
+
+		/// <summary>
+		/// Backbuffer depth stencil surface.
+		/// </summary>
+		public DepthStencil2D	BackbufferDepth	{ 
+			get { 
+				return display.BackbufferDepth; 
+			} 
+		}
+
+
+		#region Samplers
+		/// <summary>
+		/// Pixel shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	PixelShaderSamplers		{ get; private set; }	
+
+		/// <summary>
+		/// Vertex shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	VertexShaderSamplers	{ get; private set; }	
+
+		/// <summary>
+		/// Geometry shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	GeometryShaderSamplers	{ get; private set; }	
+
+		/// <summary>
+		/// Compute shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	ComputeShaderSamplers	{ get; private set; }	
+
+		/// <summary>
+		/// Domain shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	DomainShaderSamplers	{ get; private set; }	
+
+		/// <summary>
+		/// Hull shader sampler collection.
+		/// </summary>
+		public SamplerStateCollection	HullShaderSamplers		{ get; private set; }	
+		#endregion
+
+
+		#region Shader Resources
+		/// <summary>
+		/// Pixel shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	PixelShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Vertex shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	VertexShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Geometry shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	GeometryShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Compute shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	ComputeShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Domain shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	DomainShaderResources	{ get; private set; }	
+
+		/// <summary>
+		/// Hull shader resource collection.
+		/// </summary>
+		public ShaderResourceCollection	HullShaderResources		{ get; private set; }	
+		#endregion
+
+
+		#region Constants
+		/// <summary>
+		/// Pixel shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	PixelShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Vertex shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	VertexShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Geometry shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	GeometryShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Compute shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	ComputeShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Domain shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	DomainShaderConstants	{ get; private set; }	
+
+		/// <summary>
+		/// Hull shader constant buffer collection.
+		/// </summary>
+		public ConstantBufferCollection	HullShaderConstants		{ get; private set; }	
+		#endregion
+
+
+		PipelineState		pipelineState			=	null;
+		bool				pipelineStateDirty		=	true;
+
+		DepthStencilState	depthStencilState		=	null;	
+		bool				depthStencilStateDirty	=	true;
+
+
+		/// <summary>
+		/// Pipeline state.
+		/// </summary>
+		public PipelineState PipelineState {
+			get {
+				return pipelineState;
+			}
+			set {
+				if (value!=pipelineState) {
+					pipelineState		= value;
+					pipelineStateDirty	= true;
+				}
+			}
+		}
+
+
+		/// <summary>
+		/// Depth stencil state.
+		/// </summary>
+		public DepthStencilState DepthStencilState {
+			get {
+				return depthStencilState;
+			}
+			set {
+				if (value!=depthStencilState) {
+					depthStencilState		= value;
+					depthStencilStateDirty	= true;
+				}
+			}
+		}
+
+
+		HashSet<IDisposable>	toDispose = new HashSet<IDisposable>();
+
+		internal ShaderFactory ShaderFactory { get { return shaderFactory; } }
+		ShaderFactory shaderFactory;
 
 		internal Device			Device			{ get { return device; } }			
 		internal DeviceContext	DeviceContext	{ get { return deviceContext; } }	
 		internal BaseDisplay	Display			{ get { return display; } }
-		
 
 		BaseDisplay				display			=	null;
 		Device					device			=	null;
 		DeviceContext			deviceContext	=	null;
 
-		public RenderTarget2D	BackbufferColor	{ get { return display.BackbufferColor; } }
-		public DepthStencil2D	BackbufferDepth	{ get { return display.BackbufferDepth; } }
-
-
-		//LayoutManager			layoutManager	=	null;
-
-		HashSet<IDisposable>	toDispose = new HashSet<IDisposable>();
-
-		public SamplerStateCollection	PixelShaderSamplers		{ get; private set; }	
-		public SamplerStateCollection	VertexShaderSamplers	{ get; private set; }	
-		public SamplerStateCollection	GeometryShaderSamplers	{ get; private set; }	
-		public SamplerStateCollection	ComputeShaderSamplers	{ get; private set; }	
-		public SamplerStateCollection	DomainShaderSamplers	{ get; private set; }	
-		public SamplerStateCollection	HullShaderSamplers		{ get; private set; }	
-
-		public ShaderResourceCollection	PixelShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	VertexShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	GeometryShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	ComputeShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	DomainShaderResources	{ get; private set; }	
-		public ShaderResourceCollection	HullShaderResources		{ get; private set; }	
-
-		public ConstantBufferCollection	PixelShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	VertexShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	GeometryShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	ComputeShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	DomainShaderConstants	{ get; private set; }	
-		public ConstantBufferCollection	HullShaderConstants		{ get; private set; }	
-
-		internal ShaderFactory ShaderFactory { get { return shaderFactory; } }
-		ShaderFactory shaderFactory;
 
 		/// <summary>
 		/// 
@@ -98,7 +260,6 @@ namespace Fusion.Graphics {
 				if (parameters.StereoMode==StereoMode.DualHead)		display	=	new StereoDualHeadDisplay( Game, this, parameters ); else 
 				if (parameters.StereoMode==StereoMode.Interlaced)	display	=	new StereoInterlacedDisplay( Game, this, parameters ); else 
 				if (parameters.StereoMode==StereoMode.OculusRift)	display	=	new OculusRiftDisplay( Game, this, parameters ); else 
-				//if (parameters.StereoMode==StereoMode.OculusRift)	display	=	new NV3DVisionDisplay( Game, this, parameters ); else 
 					throw new ArgumentException("parameters.StereoMode");
 			} catch ( Exception e ) {
 				Log.Warning("Failed to intialize graphics device.");
@@ -115,7 +276,7 @@ namespace Fusion.Graphics {
 			device			=	display.d3dDevice;
 			deviceContext	=	device.ImmediateContext;
 
-			shaderFactory		=	new ShaderFactory( this );
+			shaderFactory	=	new ShaderFactory( this );
 
 			display.CreateDisplayResources();
 
@@ -125,16 +286,16 @@ namespace Fusion.Graphics {
 			//	
 			PixelShaderResources	=	new ShaderResourceCollection( this, DeviceContext.PixelShader		);
 			VertexShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.VertexShader		);
-			GeometryShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.GeometryShader	);
+			GeometryShaderResources =	new ShaderResourceCollection( this, DeviceContext.GeometryShader	);
 			ComputeShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.ComputeShader		);
 			DomainShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.DomainShader		);
 			HullShaderResources 	=	new ShaderResourceCollection( this, DeviceContext.HullShader		);
 
 			PixelShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.PixelShader		);
-			VertexShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.VertexShader		);
-			GeometryShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.GeometryShader	);
-			ComputeShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.ComputeShader		);
-			DomainShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.DomainShader		);
+			VertexShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.VertexShader		);
+			GeometryShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.GeometryShader	);
+			ComputeShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.ComputeShader		);
+			DomainShaderSamplers	=	new SamplerStateCollection	( this, DeviceContext.DomainShader		);
 			HullShaderSamplers		=	new SamplerStateCollection	( this, DeviceContext.HullShader		);
 
 			PixelShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.PixelShader		);
@@ -142,7 +303,9 @@ namespace Fusion.Graphics {
 			GeometryShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.GeometryShader	);
 			ComputeShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.ComputeShader		);
 			DomainShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.DomainShader		);
-			HullShaderConstants	=	new ConstantBufferCollection( this, DeviceContext.HullShader		);
+			HullShaderConstants		=	new ConstantBufferCollection( this, DeviceContext.HullShader		);
+
+			ResetStates();
 		}
 
 
@@ -161,9 +324,7 @@ namespace Fusion.Graphics {
 				SafeDispose( ref display );
 
 				SamplerState.DisposeStates();
-				RasterizerState.DisposeStates();
 				DepthStencilState.DisposeStates();
-				BlendState.DisposeStates();
 			}
 
 			base.Dispose(disposing);
@@ -202,7 +363,9 @@ namespace Fusion.Graphics {
 		internal void NotifyViewportChanges ()
 		{
 			if (DisplayBoundsChanged!=null) {
-				DisplayBoundsChanged( this, EventArgs.Empty );
+				lock (deviceContext) {
+					DisplayBoundsChanged( this, EventArgs.Empty );
+				}
 			}
 		}
 
@@ -213,217 +376,113 @@ namespace Fusion.Graphics {
 		/// </summary>
 		internal void Present ()
 		{
-			if (requestScreenShotPath != null ) {
+			lock (deviceContext) {
+				if (requestScreenShotPath != null ) {
 
-				var path = requestScreenShotPath;
-				requestScreenShotPath = null;
+					var path = requestScreenShotPath;
+					requestScreenShotPath = null;
 
-				BackbufferColor.SaveToFile( path );
+					BackbufferColor.SaveToFile( path );
+				}
+
+				display.SwapBuffers( Game.Parameters.VSyncInterval );
+
+				display.Update();
+			}
+		}
+
+		/*-----------------------------------------------------------------------------------------
+		 * 
+		 * 	Drawing stuff :
+		 *	
+		-----------------------------------------------------------------------------------------*/
+
+		/// <summary>
+		/// Applies all GPU states before draw, dispatch or clear.
+		/// Method assumes that deviceContext is already locked.
+		/// </summary>
+		void ApplyGpuState ()
+		{
+			if (pipelineStateDirty) {
+				pipelineState.Set();
+				pipelineStateDirty = false;
 			}
 
-			display.SwapBuffers( Game.Parameters.VSyncInterval );
+			if (depthStencilStateDirty) {
+				depthStencilState.Apply( this );
+			}
+		}
 
-			display.Update();
+
+		/// <summary>
+		/// Sets index and vertex buffer.
+		/// </summary>
+		/// <param name="vertexBuffer">Vertex buffer to apply</param>
+		/// <param name="indexBuffer">Index buffer to apply.</param>
+		public void SetupVertexInput ( VertexBuffer vertexBuffer, IndexBuffer indexBuffer )
+		{
+			SetupVertexInput( new[]{ vertexBuffer }, new[]{ 0 }, indexBuffer );
 		}
 
 
 
-		/*-----------------------------------------------------------------------------------------
-		 * 
-		 * 	Input assembler stuff :
-		 *	
-		-----------------------------------------------------------------------------------------*/
-
-		internal bool	vertexInputDirty		= true;
-		internal bool	vertexOutputDirty		= true;
-		internal string vertexShaderSignature	= null;
-
-		D3D.Buffer[]		inputVertexBuffers	= null;
-		D3D.Buffer			inputIndexBuffer	= null;
-		int[]				inputVertexOffsets	= null;
-		int[]				inputVertexStrides	= null;
-		VertexInputLayout 	inputVertexLayout	= null;
-
-		StreamOutputBufferBinding[] outputBinding		= null;
-		StreamOutputBufferBinding[] outputBindingAppend = null;
-		VertexOutputLayout	outputVertexLayout	= null;
-
-		int[] zeroIntBuffer = new[]{ 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0 };
-
-		StreamOutputBufferBinding[] nullSO = 
-			new StreamOutputBufferBinding[] {
-				new StreamOutputBufferBinding( null, 0 ),
-				new StreamOutputBufferBinding( null, 0 ),
-				new StreamOutputBufferBinding( null, 0 ),
-				new StreamOutputBufferBinding( null, 0 ),
-			};
-
-
 		/// <summary>
-		/// 
+		/// Sets index and vertex buffers.
 		/// </summary>
-		void ApplyVertexStage()
+		/// <param name="vertexBuffers">Vertex buffers to apply. Provide null if no vertex buffers are required.</param>
+		/// <param name="offsets">Offsets in each vertex buffer.</param>
+		/// <param name="indexBuffer">Index buffers to apply.</param>
+		public void SetupVertexInput ( VertexBuffer[] vertexBuffers, int[] offsets, IndexBuffer indexBuffer )
 		{
-			if (vertexOutputDirty) {
-				if (outputBinding!=null && outputVertexLayout!=null ) {
-					
-					if (gs==null) {
-						deviceContext.StreamOutput.SetTargets( nullSO );
-						throw new InvalidOperationException("Geometry shader must be set to use vertex output.");
-					} else {
-						deviceContext.StreamOutput.SetTargets( outputBinding );
-						outputBinding = outputBindingAppend;
-						DeviceContext.GeometryShader.Set( outputVertexLayout.GetStreamOutputGeometryShader(gs) );
-					}
-
-				} else {
-					var oldGS = GeometryShader;
-					GeometryShader = null;
-					GeometryShader = oldGS;
-					deviceContext.StreamOutput.SetTargets( nullSO );
-				}// */
-
-				vertexOutputDirty	=	false;
-			}
-
-
-			if (vertexInputDirty) {
-
-				if (inputVertexBuffers!=null && inputVertexLayout!=null) {
-					deviceContext.InputAssembler.InputLayout	=	inputVertexLayout.GetInputLayout( vertexShaderSignature );
-					deviceContext.InputAssembler.SetVertexBuffers( 0, inputVertexBuffers, inputVertexStrides, inputVertexOffsets );
-				} else {
-					deviceContext.InputAssembler.InputLayout	=	null;
-					deviceContext.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( null, 0, 0 ) );
-				}
-
-				if (inputIndexBuffer!=null) {
-					deviceContext.InputAssembler.SetIndexBuffer( inputIndexBuffer, DXGI.Format.R32_UInt, 0 );
+			lock (deviceContext) {
+				if (indexBuffer!=null) {
+					deviceContext.InputAssembler.SetIndexBuffer( indexBuffer.Buffer, DXGI.Format.R32_UInt, 0 );
 				} else {	
 					deviceContext.InputAssembler.SetIndexBuffer( null, Format.Unknown, 0 );
 				}
 
-				vertexInputDirty	=	false;
+
+				if (vertexBuffers==null) {
+					deviceContext.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( null, 0, 0 ) );
+				} else {
+
+					if (vertexBuffers.Length!=offsets.Length) {
+						throw new InvalidOperationException("vertexBuffers.Length != offsets.Length");
+					}
+					if (vertexBuffers.Length>16) {
+						throw new InvalidOperationException("vertexBuffers.Length > 16");
+					}
+
+					int count = vertexBuffers.Length;
+
+					#warning Remove allocation!
+					var inputVertexBufferBinding = new VertexBufferBinding[count];
+
+					for (int i=0; i<count; i++) {
+						inputVertexBufferBinding[i].Buffer	=	( vertexBuffers[i]==null ) ? null : vertexBuffers[i].Buffer;
+						inputVertexBufferBinding[i].Stride	=	( vertexBuffers[i]==null ) ? 0 : vertexBuffers[i].Stride;
+						inputVertexBufferBinding[i].Offset	=	offsets[i];
+					}
+					deviceContext.InputAssembler.SetVertexBuffers( 0, inputVertexBufferBinding );
+				}
 			}
 		}
 
 
 
 		/// <summary>
-		/// Setups vertex input 
+		/// Draws primitives.
 		/// </summary>
-		/// <param name="vb">Vertex buffer</param>
-		/// <param name="ib">Index buffer, can be null</param>
-		/// <param name="primitive">Primitive to draw</param>
-		/// <param name="signature">Input signature</param>
-		public void SetupVertexInput ( VertexInputLayout layout, VertexBuffer vb, IndexBuffer ib )
-		{
-			vertexInputDirty	=	true;
-
-			inputVertexLayout	=	layout;
-			inputVertexBuffers	=	vb == null ? null : new[]{ vb.Buffer };
-			inputVertexOffsets	=	new[]{ 0 };
-			inputVertexStrides	=	new[]{ vb == null ? 0 : vb.Stride };
-			inputIndexBuffer	=	ib == null ? null : ib.Buffer;
+		/// <param name="vertexCount"></param>
+		/// <param name="vertexFirstIndex"></param>
+		public void Draw ( Primitive primitive, int vertexCount, int firstIndex )
+		{					
+			lock (deviceContext) {
+				ApplyGpuState();
+				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+				deviceContext.Draw( vertexCount, firstIndex );
+			}
 		}
-
-
-
-		/// <summary>
-		/// Setups vertex input.
-		/// </summary>
-		/// <param name="vertexBuffers">Array of vertex buffers to bind. Null means no VBs to bind.</param>
-		/// <param name="offsets">Array of vertex offsets. Null means that all offsets are zero.</param>
-		/// <param name="instancingRate">Array of instance rates. Zero instance rates means that data is per-vertex.
-		/// Null means that all instance rates are zero.</param>
-		/// <param name="indexBuffer">Index buffer to bind. Null means no IB to bind.</param>
-		/// <param name="vertexType">Vertex type that describes input layout.</param>
-		public void SetupVertexInput ( VertexInputLayout layout, VertexBuffer[] vertexBuffers, int[] offsets, IndexBuffer indexBuffer )
-		{
-			vertexInputDirty	=	true;
-
-			inputVertexLayout	=	layout;
-
-			if (vertexBuffers!=null) {
-				inputVertexBuffers	=	vertexBuffers.Select( vb => vb.Buffer ).ToArray();
-				inputVertexStrides	=	vertexBuffers.Select( vb => vb.Stride ).ToArray();
-			} else {
-				inputVertexBuffers	=	null;
-				inputVertexStrides	=	zeroIntBuffer;
-			}
-
-			if (offsets==null) {
-				inputVertexOffsets	= zeroIntBuffer;
-			} else {
-				inputVertexOffsets	= offsets;
-			}
-
-			inputIndexBuffer	=	indexBuffer == null ? null : indexBuffer.Buffer;
-		} 
-
-
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="layout"></param>
-		/// <param name="vertexBuffer"></param>
-		/// <param name="offset"></param>
-		public void SetupVertexOutput ( VertexOutputLayout layout, VertexBuffer vertexBuffer, int offset )
-		{
-			SetupVertexOutput( layout, new[]{ vertexBuffer }, new[]{ offset } );
-		}
-
-
-
-		/// <summary>
-		/// Setups vertex (stream) output.
-		/// </summary>
-		/// <param name="vertexBuffers">Vertex buffer to write data.</param>
-		/// <param name="offset">Offset where to start writing data. -1 means append.</param>
-		public void SetupVertexOutput ( VertexOutputLayout layout, VertexBuffer[] vertexBuffers, int[] offsets )
-		{
-			vertexOutputDirty	=	true;
-
-			if (layout==null || vertexBuffers==null || offsets==null ) {
-				outputBinding		=	null;
-				return;
-			}
-
-			if (vertexBuffers.Length>4) {
-				throw new ArgumentException("Length of 'vertexBuffers' must be less than 4");
-			}
-
-			if (vertexBuffers.Length!=offsets.Length) {
-				throw new ArgumentException("Lengths of 'vertexBuffers' and 'offsets' must be the same.");
-			}
-
-			if ( !offsets.All( e => (e<0) || (e%4==0) ) ) {
-				throw new ArgumentException("SetupVertexOutput: Offsets must be multiple of 4.");
-			}
-
-			if ( !vertexBuffers.All( vb => vb.IsVertexOutputEnabled) ) {
-				throw new GraphicsException("SetupVertexOutput: Vertex buffer must be created with enabled vertex output.");
-			}
-
-			outputVertexLayout	=	layout;
-			outputBinding		=	vertexBuffers.Zip( offsets, (vb,offset) => new StreamOutputBufferBinding( vb.Buffer, offset ) ).ToArray();
-			outputBindingAppend	=	vertexBuffers.Zip( offsets, (vb,offset) => new StreamOutputBufferBinding( vb.Buffer, -1 ) ).ToArray();
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="threadGroupCountX"></param>
-		/// <param name="threadGroupCountY"></param>
-		/// <param name="threadGroupCountZ"></param>
-		public void Dispatch( int threadGroupCountX, int threadGroupCountY = 1, int threadGroupCountZ = 1 )
-		{
-			deviceContext.Dispatch( threadGroupCountX, threadGroupCountY, threadGroupCountZ ); 
-		}
-
 
 
 		/// <summary>
@@ -433,23 +492,11 @@ namespace Fusion.Graphics {
 		/// <param name="vertexFirstIndex"></param>
 		public void DrawAuto ( Primitive primitive )
 		{									 
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.DrawAuto();
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="vertexCount"></param>
-		/// <param name="vertexFirstIndex"></param>
-		public void Draw ( Primitive primitive, int vertexCount, int firstIndex )
-		{									 
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.Draw( vertexCount, firstIndex );
+			lock (deviceContext) {
+				ApplyGpuState();
+				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+				deviceContext.DrawAuto();
+			}
 		}
 
 
@@ -464,9 +511,11 @@ namespace Fusion.Graphics {
 		/// <param name="startInstanceLocation"></param>
 		public void DrawInstanced ( Primitive primitive, int vertexCountPerInstance, int instanceCount, int startVertexLocation, int startInstanceLocation )
 		{
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.DrawInstanced( vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation );
+			lock (deviceContext) {
+				ApplyGpuState();
+				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+				deviceContext.DrawInstanced( vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation );
+			}
 		}
 
 
@@ -479,9 +528,11 @@ namespace Fusion.Graphics {
 		/// <param name="baseVertexOffset"></param>
 		public void DrawIndexed ( Primitive primitive, int indexCount, int firstIndex, int baseVertexOffset )
 		{
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.DrawIndexed( indexCount, firstIndex,	baseVertexOffset );
+			lock (deviceContext) {
+				ApplyGpuState();
+				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+				deviceContext.DrawIndexed( indexCount, firstIndex,	baseVertexOffset );
+			}
 		}
 
 
@@ -494,10 +545,86 @@ namespace Fusion.Graphics {
 		/// <param name="baseVertexOffset"></param>
 		public void DrawInstancedIndexed ( Primitive primitive, int indexCountPerInstance, int instanceCount, int startIndexLocation, int baseVertexLocation, int startInstanceLocation )
 		{
-			ApplyVertexStage();
-			deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
-			deviceContext.DrawIndexedInstanced( indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation );
+			lock (deviceContext) {
+				ApplyGpuState();
+				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+				deviceContext.DrawIndexedInstanced( indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation );
+			}
 		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="threadGroupCountX"></param>
+		/// <param name="threadGroupCountY"></param>
+		/// <param name="threadGroupCountZ"></param>
+		public void Dispatch( int threadGroupCountX, int threadGroupCountY = 1, int threadGroupCountZ = 1 )
+		{
+			lock (deviceContext) {
+				ApplyGpuState();
+				deviceContext.Dispatch( threadGroupCountX, threadGroupCountY, threadGroupCountZ ); 
+			}
+		}
+
+
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="layout"></param>
+		/// <param name="vertexBuffer"></param>
+		/// <param name="offset"></param>
+		public void SetupVertexOutput ( VertexBuffer vertexBuffer, int offset )
+		{
+			if (vertexBuffer==null) {
+				SetupVertexOutput( null, null );
+			} else {
+				SetupVertexOutput( new[]{ vertexBuffer }, new[]{ offset } );
+			}
+		}
+
+
+
+		/// <summary>
+		/// Setups vertex (stream) output.
+		/// </summary>
+		/// <param name="vertexBuffers">Vertex buffer to write data.</param>
+		/// <param name="offset">Offset where to start writing data. -1 means append.</param>
+		public void SetupVertexOutput ( VertexBuffer[] vertexBuffers, int[] offsets )
+		{
+			if (vertexBuffers==null || offsets==null ) {
+				lock (deviceContext) {
+					deviceContext.StreamOutput.SetTargets( null );
+				}
+				return;
+			}
+
+			if (vertexBuffers.Length>4) {
+				throw new ArgumentException("Length of 'vertexBuffers' must be less or equal 4");
+			}
+
+			if (vertexBuffers.Length!=offsets.Length) {
+				throw new ArgumentException("Lengths of 'vertexBuffers' and 'offsets' must be the same.");
+			}
+
+			if ( !offsets.All( e => (e<0) || (e%4==0) ) ) {
+				throw new ArgumentException("SetupVertexOutput: Offsets must be multiple of 4.");
+			}
+
+			if ( !vertexBuffers.All( vb => vb.IsVertexOutputEnabled) ) {
+				throw new GraphicsException("SetupVertexOutput: Vertex buffer must be created with enabled vertex output.");
+			}
+
+			var outputBinding		=	vertexBuffers.Zip( offsets, (vb,offset) => new StreamOutputBufferBinding( vb.Buffer, offset ) ).ToArray();
+
+			lock (deviceContext) {
+				deviceContext.StreamOutput.SetTargets( outputBinding );
+			}
+		}
+
+
 
 
 		/*-----------------------------------------------------------------------------------------
@@ -507,199 +634,42 @@ namespace Fusion.Graphics {
 		-----------------------------------------------------------------------------------------*/
 
 		/// <summary>
-		/// Resets all? including RTs and DS
+		/// Resets all devices states including RTs and DS
 		/// </summary>
 		public void ResetStates ()
 		{
-			DeviceContext.ClearState();
-			
-			//	Kill cached value :
-			vertexInputDirty	=	false;
-			vertexOutputDirty	=	false;
+			deviceContext.ClearState();
 
-			blendState	=	null;
-			rasterState	=	null;
-			depthState	=	null;
+			DepthStencilState	=	DepthStencilState.Default;
 
-			ps	=	null;
-			vs	=	null;
-			gs	=	null;
-			cs	=	null;
-			ds	=	null;
-			hs	=	null;
+			SetTargets( null );
+			SetupVertexInput( null, null );
+			SetupVertexOutput( null, 0 );
 
-			vertexInputDirty		= true;
-			vertexOutputDirty		= true;
-			vertexShaderSignature	= null;
+			PixelShaderResources	.Clear();
+			VertexShaderResources 	.Clear();
+			GeometryShaderResources .Clear();
+			ComputeShaderResources 	.Clear();
+			DomainShaderResources 	.Clear();
+			HullShaderResources 	.Clear();
 
-			inputVertexBuffers	= null;
-			inputIndexBuffer	= null;
-			inputVertexOffsets	= null;
-			inputVertexStrides	= null;
-			inputVertexLayout	= null;
+			PixelShaderSamplers		.Clear();
+			VertexShaderSamplers	.Clear();
+			GeometryShaderSamplers	.Clear();
+			ComputeShaderSamplers	.Clear();
+			DomainShaderSamplers	.Clear();
+			HullShaderSamplers		.Clear();
 
-			outputBinding		= null;
+			PixelShaderConstants	.Clear();
+			VertexShaderConstants	.Clear();
+			GeometryShaderConstants	.Clear();
+			ComputeShaderConstants	.Clear();
+			DomainShaderConstants	.Clear();
+			HullShaderConstants		.Clear();
+
+			PipelineState	=	null;
 		}
 
-
-
-		BlendState			blendState	=	null;
-		RasterizerState		rasterState	=	null;
-		DepthStencilState	depthState	=	null;
-
-
-
-		/// <summary>
-		/// Sets and gets blend state.
-		/// </summary>
-		public BlendState BlendState {
-			set {
-				if (value==null) {
-					throw new ArgumentNullException();
-				}
-				if (blendState!=value) {
-					blendState = value;
-					blendState.Apply( this );
-				}
-			} 
-			get {
-				return blendState;
-			}
-		}
-
-
-
-		/// <summary>
-		/// Sets and gets rasterizer state.
-		/// </summary>
-		public RasterizerState RasterizerState {
-			set {
-				if (value==null) {
-					throw new ArgumentNullException();
-				}
-				if (rasterState!=value) {
-					rasterState = value;
-					rasterState.Apply( this );
-				}
-			}
-			get {
-				return rasterState;
-			}
-		} 
-
-
-
-		/// <summary>
-		/// Sets and gets depth stencil state.
-		/// </summary>
-		public DepthStencilState DepthStencilState {
-			set {
-				if (value==null) {
-					throw new ArgumentNullException();
-				}
-				if (depthState!=value) {
-					depthState = value;
-					depthState.Apply(this);
-				}
-			}
-			get {
-				return depthState;
-			}
-		}
-
-
-
-		PixelShader		ps;
-		VertexShader	vs;
-		GeometryShader	gs;
-		ComputeShader	cs;
-		DomainShader	ds;
-		HullShader		hs;
-
-		public PixelShader PixelShader {
-			set { 
-				if (ps!=value) { 
-					ps=value; 
-					deviceContext.PixelShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return ps; 
-			}
-		}
-
-
-		public VertexShader VertexShader {
-			set { 
-				if (vs!=value) { 
-					vs = value;
-					vertexInputDirty = true;
-					if (value==null) {
-						vertexShaderSignature = null;
-						deviceContext.VertexShader.Set( null );
-					} else {
-						vertexShaderSignature = value.Bytecode;
-						deviceContext.VertexShader.Set( value.Shader ); 
-					}
-				} 
-			}
-			get { 
-				return vs; 
-			}
-		}
-
-
-		public GeometryShader GeometryShader {
-			set { 
-				if (gs!=value) { 
-					gs=value; 
-					vertexOutputDirty = true;
-					deviceContext.GeometryShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return gs; 
-			}
-		}
-
-
-		public ComputeShader ComputeShader {
-			set { 
-				if (cs!=value) { 
-					cs=value; 
-					deviceContext.ComputeShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return cs; 
-			}
-		}
-
-
-		public DomainShader DomainShader {
-			set { 
-				if (ds!=value) { 
-					ds=value; 
-					deviceContext.DomainShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return ds; 
-			}
-		}
-
-
-		public HullShader HullShader {
-			set { 
-				if (hs!=value) { 
-					hs=value; 
-					deviceContext.HullShader.Set( value==null? null:value.Shader ); 
-				} 
-			}
-			get { 
-				return hs; 
-			}
-		}
 
 
 		/*-----------------------------------------------------------------------------------------
@@ -749,7 +719,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// Sets targets
+		/// Sets targets.
 		/// </summary>
 		/// <param name="renderTargets"></param>
 		public void SetTargets ( DepthStencilSurface depthStencil, params RenderTargetSurface[] renderTargets )
@@ -762,37 +732,42 @@ namespace Fusion.Graphics {
 			}
 
 
-			this.depthStencilSurface	=	depthStencil;
-			renderTargets.CopyTo( renderTargetSurfaces, 0 );
+			lock (deviceContext) {
+
+				this.depthStencilSurface	=	depthStencil;
+				renderTargets.CopyTo( renderTargetSurfaces, 0 );
 
 
-			if (depthStencil!=null) {
-				w	=	depthStencil.Width;
-				h	=	depthStencil.Height;
-			}
-
-			if (renderTargets.Any()) {
-				
-				if (w==-1 || h==-1) {
-					w	=	renderTargets.First().Width;
-					h	=	renderTargets.First().Height;
+				if (depthStencil!=null) {
+					w	=	depthStencil.Width;
+					h	=	depthStencil.Height;
 				}
+
+				if (renderTargets.Any()) {
 				
-				if ( !renderTargets.All( surf => surf.Width == w && surf.Height == h ) ) {
-					throw new ArgumentException("All surfaces must be the same size", "renderTargets");
+					if (w==-1 || h==-1) {
+						w	=	renderTargets.First().Width;
+						h	=	renderTargets.First().Height;
+					}
+				
+					if ( !renderTargets.All( surf => surf.Width == w && surf.Height == h ) ) {
+						throw new ArgumentException("All surfaces must be the same size", "renderTargets");
+					}
+				}
+
+				DepthStencilView	dsv		=	depthStencil == null ? null : depthStencil.DSV;
+				RenderTargetView[] 	rtvs	=	renderTargets.Select( rt => rt.RTV ).ToArray();
+
+				if (!rtvs.Any()) {
+					deviceContext.OutputMerger.SetTargets( dsv, (RenderTargetView)null );
+				} else {
+					deviceContext.OutputMerger.SetTargets( dsv, rtvs );
+				}
+
+				if (w>0 && h>0) {
+					SetViewport( 0, 0, w, h );
 				}
 			}
-
-			DepthStencilView	dsv		=	depthStencil == null ? null : depthStencil.DSV;
-			RenderTargetView[] 	rtvs	=	renderTargets.Select( rt => rt.RTV ).ToArray();
-
-			if (!rtvs.Any()) {
-				deviceContext.OutputMerger.SetTargets( dsv, (RenderTargetView)null );
-			} else {
-				deviceContext.OutputMerger.SetTargets( dsv, rtvs );
-			}
-
-			SetViewport( 0, 0, w, h );
 		}
 
 
@@ -818,7 +793,9 @@ namespace Fusion.Graphics {
 		/// <param name="stencil"></param>
 		public void Clear ( DepthStencilSurface surface, float depth = 1, byte stencil = 0 )
 		{
-			deviceContext.ClearDepthStencilView( surface.DSV, DepthStencilClearFlags.Depth|DepthStencilClearFlags.Stencil, depth, stencil );
+			lock (deviceContext) {
+				deviceContext.ClearDepthStencilView( surface.DSV, DepthStencilClearFlags.Depth|DepthStencilClearFlags.Stencil, depth, stencil );
+			}
 		}
 
 
@@ -830,7 +807,9 @@ namespace Fusion.Graphics {
 		/// <param name="color"></param>
 		public void Clear ( RenderTargetSurface surface, Color4 color )
 		{
-			deviceContext.ClearRenderTargetView( surface.RTV, SharpDXHelper.Convert( color ) );
+			lock (deviceContext) {
+				deviceContext.ClearRenderTargetView( surface.RTV, SharpDXHelper.Convert( color ) );
+			}
 		}
 
 
@@ -842,9 +821,10 @@ namespace Fusion.Graphics {
 		/// <param name="values"></param>
 		public void Clear ( StructuredBuffer buffer, Int4 values )
 		{
-			deviceContext.ClearUnorderedAccessView( buffer.UAV, SharpDXHelper.Convert( values ) );
+			lock (deviceContext) {
+				deviceContext.ClearUnorderedAccessView( buffer.UAV, SharpDXHelper.Convert( values ) );
+			}
 		}
-
 
 
 
@@ -879,7 +859,9 @@ namespace Fusion.Graphics {
 				throw new GraphicsException( "Could not resolve: destination surface is multisampled");
 			}
 
-			deviceContext.ResolveSubresource( source.Resource, source.Subresource, destination.Resource, destination.Subresource, Converter.Convert( source.Format ) );
+			lock (deviceContext) {
+				deviceContext.ResolveSubresource( source.Resource, source.Subresource, destination.Resource, destination.Subresource, Converter.Convert( source.Format ) );
+			}
 		}
 
 
@@ -893,7 +875,7 @@ namespace Fusion.Graphics {
 		/// <param name="h"></param>
 		public void SetViewport ( int x, int y, int w, int h )
 		{
-			deviceContext.Rasterizer.SetViewport( SharpDXHelper.Convert( new ViewportF(x,y,w,h) ) );
+			SetViewport( new ViewportF(x,y,w,h) );
 		}
 
 
@@ -907,7 +889,7 @@ namespace Fusion.Graphics {
 		/// <param name="h"></param>
 		public void SetViewport ( Viewport viewport )
 		{
-			deviceContext.Rasterizer.SetViewport( SharpDXHelper.Convert( new ViewportF( viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth ) ) );
+			SetViewport( new ViewportF( viewport.X, viewport.Y, viewport.Width, viewport.Height, viewport.MinDepth, viewport.MaxDepth ) );
 		}
 
 
@@ -921,7 +903,9 @@ namespace Fusion.Graphics {
 		/// <param name="h"></param>
 		public void SetViewport ( ViewportF viewport )
 		{
-			deviceContext.Rasterizer.SetViewport( SharpDXHelper.Convert( viewport ) );
+			lock (deviceContext) {
+				deviceContext.Rasterizer.SetViewport( SharpDXHelper.Convert( viewport ) );
+			}
 		}
 
 
@@ -940,7 +924,9 @@ namespace Fusion.Graphics {
 				throw new GraphicsException("Could not bind RW buffer at register " + register.ToString() + " (max 8)");
 			}
 
-			DeviceContext.ComputeShader.SetUnorderedAccessView( register, buffer==null?null:buffer.UAV, initialCount ); 
+			lock (deviceContext) {
+				DeviceContext.ComputeShader.SetUnorderedAccessView( register, buffer==null?null:buffer.UAV, initialCount ); 
+			}
 		}
 
 
@@ -959,7 +945,9 @@ namespace Fusion.Graphics {
 				throw new GraphicsException("Could not bind RW buffer at register " + register.ToString() + " (max 8)");
 			}
 
-			DeviceContext.OutputMerger.SetUnorderedAccessView ( register, buffer==null?null:buffer.UAV, initialCount ); 
+			lock (deviceContext) {
+				DeviceContext.OutputMerger.SetUnorderedAccessView ( register, buffer==null?null:buffer.UAV, initialCount ); 
+			}
 		}
 
 
@@ -978,7 +966,9 @@ namespace Fusion.Graphics {
 				throw new GraphicsException("Could not bind RW texture at register " + register.ToString() + " (max 8)");
 			}
 
-			DeviceContext.ComputeShader.SetUnorderedAccessView( register, surface==null?null:surface.UAV, -1 ); 
+			lock (deviceContext) {
+				DeviceContext.ComputeShader.SetUnorderedAccessView( register, surface==null?null:surface.UAV, -1 ); 
+			}
 		}
 
 
@@ -997,7 +987,9 @@ namespace Fusion.Graphics {
 				throw new GraphicsException("Could not bind RW texture at register " + register.ToString() + " (max 8)");
 			}
 
-			DeviceContext.OutputMerger.SetUnorderedAccessView ( register, surface==null?null:surface.UAV, -1 ); 
+			lock (deviceContext) {
+				DeviceContext.OutputMerger.SetUnorderedAccessView ( register, surface==null?null:surface.UAV, -1 ); 
+			}
 		}
 	}
 }

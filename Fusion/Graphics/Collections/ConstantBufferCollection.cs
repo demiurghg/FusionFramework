@@ -36,12 +36,25 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public int Count { 
 			get { 
-				return CommonShaderStage.ConstantBufferRegisterCount;
+				return CommonShaderStage.ConstantBufferApiSlotCount;
 			}
 		}
 
 
 		
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Clear ()
+		{
+			for (int i=0; i<Count; i++) {
+				this[i] = null;
+			}
+		}
+
+
+		
+
 		/// <summary>
 		/// Sets and gets sampler state to given shader stage.
 		/// </summary>

@@ -395,28 +395,30 @@ namespace Fusion.Graphics {
 		/// <param name="path"></param>
 		public void SaveToFile ( string path )
 		{
-			if (SampleCount>1) {
+			lock ( device.DeviceContext ) {
+				if (SampleCount>1) {
 												
-				using( var temp = new RenderTarget2D( this.device, this.Format, this.Width, this.Height, false, false ) ) {
-					this.device.Resolve( this, temp );
-					temp.SaveToFile( path );
-				}
+					using( var temp = new RenderTarget2D( this.device, this.Format, this.Width, this.Height, false, false ) ) {
+						this.device.Resolve( this, temp );
+						temp.SaveToFile( path );
+					}
 				
-			} else {
-				var ext = Path.GetExtension( path ).ToLower();
+				} else {
+					var ext = Path.GetExtension( path ).ToLower();
 
-				var iff = ImageFileFormat.Jpg;
+					var iff = ImageFileFormat.Jpg;
 
-				if ( ext == ".bmp"  ) iff = ImageFileFormat.Bmp;
-				if ( ext == ".dds"  ) iff = ImageFileFormat.Dds;
-				if ( ext == ".gif"  ) iff = ImageFileFormat.Gif;
-				if ( ext == ".jpg"  ) iff = ImageFileFormat.Jpg;
-				if ( ext == ".png"  ) iff = ImageFileFormat.Png;
-				if ( ext == ".tiff" ) iff = ImageFileFormat.Tiff;
-				if ( ext == ".wmp"  ) iff = ImageFileFormat.Wmp;
+					if ( ext == ".bmp"  ) iff = ImageFileFormat.Bmp;
+					if ( ext == ".dds"  ) iff = ImageFileFormat.Dds;
+					if ( ext == ".gif"  ) iff = ImageFileFormat.Gif;
+					if ( ext == ".jpg"  ) iff = ImageFileFormat.Jpg;
+					if ( ext == ".png"  ) iff = ImageFileFormat.Png;
+					if ( ext == ".tiff" ) iff = ImageFileFormat.Tiff;
+					if ( ext == ".wmp"  ) iff = ImageFileFormat.Wmp;
 
-				//
-				D3D.Texture2D.ToFile( device.DeviceContext, tex2D, iff, path );
+					//
+					D3D.Texture2D.ToFile( device.DeviceContext, tex2D, iff, path );
+				}
 			}
 		}
 	}

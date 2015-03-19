@@ -729,7 +729,7 @@ namespace Fusion.UserInterface {
 
 					DrawFrameBorders( sb );
 
-					sb.Restart( null,null,null,null,null, clipRect );
+					sb.Restart( SpriteBlend.AlphaBlend,null,null,null, clipRect );
 
 						Draw( gameTime, stereoEye, sb );
 

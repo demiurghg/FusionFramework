@@ -140,12 +140,12 @@
     <Compile Include="Content\AssetTypes\BMFontSpriteFontAsset.cs" />
     <Compile Include="Content\AssetTypes\AbstractAsset.cs" />
     <Compile Include="Content\AssetTypes\AbstractAssetLoader.cs" />
+    <Compile Include="Content\AssetTypes\UbershaderEnumerator.cs" />
     <Compile Include="Content\AssetTypes\RawFileAsset.cs" />
     <Compile Include="Content\BuildContext.cs" />
     <Compile Include="Content\ContentLoader.cs" />
     <Compile Include="Content\ContentManager.cs" />
     <Compile Include="Content\ContentUtils.cs" />
-    <Compile Include="Content\AssetTypes\UbershaderAsset.Parser.cs" />
     <Compile Include="Content\AssetTypes\WaveFileSoundEffectAsset.cs" />
     <Compile Include="Content\AssetTypes\AssembledCubeTextureAsset.cs" />
     <Compile Include="Content\Asset.cs" />
@@ -206,6 +206,10 @@
     <Compile Include="Graphics\Collections\ConstantBufferCollection.cs" />
     <Compile Include="Graphics\Collections\SamplerStateCollection.cs" />
     <Compile Include="Graphics\Collections\ShaderResourceCollection.cs" />
+    <Compile Include="Graphics\Resources\UnorderedAccess.cs" />
+    <Compile Include="Graphics\Scene\SceneDrawer.cs" />
+    <Compile Include="Graphics\States\StateFactory.cs" />
+    <Compile Include="Graphics\UbershaderLoader.cs" />
     <Compile Include="Graphics\Display\BaseDisplay.cs" />
     <Compile Include="Graphics\Display\GenericDisplay.cs" />
     <Compile Include="Graphics\Display\NV3DVisionDisplay.cs">
@@ -214,16 +218,18 @@
     <Compile Include="Graphics\Display\OculusRiftDisplay.cs" />
     <Compile Include="Graphics\Display\StereoDualHeadDisplay.cs" />
     <Compile Include="Graphics\Display\StereoInterlacedDisplay.cs" />
-    <Compile Include="Graphics\Resources\VertexInputElement.cs" />
-    <Compile Include="Graphics\Resources\VertexOutputElement.cs" />
-    <Compile Include="Graphics\Resources\VertexOutputLayout.cs" />
-    <Compile Include="Graphics\Resources\VertexInputLayout.cs" />
     <Compile Include="Graphics\Scene\AnimMode.cs" />
     <Compile Include="Graphics\ShaderFactory.cs" />
     <Compile Include="Graphics\Resources\TextureAtlas.cs" />
     <Compile Include="Graphics\Scene\VertexColorTextureNormal.cs" />
     <Compile Include="Graphics\Scene\SceneLoader.cs" />
     <Compile Include="Graphics\Scene\MeshSubset.cs" />
+    <Compile Include="Graphics\States\BlendState.cs" />
+    <Compile Include="Graphics\States\RasterizerState.cs" />
+    <Compile Include="Graphics\States\PipelineState.cs" />
+    <Compile Include="Graphics\States\ShaderBytecode.cs" />
+    <Compile Include="Graphics\States\VertexInputElement.cs" />
+    <Compile Include="Graphics\States\VertexOutputElement.cs" />
     <Compile Include="Graphics\UbershaderException.cs" />
     <Compile Include="Graphics\HardwareProfileChecker.cs" />
     <Compile Include="Graphics\Resources\DepthStencil2D.cs" />
@@ -237,6 +243,7 @@
     <Compile Include="Graphics\Resources\Texture2D.cs" />
     <Compile Include="Graphics\Utils\Camera.cs" />
     <Compile Include="Graphics\Utils\CameraConfig.cs" />
+    <Compile Include="Graphics\Utils\SpriteBlend.cs" />
     <Compile Include="Graphics\Utils\DebugRender.cs" />
     <Compile Include="Graphics\Utils\DebugRenderConfig.cs" />
     <Compile Include="Graphics\Utils\DebugStrings.cs" />
@@ -259,9 +266,7 @@
     <Compile Include="Graphics\Resources\RenderTarget2D.cs" />
     <Compile Include="Graphics\Resources\RenderTargetCube.cs" />
     <Compile Include="Graphics\Resources\VertexBuffer.cs" />
-    <Compile Include="Graphics\States\BlendState.cs" />
     <Compile Include="Graphics\States\DepthStencilState.cs" />
-    <Compile Include="Graphics\States\RasterizerState.cs" />
     <Compile Include="Graphics\States\SamplerState.cs" />
     <Compile Include="Input\GamepadButtons.cs" />
     <Compile Include="Input\Gamepad.cs" />
@@ -402,6 +407,7 @@
       <Name>NvApiWrapper</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

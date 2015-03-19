@@ -12,8 +12,9 @@ namespace ParticleDemo {
 	public class ParticleSystem : GameService {
 
 
-		Texture2D	texture;
-		Ubershader	shader;
+		Texture2D		texture;
+		Ubershader		shader;
+		StateFactory	factory;
 
 		const int BlockSize				=	512;
 		const int MaxInjectingParticles	=	1024;
@@ -64,13 +65,21 @@ namespace ParticleDemo {
 		enum Flags {
 			INJECTION	=	0x1,
 			SIMULATION	=	0x2,
+			DRAW		=	0x4,
 		}
 
+
+//       row_major float4x4 View;       // Offset:    0
+//       row_major float4x4 Projection; // Offset:   64
+//       int MaxParticles;              // Offset:  128
+//       float DeltaTime;               // Offset:  132
+
+		[StructLayout(LayoutKind.Explicit, Size=144)]
 		struct Params {
-			public Matrix	View;
-			public Matrix	Projection;
-			public int		MaxParticles;
-			public float	DeltaTime;
+			[FieldOffset(  0)] public Matrix	View;
+			[FieldOffset( 64)] public Matrix	Projection;
+			[FieldOffset(128)] public int		MaxParticles;
+			[FieldOffset(132)] public float		DeltaTime;
 		} 
 
 		Random rand = new Random();
@@ -105,9 +114,26 @@ namespace ParticleDemo {
 
 		void Game_Reloading ( object sender, EventArgs e )
 		{
+			SafeDispose( ref factory );
+
 			texture		=	Game.Content.Load<Texture2D>("particle");
 			shader		=	Game.Content.Load<Ubershader>("test");
-			shader.Map( typeof(Flags) );
+
+
+			factory		=	new StateFactory( shader, typeof(Flags), (ps,i) => StateEnum( ps, (Flags)i) );
+			
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ps"></param>
+		/// <param name="flags"></param>
+		void StateEnum ( PipelineState ps, Flags flags )
+		{
+			ps.Blending	=	BlendState.Additive;
 		}
 
 
@@ -189,6 +215,8 @@ namespace ParticleDemo {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
+				SafeDispose( ref factory );
+
 				paramsCB.Dispose();
 
 				injectionBuffer.Dispose();
@@ -269,7 +297,7 @@ namespace ParticleDemo {
 			paramsCB.SetData( param );
 			//device.CSConstantBuffers[0] = paramsCB ;
 
-			shader.SetComputeShader( (int)Flags.INJECTION );
+			device.PipelineState	=	factory[ (int)Flags.INJECTION ];
 			device.Dispatch( MathUtil.IntDivUp( MaxInjectingParticles, BlockSize ) );
 
 			ClearParticleBuffer();
@@ -283,10 +311,8 @@ namespace ParticleDemo {
 			paramsCB.SetData( param );
 			device.ComputeShaderConstants[0] = paramsCB ;
 
-			shader.SetComputeShader( (int)Flags.SIMULATION );
+			device.PipelineState	=	factory[ (int)Flags.SIMULATION ];
 			device.Dispatch( MathUtil.IntDivUp( MaxSimulatedParticles, BlockSize ) );//*/
-
-			device.ComputeShader = null;
 
 			SwapParticleBuffers();
 
@@ -294,15 +320,10 @@ namespace ParticleDemo {
 			//
 			//	Render
 			//
-			shader.SetVertexShader( 0 );
-			shader.SetPixelShader( 0 );
-			shader.SetGeometryShader( 0 );
-
-			device.SetCSRWBuffer( 0, null );
+			device.PipelineState	=	factory[ (int)Flags.DRAW ];
+			device.SetCSRWBuffer( 0, null );	
 			device.PixelShaderResources[0]	=	texture ;
 			device.GeometryShaderResources[1]	=	simulationBufferSrc ;
-			device.RasterizerState		=	RasterizerState.CullNone ;
-			device.BlendState			=	BlendState.Screen ;
 			device.DepthStencilState	=	DepthStencilState.Readonly ;
 
 			device.Draw( Primitive.PointList, MaxSimulatedParticles, 0 );

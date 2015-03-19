@@ -15,7 +15,7 @@ using D3DDepthStencilState	=	SharpDX.Direct3D11.DepthStencilState;
 
 namespace Fusion.Graphics {
 
-	public class DepthStencilState : DisposableBase {
+	public sealed class DepthStencilState : DisposableBase {
 
 		//GraphicsDevice	device;
 		

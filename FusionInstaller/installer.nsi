@@ -11,11 +11,11 @@
 
 
 ; The name of the installer
-Name "Fusion Game Library (v0.9)"
+Name "Fusion Game Library (v1.0)"
 XPStyle on
 
 ; The file to write
-OutFile "FusionInstaller-0.9.exe"
+OutFile "FusionInstaller-1.0.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\FusionGameLib
@@ -164,10 +164,10 @@ Section "Install DirectX End-User Runtimes (June 2010)" Section2
     DetailPrint "Download failed : $R0"
     Abort
   success:
-    ExecWait "$INSTDIR\DirectX\dxsetup.exe /q /t:$INSTDIR\DirectX\Temp"
-	ExecWait "$INSTDIR\DirectX\Temp\DXSETUP.exe /silent"
-	Delete   "$INSTDIR\DirectX\Temp\*.*"
-	RMDir    "$INSTDIR\DirectX\Temp"
+    ExecWait '"$INSTDIR\DirectX\dxsetup.exe" /q /t:"$INSTDIR\DirectX\Temp"'
+	ExecWait '"$INSTDIR\DirectX\Temp\DXSETUP.exe" /silent'
+	Delete   '$INSTDIR\DirectX\Temp\*.*'
+	RMDir    '$INSTDIR\DirectX\Temp'
 SectionEnd
 
 

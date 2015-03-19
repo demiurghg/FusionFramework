@@ -6,24 +6,50 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.IO;
 using System.Diagnostics;
+using System.Xml.Serialization;
+using SharpDX;
+using Fusion.Graphics;
+using System.Threading;
 using Fusion.Mathematics;
 
 
 namespace Fusion.Content {
 
-	public partial class UbershaderAsset {
+	/// <summary>
+	/// Creates definition list by declaration.
+	/// </summary>
+	public class UbershaderEnumerator {
 
-		#if false
-			Expression	::=		'$pixel'|'$vertex'|'$geometry'|'$compute'|'$domain'|'$hull' Combination
-			Combination	::=		Sequence (' '+ Sequence)*
-			Sequence	::=		[+] Exclusion ('..' Exclusion)*
-			Exclusion	::=		Factor ('|' Factor)*
-			Factor		::=		Definition | "(" Combination ")"
-			Definition	::=		IdentChar+
-		#endif
+		List<string> defineList;
 
 
-		CharStream cs;
+		/// <summary>
+		/// Define list.
+		/// </summary>
+		public ICollection<string>	DefineList {
+			get {
+				return defineList;
+			}
+		}
+
+
+		/// <summary>
+		/// Creates list of definitions using given string and leading keyword.
+		/// </summary>
+		/// <param name="inputString"></param>
+		/// <param name="prefix"></param>
+		public UbershaderEnumerator ( string inputString, string leadingKeyword )
+		{
+			defineList	=	Parse( inputString, leadingKeyword );
+		}
+
+
+
+		/*-----------------------------------------------------------------------------------------------
+		 * 
+		 *	Generator :
+		 * 
+		-----------------------------------------------------------------------------------------------*/
 
 
 		enum Operation {
@@ -160,14 +186,17 @@ namespace Fusion.Content {
 		/// 
 		/// </summary>
 		/// <param name="line"></param>
-		List<string> Parse ( string line, out Target target )
+		List<string> Parse ( string line, string leadingKeyword )
 		{
 			cs	=	new CharStream( line );
 
-			var root =	Expression( out target );
+			var root =	Expression( leadingKeyword );
 			var list =	root.Enumerate();
 			return list;
 		}
+
+
+		CharStream cs;
 
 
 		/*-----------------------------------------------------------------------------------------------
@@ -179,26 +208,14 @@ namespace Fusion.Content {
 		/// <summary>
 		/// 
 		/// </summary>
-		Node Expression ( out Target target )
+		Node Expression ( string leadingKeyword )
 		{
-			target = Target.None;
-			if ( cs.Accept( "$pixel"	) ) target = Target.PixelShader		;
-			if ( cs.Accept( "$vertex"	) ) target = Target.VertexShader	;
-			if ( cs.Accept( "$geometry"	) ) target = Target.GeometryShader	;
-			if ( cs.Accept( "$domain"	) ) target = Target.DomainShader	;
-			if ( cs.Accept( "$hull"		) ) target = Target.HullShader		;
-			if ( cs.Accept( "$compute"	) ) target = Target.ComputeShader	;
+			cs.Expect( leadingKeyword );
 
-			if (target!=Target.None) {
-				
-				if (cs.AcceptSpace()) {
-					return Combination(); 
-				} else {
-					return new Node("");
-				}
-
-			} else { 
-				throw new ContentException("Bad shader type"); 
+			if (cs.AcceptSpace()) {
+				return Combination(); 
+			} else {
+				return new Node("");
 			}
 		}
 
@@ -259,5 +276,6 @@ namespace Fusion.Content {
 			var s = cs.ExpectIdent();
 			return new Node( s );
 		}
+			
 	}
 }

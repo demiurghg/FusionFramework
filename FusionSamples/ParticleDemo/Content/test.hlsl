@@ -1,9 +1,6 @@
 
 #if 0
-$compute INJECTION|SIMULATION
-$geometry
-$pixel
-$vertex
+$ubershader INJECTION|SIMULATION|DRAW
 #endif
 
 #define BLOCK_SIZE	512
@@ -43,7 +40,7 @@ AppendStructuredBuffer<PARTICLE>	particleBufferDst	: 	register(u0);
 /*-----------------------------------------------------------------------------
 	Simulation :
 -----------------------------------------------------------------------------*/
-
+#if (defined INJECTION) || (defined SIMULATION)
 [numthreads( BLOCK_SIZE, 1, 1 )]
 void CSMain( 
 	uint3 groupID			: SV_GroupID,
@@ -75,6 +72,7 @@ void CSMain(
 	}
 #endif
 }
+#endif
 
 
 /*-----------------------------------------------------------------------------
@@ -96,6 +94,7 @@ struct GSOutput {
 };
 
 
+#if DRAW
 VSOutput VSMain( uint vertexID : SV_VertexID )
 {
 	VSOutput output;
@@ -182,5 +181,5 @@ float4 PSMain( GSOutput input ) : SV_Target
 {
 	return Texture.Sample( Sampler, input.TexCoord ) * float4(input.Color.rgb,1);
 }
-
+#endif
 

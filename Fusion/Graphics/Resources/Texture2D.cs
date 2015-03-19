@@ -217,61 +217,6 @@ namespace Fusion.Graphics {
 
 
 		
-	#if false
-		internal static bool SaveDDS( DeviceContext context, Resource resource, string file )
-		{
-			Image img = null;
-
-			switch( resource.Dimension ) {
-				case ResourceDimension.Buffer: return false;
-				case ResourceDimension.Texture1D: {
-					var descr = resource.QueryInterface<D3D.Texture1D>().Description;
-					if( ( descr.CpuAccessFlags & CpuAccessFlags.Read ) == 0 ) {
-						return false;
-					}
-					img = new Image( descr.Format, descr.Width, 1, 1, descr.MipLevels, descr.ArraySize );
-				} break;
-				case ResourceDimension.Texture2D: {
-					var descr = resource.QueryInterface<D3D.Texture2D>().Description;
-					if( ( descr.CpuAccessFlags & CpuAccessFlags.Read ) == 0 ) {
-						return false;
-					}
-					var isCube = ( descr.OptionFlags & ResourceOptionFlags.TextureCube ) != 0;
-					img = new Image( descr.Format, descr.Width, descr.Height, isCube ?  0 : 1, descr.MipLevels, descr.ArraySize / ( isCube ? 6 : 1 ) );
-				} break;
-				case ResourceDimension.Texture3D: {
-					var descr = resource.QueryInterface<D3D.Texture3D>().Description;
-					if( ( descr.CpuAccessFlags & CpuAccessFlags.Read ) == 0 ) {
-						return false;
-					}
-					img = new Image( descr.Format, descr.Width, descr.Height, descr.Depth, descr.MipLevels, 1 );
-				} break;
-			}
-
-			img.AllocateData();
-
-			var buffer = new byte[Image.GetSizeInBytes( img.Format, img.Width(), img.Height(), Math.Max( 1, img.Depth() ), 1 )];
-
-			for( int arraySlice = ( img.IsCube() ? 6 : 1 ) * img.ArraySize, subResourceID = arraySlice * img.MipLevels; --arraySlice >= 0; ) {
-				for( int mipLevel = img.MipLevels; --mipLevel >= 0; ) {
-					var db = context.MapSubresource( resource, --subResourceID, MapMode.Read, MapFlags.None );
-					var size = Image.GetSizeInBytes( img.Format, img.Width( mipLevel ), img.Height( mipLevel ), Math.Max( 1, img.Depth( mipLevel ) ), 1 );
-					Marshal.Copy( db.DataPointer, buffer, 0, size );
-					context.UnmapSubresource( resource, subResourceID );
-					Marshal.Copy( buffer, 0, img.Data( mipLevel, arraySlice ), size );
-				}
-			}
-
-			var result = img.SaveDDS( file );
-
-			img.Dispose();
-
-			return result;
-		}
-	#endif
-
-
-		
 		/// <summary>
 		/// 
 		/// </summary>
@@ -308,10 +253,10 @@ namespace Fusion.Graphics {
 		/// <param name="elementCount"></param>
 		public void SetData<T>( int level, Rectangle? rect, T[] data, int startIndex, int elementCount ) where T: struct
 		{
-            var elementSizeInByte	=	Marshal.SizeOf(typeof(T));
-            var dataHandle			=	GCHandle.Alloc(data, GCHandleType.Pinned);
-            // Use try..finally to make sure dataHandle is freed in case of an error
-            try {
+			var elementSizeInByte	=	Marshal.SizeOf(typeof(T));
+			var dataHandle			=	GCHandle.Alloc(data, GCHandleType.Pinned);
+			// Use try..finally to make sure dataHandle is freed in case of an error
+			try {
 				var startBytes	=	startIndex * elementSizeInByte;
 				var dataPtr		=	(IntPtr)(dataHandle.AddrOfPinnedObject().ToInt64() + startBytes);
 
@@ -328,10 +273,6 @@ namespace Fusion.Graphics {
 					h = Math.Max(Height >> level, 1);
 
 					// For DXT textures the width and height of each level is a multiple of 4.
-					// OpenGL only: The last two mip levels require the width and height to be 
-					// passed as 2x2 and 1x1, but there needs to be enough data passed to occupy 
-					// a 4x4 block. 
-					// Ref: http://www.mentby.com/Group/mac-opengl/issue-with-dxt-mipmapped-textures.html 
 					if (format == ColorFormat.Dxt1 ||
 						format == ColorFormat.Dxt3 ||
 						format == ColorFormat.Dxt5 ) {
@@ -342,19 +283,16 @@ namespace Fusion.Graphics {
 
 				var box = new SharpDX.DataBox(dataPtr, w * Converter.SizeOf(format), 0);
 
-				var region = new SharpDX.Direct3D11.ResourceRegion();
-				region.Top = y;
-				region.Front = 0;
-				region.Back = 1;
-				region.Bottom = y + h;
-				region.Left = x;
-				region.Right = x + w;
+				var region		= new SharpDX.Direct3D11.ResourceRegion();
+				region.Top		= y;
+				region.Front	= 0;
+				region.Back		= 1;
+				region.Bottom	= y + h;
+				region.Left		= x;
+				region.Right	= x + w;
 
-				// TODO: We need to deal with threaded contexts here!
-				var d3dContext = device.DeviceContext;
-
-				lock (d3dContext) {
-					d3dContext.UpdateSubresource(box, tex2D, level, region);
+				lock (device.DeviceContext) {
+					device.DeviceContext.UpdateSubresource(box, tex2D, level, region);
 				}
 				
 			} finally {

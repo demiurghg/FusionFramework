@@ -31,7 +31,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>debugRender.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\FUSION_ENGINE\FusionSamples\InstancingDemo2\Content\Temp\0EC7C2D14F65EFBA65B361728EE70CD3.html</ListingPath>
+    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\InstancingDemo2\Content\Temp\0EC7C2D14F65EFBA65B361728EE70CD3.html</ListingPath>
   </Asset>
   <Asset xsi:type="UbershaderAsset">
     <AssetPath>spriteBatch.hlsl</AssetPath>
@@ -51,7 +51,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>spriteBatch.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\FUSION_ENGINE\FusionSamples\InstancingDemo2\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
+    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\InstancingDemo2\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
   </Asset>
   <Asset xsi:type="ImageFileTextureAsset">
     <AssetPath>block.tga</AssetPath>
@@ -84,7 +84,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>test.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\FUSION_ENGINE\FusionSamples\InstancingDemo2\Content\Temp\F896B223F730F30840F6325E60A3DDCB.html</ListingPath>
+    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\InstancingDemo2\Content\Temp\F896B223F730F30840F6325E60A3DDCB.html</ListingPath>
   </Asset>
   <Asset xsi:type="UbershaderAsset">
     <AssetPath>stereo.hlsl</AssetPath>
@@ -104,6 +104,6 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>stereo.hlsl</SourceFile>
     <ShowPemutations>true</ShowPemutations>
-    <ListingPath>C:\FUSION_ENGINE\FusionSamples\InstancingDemo2\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
+    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\InstancingDemo2\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
   </Asset>
 </ArrayOfAsset>

@@ -280,10 +280,6 @@ namespace Fusion.Graphics {
                     height = Math.Max(1, this.Height >> level);
 
                     // For DXT textures the width and height of each level is a multiple of 4.
-                    // OpenGL only: The last two mip levels require the width and height to be 
-                    // passed as 2x2 and 1x1, but there needs to be enough data passed to occupy 
-                    // a 4x4 block. 
-                    // Ref: http://www.mentby.com/Group/mac-opengl/issue-with-dxt-mipmapped-textures.html 
                     if (format == ColorFormat.Dxt1 ||
                         format == ColorFormat.Dxt3 ||
                         format == ColorFormat.Dxt5)
@@ -306,10 +302,8 @@ namespace Fusion.Graphics {
                     Right = xOffset + width
                 };
 
-				var d3dContext = device.DeviceContext;
-
-				lock (d3dContext) {
-					d3dContext.UpdateSubresource(box, texCube, subresourceIndex, region);
+				lock (device.DeviceContext) {
+					device.DeviceContext.UpdateSubresource(box, texCube, subresourceIndex, region);
 				}
 
             } finally {

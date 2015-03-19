@@ -1,8 +1,7 @@
 
 
 #if 0
-$pixel  PROCEDURAL_SKY|FOG
-$vertex PROCEDURAL_SKY|FOG
+$ubershader  PROCEDURAL_SKY|FOG
 #endif
 
 cbuffer Constants : register(b0)

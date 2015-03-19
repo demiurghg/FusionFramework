@@ -16,48 +16,76 @@ using Fusion.Mathematics;
 
 
 namespace Fusion.Graphics {
-	public class VertexInputLayout : DisposableBase {
+	public struct VertexInputElement {
 
-		readonly GraphicsDevice	device;
+		public static int AppendAligned { get { return -1; } }
 
-		InputElement[] inputElements;
+		/// <summary>
+		/// The HLSL semantic associated with this element in a shader input-signature.
+		/// </summary>
+		public string		SemanticName;
 
-		InputLayout	lastUsedInputLayout = null;
-		string		lastUsedSignature = null;
-		Dictionary<string,InputLayout> layoutDictionary = new Dictionary<string,InputLayout>();
+		/// <summary>
+		/// The semantic index for the element. 
+		/// A semantic index modifies a semantic, with an integer index number. 
+		/// A semantic index is only needed in a case where there is more than one element with the same semantic. 
+		/// For example, a 4x4 matrix would have four components each with the semantic name "Matrix", 
+		/// however each of the four component would have different semantic indices (0, 1, 2, and 3
+		/// </summary>
+		public int			SemanticIndex;
 
-		
+		/// <summary>
+		/// The data type of the element data. 
+		/// </summary>
+		public VertexFormat	Format;
+
+		/// <summary>
+		/// An integer value that identifies the input-assembler (see input slot). Valid values are between 0 and 15.
+		/// </summary>
+		public int			InputSlot;
+
+		/// <summary>
+		/// Optional. Offset (in bytes) between each element. 
+		/// Use VertexInputElement.AppendAligned for convenience to define the current element directly after the previous one, 
+		/// including any packing if necessary.
+		/// </summary>
+		public int			ByteOffset;
+
+		/// <summary>
+		/// The number of instances to draw using the same per-instance data before advancing in the buffer by one element. 
+		/// This value must be 0 for an element that contains per-vertex data.
+		/// </summary>
+		public int			InstanceStepRate;
+
+
+
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="vertexType"></param>
-		public VertexInputLayout ( GraphicsDevice device, Type vertexType )
+		/// <param name="name"></param>
+		/// <param name="index"></param>
+		/// <param name="format"></param>
+		/// <param name="slot"></param>
+		/// <param name="offset"></param>
+		/// <param name="instanceStepRate"></param>
+		public VertexInputElement( string name, int index, VertexFormat format, int slot, int offset = -1, int instanceStepRate = 0 )
 		{
-			this.device		=	device;
-			inputElements	=	Convert( GetInputElements( vertexType ) );	
+			SemanticName		=	name;
+			SemanticIndex		=	index;
+			Format				=	format;
+			InputSlot			=	slot;
+			ByteOffset			=	offset;
+			InstanceStepRate	=	instanceStepRate;
 		}
 
 
 
 		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="device"></param>
-		/// <param name="elements"></param>
-		public VertexInputLayout ( GraphicsDevice device, VertexInputElement[] elements )
-		{
-			this.device		=	device;
-			inputElements	=	Convert( elements );
-		}
-
-
-
-		/// <summary>
-		/// 
+		/// Converts array of VertexInputElement to array of InputElement.
 		/// </summary>
 		/// <param name="elements"></param>
 		/// <returns></returns>
-		InputElement[] Convert( VertexInputElement[] elements ) 
+		static internal InputElement[] Convert ( VertexInputElement[] elements )
 		{
 			return	elements.Select( e => new InputElement( 
 						e.SemanticName, 
@@ -75,18 +103,10 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="disposing"></param>
-		protected override void Dispose ( bool disposing )
-		{
-			if (disposing) {
-
-				foreach ( var entry in layoutDictionary ) {
-					entry.Value.Dispose();
-				}
-
-				layoutDictionary.Clear();				
+		public static VertexInputElement[] Empty {
+			get {
+				return null;
 			}
-			base.Dispose( disposing );
 		}
 
 
@@ -94,28 +114,13 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="signature"></param>
+		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
-		internal InputLayout GetInputLayout ( string signature )
+		public static VertexInputElement[] FromStructure<T> () where T: struct
 		{
-			if (lastUsedSignature==signature) {
-				return lastUsedInputLayout;
-			}
-
-			InputLayout layout;
-
-			if (!layoutDictionary.TryGetValue( signature, out layout )) {
-				
-				layout	=	new InputLayout( device.Device, Misc.HexStringToByte(signature), inputElements );
-
-				layoutDictionary.Add( signature, layout );
-			}
-
-			lastUsedInputLayout	=	layout;
-			lastUsedSignature	=	signature;
-
-			return layout;
+			return FromStructure( typeof(T) );
 		}
+
 
 
 
@@ -124,7 +129,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="type"></param>
 		/// <returns></returns>
-		VertexInputElement[] GetInputElements ( Type type )
+		public static VertexInputElement[] FromStructure ( Type type )
 		{
 			if (!type.IsStruct()) {
 				throw new ArgumentException("Vertex type must be structure. Got: " + type.ToString() );
@@ -146,7 +151,7 @@ namespace Fusion.Graphics {
 		/// <param name="type"></param>
 		/// <param name="fieldInfo"></param>
 		/// <returns></returns>
-		VertexInputElement FieldToInputElement ( Type type, FieldInfo fieldInfo )
+		static VertexInputElement FieldToInputElement ( Type type, FieldInfo fieldInfo )
 		{
 			var fieldType	= fieldInfo.FieldType;
 			var attr		= (VertexAttribute)fieldInfo.GetCustomAttributes(true).FirstOrDefault( a => a is VertexAttribute );

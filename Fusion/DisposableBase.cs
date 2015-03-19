@@ -64,5 +64,27 @@ namespace Fusion {
 				obj = default(T);
 			}
 		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="obj"></param>
+		public static void SafeDispose<T> ( ref T[] objArray ) where T: IDisposable
+		{
+			if ( objArray==null ) {
+				return;
+			}
+
+			foreach ( var obj in objArray ) {
+				if (obj!=null) {
+					obj.Dispose();
+				}
+			}
+
+			objArray	=	null;
+		}
 	}
 }

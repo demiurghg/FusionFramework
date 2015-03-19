@@ -2,7 +2,7 @@
 
 #if 0
 //$compute	+DIRECT..SHOW_SPLITS +OMNI..SHOW_OMNI_LOAD +SPOT..SHOW_SPOT_LOAD
-$compute	+DIRECT..SHOW_SPLITS +OMNI..SHOW_OMNI_LOAD +SPOT..SHOW_SPOT_LOAD +USE_UE4
+$ubershader	+DIRECT..SHOW_SPLITS +OMNI..SHOW_OMNI_LOAD +SPOT..SHOW_SPOT_LOAD +USE_UE4
 //$compute	+DIRECT +USE_UE4
 #endif
 
@@ -164,7 +164,7 @@ float3	ComputeSpotShadow ( float4 worldPos, SPOTLIGHT spot );
 -----------------------------------------------------------------------------------------------------*/
 RWTexture2D<float4> hdrTexture : register(u0); 
 
-#ifdef __COMPUTE_SHADER__
+//#ifdef __COMPUTE_SHADER__
 
 groupshared uint minDepthInt = 0xFFFFFFFF; 
 groupshared uint maxDepthInt = 0;
@@ -345,7 +345,7 @@ void CSMain(
 
 	hdrTexture[dispatchThreadId.xy] = totalLight;
 }
-#endif
+//#endif
 
 
 /*-----------------------------------------------------------------------------------------------------

@@ -15,17 +15,19 @@ using Fusion.Mathematics;
 
 
 namespace Fusion.Graphics {
-	public class TextureAtlas : DisposableBase {
 
-		[ContentLoader(typeof(TextureAtlas))]
-		public class Loader : ContentLoader {
+	[ContentLoader(typeof(TextureAtlas))]
+	public class TextureAtlasLoader : ContentLoader {
 
-			public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
-			{
-				return new TextureAtlas( game.GraphicsDevice, stream );
-			}
+		public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
+		{
+			return new TextureAtlas( game.GraphicsDevice, stream );
 		}
+	}
 		
+
+
+	public class TextureAtlas : DisposableBase {
 
 		private	Texture2D	texture;
 

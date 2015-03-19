@@ -185,6 +185,19 @@ namespace Fusion.Graphics {
 		}
 
 
+		public Vector3 GetCameraPosition ( StereoEye eye )
+		{
+			return GetCameraMatrix(eye).TranslationVector;
+		}
+
+
+
+		public Vector4 GetCameraPosition4 ( StereoEye eye )
+		{
+			return new Vector4( GetCameraMatrix(eye).TranslationVector, 1 );
+		}
+
+
 
 		public AudioListener Listener {
 			get {

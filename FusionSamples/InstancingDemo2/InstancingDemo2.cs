@@ -16,7 +16,7 @@ using System.Runtime.InteropServices;
 namespace InstancingDemo2 {
 	class InstancingDemo2 : Game {
 
-		[StructLayout(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit, Size=80)]
 		struct ConstData {
 			[FieldOffset(0)]	
 			public Matrix Transform;
@@ -32,15 +32,14 @@ namespace InstancingDemo2 {
 		ConstantBuffer		cb;
 		Texture2D			tex;
 		ConstData			cbData;
-		VertexInputLayout	layout;
+		StateFactory		factory;
 
 		Instance[]			instDataCpu;
 
 
 
 		enum UberFlags {
-			USE_VERTEX_COLOR = 1,
-			USE_TEXTURE = 2,
+			NONE,
 		}
 
 
@@ -92,7 +91,7 @@ namespace InstancingDemo2 {
 		}
 
 
-		
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -100,8 +99,10 @@ namespace InstancingDemo2 {
 		/// <param name="e"></param>
 		void InstancingDemo2_Reloading ( object sender, EventArgs e )
 		{
+			SafeDispose( ref factory );
+
 			us			=	Content.Load<Ubershader>("test");
-			us.Map( typeof(UberFlags) );
+			factory		=	new StateFactory( us, typeof(UberFlags), VertexInputElement.FromStructure<VertexInstance>(), BlendState.Additive, RasterizerState.CullNone );
 			tex			=	Content.Load<Texture2D>("block" );
 		}
 
@@ -159,7 +160,6 @@ namespace InstancingDemo2 {
 			base.Initialize();
 
 			vb			=	new VertexBuffer(device,  typeof(Vertex),   6 );
-			layout		=	new VertexInputLayout(device,  typeof(VertexInstance) );
 			vbi			=	new VertexBuffer(device,  typeof(Instance), InstanceCount );
 			cb			=	new ConstantBuffer(GraphicsDevice, typeof(ConstData) );
 
@@ -190,11 +190,11 @@ namespace InstancingDemo2 {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {			
-				us.Dispose();
-				vb.Dispose();
-				vbi.Dispose();
-				cb.Dispose();
-				tex.Dispose();
+				SafeDispose( ref factory );
+				SafeDispose( ref us );
+				SafeDispose( ref vb );
+				SafeDispose( ref vbi );
+				SafeDispose( ref cb );
 			}
 
 			base.Dispose( disposing );
@@ -272,12 +272,7 @@ namespace InstancingDemo2 {
 			vb.SetData( data, 0, 6 );
 
 			//	Set required ubershader :
-			us.SetPixelShader( 0 );
-			us.SetVertexShader( 0 );
-
-			//	Set device states :
-			GraphicsDevice.BlendState			= BlendState.Additive ;
-			GraphicsDevice.RasterizerState		= RasterizerState.CullNone ;
+			GraphicsDevice.PipelineState		= factory[0];
 			GraphicsDevice.DepthStencilState	= DepthStencilState.None ;
 			GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap ;
 
@@ -285,7 +280,7 @@ namespace InstancingDemo2 {
 			GraphicsDevice.PixelShaderResources[0]	= tex ;
 					
 			//	Setup vertex data and draw :			
-			GraphicsDevice.SetupVertexInput( layout, new[]{ vb, vbi }, new[]{0,0}, null );
+			GraphicsDevice.SetupVertexInput( new[]{ vb, vbi }, new[]{0,0}, null );
 
 			GraphicsDevice.DrawInstanced( Primitive.TriangleList, 6, InstanceCount, 0, 0 );
 

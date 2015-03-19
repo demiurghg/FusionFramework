@@ -56,6 +56,7 @@ namespace ShooterDemo2
         Box[] boxes;
         ConstantBuffer constBuffer;
         Ubershader uberShader;
+		StateFactory factory;
 		bool flag = false;
 		Texture2D texture;
 		Random random = new Random();
@@ -90,7 +91,6 @@ namespace ShooterDemo2
 		}
 
 		VertexBuffer vb;
-		VertexInputLayout vil;
 		IndexBuffer ib;
 
         /// <summary>
@@ -116,11 +116,10 @@ namespace ShooterDemo2
         public void LoadContent()
         {
             uberShader = Content.Load<Ubershader>("render");
-            uberShader.Map(typeof(RenderFlags));
+			factory	=	new StateFactory( uberShader, typeof(RenderFlags), VertexInputElement.FromStructure<CubeVertex>() );
 			texture = Content.Load<Texture2D>(@"Scenes\lena");
 
 			vb = new VertexBuffer(GraphicsDevice, typeof(CubeVertex), 24);
-			vil = new VertexInputLayout(GraphicsDevice, typeof(CubeVertex));
 			ib = new IndexBuffer(GraphicsDevice, 36);
             
       		// create a new space with physics
@@ -158,17 +157,12 @@ namespace ShooterDemo2
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         { 
-            if (disposing)
-            {
-                if (constBuffer != null)
-                {
-                    constBuffer.Dispose();
-                }
+            if (disposing) {
+				SafeDispose( ref constBuffer );
+				SafeDispose( ref vb );
+				SafeDispose( ref ib );
             }
 
-			vb.Dispose();
-			ib.Dispose();
-			vil.Dispose();
             base.Dispose(disposing);
         }
 
@@ -302,9 +296,6 @@ namespace ShooterDemo2
 
             GraphicsDevice.ClearBackbuffer(Color.CornflowerBlue, 1, 0);
 
-			uberShader.SetPixelShader(0);
-			uberShader.SetVertexShader(0);
-			
 			//	fill vertex buffer for cube:
 			Vector4Fusion color = new Vector4Fusion(Vector3Fusion.Zero, 1);
 			Fusion.Mathematics.Vector2 texcoord = Fusion.Mathematics.Vector2.Zero;
@@ -391,16 +382,16 @@ namespace ShooterDemo2
 						// add data to vertex buffer
 						vb.SetData(data, 0, 24);
 
-						GraphicsDevice.RasterizerState = RasterizerState.CullCCW;
+						GraphicsDevice.PipelineState	= factory[0];
+					
 						GraphicsDevice.DepthStencilState = DepthStencilState.Default;
-						GraphicsDevice.BlendState = BlendState.Opaque;
 						GraphicsDevice.PixelShaderConstants[0] = constBuffer;
 						GraphicsDevice.VertexShaderConstants[0] = constBuffer;
 						GraphicsDevice.PixelShaderSamplers[0] = SamplerState.AnisotropicWrap;
 						GraphicsDevice.PixelShaderResources[0] = texture;
 
 						// setup data and draw box
-						GraphicsDevice.SetupVertexInput(vil, vb, ib);
+						GraphicsDevice.SetupVertexInput(vb, ib);
 						GraphicsDevice.DrawIndexed(Primitive.TriangleList, 36, 0, 0);										
 					}
 				}

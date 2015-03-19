@@ -29,9 +29,10 @@ namespace Fusion.Graphics {
 		}
 
 		VertexBuffer		vertexBuffer;
-		VertexInputLayout	inputLayout;
 		Ubershader			effect;
+		StateFactory		factory;
 		ConstantBuffer		constBuffer;
+
 		List<LineVertex>	vertexDataAccum	= new List<LineVertex>();
 		List<LineVertex>	vertexDataDraw	= new List<LineVertex>();
 		LineVertex[]		vertexArray = new LineVertex[vertexBufferSize];
@@ -76,12 +77,11 @@ namespace Fusion.Graphics {
 			var dev		= Game.GraphicsDevice;
 
 			effect		= Game.Content.Load<Ubershader>("debugRender.hlsl");
-			effect.Map( typeof(RenderFlags) );
+			factory		= new StateFactory( effect, typeof(RenderFlags), VertexInputElement.FromStructure( typeof(LineVertex) ) );
 
 			constData	= new ConstData();
 			constBuffer = new ConstantBuffer(dev, typeof(ConstData));
 
-			inputLayout	= new VertexInputLayout( dev, typeof(LineVertex) );
 
 			//	create vertex buffer :
 			vertexBuffer		= new VertexBuffer(dev, typeof(LineVertex), vertexBufferSize );
@@ -96,7 +96,7 @@ namespace Fusion.Graphics {
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing) {
-				inputLayout.Dispose();
+				factory.Dispose();
 				vertexBuffer.Dispose();
 				constBuffer.Dispose();
 				effect.Dispose();
@@ -145,17 +145,14 @@ namespace Fusion.Graphics {
 
 			var dev = Game.GraphicsDevice;
 
-			effect.SetVertexShader(	(int) RenderFlags.NONE	);
-			effect.SetPixelShader(	(int) RenderFlags.NONE	);
 
 			constData.Transform = View * Projection;
 			constBuffer.SetData(constData);
 
+			dev.SetupVertexInput( vertexBuffer, null );
 			dev.VertexShaderConstants[0]	=	constBuffer ;
-			dev.SetupVertexInput(inputLayout, vertexBuffer, null);
-
-			dev.BlendState			=	BlendState.AlphaBlend;
-			dev.DepthStencilState	=	DepthStencilState.Default;
+			dev.PipelineState				=	factory[0];
+			dev.DepthStencilState			=	DepthStencilState.Default;
 
 
 			int numDPs = MathUtil.IntDivUp(vertexDataAccum.Count, vertexBufferSize);

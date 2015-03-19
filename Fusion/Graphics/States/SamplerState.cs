@@ -15,7 +15,7 @@ using D3DDepthStencilState	=	SharpDX.Direct3D11.DepthStencilState;
 
 
 namespace Fusion.Graphics {
-	public class SamplerState : DisposableBase {
+	public sealed class SamplerState : DisposableBase {
 
 		public Filter			Filter			{ get { return filter		 ; } set { PipelineBoundCheck() ; filter		  = value; } }
 		public AddressMode		AddressU		{ get { return addressU		 ; } set { PipelineBoundCheck() ; addressU		  = value; } }

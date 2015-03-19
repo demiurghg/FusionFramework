@@ -53,6 +53,9 @@ namespace ComputeDemo {
 
 		struct Params {
 			public int Size;
+			public int Dummy0;
+			public int Dummy1;
+			public int Dummy2;
 		}
 
 
@@ -67,6 +70,7 @@ namespace ComputeDemo {
 		StructuredBuffer	argB;
 		StructuredBuffer	result;
 		Ubershader			shader;
+		StateFactory		factory;
 
 
 		/// <summary>
@@ -84,7 +88,7 @@ namespace ComputeDemo {
 			result		=	new StructuredBuffer( GraphicsDevice, typeof(Result), BufferSize , StructuredBufferFlags.None );
 			paramsCB	=	new ConstantBuffer( GraphicsDevice, typeof(Params) );
 			shader		=	Content.Load<Ubershader>("test");
-			shader.Map(typeof(ShaderFlags));
+			factory		=	new StateFactory( shader, typeof(ShaderFlags), VertexInputElement.Empty );
 
 			//	write data :
 			var	rand	=	new Random();
@@ -105,7 +109,7 @@ namespace ComputeDemo {
 			GraphicsDevice.ComputeShaderConstants[0]	= paramsCB ;
 		
 			//	set compute shader and dispatch threadblocks :
-			shader.SetComputeShader(0);
+			GraphicsDevice.PipelineState	=	factory[0];
 
 			GraphicsDevice.Dispatch( MathUtil.IntDivUp(BufferSize,256) );
 
@@ -132,6 +136,7 @@ namespace ComputeDemo {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
+				SafeDispose( ref factory );
 				SafeDispose( ref argA );
 				SafeDispose( ref argB );
 				SafeDispose( ref result );
@@ -139,6 +144,7 @@ namespace ComputeDemo {
 			}
 			base.Dispose( disposing );
 		}
+
 
 
 		/// <summary>

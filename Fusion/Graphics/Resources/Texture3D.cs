@@ -275,10 +275,8 @@ namespace Fusion.Graphics {
 
 				var region		= new ResourceRegion(left, top, front, right, bottom, back);
 
-				var d3dContext	= device.DeviceContext;
-            
-				lock (d3dContext) {
-					d3dContext.UpdateSubresource( box, tex3D, subresourceIndex, region );
+				lock (device.DeviceContext) {
+					device.DeviceContext.UpdateSubresource( box, tex3D, subresourceIndex, region );
 				}
 
 			} finally {
