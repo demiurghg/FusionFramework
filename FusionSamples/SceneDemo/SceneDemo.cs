@@ -70,7 +70,7 @@ namespace SceneDemo {
 
 
 
-		class MySceneDrawer : SceneDrawer2<Context,Material,VertexColorTextureNormal> {
+		class MySceneDrawer : SceneDrawer<Context,Material,VertexColorTextureNormal> {
 
 			ConstantBuffer	constBuffer;
 			Ubershader		uberShader;
@@ -105,7 +105,7 @@ namespace SceneDemo {
 
 			public override VertexColorTextureNormal Convert ( MeshVertex vertex )
 			{
-				return VertexColorTextureNormal.Bake( vertex );
+				return VertexColorTextureNormal.Convert( vertex );
 			}
 
 
@@ -123,7 +123,7 @@ namespace SceneDemo {
 
 			public override void PrepareMesh ( Context context, Mesh mesh, VertexBuffer vb, IndexBuffer ib )
 			{
-				GraphicsDevice.SetupVertexInput( ib, vb );
+				GraphicsDevice.SetupVertexInput( vb, ib );
 			}
 
 
@@ -288,7 +288,7 @@ namespace SceneDemo {
 
 			sceneDrawer.EvaluateScene();
 
-			for (int j = 0; j<30; j++) {
+			for (int j = 0; j<1; j++) {
 				sceneDrawer.Draw( gameTime, stereoEye );
 			}
 

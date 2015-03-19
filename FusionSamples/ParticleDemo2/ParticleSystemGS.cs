@@ -276,7 +276,7 @@ namespace ParticleDemo2 {
 			//
 			device.PipelineState	=	factory[ (int)Flags.SIMULATION ];
 
-			device.SetupVertexInput( null, simulationSrcVB );
+			device.SetupVertexInput( simulationSrcVB, null );
 			device.SetupVertexOutput( simulationDstVB, 0 );
 		
 			device.DrawAuto( Primitive.PointList );
@@ -288,7 +288,7 @@ namespace ParticleDemo2 {
 
 			device.PipelineState	=	factory[ (int)Flags.INJECTION ];
 
-			device.SetupVertexInput( null, injectionVB );
+			device.SetupVertexInput( injectionVB, null );
 			device.SetupVertexOutput( simulationDstVB, -1 );
 		
 			device.Draw( Primitive.PointList, injectionCount, 0 );
@@ -309,7 +309,7 @@ namespace ParticleDemo2 {
 			device.DepthStencilState	=	DepthStencilState.None ;
 
 			device.SetupVertexOutput( null, 0 );
-			device.SetupVertexInput( null, simulationSrcVB );
+			device.SetupVertexInput( simulationSrcVB, null );
 
 			//device.Draw( Primitive.PointList, injectionCount, 0 );
 

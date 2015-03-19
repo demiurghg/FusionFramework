@@ -90,7 +90,9 @@ namespace Fusion.Graphics {
 
 			SharpDX.Utilities.Write( dataBox.DataPointer, data, offset, count );
 
-			device.DeviceContext.UnmapSubresource( indexBuffer, 0 );
+			lock ( device.DeviceContext ) {
+				device.DeviceContext.UnmapSubresource( indexBuffer, 0 );
+			}
 		}
 
 

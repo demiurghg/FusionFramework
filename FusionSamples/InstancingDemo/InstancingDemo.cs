@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 namespace InstancingDemo2D {
 	class InstancingDemo : Game {
 
-		[StructLayout(LayoutKind.Explicit)]
+		[StructLayout(LayoutKind.Explicit, Size=80)]
 		struct ConstData {
 			[FieldOffset(0)]	
 			public Matrix Transform;
@@ -276,7 +276,7 @@ namespace InstancingDemo2D {
 			GraphicsDevice.VertexShaderResources[1]	= instDataGpu ;
 					
 			//	Setup vertex data and draw :			
-			GraphicsDevice.SetupVertexInput( null, vb );
+			GraphicsDevice.SetupVertexInput( vb, null );
 
 			GraphicsDevice.DrawInstanced( Primitive.TriangleList, 6, InstanceCount, 0, 0 );
 

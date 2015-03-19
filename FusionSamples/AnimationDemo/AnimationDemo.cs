@@ -41,7 +41,7 @@ namespace AnimationDemo {
 
 
 
-		class MySceneDrawer : SceneDrawer2<Context,Material,VertexColorTextureNormal> {
+		class MySceneDrawer : SceneDrawer<Context,Material,VertexColorTextureNormal> {
 
 			ConstantBuffer	constBuffer;
 			Ubershader		uberShader;
@@ -76,7 +76,7 @@ namespace AnimationDemo {
 
 			public override VertexColorTextureNormal Convert ( MeshVertex vertex )
 			{
-				return VertexColorTextureNormal.Bake( vertex );
+				return VertexColorTextureNormal.Convert( vertex );
 			}
 
 
@@ -94,7 +94,7 @@ namespace AnimationDemo {
 
 			public override void PrepareMesh ( Context context, Mesh mesh, VertexBuffer vb, IndexBuffer ib )
 			{
-				GraphicsDevice.SetupVertexInput( ib, vb );
+				GraphicsDevice.SetupVertexInput( vb, ib );
 			}
 
 

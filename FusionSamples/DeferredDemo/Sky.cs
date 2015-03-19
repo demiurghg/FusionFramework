@@ -178,11 +178,8 @@ namespace DeferredDemo
 		Random	rand = new Random();
 
 
-
-		class RendMesh {
-			public VertexBuffer	VertexBuffer;
-			public IndexBuffer	IndexBuffer;
-		}
+		VertexBuffer[]	vertexBuffers;
+		IndexBuffer[]	indexBuffers;
 
 
 
@@ -234,14 +231,14 @@ namespace DeferredDemo
 
 			skySphere	=	Game.Content.Load<Scene>("skySphere");
 
-			foreach ( var mesh in skySphere.Meshes ) {
-				var rmesh = new RendMesh() {
-					IndexBuffer		=	IndexBuffer.Create( Game.GraphicsDevice, mesh.GetIndices() ),
-					VertexBuffer	=	VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTexture.Bake( v ) ).ToArray() ),
-				};
 
-				mesh.Tag	=	rmesh;
-			}
+			vertexBuffers	=	skySphere.Meshes
+							.Select( mesh => VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTexture.Convert( v ) ).ToArray() ) )
+							.ToArray();
+
+			indexBuffers	=	skySphere.Meshes
+							.Select( mesh => IndexBuffer.Create( Game.GraphicsDevice, mesh.GetIndices() ) )
+							.ToArray();
 
 			sky		=	Game.Content.Load<Ubershader>("sky");
 			factory	=	new StateFactory( sky, typeof(SkyFlags), VertexInputElement.FromStructure<VertexColorTexture>() );
@@ -308,9 +305,12 @@ namespace DeferredDemo
 				rs.VertexShaderConstants[0] = skyConstsCB;
 				rs.PixelShaderConstants[0] = skyConstsCB;
 
-				foreach ( var mesh in skySphere.Meshes ) {
-					rs.SetupVertexInput( (mesh.Tag as RendMesh).IndexBuffer, (mesh.Tag as RendMesh).VertexBuffer );
-					rs.Draw( Primitive.TriangleList, mesh.VertexCount, 0 );
+
+				for ( int j=0; j<skySphere.Meshes.Count; j++) {
+					var mesh = skySphere.Meshes[j];
+
+					rs.SetupVertexInput( vertexBuffers[j], indexBuffers[j] );
+				rs.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
 				}
 			}
 
@@ -360,8 +360,10 @@ namespace DeferredDemo
 
 			rs.PipelineState	=	factory[(int)SkyFlags.PROCEDURAL_SKY];
 						
-			foreach ( var mesh in skySphere.Meshes ) {
-				rs.SetupVertexInput( (mesh.Tag as RendMesh).IndexBuffer, (mesh.Tag as RendMesh).VertexBuffer );
+			for ( int j=0; j<skySphere.Meshes.Count; j++) {
+				var mesh = skySphere.Meshes[j];
+
+				rs.SetupVertexInput( vertexBuffers[j], indexBuffers[j] );
 				rs.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
 			}
 

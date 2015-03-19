@@ -13,6 +13,7 @@ using DXGI = SharpDX.DXGI;
 using System.Windows.Forms;
 using Drawing = System.Drawing;
 using Fusion.Mathematics;
+using NvApiWrapper;
 
 
 namespace Fusion.Graphics.Display {
@@ -41,6 +42,14 @@ namespace Fusion.Graphics.Display {
 		/// <param name="parameters"></param>
 		public StereoDualHeadDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
 		{
+			try {
+				NvApi.Initialize();
+				NvApi.Stereo_Disable();
+			}
+			catch (NVException nvex) {
+				Log.Debug(nvex.Message);
+			}
+
 			var featureLevel	=	HardwareProfileChecker.GetFeatureLevel( parameters.GraphicsProfile ); 
 
 			Adapter	adapter;

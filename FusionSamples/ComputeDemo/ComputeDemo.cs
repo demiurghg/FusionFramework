@@ -53,6 +53,9 @@ namespace ComputeDemo {
 
 		struct Params {
 			public int Size;
+			public int Dummy0;
+			public int Dummy1;
+			public int Dummy2;
 		}
 
 

@@ -330,7 +330,7 @@ namespace Fusion.Graphics {
 
 				device.PixelShaderResources[0]	= batch.texture;
 
-				device.SetupVertexInput( indexBuffer, vertexBuffer );
+				device.SetupVertexInput( vertexBuffer, indexBuffer );
 
 				device.DrawIndexed( Primitive.TriangleList, batch.num, batch.start, 0 );
 			}

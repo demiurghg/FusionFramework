@@ -139,7 +139,7 @@ namespace DeferredDemo {
 			scene =	Game.Content.Load<Scene>(@"Scenes\testScene");
 
 			vertexBuffers	=	scene.Meshes
-							.Select( mesh => VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTextureTBN.Bake( v ) ).ToArray() ) )
+							.Select( mesh => VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTextureTBN.Convert( v ) ).ToArray() ) )
 							.ToArray();
 
 			indexBuffers	=	scene.Meshes
@@ -248,7 +248,7 @@ namespace DeferredDemo {
 				device.VertexShaderConstants[0]	= constBuffer ;
 				device.PixelShaderSamplers[0]	= SamplerState.AnisotropicWrap ;
 
-				device.SetupVertexInput( indexBuffers[ node.MeshIndex ], vertexBuffers[ node.MeshIndex ] );
+				device.SetupVertexInput( vertexBuffers[ node.MeshIndex ], indexBuffers[ node.MeshIndex ] );
 
 				foreach ( var subset in mesh.Subsets ) {
 
@@ -316,7 +316,7 @@ namespace DeferredDemo {
 
 				constBuffer.SetData( cbData );
 
-				device.SetupVertexInput( indexBuffers[ node.MeshIndex ], vertexBuffers[ node.MeshIndex ] );
+				device.SetupVertexInput( vertexBuffers[ node.MeshIndex ], indexBuffers[ node.MeshIndex ] );
 				device.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
 			}
 		}

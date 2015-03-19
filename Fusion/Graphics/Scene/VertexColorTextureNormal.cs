@@ -23,7 +23,7 @@ namespace Fusion.Graphics {
 			}
 		}
 
-		public static VertexColorTextureNormal Bake ( MeshVertex meshVertex )
+		public static VertexColorTextureNormal Convert ( MeshVertex meshVertex )
 		{
 			VertexColorTextureNormal v;
 			v.Position	=	meshVertex.Position;

@@ -154,7 +154,7 @@ namespace QuadDemo2D {
 			GraphicsDevice.PixelShaderResources[0]	= texture ;
 								
 			//	Setup vertex data and draw :			
-			GraphicsDevice.SetupVertexInput( null, new[]{vertexBuffer}, new[]{0} );
+			GraphicsDevice.SetupVertexInput( vertexBuffer, null );
 			GraphicsDevice.Draw( Primitive.TriangleList, 6, 0 );
 
 

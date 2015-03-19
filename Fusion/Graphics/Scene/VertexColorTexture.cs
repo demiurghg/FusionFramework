@@ -21,7 +21,7 @@ namespace Fusion.Graphics {
 			}
 		}
 
-		public static VertexColorTexture Bake ( MeshVertex meshVertex )
+		public static VertexColorTexture Convert ( MeshVertex meshVertex )
 		{
 			VertexColorTexture v;
 			v.Position	=	meshVertex.Position;

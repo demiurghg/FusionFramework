@@ -11,11 +11,11 @@
 
 
 ; The name of the installer
-Name "Fusion Game Library (v0.9)"
+Name "Fusion Game Library (v1.0)"
 XPStyle on
 
 ; The file to write
-OutFile "FusionInstaller-0.9.exe"
+OutFile "FusionInstaller-1.0.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\FusionGameLib
@@ -104,54 +104,54 @@ SectionEnd
 
 
 
-Section "Fusion Game Library Samples"
+; Section "Fusion Game Library Samples"
 	
-	SetOutPath "$INSTDIR\Samples"
-	File /r /x bin /x obj "..\FusionSamples\FusionSamples.sln"
+	; SetOutPath "$INSTDIR\Samples"
+	; File /r /x bin /x obj "..\FusionSamples\FusionSamples.sln"
 
-	SetOutPath "$INSTDIR\Samples\AnimationDemo"
-	File /r /x bin /x obj "..\FusionSamples\AnimationDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\AnimationDemo"
+	; File /r /x bin /x obj "..\FusionSamples\AnimationDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\ComputeDemo"
-	File /r /x bin /x obj "..\FusionSamples\ComputeDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\ComputeDemo"
+	; File /r /x bin /x obj "..\FusionSamples\ComputeDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\DeferredDemo"
-	File /r /x bin /x obj "..\FusionSamples\DeferredDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\DeferredDemo"
+	; File /r /x bin /x obj "..\FusionSamples\DeferredDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\DescriptorDemo"
-	File /r /x bin /x obj "..\FusionSamples\DescriptorDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\DescriptorDemo"
+	; File /r /x bin /x obj "..\FusionSamples\DescriptorDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\InputDemo"
-	File /r /x bin /x obj "..\FusionSamples\InputDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\InputDemo"
+	; File /r /x bin /x obj "..\FusionSamples\InputDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\SpriteDemo"
-	File /r /x bin /x obj "..\FusionSamples\SpriteDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\SpriteDemo"
+	; File /r /x bin /x obj "..\FusionSamples\SpriteDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\QuadDemo"
-	File /r /x bin /x obj "..\FusionSamples\QuadDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\QuadDemo"
+	; File /r /x bin /x obj "..\FusionSamples\QuadDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\InstancingDemo"
-	File /r /x bin /x obj "..\FusionSamples\InstancingDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\InstancingDemo"
+	; File /r /x bin /x obj "..\FusionSamples\InstancingDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\InstancingDemo2"
-	File /r /x bin /x obj "..\FusionSamples\InstancingDemo2\*.*"
+	; SetOutPath "$INSTDIR\Samples\InstancingDemo2"
+	; File /r /x bin /x obj "..\FusionSamples\InstancingDemo2\*.*"
 
-	SetOutPath "$INSTDIR\Samples\SoundDemo"
-	File /r /x bin /x obj "..\FusionSamples\SoundDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\SoundDemo"
+	; File /r /x bin /x obj "..\FusionSamples\SoundDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\SkinningDemo"
-	File /r /x bin /x obj "..\FusionSamples\SkinningDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\SkinningDemo"
+	; File /r /x bin /x obj "..\FusionSamples\SkinningDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\SceneDemo"
-	File /r /x bin /x obj "..\FusionSamples\SceneDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\SceneDemo"
+	; File /r /x bin /x obj "..\FusionSamples\SceneDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\ParticleDemo"
-	File /r /x bin /x obj "..\FusionSamples\ParticleDemo\*.*"
+	; SetOutPath "$INSTDIR\Samples\ParticleDemo"
+	; File /r /x bin /x obj "..\FusionSamples\ParticleDemo\*.*"
 
-	SetOutPath "$INSTDIR\Samples\ParticleDemo2"
-	File /r /x bin /x obj "..\FusionSamples\ParticleDemo2\*.*"
+	; SetOutPath "$INSTDIR\Samples\ParticleDemo2"
+	; File /r /x bin /x obj "..\FusionSamples\ParticleDemo2\*.*"
 
-SectionEnd
+; SectionEnd
 
 
   
@@ -164,10 +164,10 @@ Section "Install DirectX End-User Runtimes (June 2010)" Section2
     DetailPrint "Download failed : $R0"
     Abort
   success:
-    ExecWait "$INSTDIR\DirectX\dxsetup.exe /q /t:$INSTDIR\DirectX\Temp"
-	ExecWait "$INSTDIR\DirectX\Temp\DXSETUP.exe /silent"
-	Delete   "$INSTDIR\DirectX\Temp\*.*"
-	RMDir    "$INSTDIR\DirectX\Temp"
+    ExecWait '"$INSTDIR\DirectX\dxsetup.exe" /q /t:"$INSTDIR\DirectX\Temp"'
+	ExecWait '"$INSTDIR\DirectX\Temp\DXSETUP.exe" /silent'
+	Delete   '$INSTDIR\DirectX\Temp\*.*'
+	RMDir    '$INSTDIR\DirectX\Temp'
 SectionEnd
 
 

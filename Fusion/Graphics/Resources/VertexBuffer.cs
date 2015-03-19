@@ -123,11 +123,13 @@ namespace Fusion.Graphics {
 				throw new GraphicsException("Vertex buffer created with enabled vertex output can not be written.");
 			}
 
-			var dataBox = device.DeviceContext.MapSubresource( vertexBuffer, 0, MapMode.WriteDiscard, D3D11.MapFlags.None );
+			lock (device.DeviceContext) {
+				var dataBox = device.DeviceContext.MapSubresource( vertexBuffer, 0, MapMode.WriteDiscard, D3D11.MapFlags.None );
 
-			SharpDX.Utilities.Write( dataBox.DataPointer, data, offset, count );
+				SharpDX.Utilities.Write( dataBox.DataPointer, data, offset, count );
 
-			device.DeviceContext.UnmapSubresource( vertexBuffer, 0 );
+				device.DeviceContext.UnmapSubresource( vertexBuffer, 0 );
+			}
 		}
 
 

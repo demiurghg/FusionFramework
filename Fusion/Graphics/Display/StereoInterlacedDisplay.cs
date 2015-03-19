@@ -12,6 +12,7 @@ using D3D = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using System.Windows.Forms;
 using Fusion.Mathematics;
+using NvApiWrapper;
 
 
 namespace Fusion.Graphics.Display {
@@ -40,9 +41,16 @@ namespace Fusion.Graphics.Display {
 		/// <param name="parameters"></param>
 		public StereoInterlacedDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
 		{
+			try {
+				NvApi.Initialize();
+				NvApi.Stereo_Disable();
+			}
+			catch (NVException nvex) {
+				Log.Debug(nvex.Message);
+			}
+
+
 			window	=	CreateForm( parameters, null );
-
-
 
 			var deviceFlags			=	DeviceCreationFlags.None;
 				deviceFlags			|=	parameters.UseDebugDevice ? DeviceCreationFlags.Debug : DeviceCreationFlags.None;

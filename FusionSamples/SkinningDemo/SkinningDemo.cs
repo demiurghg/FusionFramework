@@ -67,7 +67,7 @@ namespace SkinningDemo {
 
 
 
-		class MySceneDrawer : SceneDrawer2<Context,Material,VertexColorSkin> {
+		class MySceneDrawer : SceneDrawer<Context,Material,VertexColorSkin> {
 													
 			ConstantBuffer	constBuffer;
 			ConstantBuffer	constBufferBones;
@@ -130,7 +130,7 @@ namespace SkinningDemo {
 
 			public override void PrepareMesh ( Context context, Mesh mesh, VertexBuffer vb, IndexBuffer ib )
 			{
-				GraphicsDevice.SetupVertexInput( ib, vb );
+				GraphicsDevice.SetupVertexInput( vb, ib );
 			}
 
 

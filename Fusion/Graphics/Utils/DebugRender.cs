@@ -149,7 +149,7 @@ namespace Fusion.Graphics {
 			constData.Transform = View * Projection;
 			constBuffer.SetData(constData);
 
-			dev.SetupVertexInput( null, vertexBuffer );
+			dev.SetupVertexInput( vertexBuffer, null );
 			dev.VertexShaderConstants[0]	=	constBuffer ;
 			dev.PipelineState				=	factory[0];
 			dev.DepthStencilState			=	DepthStencilState.Default;

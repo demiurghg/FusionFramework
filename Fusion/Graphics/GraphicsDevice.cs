@@ -52,7 +52,11 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public bool FullScreen  { 
 			get { return display.Fullscreen; } 
-			set { display.Fullscreen = value; } 
+			set { 
+				lock (deviceContext) {
+					display.Fullscreen = value; 
+				}
+			} 
 		}
 
 		/// <summary>
@@ -256,7 +260,6 @@ namespace Fusion.Graphics {
 				if (parameters.StereoMode==StereoMode.DualHead)		display	=	new StereoDualHeadDisplay( Game, this, parameters ); else 
 				if (parameters.StereoMode==StereoMode.Interlaced)	display	=	new StereoInterlacedDisplay( Game, this, parameters ); else 
 				if (parameters.StereoMode==StereoMode.OculusRift)	display	=	new OculusRiftDisplay( Game, this, parameters ); else 
-				//if (parameters.StereoMode==StereoMode.OculusRift)	display	=	new NV3DVisionDisplay( Game, this, parameters ); else 
 					throw new ArgumentException("parameters.StereoMode");
 			} catch ( Exception e ) {
 				Log.Warning("Failed to intialize graphics device.");
@@ -411,36 +414,26 @@ namespace Fusion.Graphics {
 		}
 
 
-		//VertexBufferBinding[] inputVertexBufferBinding = new VertexBufferBinding[16];
-
-
 		/// <summary>
-		/// 
+		/// Sets index and vertex buffer.
 		/// </summary>
-		/// <param name="indexBuffer"></param>
-		/// <param name="vertexBuffer"></param>
-		public void SetupVertexInput ( IndexBuffer indexBuffer, VertexBuffer vertexBuffer )
+		/// <param name="vertexBuffer">Vertex buffer to apply</param>
+		/// <param name="indexBuffer">Index buffer to apply.</param>
+		public void SetupVertexInput ( VertexBuffer vertexBuffer, IndexBuffer indexBuffer )
 		{
-			SetupVertexInput( indexBuffer, new[]{ vertexBuffer }, new[]{ 0 } );
+			SetupVertexInput( new[]{ vertexBuffer }, new[]{ 0 }, indexBuffer );
 		}
 
 
 
 		/// <summary>
-		/// 
+		/// Sets index and vertex buffers.
 		/// </summary>
-		/// <param name="indexBuffer"></param>
-		/// <param name="vertexBuffers"></param>
-		/// <param name="offsets"></param>
-		public void SetupVertexInput ( IndexBuffer indexBuffer, VertexBuffer[] vertexBuffers, int[] offsets )
+		/// <param name="vertexBuffers">Vertex buffers to apply. Provide null if no vertex buffers are required.</param>
+		/// <param name="offsets">Offsets in each vertex buffer.</param>
+		/// <param name="indexBuffer">Index buffers to apply.</param>
+		public void SetupVertexInput ( VertexBuffer[] vertexBuffers, int[] offsets, IndexBuffer indexBuffer )
 		{
-			if (vertexBuffers.Length!=offsets.Length) {
-				throw new InvalidOperationException("vertexBuffers.Length != offsets.Length");
-			}
-			if (vertexBuffers.Length>16) {
-				throw new InvalidOperationException("vertexBuffers.Length > 16");
-			}
-
 			lock (deviceContext) {
 				if (indexBuffer!=null) {
 					deviceContext.InputAssembler.SetIndexBuffer( indexBuffer.Buffer, DXGI.Format.R32_UInt, 0 );
@@ -452,6 +445,14 @@ namespace Fusion.Graphics {
 				if (vertexBuffers==null) {
 					deviceContext.InputAssembler.SetVertexBuffers( 0, new VertexBufferBinding( null, 0, 0 ) );
 				} else {
+
+					if (vertexBuffers.Length!=offsets.Length) {
+						throw new InvalidOperationException("vertexBuffers.Length != offsets.Length");
+					}
+					if (vertexBuffers.Length>16) {
+						throw new InvalidOperationException("vertexBuffers.Length > 16");
+					}
+
 					int count = vertexBuffers.Length;
 
 					#warning Remove allocation!
@@ -470,7 +471,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Draws primitives.
 		/// </summary>
 		/// <param name="vertexCount"></param>
 		/// <param name="vertexFirstIndex"></param>
@@ -641,6 +642,10 @@ namespace Fusion.Graphics {
 
 			DepthStencilState	=	DepthStencilState.Default;
 
+			SetTargets( null );
+			SetupVertexInput( null, null );
+			SetupVertexOutput( null, 0 );
+
 			PixelShaderResources	.Clear();
 			VertexShaderResources 	.Clear();
 			GeometryShaderResources .Clear();
@@ -661,9 +666,6 @@ namespace Fusion.Graphics {
 			ComputeShaderConstants	.Clear();
 			DomainShaderConstants	.Clear();
 			HullShaderConstants		.Clear();
-
-			SetTargets( null );
-			SetupVertexInput( null, null );
 
 			PipelineState	=	null;
 		}
