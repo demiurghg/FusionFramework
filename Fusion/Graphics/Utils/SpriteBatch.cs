@@ -162,15 +162,15 @@ namespace Fusion.Graphics {
 
 				var ps = new PipelineState( Game.GraphicsDevice );
 
-				ps.Rasterizer	=	RasterizerState.CullNone;
+				ps.RasterizerState	=	RasterizerState.CullNone;
 
-				if (blend==SpriteBlend.Opaque			) ps.Blending	=	BlendState.Opaque;
-				if (blend==SpriteBlend.AlphaBlend		) ps.Blending	=	BlendState.AlphaBlend;
-				if (blend==SpriteBlend.AlphaBlendPreMul	) ps.Blending	=	BlendState.AlphaBlendPreMul;
-				if (blend==SpriteBlend.Additive			) ps.Blending	=	BlendState.Additive;
-				if (blend==SpriteBlend.Screen			) ps.Blending	=	BlendState.Screen;
-				if (blend==SpriteBlend.Multiply			) ps.Blending	=	BlendState.Multiply;
-				if (blend==SpriteBlend.NegMultiply		) ps.Blending	=	BlendState.NegMultiply;
+				if (blend==SpriteBlend.Opaque			) ps.BlendState	=	BlendState.Opaque;
+				if (blend==SpriteBlend.AlphaBlend		) ps.BlendState	=	BlendState.AlphaBlend;
+				if (blend==SpriteBlend.AlphaBlendPreMul	) ps.BlendState	=	BlendState.AlphaBlendPreMul;
+				if (blend==SpriteBlend.Additive			) ps.BlendState	=	BlendState.Additive;
+				if (blend==SpriteBlend.Screen			) ps.BlendState	=	BlendState.Screen;
+				if (blend==SpriteBlend.Multiply			) ps.BlendState	=	BlendState.Multiply;
+				if (blend==SpriteBlend.NegMultiply		) ps.BlendState	=	BlendState.NegMultiply;
 
 				ps.VertexInputElements	=	VertexInputElement.FromStructure( typeof(SpriteVertex) );
 

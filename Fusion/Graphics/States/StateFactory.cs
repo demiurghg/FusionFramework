@@ -72,8 +72,8 @@ namespace Fusion.Graphics {
 
 			Enumerate( enumType, ubershader, (ps,i) => { 
 					ps.VertexInputElements = vertexInputElements; 
-					ps.Blending			=	blendState;
-					ps.Rasterizer		=	rasterizerState;
+					ps.BlendState		=	blendState;
+					ps.RasterizerState	=	rasterizerState;
 				} );
 		}
 
