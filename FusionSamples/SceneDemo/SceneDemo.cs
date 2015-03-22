@@ -288,7 +288,7 @@ namespace SceneDemo {
 
 			sceneDrawer.EvaluateScene();
 
-			for (int j = 0; j<1; j++) {
+			for (int j = 0; j<30; j++) {
 				sceneDrawer.Draw( gameTime, stereoEye );
 			}
 

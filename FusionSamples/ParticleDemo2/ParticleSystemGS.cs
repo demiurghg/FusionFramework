@@ -115,8 +115,8 @@ namespace ParticleDemo2 {
 			}
 
 			if (flag==Flags.RENDER) {
-				ps.Blending	=	BlendState.Screen;
-				ps.Rasterizer	=	RasterizerState.CullNone;
+				ps.BlendState	=	BlendState.Screen;
+				ps.RasterizerState	=	RasterizerState.CullNone;
 			}
 		}
 

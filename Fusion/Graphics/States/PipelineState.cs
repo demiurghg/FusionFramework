@@ -36,12 +36,12 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// Blend description. Null value is not acceptable.
 		/// </summary>
-		public BlendState Blending { get; set; }
+		public BlendState BlendState { get; set; }
 
 		/// <summary>
 		/// Rasterizer state description. Null value is not acceptable.
 		/// </summary>
-		public RasterizerState Rasterizer { get; set; }
+		public RasterizerState RasterizerState { get; set; }
 
 		/// <summary>
 		/// Pixel shader. Null value is not acceptable.
@@ -122,8 +122,8 @@ namespace Fusion.Graphics {
 		public PipelineState ( GraphicsDevice device )
 		{	
 			this.device	=	device;
-			Blending	=	new BlendState();
-			Rasterizer	=	new RasterizerState();
+			BlendState	=	new BlendState();
+			RasterizerState	=	new RasterizerState();
 			RasterizedStream	=	-1;
 
 			isReady		=	false;
@@ -284,29 +284,29 @@ namespace Fusion.Graphics {
 		{
 			var rsd = new RasterizerStateDescription();
 
-			if ( Rasterizer.CullMode == CullMode.CullNone ) {
+			if ( RasterizerState.CullMode == CullMode.CullNone ) {
 
 				rsd.CullMode				=	D3DCullMode.None;
 				rsd.IsFrontCounterClockwise	=	false;
 
-			} else if ( Rasterizer.CullMode == CullMode.CullCW ) {
+			} else if ( RasterizerState.CullMode == CullMode.CullCW ) {
 
 				rsd.CullMode				=	D3DCullMode.Front;
 				rsd.IsFrontCounterClockwise	=	false;
 
-			} else if ( Rasterizer.CullMode == CullMode.CullCCW ) {
+			} else if ( RasterizerState.CullMode == CullMode.CullCCW ) {
 
 				rsd.CullMode				=	D3DCullMode.Front;
 				rsd.IsFrontCounterClockwise	=	true;
 			}
 
 
-			rsd.FillMode				=	Converter.Convert( Rasterizer.FillMode );
-			rsd.DepthBias				=	Rasterizer.DepthBias;
+			rsd.FillMode				=	Converter.Convert( RasterizerState.FillMode );
+			rsd.DepthBias				=	RasterizerState.DepthBias;
 			rsd.DepthBiasClamp			=	0;
-			rsd.IsMultisampleEnabled	=	Rasterizer.MsaaEnabled;
-			rsd.IsScissorEnabled		=	Rasterizer.ScissorEnabled;
-			rsd.SlopeScaledDepthBias	=	Rasterizer.SlopeDepthBias;
+			rsd.IsMultisampleEnabled	=	RasterizerState.MsaaEnabled;
+			rsd.IsScissorEnabled		=	RasterizerState.ScissorEnabled;
+			rsd.SlopeScaledDepthBias	=	RasterizerState.SlopeDepthBias;
 
 			rasterState	=	new D3DRasterizerState( device.Device, rsd );
 		}
@@ -322,28 +322,28 @@ namespace Fusion.Graphics {
 
 			bool enabled	=	true;
 
-			if ( Blending.DstAlpha==Blend.Zero && Blending.SrcAlpha==Blend.One &&
-				 Blending.DstColor==Blend.Zero && Blending.SrcColor==Blend.One ) {
+			if ( BlendState.DstAlpha==Blend.Zero && BlendState.SrcAlpha==Blend.One &&
+				 BlendState.DstColor==Blend.Zero && BlendState.SrcColor==Blend.One ) {
 
 				 enabled = false;
 			}
 
 			rtbd.IsBlendEnabled			=	enabled	;
-			rtbd.BlendOperation			=	Converter.Convert( Blending.ColorOp );
-			rtbd.AlphaBlendOperation	=	Converter.Convert( Blending.AlphaOp );
-			rtbd.RenderTargetWriteMask	=	(ColorWriteMaskFlags)(int)Blending.WriteMask;
-			rtbd.DestinationBlend		=	Converter.Convert( Blending.DstColor );
-			rtbd.SourceBlend			=	Converter.Convert( Blending.SrcColor );
-			rtbd.DestinationAlphaBlend	=	Converter.Convert( Blending.DstAlpha );
-			rtbd.SourceAlphaBlend		=	Converter.Convert( Blending.SrcAlpha );
+			rtbd.BlendOperation			=	Converter.Convert( BlendState.ColorOp );
+			rtbd.AlphaBlendOperation	=	Converter.Convert( BlendState.AlphaOp );
+			rtbd.RenderTargetWriteMask	=	(ColorWriteMaskFlags)(int)BlendState.WriteMask;
+			rtbd.DestinationBlend		=	Converter.Convert( BlendState.DstColor );
+			rtbd.SourceBlend			=	Converter.Convert( BlendState.SrcColor );
+			rtbd.DestinationAlphaBlend	=	Converter.Convert( BlendState.DstAlpha );
+			rtbd.SourceAlphaBlend		=	Converter.Convert( BlendState.SrcAlpha );
 				
 			var	bsd		=	new BlendStateDescription();
 			bsd.AlphaToCoverageEnable	=	false;
 			bsd.IndependentBlendEnable	=	false;
 			bsd.RenderTarget[0]			=	rtbd;
 
-			blendFactor	=	SharpDXHelper.Convert( Blending.BlendFactor );
-			blendMsaaMask	=	Blending.MultiSampleMask;
+			blendFactor	=	SharpDXHelper.Convert( BlendState.BlendFactor );
+			blendMsaaMask	=	BlendState.MultiSampleMask;
 
 			blendState	=	new D3DBlendState( device.Device, bsd );
 		}

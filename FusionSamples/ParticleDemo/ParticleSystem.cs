@@ -133,7 +133,7 @@ namespace ParticleDemo {
 		/// <param name="flags"></param>
 		void StateEnum ( PipelineState ps, Flags flags )
 		{
-			ps.Blending	=	BlendState.Additive;
+			ps.BlendState	=	BlendState.Additive;
 		}
 
 
