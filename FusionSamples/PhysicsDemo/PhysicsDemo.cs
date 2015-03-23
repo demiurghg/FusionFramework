@@ -23,39 +23,37 @@ using Vector3Fusion = Fusion.Mathematics.Vector3;
 using Vector4Fusion = Fusion.Mathematics.Vector4;
 
 
-namespace ShooterDemo2
-{
-    public class PhysicsDemo : Game
-    {
-        /// <summary>
-        /// PhysicsDemo constructor
-        /// </summary>
-        public PhysicsDemo()
-            : base()
-        {
-            //	enable object tracking :
-            Parameters.TrackObjects = false;
-            Parameters.VSyncInterval = 0;
-            Parameters.MsaaLevel = 4;
-			
-            //	add services :
-            AddService(new SpriteBatch(this), false, false, 0, 0);
-            AddService(new DebugStrings(this), true, true, 9999, 9999);
-            AddService(new DebugRender(this), true, true, 9998, 9998);
-            AddService(new Camera(this), true, false, 1, 1);
+namespace ShooterDemo2 {
+	public class PhysicsDemo: Game {
+		/// <summary>
+		/// PhysicsDemo constructor
+		/// </summary>
+		public PhysicsDemo ()
+			: base()
+		{
+			//	enable object tracking :
+			Parameters.TrackObjects = false;
+			Parameters.VSyncInterval = 0;
+			Parameters.MsaaLevel = 4;
 
-            //	load configuration :
-            LoadConfiguration();
+			//	add services :
+			AddService(new SpriteBatch(this), false, false, 0, 0);
+			AddService(new DebugStrings(this), true, true, 9999, 9999);
+			AddService(new DebugRender(this), true, true, 9998, 9998);
+			AddService(new Camera(this), true, false, 1, 1);
 
-            //	make configuration saved on exit
-            Exiting += FusionGame_Exiting;
-            InputDevice.KeyDown += InputDevice_KeyDown;
-        }
+			//	load configuration :
+			LoadConfiguration();
 
-        Space space;
-        Box[] boxes;
-        ConstantBuffer constBuffer;
-        Ubershader uberShader;
+			//	make configuration saved on exit
+			Exiting += FusionGame_Exiting;
+			InputDevice.KeyDown += InputDevice_KeyDown;
+		}
+
+		Space space;
+		Box[] boxes;
+		ConstantBuffer constBuffer;
+		Ubershader uberShader;
 		StateFactory factory;
 		bool flag = false;
 		Texture2D texture;
@@ -63,23 +61,20 @@ namespace ShooterDemo2
 		int numberOfBoxes = 250;
 
 
-        struct CBData
-        {
-            public Fusion.Mathematics.Matrix Projection;
-            public Fusion.Mathematics.Matrix View;
-            public Fusion.Mathematics.Matrix World;
-            public Vector4Fusion ViewPos;
-        }
+		struct CBData {
+			public Fusion.Mathematics.Matrix Projection;
+			public Fusion.Mathematics.Matrix View;
+			public Fusion.Mathematics.Matrix World;
+			public Vector4Fusion ViewPos;
+		}
 
 
-        enum RenderFlags
-        {
-            None,
-        }
+		enum RenderFlags {
+			None,
+		}
 
 
-		struct CubeVertex
-		{
+		struct CubeVertex {
 			[Vertex("POSITION")]
 			public Vector3Fusion Position;
 			[Vertex("NORMAL")]
@@ -93,215 +88,201 @@ namespace ShooterDemo2
 		VertexBuffer vb;
 		IndexBuffer ib;
 
-        /// <summary>
-        /// Add services :
-        /// </summary>
-        protected override void Initialize()
-        {
-            base.Initialize();
+		/// <summary>
+		/// Add services :
+		/// </summary>
+		protected override void Initialize ()
+		{
+			base.Initialize();
 
-            constBuffer = new ConstantBuffer(GraphicsDevice, typeof(CBData));
+			constBuffer = new ConstantBuffer(GraphicsDevice, typeof(CBData));
 
-            LoadContent();
-            Reloading += (s, e) => LoadContent();
-			            
-            GetService<Camera>().FreeCamPosition = Vector3Fusion.Up * 10;
-        }
+			LoadContent();
+			Reloading += (s, e) => LoadContent();
+
+			GetService<Camera>().FreeCamPosition = Vector3Fusion.Up * 10;
+		}
 
 
 
-        /// <summary>
-        /// Load content
-        /// </summary>
-        public void LoadContent()
-        {
-            uberShader = Content.Load<Ubershader>("render");
-			factory	=	new StateFactory( uberShader, typeof(RenderFlags), VertexInputElement.FromStructure<CubeVertex>() );
+		/// <summary>
+		/// Load content
+		/// </summary>
+		public void LoadContent ()
+		{
+			uberShader = Content.Load<Ubershader>("render");
+			factory = new StateFactory(uberShader, typeof(RenderFlags), VertexInputElement.FromStructure<CubeVertex>());
 			texture = Content.Load<Texture2D>(@"Scenes\lena");
 
 			vb = new VertexBuffer(GraphicsDevice, typeof(CubeVertex), 24);
 			ib = new IndexBuffer(GraphicsDevice, 36);
-            
-      		// create a new space with physics
-            space = new Space();
+
+			// create a new space with physics
+			space = new Space();
 
 			// update gravity force
-            space.ForceUpdater.Gravity = new Vector3BEPU(0, -9.81f, 0);
+			space.ForceUpdater.Gravity = new Vector3BEPU(0, -9.81f, 0);
 
 			// add ground, ground has infinite mass
-            Box ground = new Box(new Vector3BEPU(0, 0, 0), 50, 1, 50);
-			space.Add( ground );
+			Box ground = new Box(new Vector3BEPU(0, 0, 0), 50, 1, 50);
+			space.Add(ground);
 
 			// create boxes with random position
-            boxes = new Box[numberOfBoxes];
-			for (int i = 0; i < numberOfBoxes; i++)
-			{
+			boxes = new Box[numberOfBoxes];
+			for ( int i = 0; i < numberOfBoxes; i++ ) {
 				Vector3Fusion vector = RandomExt.NextVector3(random, new Vector3Fusion(-10, 20, -10), new Vector3Fusion(10, 30, 10));
 				boxes[i] = new Box(new Vector3BEPU(vector.X, vector.Y, vector.Z), 1, 1, 1, 1);
 			}
 
 			// add color as a tag, then add box to space
-			foreach (var box in boxes)
-			{
+			foreach ( var box in boxes ) {
 				box.Tag = RandomExt.NextColor(random);
 				space.Add(box);
-			}      
+			}
 		}
 
 
-       
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected override void Dispose(bool disposing)
-        { 
-            if (disposing) {
-				SafeDispose( ref constBuffer );
-				SafeDispose( ref vb );
-				SafeDispose( ref ib );
-            }
-
-            base.Dispose(disposing);
-        }
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="disposing"></param>
+		protected override void Dispose (bool disposing)
+		{
+			if ( disposing ) {
+				SafeDispose(ref constBuffer);
+				SafeDispose(ref vb);
+				SafeDispose(ref ib);
+			}
 
-        /// <summary>
-        /// Handle keys for each demo
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void InputDevice_KeyDown(object sender, Fusion.Input.InputDevice.KeyEventArgs e)
-        {
-            if (e.Key == Keys.F1)
-            {
-                DevCon.Show(this);
-            }
+			base.Dispose(disposing);
+		}
 
-            if (e.Key == Keys.F2)
-            {
-                Parameters.ToggleVSync();
-            }
 
-            if (e.Key == Keys.F5)
-            {
-                Reload();
-            }
 
-            if (e.Key == Keys.F12)
-            {
-                GraphicsDevice.Screenshot();
-            }
+		/// <summary>
+		/// Handle keys for each demo
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void InputDevice_KeyDown (object sender, Fusion.Input.InputDevice.KeyEventArgs e)
+		{
+			if ( e.Key == Keys.F1 ) {
+				DevCon.Show(this);
+			}
 
-            if (e.Key == Keys.Escape)
-            {
-                Exit();
-            }
+			if ( e.Key == Keys.F2 ) {
+				Parameters.ToggleVSync();
+			}
+
+			if ( e.Key == Keys.F5 ) {
+				Reload();
+			}
+
+			if ( e.Key == Keys.F12 ) {
+				GraphicsDevice.Screenshot();
+			}
+
+			if ( e.Key == Keys.Escape ) {
+				Exit();
+			}
 
 			// pause physics
-			if (e.Key == Keys.P)
-			{
-				if (flag)
-				{
+			if ( e.Key == Keys.P ) {
+				if ( flag ) {
 					flag = false;
-				}
-				else
-				{
+				} else {
 					flag = true;
 				}
 			}
 
 			// shoot box from camera
-			if (e.Key == Keys.LeftButton)
-			{
+			if ( e.Key == Keys.LeftButton ) {
 				Vector3Fusion vector = GetService<Camera>().FreeCamPosition;
 				Box box = new Box(new Vector3BEPU(vector.X, vector.Y, vector.Z), 1, 1, 1, 1);
 				Vector3Fusion velocity = 10 * GetService<Camera>().GetCameraMatrix(StereoEye.Mono).Forward;
 				box.LinearVelocity = new Vector3BEPU(velocity.X, velocity.Y, velocity.Z);
 				box.Tag = RandomExt.NextColor(random);
-				space.Add(box);	
+				space.Add(box);
 			}
 
 			// add new box somewhere
-			if (e.Key == Keys.O)
-			{
+			if ( e.Key == Keys.O ) {
 				Vector3Fusion vector = RandomExt.NextVector3(random, new Vector3Fusion(-10, 20, -10), new Vector3Fusion(10, 30, 10));
 				Box box = new Box(new Vector3BEPU(vector.X, vector.Y, vector.Z), 1, 1, 1, 1);
 				box.Tag = RandomExt.NextColor(random);
 				space.Add(box);
 			}
-        }
+		}
 
 
 
-        /// <summary>
-        /// Save configuration on exit.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void FusionGame_Exiting(object sender, EventArgs e)
-        {
-            SaveConfiguration();
-        }
+		/// <summary>
+		/// Save configuration on exit.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void FusionGame_Exiting (object sender, EventArgs e)
+		{
+			SaveConfiguration();
+		}
 
 
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameTime"></param>
-        protected override void Update(GameTime gameTime)
-        {
-            var ds = GetService<DebugStrings>();
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="gameTime"></param>
+		protected override void Update (GameTime gameTime)
+		{
+			var ds = GetService<DebugStrings>();
 
-            ds.Add(Color.Orange, "FPS {0}", gameTime.Fps);
-            ds.Add("F1   - show developer console");
-            ds.Add("F2   - toggle vsync");
-            ds.Add("F5   - build content and reload textures");
-            ds.Add("F12  - make screenshot");
-            ds.Add("ESC  - exit");
-            
+			ds.Add(Color.Orange, "FPS {0}", gameTime.Fps);
+			ds.Add("F1   - show developer console");
+			ds.Add("F2   - toggle vsync");
+			ds.Add("F5   - build content and reload textures");
+			ds.Add("F12  - make screenshot");
+			ds.Add("ESC  - exit");
 
-            var cam = GetService<Camera>();
-            var dr = GetService<DebugRender>();
-            dr.View = cam.GetViewMatrix(StereoEye.Mono);
-            dr.Projection = cam.GetProjectionMatrix(StereoEye.Mono);
 
-            dr.DrawGrid(10);
+			var cam = GetService<Camera>();
+			var dr = GetService<DebugRender>();
+			dr.View = cam.GetViewMatrix(StereoEye.Mono);
+			dr.Projection = cam.GetProjectionMatrix(StereoEye.Mono);
+
+			dr.DrawGrid(10);
 
 			// physics updates here
-			if (flag)
-			{
-				space.Update(gameTime.ElapsedSec);				
+			if ( flag ) {
+				space.Update(gameTime.ElapsedSec);
 			}
-			            
-            base.Update(gameTime);
-        }
 
-		
-	
+			base.Update(gameTime);
+		}
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="gameTime"></param>
-        /// <param name="stereoEye"></param>
-        protected override void Draw(GameTime gameTime, StereoEye stereoEye)
-        {
-            CBData cbData = new CBData();			
 
-            var cam = GetService<Camera>();
 
-            GraphicsDevice.ClearBackbuffer(Color.CornflowerBlue, 1, 0);
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="gameTime"></param>
+		/// <param name="stereoEye"></param>
+		protected override void Draw (GameTime gameTime, StereoEye stereoEye)
+		{
+			CBData cbData = new CBData();
+
+			var cam = GetService<Camera>();
+
+			GraphicsDevice.ClearBackbuffer(Color.CornflowerBlue, 1, 0);
 
 			//	fill vertex buffer for cube:
 			Vector4Fusion color = new Vector4Fusion(Vector3Fusion.Zero, 1);
 			Fusion.Mathematics.Vector2 texcoord = Fusion.Mathematics.Vector2.Zero;
 
 			// back face
-			var v0 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord};
+			var v0 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
 			var v1 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
 			var v2 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
 			var v3 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
@@ -335,7 +316,7 @@ namespace ShooterDemo2
 			var v21 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
 			var v22 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
 			var v23 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
-			
+
 			var data = new CubeVertex[] { v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 };
 
 			// fill the index buffer
@@ -353,12 +334,11 @@ namespace ShooterDemo2
 									20, 22, 21};
 			ib.SetData(index);
 
-			foreach (var e in space.Entities)
-			{
+			foreach ( var e in space.Entities ) {
 				Box box = e as Box;
-				if (box != null) // this won't create any graphics for an entity that isn't a box
+				if ( box != null ) // this won't create any graphics for an entity that isn't a box
 				{
-					if (box.IsDynamic) // draw only dynamic boxes
+					if ( box.IsDynamic ) // draw only dynamic boxes
 					{
 						// fill world matrix
 						Fusion.Mathematics.Matrix matrix = new Fusion.Mathematics.Matrix(box.WorldTransform.M11, box.WorldTransform.M12, box.WorldTransform.M13, box.WorldTransform.M14,
@@ -367,14 +347,13 @@ namespace ShooterDemo2
 																									box.WorldTransform.M41, box.WorldTransform.M42, box.WorldTransform.M43, box.WorldTransform.M44);
 						cbData.Projection = cam.GetProjectionMatrix(stereoEye);
 						cbData.View = cam.GetViewMatrix(stereoEye);
-						cbData.World =  matrix;
+						cbData.World = matrix;
 						cbData.ViewPos = new Vector4Fusion(cam.GetCameraMatrix(stereoEye).TranslationVector, 1);
 
 						constBuffer.SetData(cbData);
 
 						// update colors
-						for (int i = 0; i < 24; i++ )
-						{
+						for ( int i = 0; i < 24; i++ ) {
 							Color c = (Color) box.Tag;
 							data[i].Color = c.ToVector4();
 						}
@@ -382,8 +361,8 @@ namespace ShooterDemo2
 						// add data to vertex buffer
 						vb.SetData(data, 0, 24);
 
-						GraphicsDevice.PipelineState	= factory[0];
-					
+						GraphicsDevice.PipelineState = factory[0];
+
 						GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 						GraphicsDevice.PixelShaderConstants[0] = constBuffer;
 						GraphicsDevice.VertexShaderConstants[0] = constBuffer;
@@ -392,12 +371,12 @@ namespace ShooterDemo2
 
 						// setup data and draw box
 						GraphicsDevice.SetupVertexInput(vb, ib);
-						GraphicsDevice.DrawIndexed(Primitive.TriangleList, 36, 0, 0);										
+						GraphicsDevice.DrawIndexed(Primitive.TriangleList, 36, 0, 0);
 					}
 				}
 			}
-			
-            base.Draw(gameTime, stereoEye);
-        }
-    }
+
+			base.Draw(gameTime, stereoEye);
+		}
+	}
 }
