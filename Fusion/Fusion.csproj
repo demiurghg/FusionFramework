@@ -424,5 +424,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="$(SolutionDir)\FusionFramework.targets" />
+  <Import Project="$(FUSION_BUILD)\FusionFramework.targets" />
 </Project>

@@ -114,5 +114,5 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
-  <Import Project="$(SolutionDir)\FusionFramework.targets" />
+  <Import Project="$(FUSION_BUILD)\FusionFramework.targets" />
 </Project>

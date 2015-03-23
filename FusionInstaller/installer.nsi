@@ -89,6 +89,7 @@ Section "Fusion Game Library Core" Section1
   ; Build stuff :
   SetOutPath "$INSTDIR\Build"
   File "..\FusionProject.targets"
+  File "..\FusionFramework.targets"
   
   ; Write the installation path into the registry
   WriteRegStr HKLM SOFTWARE\FusionGameLib "Install_Dir" "$INSTDIR"
