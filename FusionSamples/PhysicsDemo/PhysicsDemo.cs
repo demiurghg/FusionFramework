@@ -51,14 +51,13 @@ namespace PhysicsDemo {
 		}
 
 		Space space;
-		Box[] boxes;
 		ConstantBuffer constBuffer;
 		Ubershader uberShader;
 		StateFactory factory;
 		bool flag = false;
 		Texture2D texture;
 		Random random = new Random();
-		int numberOfBoxes = 250;
+		int numberOfBoxes = 500;
 		CubeVertex[]  data;
 
 
@@ -187,15 +186,10 @@ namespace PhysicsDemo {
 			Box ground = new Box(new Vector3BEPU(0, 0, 0), 50, 1, 50);
 			space.Add(ground);
 
-			// create boxes with random position
-			boxes = new Box[numberOfBoxes];
+			// create boxes with random position and add color as a tag, then add box to space
 			for ( int i = 0; i < numberOfBoxes; i++ ) {
-				Vector3Fusion vector = RandomExt.NextVector3(random, new Vector3Fusion(-10, 20, -10), new Vector3Fusion(10, 30, 10));
-				boxes[i] = new Box(new Vector3BEPU(vector.X, vector.Y, vector.Z), 1, 1, 1, 1);
-			}
-
-			// add color as a tag, then add box to space
-			foreach ( var box in boxes ) {
+				Vector3Fusion vector = RandomExt.NextVector3(random, new Vector3Fusion(-10, 20, -10), new Vector3Fusion(10, 80, 10));
+				Box box = new Box(new Vector3BEPU(vector.X, vector.Y, vector.Z), 1, 1, 1, 1);
 				box.Tag = RandomExt.NextColor(random);
 				space.Add(box);
 			}
@@ -357,16 +351,7 @@ namespace PhysicsDemo {
 						cbData.Color =  c.ToVector4();
 
 						constBuffer.SetData(cbData);
-
-						// update colors
-						//for ( int i = 0; i < 24; i++ ) {
-						//	Color c = (Color) box.Tag;
-						//	data[i].Color = c.ToVector4();
-						//}
-
-						//// add data to vertex buffer
-						//vb.SetData(data, 0, 24);
-
+						
 						GraphicsDevice.PipelineState = factory[0];
 
 						GraphicsDevice.DepthStencilState = DepthStencilState.Default;
