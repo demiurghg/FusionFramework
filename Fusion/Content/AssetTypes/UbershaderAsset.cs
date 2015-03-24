@@ -12,6 +12,7 @@ using Fusion.Graphics;
 using System.Threading;
 using Fusion.Mathematics;
 using FX = SharpDX.D3DCompiler;
+using SharpDX.D3DCompiler;
 
 
 namespace Fusion.Content {
@@ -267,9 +268,41 @@ namespace Fusion.Content {
 		}
 
 
-		/*class IncludeHandler : FX.Include {
-			
-		} */
+		class IncludeHandler : FX.Include {
+
+			readonly BuildContext buildContext;
+		
+			public IncludeHandler ( BuildContext buildContext )
+			{
+				this.buildContext	=	buildContext;
+			}
+
+
+			public Stream Open( IncludeType type, string fileName, Stream parentStream )
+			{
+				Log.Information("{0} {1} {2}", type, fileName, parentStream );
+
+				return File.OpenRead( buildContext.Resolve( fileName ) );
+			}
+
+
+			public void Close( Stream stream )
+			{
+				stream.Close();
+			}
+
+
+			IDisposable ICallbackable.Shadow {
+				get; set;
+			}
+
+
+			public void Dispose ()
+			{
+				
+			}
+				
+		}
 
 
 		/// <summary>
@@ -285,10 +318,12 @@ namespace Fusion.Content {
 		/// <returns></returns>
 		byte[] Compile (  BuildContext buildContext, string sourceFile, string profile, string entryPoint, string defines, string output, string listing )
 		{
+			Log.Debug("{0} {1} {2} {3}", sourceFile, profile, entryPoint, defines );
+
 			var	flags	=	FX.ShaderFlags.None;
 
 			if ( DisableOptimization)	flags |= FX.ShaderFlags.OptimizationLevel0;
-			if (!DisableOptimization)	flags |= FX.ShaderFlags.OptimizationLevel3;
+			// (!DisableOptimization)	flags |= FX.ShaderFlags.OptimizationLevel3;
 			if ( PreferFlowControl)		flags |= FX.ShaderFlags.PreferFlowControl;
 			if ( AvoidFlowControl)		flags |= FX.ShaderFlags.AvoidFlowControl;
 
@@ -296,14 +331,14 @@ namespace Fusion.Content {
 			if ( MatrixPacking==ShaderMatrixPacking.RowMajor )		flags |= FX.ShaderFlags.PackMatrixRowMajor;
 
 			var defs = defines.Split(new[]{' ','\t'}, StringSplitOptions.RemoveEmptyEntries)	
-						.Select( entry => new SharpDX.Direct3D.ShaderMacro( entry, "0" ) )
+						.Select( entry => new SharpDX.Direct3D.ShaderMacro( entry, "1" ) )
 						.ToArray();
 
 			sourceFile	=	buildContext.Resolve( sourceFile );
 					
 			try {
 			
-				var result = FX.ShaderBytecode.CompileFromFile( sourceFile, entryPoint, profile, flags, FX.EffectFlags.None, defs, null );
+				var result = FX.ShaderBytecode.CompileFromFile( sourceFile, entryPoint, profile, flags, FX.EffectFlags.None, defs, new IncludeHandler(buildContext) );
 			
 				Log.Warning( result.Message );
 
@@ -314,7 +349,7 @@ namespace Fusion.Content {
 			} catch ( Exception ex ) {
 
 				if (ex.Message.Contains("error X3501")) {
-					Log.Debug("No entry point '{0}'. That is ok.", entryPoint );
+					Log.Debug("No entry point '{0}'. It's ok", entryPoint );
 					return new byte[0];
 				}
 
