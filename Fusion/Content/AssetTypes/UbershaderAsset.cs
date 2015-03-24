@@ -11,6 +11,7 @@ using SharpDX;
 using Fusion.Graphics;
 using System.Threading;
 using Fusion.Mathematics;
+using FX = SharpDX.D3DCompiler;
 
 
 namespace Fusion.Content {
@@ -199,12 +200,12 @@ namespace Fusion.Content {
 				var dshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".DS.html", true );
 				var cshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".CS.html", true );
 
-				var ps = RunFxc( buildContext, SourceFile, "ps_5_0", PSEntryPoint, defines, psbc, pshtm );
-				var vs = RunFxc( buildContext, SourceFile, "vs_5_0", VSEntryPoint, defines, vsbc, vshtm );
-				var gs = RunFxc( buildContext, SourceFile, "gs_5_0", GSEntryPoint, defines, gsbc, gshtm );
-				var hs = RunFxc( buildContext, SourceFile, "hs_5_0", HSEntryPoint, defines, hsbc, hshtm );
-				var ds = RunFxc( buildContext, SourceFile, "ds_5_0", DSEntryPoint, defines, dsbc, dshtm );
-				var cs = RunFxc( buildContext, SourceFile, "cs_5_0", CSEntryPoint, defines, csbc, cshtm );
+				var ps = Compile( buildContext, SourceFile, "ps_5_0", PSEntryPoint, defines, psbc, pshtm );
+				var vs = Compile( buildContext, SourceFile, "vs_5_0", VSEntryPoint, defines, vsbc, vshtm );
+				var gs = Compile( buildContext, SourceFile, "gs_5_0", GSEntryPoint, defines, gsbc, gshtm );
+				var hs = Compile( buildContext, SourceFile, "hs_5_0", HSEntryPoint, defines, hsbc, hshtm );
+				var ds = Compile( buildContext, SourceFile, "ds_5_0", DSEntryPoint, defines, dsbc, dshtm );
+				var cs = Compile( buildContext, SourceFile, "cs_5_0", CSEntryPoint, defines, csbc, cshtm );
 				
 
 				htmlBuilder.AppendFormat( (vs.Length==0) ? ".. " : "<a href=\"{0}\">vs</a> ", Path.GetFileName(vshtm) );
@@ -262,6 +263,62 @@ namespace Fusion.Content {
 						bw.Write( entry.CSBytecode );
 					}
 				}
+			}
+		}
+
+
+		/*class IncludeHandler : FX.Include {
+			
+		} */
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="buildContext"></param>
+		/// <param name="sourceFile"></param>
+		/// <param name="profile"></param>
+		/// <param name="entryPoint"></param>
+		/// <param name="defines"></param>
+		/// <param name="output"></param>
+		/// <param name="listing"></param>
+		/// <returns></returns>
+		byte[] Compile (  BuildContext buildContext, string sourceFile, string profile, string entryPoint, string defines, string output, string listing )
+		{
+			var	flags	=	FX.ShaderFlags.None;
+
+			if ( DisableOptimization)	flags |= FX.ShaderFlags.OptimizationLevel0;
+			if (!DisableOptimization)	flags |= FX.ShaderFlags.OptimizationLevel3;
+			if ( PreferFlowControl)		flags |= FX.ShaderFlags.PreferFlowControl;
+			if ( AvoidFlowControl)		flags |= FX.ShaderFlags.AvoidFlowControl;
+
+			if ( MatrixPacking==ShaderMatrixPacking.ColumnMajor )	flags |= FX.ShaderFlags.PackMatrixColumnMajor;
+			if ( MatrixPacking==ShaderMatrixPacking.RowMajor )		flags |= FX.ShaderFlags.PackMatrixRowMajor;
+
+			var defs = defines.Split(new[]{' ','\t'}, StringSplitOptions.RemoveEmptyEntries)	
+						.Select( entry => new SharpDX.Direct3D.ShaderMacro( entry, "0" ) )
+						.ToArray();
+
+			sourceFile	=	buildContext.Resolve( sourceFile );
+					
+			try {
+			
+				var result = FX.ShaderBytecode.CompileFromFile( sourceFile, entryPoint, profile, flags, FX.EffectFlags.None, defs, null );
+			
+				Log.Warning( result.Message );
+
+				File.WriteAllText( listing, result.Bytecode.Disassemble( FX.DisassemblyFlags.EnableColorCode, "" ) );
+
+				return result.Bytecode.Data;
+
+			} catch ( Exception ex ) {
+
+				if (ex.Message.Contains("error X3501")) {
+					Log.Debug("No entry point '{0}'. That is ok.", entryPoint );
+					return new byte[0];
+				}
+
+				throw;
 			}
 		}
 
