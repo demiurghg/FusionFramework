@@ -16,8 +16,8 @@ namespace SubmarinesWars.SubmarinesGameLibrary.ArtificialIntelligence
             this.path = new List<Cell>();
             if (path != null)
                 this.path.AddRange(path);
-            if (this.path.Count > 9)
-                this.path.RemoveRange(9, path.Count - 9);
+            if (this.path.Count > 13)
+                this.path.RemoveRange(13, path.Count - 13);
         }
 
         internal override void execute(Submarine sub, ActionsQueue queue)

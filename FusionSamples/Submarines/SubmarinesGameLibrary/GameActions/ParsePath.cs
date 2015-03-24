@@ -53,8 +53,8 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameActions
             }
             if (Entity is Torpedo)
             {
-                if (this.path.Count > 9)
-                    this.path.RemoveRange(9, path.Count - 9);
+                if (this.path.Count > 13)
+                    this.path.RemoveRange(13, path.Count - 13);
                 Noise = Config.NOISE_TORPEDO_STEP;
                 _speed = 3.0f * Config.SPEED;
             }
