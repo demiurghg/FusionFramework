@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Fusion;
 using Fusion.Development;
 
-namespace ShooterDemo2
+namespace PhysicsDemo
 {
     class Program
     {

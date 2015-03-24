@@ -5,6 +5,7 @@ struct BATCH {
 	float4x4	World			;
 	
 	float4		ViewPos			;
+	float4		Color			;
 	
 	float4		SkyLightDir		;
 	float4		SkyLightColor	;
@@ -54,7 +55,7 @@ PS_IN VSMain( VS_IN input )
 	float4	normal	=	mul( float4(input.Normal,0),  Batch.World 		);
 	
 	output.Position = pPos;
-	output.Color 	= input.Color;
+	output.Color 	= Batch.Color;
 	output.TexCoord	= input.TexCoord;
 	output.WNormal	= normalize(normal);
 	

@@ -23,7 +23,7 @@ using Vector3Fusion = Fusion.Mathematics.Vector3;
 using Vector4Fusion = Fusion.Mathematics.Vector4;
 
 
-namespace ShooterDemo2 {
+namespace PhysicsDemo {
 	public class PhysicsDemo: Game {
 		/// <summary>
 		/// PhysicsDemo constructor
@@ -59,6 +59,7 @@ namespace ShooterDemo2 {
 		Texture2D texture;
 		Random random = new Random();
 		int numberOfBoxes = 250;
+		CubeVertex[]  data;
 
 
 		struct CBData {
@@ -66,6 +67,7 @@ namespace ShooterDemo2 {
 			public Fusion.Mathematics.Matrix View;
 			public Fusion.Mathematics.Matrix World;
 			public Vector4Fusion ViewPos;
+			public Vector4Fusion Color;
 		}
 
 
@@ -100,7 +102,65 @@ namespace ShooterDemo2 {
 			LoadContent();
 			Reloading += (s, e) => LoadContent();
 
-			GetService<Camera>().FreeCamPosition = Vector3Fusion.Up * 10;
+			GetService<Camera>().FreeCamPosition = new Vector3Fusion(0, 12, 21);
+						
+			//	fill vertex buffer for cube:
+			Vector4Fusion color = new Vector4Fusion(Vector3Fusion.Zero, 1);
+			Fusion.Mathematics.Vector2 texcoord = Fusion.Mathematics.Vector2.Zero;
+
+			// back face
+			var v0 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
+			var v1 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
+			var v2 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
+			var v3 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
+
+			// front
+			var v4 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(1.0f, 0, 0), Color = color, TexCoord = texcoord };
+			var v5 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(1.0f, 0, 0), Color = color, TexCoord = texcoord };
+			var v6 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(1.0f, 0, 0), Color = color, TexCoord = texcoord };
+			var v7 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(1.0f, 0, 0), Color = color, TexCoord = texcoord };
+
+			// left
+			var v8 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(0, 0, -1.0f), Color = color, TexCoord = texcoord };
+			var v9 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(0, 0, -1.0f), Color = color, TexCoord = texcoord };
+			var v10 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(0, 0, -1.0f), Color = color, TexCoord = texcoord };
+			var v11 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(0, 0, -1.0f), Color = color, TexCoord = texcoord };
+
+			// right
+			var v12 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, 0, 1.0f), Color = color, TexCoord = texcoord };
+			var v13 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, 0, 1.0f), Color = color, TexCoord = texcoord };
+			var v14 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(0, 0, 1.0f), Color = color, TexCoord = texcoord };
+			var v15 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(0, 0, 1.0f), Color = color, TexCoord = texcoord };
+
+			// top
+			var v16 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(0, 1.0f, 0), Color = color, TexCoord = texcoord };
+			var v17 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(0, 1.0f, 0), Color = color, TexCoord = texcoord };
+			var v18 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(0, 1.0f, 0), Color = color, TexCoord = texcoord };
+			var v19 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(0, 1.0f, 0), Color = color, TexCoord = texcoord };
+
+			// bottom
+			var v20 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
+			var v21 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
+			var v22 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
+			var v23 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
+
+			data = new CubeVertex[] { v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 };
+			vb.SetData(data, 0, 24);
+
+			// fill the index buffer
+			var index = new int[] { 3, 1, 0,	// back
+									3, 2, 1,
+									4, 5, 7,	// front
+									7, 5, 6,
+									8, 9, 11,	// left
+									11, 9, 10,
+									14, 13, 12,	// right
+									14, 12, 15,
+									19, 16, 17,	// top
+									19, 17, 18,
+									20, 23, 22,	// bottom
+									20, 22, 21};
+			ib.SetData(index);
 		}
 
 
@@ -277,62 +337,6 @@ namespace ShooterDemo2 {
 
 			GraphicsDevice.ClearBackbuffer(Color.CornflowerBlue, 1, 0);
 
-			//	fill vertex buffer for cube:
-			Vector4Fusion color = new Vector4Fusion(Vector3Fusion.Zero, 1);
-			Fusion.Mathematics.Vector2 texcoord = Fusion.Mathematics.Vector2.Zero;
-
-			// back face
-			var v0 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
-			var v1 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
-			var v2 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
-			var v3 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(-1.0f, 0, 0), Color = color, TexCoord = texcoord };
-
-			// front
-			var v4 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(1.0f, 0, 0), Color = color, TexCoord = texcoord };
-			var v5 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(1.0f, 0, 0), Color = color, TexCoord = texcoord };
-			var v6 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(1.0f, 0, 0), Color = color, TexCoord = texcoord };
-			var v7 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(1.0f, 0, 0), Color = color, TexCoord = texcoord };
-
-			// left
-			var v8 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(0, 0, -1.0f), Color = color, TexCoord = texcoord };
-			var v9 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(0, 0, -1.0f), Color = color, TexCoord = texcoord };
-			var v10 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(0, 0, -1.0f), Color = color, TexCoord = texcoord };
-			var v11 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(0, 0, -1.0f), Color = color, TexCoord = texcoord };
-
-			// right
-			var v12 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, 0, 1.0f), Color = color, TexCoord = texcoord };
-			var v13 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, 0, 1.0f), Color = color, TexCoord = texcoord };
-			var v14 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(0, 0, 1.0f), Color = color, TexCoord = texcoord };
-			var v15 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(0, 0, 1.0f), Color = color, TexCoord = texcoord };
-
-			// top
-			var v16 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(0, 1.0f, 0), Color = color, TexCoord = texcoord };
-			var v17 = new CubeVertex { Position = new Vector3Fusion(0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(0, 1.0f, 0), Color = color, TexCoord = texcoord };
-			var v18 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, 0.5f), Normal = new Vector3Fusion(0, 1.0f, 0), Color = color, TexCoord = texcoord };
-			var v19 = new CubeVertex { Position = new Vector3Fusion(-0.5f, 0.5f, -0.5f), Normal = new Vector3Fusion(0, 1.0f, 0), Color = color, TexCoord = texcoord };
-
-			// bottom
-			var v20 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
-			var v21 = new CubeVertex { Position = new Vector3Fusion(0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
-			var v22 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, 0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
-			var v23 = new CubeVertex { Position = new Vector3Fusion(-0.5f, -0.5f, -0.5f), Normal = new Vector3Fusion(0, -1.0f, 0), Color = color, TexCoord = texcoord };
-
-			var data = new CubeVertex[] { v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14, v15, v16, v17, v18, v19, v20, v21, v22, v23 };
-
-			// fill the index buffer
-			var index = new int[] { 3, 1, 0,	// back
-									3, 2, 1,
-									4, 5, 7,	// front
-									7, 5, 6,
-									8, 9, 11,	// left
-									11, 9, 10,
-									14, 13, 12,	// right
-									14, 12, 15,
-									19, 16, 17,	// top
-									19, 17, 18,
-									20, 23, 22,	// bottom
-									20, 22, 21};
-			ib.SetData(index);
 
 			foreach ( var e in space.Entities ) {
 				Box box = e as Box;
@@ -349,17 +353,19 @@ namespace ShooterDemo2 {
 						cbData.View = cam.GetViewMatrix(stereoEye);
 						cbData.World = matrix;
 						cbData.ViewPos = new Vector4Fusion(cam.GetCameraMatrix(stereoEye).TranslationVector, 1);
+						Color c = (Color) box.Tag;
+						cbData.Color =  c.ToVector4();
 
 						constBuffer.SetData(cbData);
 
 						// update colors
-						for ( int i = 0; i < 24; i++ ) {
-							Color c = (Color) box.Tag;
-							data[i].Color = c.ToVector4();
-						}
+						//for ( int i = 0; i < 24; i++ ) {
+						//	Color c = (Color) box.Tag;
+						//	data[i].Color = c.ToVector4();
+						//}
 
-						// add data to vertex buffer
-						vb.SetData(data, 0, 24);
+						//// add data to vertex buffer
+						//vb.SetData(data, 0, 24);
 
 						GraphicsDevice.PipelineState = factory[0];
 
