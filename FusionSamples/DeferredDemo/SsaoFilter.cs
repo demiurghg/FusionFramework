@@ -115,7 +115,7 @@ namespace DeferredDemo {
 		{
 			SafeDispose( ref factory );
 			shader	=	Game.Content.Load<Ubershader>("ssao");
-			factory	=	new StateFactory( shader, typeof(Flags), VertexInputElement.Empty, BlendState.Opaque, RasterizerState.CullNone ); 
+			factory	=	new StateFactory( shader, typeof(Flags), Primitive.TriangleList, VertexInputElement.Empty, BlendState.Opaque, RasterizerState.CullNone, DepthStencilState.None ); 
 		}
 
 
@@ -179,11 +179,10 @@ namespace DeferredDemo {
 			device.PixelShaderResources[1]	=	downsampledNormals;
 			device.PixelShaderResources[2]	=	randomDir;
 			device.PixelShaderSamplers[0]	=	SamplerState.LinearClamp;
-			device.DepthStencilState		=	DepthStencilState.None;
 			device.PipelineState			=	factory[ (int)Flags.HBAO ];
 
 				
-			device.Draw( Primitive.TriangleList, 3, 0 );
+			device.Draw( 3, 0 );
 			
 			device.ResetStates();
 

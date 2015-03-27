@@ -170,7 +170,7 @@ namespace PhysicsDemo {
 		public void LoadContent ()
 		{
 			uberShader = Content.Load<Ubershader>("render");
-			factory = new StateFactory(uberShader, typeof(RenderFlags), VertexInputElement.FromStructure<CubeVertex>());
+			factory = new StateFactory(uberShader, typeof(RenderFlags), Primitive.TriangleList, VertexInputElement.FromStructure<CubeVertex>());
 			texture = Content.Load<Texture2D>(@"Scenes\lena");
 
 			vb = new VertexBuffer(GraphicsDevice, typeof(CubeVertex), 24);
@@ -354,7 +354,6 @@ namespace PhysicsDemo {
 						
 						GraphicsDevice.PipelineState = factory[0];
 
-						GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 						GraphicsDevice.PixelShaderConstants[0] = constBuffer;
 						GraphicsDevice.VertexShaderConstants[0] = constBuffer;
 						GraphicsDevice.PixelShaderSamplers[0] = SamplerState.AnisotropicWrap;
@@ -362,7 +361,7 @@ namespace PhysicsDemo {
 
 						// setup data and draw box
 						GraphicsDevice.SetupVertexInput(vb, ib);
-						GraphicsDevice.DrawIndexed(Primitive.TriangleList, 36, 0, 0);
+						GraphicsDevice.DrawIndexed( 36, 0, 0);
 					}
 				}
 			}

@@ -162,7 +162,8 @@ namespace Fusion.Graphics {
 
 				var ps = new PipelineState( Game.GraphicsDevice );
 
-				ps.RasterizerState	=	RasterizerState.CullNone;
+				ps.RasterizerState		=	RasterizerState.CullNone;
+				ps.DepthStencilState	=	DepthStencilState.None;
 
 				if (blend==SpriteBlend.Opaque			) ps.BlendState	=	BlendState.Opaque;
 				if (blend==SpriteBlend.AlphaBlend		) ps.BlendState	=	BlendState.AlphaBlend;
@@ -176,6 +177,7 @@ namespace Fusion.Graphics {
 
 				ps.PixelShader	=	shader.GetPixelShader("");
 				ps.VertexShader	=	shader.GetVertexShader("");
+				ps.Primitive	=	Primitive.TriangleList;
 
 				pipelineStates.Add( blend, ps );
 								
@@ -265,7 +267,6 @@ namespace Fusion.Graphics {
 			}
 
 			device.PipelineState			=	pipelineState;
-			device.DepthStencilState		=	depthStencilState	;
 			device.PixelShaderSamplers[0]	=	samplerState;
 
 			constData.Transform		=	sbTransform;
@@ -332,7 +333,7 @@ namespace Fusion.Graphics {
 
 				device.SetupVertexInput( vertexBuffer, indexBuffer );
 
-				device.DrawIndexed( Primitive.TriangleList, batch.num, batch.start, 0 );
+				device.DrawIndexed( batch.num, batch.start, 0 );
 			}
 
 			vertexPointer = 0;

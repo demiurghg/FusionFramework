@@ -89,7 +89,7 @@ namespace DeferredDemo
 		{
 			SafeDispose( ref factory );
 			shaders = Game.Content.Load<Ubershader>( "filter" );
-			factory	= new StateFactory( shaders, typeof(ShaderFlags), VertexInputElement.Empty );
+			factory	= new StateFactory( shaders, typeof(ShaderFlags), Primitive.TriangleList, VertexInputElement.Empty, BlendState.Opaque, RasterizerState.CullNone, DepthStencilState.None );
 		}
 
 
@@ -117,7 +117,6 @@ namespace DeferredDemo
 		void SetDefaultRenderStates()
 		{
 			rs.ResetStates();
-			rs.DepthStencilState	= DepthStencilState.None ;
 		}
 
 		/*-----------------------------------------------------------------------------------------------
@@ -146,7 +145,7 @@ namespace DeferredDemo
 				rs.PixelShaderResources[0]	=	src;
 				rs.PixelShaderSamplers[0]	=  filter ?? SamplerState.LinearPointClamp;
 
-				rs.Draw( Primitive.TriangleList, 3, 0 );
+				rs.Draw( 3, 0 );
 			}
 			rs.ResetStates();
 		}
@@ -168,7 +167,7 @@ namespace DeferredDemo
 				rs.PixelShaderResources[0]	=	src;
 				rs.PixelShaderSamplers[0]	=	filter ?? SamplerState.LinearPointClamp;
 
-				rs.Draw( Primitive.TriangleList, 3, 0 );
+				rs.Draw( 3, 0 );
 			}
 			rs.ResetStates();
 		}
@@ -189,7 +188,7 @@ namespace DeferredDemo
 				rs.PixelShaderResources[0]	=	src;
 				rs.PixelShaderSamplers[0]	=	SamplerState.LinearPointClamp;
 
-				rs.Draw( Primitive.TriangleList, 3, 0 );
+				rs.Draw( 3, 0 );
 			}
 			rs.ResetStates();
 		}
@@ -262,7 +261,7 @@ namespace DeferredDemo
 				rs.PipelineState			=	factory[ (int)ShaderFlags.COPY ];
 				rs.PixelShaderResources[0]	= src;
 
-				rs.Draw( Primitive.TriangleList, 3, 0 );
+				rs.Draw( 3, 0 );
 			}
 			rs.ResetStates();
 		}
@@ -292,7 +291,7 @@ namespace DeferredDemo
 				rs.PixelShaderResources[0]	=	src;
 				rs.PixelShaderSamplers[0]	=	SamplerState.LinearPointClamp;
 
-				rs.Draw( Primitive.TriangleList, 3, 0 );
+				rs.Draw( 3, 0 );
 			}
 			rs.ResetStates();
 		}
@@ -363,9 +362,8 @@ namespace DeferredDemo
 				rs.PixelShaderConstants[0]	=	gaussWeightsCB;
 				
 				rs.PixelShaderSamplers[0]	=	SamplerState.LinearPointClamp;
-				rs.DepthStencilState		=	DepthStencilState.None;
 
-				rs.Draw( Primitive.TriangleList, 3, 0 );
+				rs.Draw( 3, 0 );
 
 
 				rs.VertexShaderResources[0] =	null;
@@ -380,9 +378,8 @@ namespace DeferredDemo
 				rs.PixelShaderConstants[0]	=	gaussWeightsCB;
 
 				rs.PixelShaderSamplers[0]	=	SamplerState.LinearPointClamp;
-				rs.DepthStencilState		=	DepthStencilState.None;
 
-				rs.Draw( Primitive.TriangleList, 3, 0 );
+				rs.Draw( 3, 0 );
 			}
 			rs.ResetStates();
 		}

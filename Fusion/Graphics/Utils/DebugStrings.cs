@@ -122,7 +122,6 @@ namespace Fusion.Graphics {
 			var sb = Game.GetService<SpriteBatch>();
 
 			sb.Begin();
-				Game.GraphicsDevice.DepthStencilState	=	DepthStencilState.None;
 			
 				int w = linesDraw.Max( line => line.text.Length ) * 8 + 16;
 				int h = linesDraw.Count * 8 + 16;

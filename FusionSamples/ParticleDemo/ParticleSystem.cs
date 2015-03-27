@@ -133,7 +133,9 @@ namespace ParticleDemo {
 		/// <param name="flags"></param>
 		void StateEnum ( PipelineState ps, Flags flags )
 		{
-			ps.BlendState	=	BlendState.Additive;
+			ps.BlendState			=	BlendState.Additive;
+			ps.DepthStencilState	=	DepthStencilState.None;
+			ps.Primitive			=	Primitive.PointList;
 		}
 
 
@@ -324,9 +326,8 @@ namespace ParticleDemo {
 			device.SetCSRWBuffer( 0, null );	
 			device.PixelShaderResources[0]	=	texture ;
 			device.GeometryShaderResources[1]	=	simulationBufferSrc ;
-			device.DepthStencilState	=	DepthStencilState.Readonly ;
 
-			device.Draw( Primitive.PointList, MaxSimulatedParticles, 0 );
+			device.Draw( MaxSimulatedParticles, 0 );
 
 
 			/*var testSrc = new Particle[MaxSimulatedParticles];

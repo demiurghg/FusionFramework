@@ -111,7 +111,7 @@ namespace DeferredDemo {
 			SafeDispose( ref factory );
 
 			shader	=	Game.Content.Load<Ubershader>("hdr");
-			factory	=	new StateFactory( shader, typeof(Flags), VertexInputElement.Empty );
+			factory	=	new StateFactory( shader, typeof(Flags), Primitive.TriangleList, VertexInputElement.Empty, BlendState.Opaque, RasterizerState.CullNone, DepthStencilState.None );
 
 			bloomMask	=	Game.Content.Load<Texture2D>("bloomMask");
 		}
@@ -190,11 +190,10 @@ namespace DeferredDemo {
 
 			device.PixelShaderResources[0]	=	averageLum;
 			device.PixelShaderResources[1]	=	measuredOld;
-			device.DepthStencilState	=	DepthStencilState.None;
 
 			device.PipelineState		=	factory[ (int)(Flags.MEASURE_ADAPT) ];
 				
-			device.Draw( Primitive.TriangleList, 3, 0 );
+			device.Draw( 3, 0 );
 
 
 			//
@@ -206,7 +205,6 @@ namespace DeferredDemo {
 			device.PixelShaderResources[1]	=	measuredNew;// averageLum;
 			device.PixelShaderResources[2]	=	bloom0;// averageLum;
 			device.PixelShaderResources[3]	=	bloomMask;// averageLum;
-			device.DepthStencilState	=	DepthStencilState.None;
 			device.PixelShaderSamplers[0]	=	SamplerState.LinearClamp;
 
 			Flags op = Flags.LINEAR;
@@ -216,7 +214,7 @@ namespace DeferredDemo {
 
 			device.PipelineState		=	factory[ (int)(Flags.TONEMAPPING|op) ];
 				
-			device.Draw( Primitive.TriangleList, 3, 0 );
+			device.Draw( 3, 0 );
 			
 			device.ResetStates();
 

@@ -51,12 +51,12 @@ namespace Fusion.Graphics {
 		/// <param name="vertexInputElements"></param>
 		/// <param name="blendState"></param>
 		/// <param name="rasterizerState"></param>
-		public StateFactory ( Ubershader ubershader, Type enumType, VertexInputElement[] vertexInputElements )
+		public StateFactory ( Ubershader ubershader, Type enumType, Primitive primitive, VertexInputElement[] vertexInputElements )
 		{
 			this.device			= ubershader.Device;
 			this.ubershader		= ubershader;
 
-			Enumerate( enumType, ubershader, (ps,i) => { ps.VertexInputElements = vertexInputElements; } );
+			Enumerate( enumType, ubershader, (ps,i) => { ps.VertexInputElements = vertexInputElements; ps.Primitive = primitive; } );
 		}
 
 
@@ -65,15 +65,36 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="ubershader"></param>
-		public StateFactory ( Ubershader ubershader, Type enumType, VertexInputElement[] vertexInputElements, BlendState blendState, RasterizerState rasterizerState )
+		public StateFactory ( Ubershader ubershader, Type enumType, Primitive primitive, VertexInputElement[] vertexInputElements, BlendState blendState, RasterizerState rasterizerState )
 		{
 			this.device			= ubershader.Device;
 			this.ubershader		= ubershader;
 
 			Enumerate( enumType, ubershader, (ps,i) => { 
+					ps.Primitive = primitive;
 					ps.VertexInputElements = vertexInputElements; 
 					ps.BlendState		=	blendState;
 					ps.RasterizerState	=	rasterizerState;
+				} );
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="device"></param>
+		/// <param name="ubershader"></param>
+		public StateFactory ( Ubershader ubershader, Type enumType, Primitive primitive, VertexInputElement[] vertexInputElements, BlendState blendState, RasterizerState rasterizerState, DepthStencilState depthStencilState )
+		{
+			this.device			= ubershader.Device;
+			this.ubershader		= ubershader;
+
+			Enumerate( enumType, ubershader, (ps,i) => { 
+					ps.Primitive = primitive;
+					ps.VertexInputElements	=	vertexInputElements; 
+					ps.BlendState			=	blendState;
+					ps.RasterizerState		=	rasterizerState;
+					ps.DepthStencilState	=	depthStencilState;
 				} );
 		}
 

@@ -88,7 +88,7 @@ namespace ComputeDemo {
 			result		=	new StructuredBuffer( GraphicsDevice, typeof(Result), BufferSize , StructuredBufferFlags.None );
 			paramsCB	=	new ConstantBuffer( GraphicsDevice, typeof(Params) );
 			shader		=	Content.Load<Ubershader>("test");
-			factory		=	new StateFactory( shader, typeof(ShaderFlags), VertexInputElement.Empty );
+			factory		=	new StateFactory( shader, typeof(ShaderFlags), Primitive.TriangleList, VertexInputElement.Empty );
 
 			//	write data :
 			var	rand	=	new Random();

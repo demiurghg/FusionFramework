@@ -66,7 +66,7 @@ namespace Fusion.Graphics.Display {
 		void LoadContent ()
 		{
 			stereo	=	Game.Content.Load<Ubershader>("stereo");
-			factory	=	new StateFactory( stereo, typeof(Flags), VertexInputElement.Empty );
+			factory	=	new StateFactory( stereo, typeof(Flags), Primitive.TriangleList, VertexInputElement.Empty, BlendState.Opaque, RasterizerState.CullNone, DepthStencilState.None );
 		}
 
 
@@ -95,14 +95,13 @@ namespace Fusion.Graphics.Display {
 
 
 			device.PipelineState		=	factory[ (int)flag ];
-			device.DepthStencilState	=	DepthStencilState.None;
 
 			device.PixelShaderSamplers[0]	=	SamplerState.LinearClamp;
 			device.PixelShaderResources[0]	=	leftResolved  == null ? left  : leftResolved;
 			device.PixelShaderResources[1]	=	rightResolved == null ? right : rightResolved;
 
 			device.SetupVertexInput( null, null, null );
-			device.Draw( Primitive.TriangleList, 3, 0 );
+			device.Draw( 3, 0 );
 		}
 
 

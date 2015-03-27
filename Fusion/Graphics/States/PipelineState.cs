@@ -44,6 +44,11 @@ namespace Fusion.Graphics {
 		public RasterizerState RasterizerState { get; set; }
 
 		/// <summary>
+		/// DepthStencil state description. Null value is not acceptable.
+		/// </summary>
+		public DepthStencilState DepthStencilState { get; set; }
+
+		/// <summary>
 		/// Pixel shader. Null value is not acceptable.
 		/// </summary>
 		public ShaderBytecode PixelShader { get; set; }
@@ -74,6 +79,11 @@ namespace Fusion.Graphics {
 		public ShaderBytecode ComputeShader { get; set; }
 
 		/// <summary>
+		/// Primitive type.
+		/// </summary>
+		public Primitive Primitive { get; set; }
+
+		/// <summary>
 		/// Vertex input elements. Null value is acceptable.
 		/// </summary>
 		public VertexInputElement[] VertexInputElements	{ 
@@ -102,6 +112,8 @@ namespace Fusion.Graphics {
 		private GraphicsDevice	device;
 		D3DBlendState			blendState;
 		D3DRasterizerState		rasterState;
+		D3DDepthStencilState	depthStencilState;
+		int						depthStencilRef;
 		InputLayout				inputLayout;
 
 		D3DPixelShader			ps;
@@ -122,9 +134,11 @@ namespace Fusion.Graphics {
 		public PipelineState ( GraphicsDevice device )
 		{	
 			this.device	=	device;
-			BlendState	=	new BlendState();
-			RasterizerState	=	new RasterizerState();
+			BlendState			=	BlendState.Opaque;
+			RasterizerState		=	RasterizerState.CullNone;
+			DepthStencilState	=	DepthStencilState.Default;
 			RasterizedStream	=	-1;
+			Primitive			=	Primitive.TriangleList;
 
 			isReady		=	false;
 		}
@@ -153,6 +167,7 @@ namespace Fusion.Graphics {
 		{
 			SafeDispose( ref blendState  );
 			SafeDispose( ref rasterState  );
+			SafeDispose( ref depthStencilState  );
 
 			SafeDispose( ref ps );
 			SafeDispose( ref vs );
@@ -175,6 +190,8 @@ namespace Fusion.Graphics {
 				ApplyChanges();
 			}
 
+			device.DeviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( Primitive );
+
 			//	set blending :
 			device.DeviceContext.OutputMerger.BlendState		=	blendState;
 			device.DeviceContext.OutputMerger.BlendFactor		=	blendFactor;
@@ -190,6 +207,9 @@ namespace Fusion.Graphics {
 			device.DeviceContext.HullShader		.Set( hs );
 			device.DeviceContext.DomainShader	.Set( ds );
 			device.DeviceContext.ComputeShader	.Set( cs );
+
+			device.DeviceContext.OutputMerger.DepthStencilState		=	depthStencilState;
+			device.DeviceContext.OutputMerger.DepthStencilReference	=	depthStencilRef;
 
 			//	layout :
 			device.DeviceContext.InputAssembler.InputLayout	=	inputLayout;
@@ -210,6 +230,8 @@ namespace Fusion.Graphics {
 			lock (device.DeviceContext) {
 				
 				DisposeStates();
+
+				SetupDepthStencilState();
 
 				SetupBlendState();
 
@@ -273,6 +295,35 @@ namespace Fusion.Graphics {
 
 				gs	=	new D3DGeometryShader( device.Device, GeometryShader.Bytecode, outputElements, bufferedStrides, RasterizedStream ); 
 			}
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		void SetupDepthStencilState ()
+		{
+			var dss	=	new DepthStencilStateDescription();
+
+			dss.DepthComparison		=	Converter.Convert( DepthStencilState.DepthComparison );
+			dss.DepthWriteMask		=	DepthStencilState.DepthWriteEnabled ? DepthWriteMask.All : DepthWriteMask.Zero;
+			dss.IsDepthEnabled		=	DepthStencilState.DepthEnabled;
+			dss.IsStencilEnabled	=	DepthStencilState.StencilEnabled;
+			dss.StencilReadMask		=	DepthStencilState.StencilReadMask;
+			dss.StencilWriteMask	=	DepthStencilState.StencilWriteMask;
+
+			dss.BackFace.Comparison				=	Converter.Convert( DepthStencilState.BackFaceStencilComparison	);
+			dss.BackFace.FailOperation			=	Converter.Convert( DepthStencilState.BackFaceFailOp				);
+			dss.BackFace.DepthFailOperation		=	Converter.Convert( DepthStencilState.BackFaceDepthFailOp		);
+			dss.BackFace.PassOperation			=	Converter.Convert( DepthStencilState.BackFacePassOp				);
+
+			dss.FrontFace.Comparison			=	Converter.Convert( DepthStencilState.FrontFaceStencilComparison	);
+			dss.FrontFace.FailOperation			=	Converter.Convert( DepthStencilState.FrontFaceFailOp				);
+			dss.FrontFace.DepthFailOperation	=	Converter.Convert( DepthStencilState.FrontFaceDepthFailOp		);
+			dss.FrontFace.PassOperation			=	Converter.Convert( DepthStencilState.FrontFacePassOp				);
+
+			depthStencilRef		=	DepthStencilState.StencilReference;
+			depthStencilState	=	new D3DDepthStencilState( device.Device, dss );
 		}
 
 

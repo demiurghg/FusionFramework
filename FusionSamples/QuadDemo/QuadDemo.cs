@@ -76,7 +76,7 @@ namespace QuadDemo2D {
 
 			texture		=	Content.Load<Texture2D>("lena.tga" );
 			ubershader	=	Content.Load<Ubershader>("test.hlsl");
-			factory		=	new StateFactory( ubershader, typeof(UberFlags), VertexInputElement.FromStructure(typeof(Vertex) ) );
+			factory		=	new StateFactory( ubershader, typeof(UberFlags), Primitive.TriangleList, VertexInputElement.FromStructure(typeof(Vertex) ) );
 		}
 
 
@@ -147,7 +147,6 @@ namespace QuadDemo2D {
 
 			//	Setup device state :
 			GraphicsDevice.PipelineState			= factory[ (int)flags ];
-			GraphicsDevice.DepthStencilState		= DepthStencilState.None ;
 			GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap ;
 
 			//	Setup texture :
@@ -155,7 +154,7 @@ namespace QuadDemo2D {
 								
 			//	Setup vertex data and draw :			
 			GraphicsDevice.SetupVertexInput( vertexBuffer, null );
-			GraphicsDevice.Draw( Primitive.TriangleList, 6, 0 );
+			GraphicsDevice.Draw( 6, 0 );
 
 
 			base.Draw( gameTime, stereoEye );

@@ -133,7 +133,7 @@ namespace DeferredDemo {
 			SafeDispose( ref indexBuffers );
 
 			surfaceShader	=	Game.Content.Load<Ubershader>("surface");
-			factory			=	new StateFactory( surfaceShader, typeof(SurfaceFlags), VertexInputElement.FromStructure<VertexColorTextureTBN>() );
+			factory			=	new StateFactory( surfaceShader, typeof(SurfaceFlags), Primitive.TriangleList, VertexInputElement.FromStructure<VertexColorTextureTBN>() );
 
 
 			scene =	Game.Content.Load<Scene>(@"Scenes\testScene");
@@ -243,7 +243,6 @@ namespace DeferredDemo {
 
 				constBuffer.SetData( cbData );
 
-				device.DepthStencilState	= DepthStencilState.Default ;
 				device.PixelShaderConstants[0]	= constBuffer ;
 				device.VertexShaderConstants[0]	= constBuffer ;
 				device.PixelShaderSamplers[0]	= SamplerState.AnisotropicWrap ;
@@ -259,7 +258,7 @@ namespace DeferredDemo {
 					device.PixelShaderResources[2]	=	surf.NormalMap;
 					device.PixelShaderResources[3]	=	surf.Emission.SRgb;
 
-					device.DrawIndexed( Primitive.TriangleList, subset.PrimitiveCount * 3, subset.StartPrimitive * 3, 0 );
+					device.DrawIndexed( subset.PrimitiveCount * 3, subset.StartPrimitive * 3, 0 );
 				}
 			}
 		}
@@ -291,7 +290,6 @@ namespace DeferredDemo {
 
 			device.PipelineState	=	factory[ (int)SurfaceFlags.SHADOW ];
 
-			device.DepthStencilState		= DepthStencilState.Default ;
 			device.PixelShaderConstants[0]	= constBuffer ;
 			device.VertexShaderConstants[0]	= constBuffer ;
 			device.PixelShaderSamplers[0]	= SamplerState.AnisotropicWrap ;
@@ -317,7 +315,7 @@ namespace DeferredDemo {
 				constBuffer.SetData( cbData );
 
 				device.SetupVertexInput( vertexBuffers[ node.MeshIndex ], indexBuffers[ node.MeshIndex ] );
-				device.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
+				device.DrawIndexed( mesh.IndexCount, 0, 0 );
 			}
 		}
 		

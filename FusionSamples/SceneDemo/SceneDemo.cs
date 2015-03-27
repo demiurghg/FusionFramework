@@ -39,7 +39,6 @@ namespace SceneDemo {
 			//	make configuration saved on exit
 			Exiting += FusionGame_Exiting;
 			InputDevice.KeyDown += InputDevice_KeyDown;
-
 		}
 
 
@@ -83,7 +82,7 @@ namespace SceneDemo {
 			{
 				constBuffer	=	new ConstantBuffer( GraphicsDevice, typeof(CBData) );
 				uberShader	=	Game.Content.Load<Ubershader>("render");
-				factory		=	new StateFactory( uberShader, typeof(RenderFlags), VertexColorTextureNormal.Elements );
+				factory		=	new StateFactory( uberShader, typeof(RenderFlags), Primitive.TriangleList, VertexColorTextureNormal.Elements );
 			}
 
 
@@ -137,7 +136,6 @@ namespace SceneDemo {
 				constBuffer.SetData( constData );
 
 				GraphicsDevice.PipelineState			=	factory[0];
-				GraphicsDevice.DepthStencilState		=	DepthStencilState.Default;
 				GraphicsDevice.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
 				GraphicsDevice.VertexShaderConstants[0]	=	constBuffer;
 
@@ -148,7 +146,7 @@ namespace SceneDemo {
 			public override void DrawSubset ( Context context, MeshSubset subset, Material material )
 			{
 				GraphicsDevice.PixelShaderResources[0]	=	material.Texture;
-				GraphicsDevice.DrawIndexed( Primitive.TriangleList, subset.PrimitiveCount * 3, subset.StartPrimitive, 0 );
+				GraphicsDevice.DrawIndexed( subset.PrimitiveCount * 3, subset.StartPrimitive, 0 );
 			}
 		}
 

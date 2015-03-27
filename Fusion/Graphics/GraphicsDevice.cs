@@ -186,9 +186,6 @@ namespace Fusion.Graphics {
 		PipelineState		pipelineState			=	null;
 		bool				pipelineStateDirty		=	true;
 
-		DepthStencilState	depthStencilState		=	null;	
-		bool				depthStencilStateDirty	=	true;
-
 
 		/// <summary>
 		/// Pipeline state.
@@ -201,22 +198,6 @@ namespace Fusion.Graphics {
 				if (value!=pipelineState) {
 					pipelineState		= value;
 					pipelineStateDirty	= true;
-				}
-			}
-		}
-
-
-		/// <summary>
-		/// Depth stencil state.
-		/// </summary>
-		public DepthStencilState DepthStencilState {
-			get {
-				return depthStencilState;
-			}
-			set {
-				if (value!=depthStencilState) {
-					depthStencilState		= value;
-					depthStencilStateDirty	= true;
 				}
 			}
 		}
@@ -324,7 +305,7 @@ namespace Fusion.Graphics {
 				SafeDispose( ref display );
 
 				SamplerState.DisposeStates();
-				DepthStencilState.DisposeStates();
+				//DepthStencilState.DisposeStates();
 			}
 
 			base.Dispose(disposing);
@@ -407,10 +388,6 @@ namespace Fusion.Graphics {
 				pipelineState.Set();
 				pipelineStateDirty = false;
 			}
-
-			if (depthStencilStateDirty) {
-				depthStencilState.Apply( this );
-			}
 		}
 
 
@@ -475,11 +452,11 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="vertexCount"></param>
 		/// <param name="vertexFirstIndex"></param>
-		public void Draw ( Primitive primitive, int vertexCount, int firstIndex )
+		public void Draw ( int vertexCount, int firstIndex )
 		{					
 			lock (deviceContext) {
 				ApplyGpuState();
-				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+				//deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 				deviceContext.Draw( vertexCount, firstIndex );
 			}
 		}
@@ -490,11 +467,11 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="vertexCount"></param>
 		/// <param name="vertexFirstIndex"></param>
-		public void DrawAuto ( Primitive primitive )
+		public void DrawAuto ()
 		{									 
 			lock (deviceContext) {
 				ApplyGpuState();
-				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+				//deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 				deviceContext.DrawAuto();
 			}
 		}
@@ -509,11 +486,11 @@ namespace Fusion.Graphics {
 		/// <param name="instanceCount"></param>
 		/// <param name="startVertexLocation"></param>
 		/// <param name="startInstanceLocation"></param>
-		public void DrawInstanced ( Primitive primitive, int vertexCountPerInstance, int instanceCount, int startVertexLocation, int startInstanceLocation )
+		public void DrawInstanced ( int vertexCountPerInstance, int instanceCount, int startVertexLocation, int startInstanceLocation )
 		{
 			lock (deviceContext) {
 				ApplyGpuState();
-				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+				//deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 				deviceContext.DrawInstanced( vertexCountPerInstance, instanceCount, startVertexLocation, startInstanceLocation );
 			}
 		}
@@ -526,11 +503,11 @@ namespace Fusion.Graphics {
 		/// <param name="indexCount"></param>
 		/// <param name="firstIndex"></param>
 		/// <param name="baseVertexOffset"></param>
-		public void DrawIndexed ( Primitive primitive, int indexCount, int firstIndex, int baseVertexOffset )
+		public void DrawIndexed ( int indexCount, int firstIndex, int baseVertexOffset )
 		{
 			lock (deviceContext) {
 				ApplyGpuState();
-				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
+				//deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 				deviceContext.DrawIndexed( indexCount, firstIndex,	baseVertexOffset );
 			}
 		}
@@ -543,11 +520,10 @@ namespace Fusion.Graphics {
 		/// <param name="indexCount"></param>
 		/// <param name="firstIndex"></param>
 		/// <param name="baseVertexOffset"></param>
-		public void DrawInstancedIndexed ( Primitive primitive, int indexCountPerInstance, int instanceCount, int startIndexLocation, int baseVertexLocation, int startInstanceLocation )
+		public void DrawInstancedIndexed ( int indexCountPerInstance, int instanceCount, int startIndexLocation, int baseVertexLocation, int startInstanceLocation )
 		{
 			lock (deviceContext) {
 				ApplyGpuState();
-				deviceContext.InputAssembler.PrimitiveTopology	=	Converter.Convert( primitive );
 				deviceContext.DrawIndexedInstanced( indexCountPerInstance, instanceCount, startIndexLocation, baseVertexLocation, startInstanceLocation );
 			}
 		}
@@ -639,8 +615,6 @@ namespace Fusion.Graphics {
 		public void ResetStates ()
 		{
 			deviceContext.ClearState();
-
-			DepthStencilState	=	DepthStencilState.Default;
 
 			SetTargets( null );
 			SetupVertexInput( null, null );

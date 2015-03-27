@@ -241,7 +241,22 @@ namespace DeferredDemo
 							.ToArray();
 
 			sky		=	Game.Content.Load<Ubershader>("sky");
-			factory	=	new StateFactory( sky, typeof(SkyFlags), VertexInputElement.FromStructure<VertexColorTexture>() );
+			factory	=	new StateFactory( sky, typeof(SkyFlags), (ps,i) => EnumFunc(ps, (SkyFlags)i) );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ps"></param>
+		/// <param name="flags"></param>
+		void EnumFunc ( PipelineState ps, SkyFlags flags )
+		{
+			ps.VertexInputElements	=	VertexInputElement.FromStructure<VertexColorTexture>();
+			ps.RasterizerState		=	RasterizerState.CullNone;
+			ps.BlendState			=	BlendState.Opaque;
+			ps.DepthStencilState	=	flags.HasFlag(SkyFlags.FOG) ? DepthStencilState.None : DepthStencilState.Readonly;
 		}
 
 
@@ -286,7 +301,7 @@ namespace DeferredDemo
 			var cubeWVPS	=	MathUtil.ComputeCubemapViewMatriciesLH( Vector3.Zero, rotation, projection );
 				
 			rs.PipelineState	=	factory[(int)(SkyFlags.FOG)];
-			rs.DepthStencilState = DepthStencilState.None ;
+//			rs.DepthStencilState = DepthStencilState.None ;
 
 			skyConstsData.SunPosition	= sunPos;
 			skyConstsData.SunColor		= sunColor;
@@ -310,7 +325,7 @@ namespace DeferredDemo
 					var mesh = skySphere.Meshes[j];
 
 					rs.SetupVertexInput( vertexBuffers[j], indexBuffers[j] );
-				rs.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
+				rs.DrawIndexed( mesh.IndexCount, 0, 0 );
 				}
 			}
 
@@ -338,7 +353,7 @@ namespace DeferredDemo
 
 			rs.ResetStates();
 
-			rs.DepthStencilState = depthBuffer==null? DepthStencilState.None : DepthStencilState.Default ;
+			//rs.DepthStencilState = depthBuffer==null? DepthStencilState.None : DepthStencilState.Default ;
 
 			rs.SetViewport( 0, 0, hdrTarget.Width, hdrTarget.Height );
 
@@ -364,7 +379,7 @@ namespace DeferredDemo
 				var mesh = skySphere.Meshes[j];
 
 				rs.SetupVertexInput( vertexBuffers[j], indexBuffers[j] );
-				rs.DrawIndexed( Primitive.TriangleList, mesh.IndexCount, 0, 0 );
+				rs.DrawIndexed( mesh.IndexCount, 0, 0 );
 			}
 
 			rs.ResetStates();

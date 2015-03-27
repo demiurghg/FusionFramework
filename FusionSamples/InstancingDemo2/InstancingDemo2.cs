@@ -102,7 +102,7 @@ namespace InstancingDemo2 {
 			SafeDispose( ref factory );
 
 			us			=	Content.Load<Ubershader>("test");
-			factory		=	new StateFactory( us, typeof(UberFlags), VertexInputElement.FromStructure<VertexInstance>(), BlendState.Additive, RasterizerState.CullNone );
+			factory		=	new StateFactory( us, typeof(UberFlags), Primitive.TriangleList, VertexInputElement.FromStructure<VertexInstance>(), BlendState.Additive, RasterizerState.CullNone, DepthStencilState.None );
 			tex			=	Content.Load<Texture2D>("block" );
 		}
 
@@ -273,7 +273,6 @@ namespace InstancingDemo2 {
 
 			//	Set required ubershader :
 			GraphicsDevice.PipelineState		= factory[0];
-			GraphicsDevice.DepthStencilState	= DepthStencilState.None ;
 			GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap ;
 
 			//	Setup texture :
@@ -282,7 +281,7 @@ namespace InstancingDemo2 {
 			//	Setup vertex data and draw :			
 			GraphicsDevice.SetupVertexInput( new[]{ vb, vbi }, new[]{0,0}, null );
 
-			GraphicsDevice.DrawInstanced( Primitive.TriangleList, 6, InstanceCount, 0, 0 );
+			GraphicsDevice.DrawInstanced( 6, InstanceCount, 0, 0 );
 
 			base.Draw( gameTime, stereoEye );
 		}

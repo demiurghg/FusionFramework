@@ -98,7 +98,9 @@ namespace ParticleDemo2 {
 
 		void EnumAction ( PipelineState ps, Flags flag )
 		{
+			ps.Primitive			=	Primitive.PointList;
 			ps.VertexInputElements	=	VertexInputElement.FromStructure<ParticleVertex>();
+			ps.DepthStencilState	=	DepthStencilState.None;
 
 			var outputElements = new[]{
 				new VertexOutputElement("SV_POSITION", 0, 0, 4),
@@ -279,7 +281,7 @@ namespace ParticleDemo2 {
 			device.SetupVertexInput( simulationSrcVB, null );
 			device.SetupVertexOutput( simulationDstVB, 0 );
 		
-			device.DrawAuto( Primitive.PointList );
+			device.DrawAuto();
 
 			//
 			//	Inject :
@@ -291,7 +293,7 @@ namespace ParticleDemo2 {
 			device.SetupVertexInput( injectionVB, null );
 			device.SetupVertexOutput( simulationDstVB, -1 );
 		
-			device.Draw( Primitive.PointList, injectionCount, 0 );
+			device.Draw(injectionCount, 0 );
 
 			SwapParticleBuffers();	
 
@@ -306,14 +308,13 @@ namespace ParticleDemo2 {
 			device.PipelineState	=	factory[ (int)Flags.RENDER ];
 
 			device.PixelShaderResources[0]	=	texture ;
-			device.DepthStencilState	=	DepthStencilState.None ;
 
 			device.SetupVertexOutput( null, 0 );
 			device.SetupVertexInput( simulationSrcVB, null );
 
 			//device.Draw( Primitive.PointList, injectionCount, 0 );
 
-			device.DrawAuto( Primitive.PointList );
+			device.DrawAuto();
 			//device.Draw( Primitive.PointList, MaxSimulatedParticles, 0 );
 
 

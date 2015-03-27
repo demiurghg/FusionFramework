@@ -19,28 +19,28 @@ namespace Fusion.Graphics {
 
 		//GraphicsDevice	device;
 		
-		bool			DepthEnabled			{ get { return depthEnabled				; } set { PipelineBoundCheck(); depthEnabled			 = value; } }
-		bool			DepthWriteEnabled		{ get { return depthWriteEnabled		; } set { PipelineBoundCheck(); depthWriteEnabled		 = value; } }
-		ComparisonFunc	DepthComparison			{ get { return depthComparison			; } set { PipelineBoundCheck(); depthComparison			 = value; } }
+		public bool				DepthEnabled				{ get; set; }
+		public bool				DepthWriteEnabled			{ get; set; }
+		public ComparisonFunc	DepthComparison				{ get; set; }
 		
-		bool			StencilEnabled			{ get { return stencilEnabled			; } set { PipelineBoundCheck(); stencilEnabled			 = value; } }
-		byte			StencilReadMask			{ get { return stencilReadMask			; } set { PipelineBoundCheck(); stencilReadMask			 = value; } }
-		byte			StencilWriteMask		{ get { return stencilWriteMask			; } set { PipelineBoundCheck(); stencilWriteMask		 = value; } }
+		public bool				StencilEnabled				{ get; set; }
+		public byte				StencilReadMask				{ get; set; }
+		public byte				StencilWriteMask			{ get; set; }
 
-		StencilOp		FrontFaceFailOp				{ get { return frontFailOp				; } set { PipelineBoundCheck(); frontFailOp				 = value; } }
-		StencilOp		FrontFaceDepthFailOp		{ get { return frontDepthFailOp			; } set { PipelineBoundCheck(); frontDepthFailOp		 = value; } }
-		StencilOp		FrontFacePassOp				{ get { return frontPassOp				; } set { PipelineBoundCheck(); frontPassOp				 = value; } }
-		ComparisonFunc	FrontFaceStencilComparison	{ get { return frontStencilComparison	; } set { PipelineBoundCheck(); frontStencilComparison	 = value; } }
+		public StencilOp		FrontFaceFailOp				{ get; set; }
+		public StencilOp		FrontFaceDepthFailOp		{ get; set; }
+		public StencilOp		FrontFacePassOp				{ get; set; }
+		public ComparisonFunc	FrontFaceStencilComparison	{ get; set; }
 		
-		StencilOp		BackFaceFailOp				{ get { return backFailOp				; } set { PipelineBoundCheck(); backFailOp				 = value; } }
-		StencilOp		BackFaceDepthFailOp			{ get { return backDepthFailOp			; } set { PipelineBoundCheck(); backDepthFailOp			 = value; } }
-		StencilOp		BackFacePassOp				{ get { return backPassOp				; } set { PipelineBoundCheck(); backPassOp				 = value; } }
-		ComparisonFunc	BackFaceStencilComparison	{ get { return backStencilComparison	; } set { PipelineBoundCheck(); backStencilComparison	 = value; } }
+		public StencilOp		BackFaceFailOp				{ get; set; }
+		public StencilOp		BackFaceDepthFailOp			{ get; set; }
+		public StencilOp		BackFacePassOp				{ get; set; }
+		public ComparisonFunc	BackFaceStencilComparison	{ get; set; }
 
-		int				StencilReference		{ get { return stencilReference; } set { PipelineBoundCheck(); stencilReference = value; } }
+		public int				StencilReference			{ get; set; }
 
 
-		bool			depthEnabled			=	false;
+		/*bool			depthEnabled			=	false;
 		bool			depthWriteEnabled		=	true;
 		ComparisonFunc	depthComparison			=	ComparisonFunc.LessEqual;
 
@@ -60,7 +60,7 @@ namespace Fusion.Graphics {
 
 		int				stencilReference		=	0;
 
-		D3DDepthStencilState	state;
+		D3DDepthStencilState	state;	 */
 
 
 		public static DepthStencilState		Default		{ get; private set; }
@@ -100,41 +100,41 @@ namespace Fusion.Graphics {
 			};
 
 			LightMark	=	new DepthStencilState() {
-				depthEnabled			=	true,
-				depthComparison			=	ComparisonFunc.Less,
-				depthWriteEnabled		=	false,
-				stencilEnabled			=	true,
-				stencilReadMask			=	0xFF,
-				stencilWriteMask		=	0xFF,
-				frontFailOp				=	StencilOp.Keep,
-				frontDepthFailOp		=	StencilOp.Increment,
-				frontPassOp				=	StencilOp.Keep,		
-				frontStencilComparison	=	ComparisonFunc.Always,
-				backFailOp				=	StencilOp.Keep,
-				backDepthFailOp			=	StencilOp.Decrement,						
-				backPassOp				=	StencilOp.Keep,						
-				backStencilComparison	=	ComparisonFunc.Always,	
+				DepthEnabled			=	true,
+				DepthComparison			=	ComparisonFunc.Less,
+				DepthWriteEnabled		=	false,
+				StencilEnabled			=	true,
+				StencilReadMask			=	0xFF,
+				StencilWriteMask		=	0xFF,
+				FrontFaceFailOp				=	StencilOp.Keep,
+				FrontFaceDepthFailOp		=	StencilOp.Increment,
+				FrontFacePassOp				=	StencilOp.Keep,		
+				FrontFaceStencilComparison	=	ComparisonFunc.Always,
+				BackFaceFailOp				=	StencilOp.Keep,
+				BackFaceDepthFailOp			=	StencilOp.Decrement,						
+				BackFacePassOp				=	StencilOp.Keep,						
+				BackFaceStencilComparison	=	ComparisonFunc.Always,	
 			};
 
 			LightPass	=	new DepthStencilState() {
-				depthEnabled			=	false,
-				depthComparison			=	ComparisonFunc.Less,
-				depthWriteEnabled		=	false,
-				stencilEnabled			=	true,
-				stencilReadMask			=	0xFF,
-				stencilWriteMask		=	0xFF,
-				frontFailOp				=	StencilOp.Keep,
-				frontDepthFailOp		=	StencilOp.Keep,
-				frontPassOp				=	StencilOp.Decrement,	
-				frontStencilComparison	=	ComparisonFunc.Equal,
-				backFailOp				=	StencilOp.Keep,
-				backDepthFailOp			=	StencilOp.Keep,
-				backPassOp				=	StencilOp.Decrement,	
-				backStencilComparison	=	ComparisonFunc.Equal,
+				DepthEnabled			=	false,
+				DepthComparison			=	ComparisonFunc.Less,
+				DepthWriteEnabled		=	false,
+				StencilEnabled			=	true,
+				StencilReadMask			=	0xFF,
+				StencilWriteMask		=	0xFF,
+				FrontFaceFailOp				=	StencilOp.Keep,
+				FrontFaceDepthFailOp		=	StencilOp.Keep,
+				FrontFacePassOp				=	StencilOp.Decrement,	
+				FrontFaceStencilComparison	=	ComparisonFunc.Equal,
+				BackFaceFailOp				=	StencilOp.Keep,
+				BackFaceDepthFailOp			=	StencilOp.Keep,
+				BackFacePassOp				=	StencilOp.Decrement,	
+				BackFaceStencilComparison	=	ComparisonFunc.Equal,
 			};
 		}
 
-
+		#if false
 
 		/// <summary>
 		/// 
@@ -213,5 +213,6 @@ namespace Fusion.Graphics {
 			device.DeviceContext.OutputMerger.DepthStencilState		=	state;
 			device.DeviceContext.OutputMerger.DepthStencilReference	=	stencilReference;
 		}
+		#endif
 	}
 }

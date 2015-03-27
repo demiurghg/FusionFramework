@@ -182,7 +182,7 @@ namespace DeferredDemo {
 		{
 			SafeDispose( ref factory );
 			lightingShader	=	Game.Content.Load<Ubershader>("lighting");
-			factory			=	new StateFactory( lightingShader, typeof(LightingFlags), VertexInputElement.Empty );
+			factory			=	new StateFactory( lightingShader, typeof(LightingFlags), Primitive.TriangleList, VertexInputElement.Empty );
 		}
 
 

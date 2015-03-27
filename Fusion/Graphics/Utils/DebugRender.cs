@@ -77,7 +77,7 @@ namespace Fusion.Graphics {
 			var dev		= Game.GraphicsDevice;
 
 			effect		= Game.Content.Load<Ubershader>("debugRender.hlsl");
-			factory		= new StateFactory( effect, typeof(RenderFlags), VertexInputElement.FromStructure( typeof(LineVertex) ) );
+			factory		= new StateFactory( effect, typeof(RenderFlags), Primitive.LineList, VertexInputElement.FromStructure( typeof(LineVertex) ) );
 
 			constData	= new ConstData();
 			constBuffer = new ConstantBuffer(dev, typeof(ConstData));
@@ -152,7 +152,6 @@ namespace Fusion.Graphics {
 			dev.SetupVertexInput( vertexBuffer, null );
 			dev.VertexShaderConstants[0]	=	constBuffer ;
 			dev.PipelineState				=	factory[0];
-			dev.DepthStencilState			=	DepthStencilState.Default;
 
 
 			int numDPs = MathUtil.IntDivUp(vertexDataAccum.Count, vertexBufferSize);
@@ -169,7 +168,7 @@ namespace Fusion.Graphics {
 
 				vertexBuffer.SetData(vertexArray, 0, numVerts);
 
-				dev.Draw( Primitive.LineList, numVerts, 0);
+				dev.Draw( numVerts, 0);
 
 			}
 
