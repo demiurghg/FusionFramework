@@ -100,6 +100,10 @@ namespace Fusion.Content {
 		/// <returns></returns>
 		public bool Exists ( string assetPath )
 		{
+			if ( string.IsNullOrWhiteSpace(assetPath) ) {
+				throw new ArgumentException("Asset path can not be null, empty or whitespace.");
+			}
+
 			return File.Exists( GetFileName( assetPath ) );
 		}
 
@@ -112,6 +116,10 @@ namespace Fusion.Content {
 		/// <returns></returns>
 		string GetFileName ( string assetPath )
 		{
+			if ( string.IsNullOrWhiteSpace(assetPath) ) {
+				throw new ArgumentException("Asset path can not be null, empty or whitespace.");
+			}
+
 			return Path.Combine(contentDirectory, ContentUtils.GetHashedFileName( assetPath, ".asset" ) );
 		}
 
@@ -122,18 +130,22 @@ namespace Fusion.Content {
 		/// </summary>
 		/// <param name="path"></param>
 		/// <returns></returns>
-		public Stream OpenStream ( string path )
+		public Stream OpenStream ( string assetPath )
 		{
-			var hashedName =  ContentUtils.GetHashedFileName( path, ".asset" );
+			if ( string.IsNullOrWhiteSpace(assetPath) ) {
+				throw new ArgumentException("Asset path can not be null, empty or whitespace.");
+			}
+
+			var hashedName =  ContentUtils.GetHashedFileName( assetPath, ".asset" );
 
 			try {
-				var fileStream	=	File.OpenRead( GetFileName( path ) );
+				var fileStream	=	File.OpenRead( GetFileName( assetPath ) );
 				var zipStream	=	new DeflateStream( fileStream, CompressionMode.Decompress, false );
 
 				return zipStream;
 
 			} catch ( IOException ioex ) {
-				throw new IOException( string.Format("Could not open file: '{0}'\r\nHashed file name: '({1})'", path, hashedName ), ioex );
+				throw new IOException( string.Format("Could not open file: '{0}'\r\nHashed file name: '({1})'", assetPath, hashedName ), ioex );
 			}
 		}
 
@@ -171,8 +183,12 @@ namespace Fusion.Content {
 		/// <typeparam name="T"></typeparam>
 		/// <param name="path"></param>
 		/// <returns></returns>
-		public T Load<T> ( string path )
+		public T Load<T> ( string assetPath )
 		{
+			if ( string.IsNullOrWhiteSpace(assetPath) ) {
+				throw new ArgumentException("Asset path can not be null, empty or whitespace.");
+			}
+
 			Item item;
 
 			//
@@ -180,20 +196,20 @@ namespace Fusion.Content {
 			//
 			lock (lockObject) {
 				//	try to find object in dictionary :
-				if ( content.TryGetValue( path, out item ) ) {
+				if ( content.TryGetValue( assetPath, out item ) ) {
 				
 					if (item.Object is T) {
 
-						var time = File.GetLastWriteTime( GetFileName( path ) );
+						var time = File.GetLastWriteTime( GetFileName( assetPath ) );
 
 						if ( time > item.LoadTime ) {
-							content.Remove(	path );
+							content.Remove(	assetPath );
 						} else {
 							return (T)item.Object;
 						}
 				
 					} else {
-						throw new ContentException( string.Format("'{0}' is not '{1}'", path, typeof(T) ) );
+						throw new ContentException( string.Format("'{0}' is not '{1}'", assetPath, typeof(T) ) );
 					}
 				}
 			}
@@ -205,11 +221,11 @@ namespace Fusion.Content {
 			//
 			//	load content and add to dictionary :
 			//
-			Log.Message("Loading : {0}", path );
-			using (var stream = OpenStream(path) ) {
+			Log.Message("Loading : {0}", assetPath );
+			using (var stream = OpenStream(assetPath) ) {
 				item = new Item() {
-					Object		= loader.Load( Game, stream, typeof(T), path ),
-					LoadTime	= File.GetLastWriteTime( GetFileName( path ) ),
+					Object		= loader.Load( Game, stream, typeof(T), assetPath ),
+					LoadTime	= File.GetLastWriteTime( GetFileName( assetPath ) ),
 				};
 			}
 
@@ -221,7 +237,7 @@ namespace Fusion.Content {
 				Item anotherItem;
 
 				//	content item already loaded in another thread.
-				if ( content.TryGetValue( path, out anotherItem ) ) {
+				if ( content.TryGetValue( assetPath, out anotherItem ) ) {
 					if (item.Object is IDisposable) {
 						(item.Object as IDisposable).Dispose();
 					}
@@ -229,7 +245,7 @@ namespace Fusion.Content {
 					return (T)anotherItem.Object;
 
 				} else {
-					content.Add( path, item );
+					content.Add( assetPath, item );
 					toDispose.Add( item.Object );
 					return (T)item.Object;
 				}
@@ -248,6 +264,10 @@ namespace Fusion.Content {
 		/// <returns></returns>
 		public T Load<T>( string path, T defaultObject )
 		{
+			if ( string.IsNullOrWhiteSpace(path) ) {
+				throw new ArgumentException("Asset path can not be null, empty or whitespace.");
+			}
+
 			try {
 				return Load<T>(path);
 			} catch ( Exception e ) {
