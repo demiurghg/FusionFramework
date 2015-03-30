@@ -42,7 +42,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Clears collection
 		/// </summary>
 		public void Clear ()
 		{

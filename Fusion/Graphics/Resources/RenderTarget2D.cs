@@ -109,7 +109,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates render target
 		/// </summary>
 		/// <param name="?"></param>
 		/// <param name="format"></param>
@@ -262,7 +262,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets a copy of 2D texture data, specifying a mipmap level, source rectangle, start index, and number of elements.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="level"></param>
@@ -362,7 +362,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets a copy of 2D texture data, specifying a start index and number of elements.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="data"></param>
@@ -376,7 +376,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets a copy of 2D texture data.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="data"></param>

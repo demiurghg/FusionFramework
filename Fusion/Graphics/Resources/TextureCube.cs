@@ -180,7 +180,7 @@ namespace Fusion.Graphics {
 		
 
 		/// <summary>
-		/// 
+		/// Disposes
 		/// </summary>
 		/// <param name="disposing"></param>
 		protected override void Dispose ( bool disposing )
@@ -217,7 +217,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Sets cube texture data, specifying a cubemap face.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="face"></param>
@@ -230,7 +230,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Sets cube texture data, specifying a cubemap face, start index, and number of elements.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="face"></param>
@@ -245,7 +245,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Sets cube texture data, specifying a cubemap face, mipmap level, source rectangle, start index, and number of elements.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="face"></param>

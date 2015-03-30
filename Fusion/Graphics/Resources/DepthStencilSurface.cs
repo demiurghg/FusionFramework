@@ -33,7 +33,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Immediately releases the unmanaged resources used by this object.
 		/// </summary>
 		/// <param name="disposing"></param>
 		protected override void Dispose ( bool disposing )

@@ -81,7 +81,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates render target
 		/// </summary>
 		/// <param name="?"></param>
 		/// <param name="format"></param>

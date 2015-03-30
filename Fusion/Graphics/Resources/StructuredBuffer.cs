@@ -152,7 +152,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Disposes
 		/// </summary>
 		protected override void Dispose ( bool disposing )
 		{
@@ -207,7 +207,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Sets structured buffer data
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="data"></param>
@@ -255,7 +255,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets structured buffer data
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="data"></param>
