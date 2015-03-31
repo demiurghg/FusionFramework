@@ -209,6 +209,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
+		/// 
 		/// </summary>
 		/// <param name="mapping"></param>
 		/// <returns></returns>

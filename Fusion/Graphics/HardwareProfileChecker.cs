@@ -10,7 +10,7 @@ namespace Fusion.Graphics {
 	static class HardwareProfileChecker {
 
 		/// <summary>
-		/// 
+		/// Gets the level of feature ?
 		/// </summary>
 		/// <param name="profile"></param>
 		/// <returns></returns>
@@ -31,7 +31,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets the version of shader
 		/// </summary>
 		/// <param name="profile"></param>
 		/// <returns></returns>

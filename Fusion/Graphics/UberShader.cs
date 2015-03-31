@@ -77,7 +77,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Resets all data and recreates UberShader
 		/// </summary>
 		/// <param name="path"></param>
 		void Recreate ( Stream stream )
@@ -142,7 +142,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets PixelShader
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
@@ -154,7 +154,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets VertexShader
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
@@ -166,7 +166,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets GeometryShader
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
@@ -178,7 +178,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets HullShader
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
@@ -190,7 +190,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets DomainShader
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>
@@ -202,7 +202,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Gets ComputeShader
 		/// </summary>
 		/// <param name="key"></param>
 		/// <returns></returns>

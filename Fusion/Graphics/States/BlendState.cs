@@ -69,7 +69,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates new instance of blend state
 		/// </summary>
 		/// <param name="mask"></param>
 		/// <param name="src"></param>

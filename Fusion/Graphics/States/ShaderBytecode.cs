@@ -11,7 +11,7 @@ namespace Fusion.Graphics {
 		byte[] bytecode;
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the ShaderBytecode class
 		/// </summary>
 		/// <param name="bytecode">Bytecode</param>
 		public ShaderBytecode ( byte[] bytecode )
@@ -21,7 +21,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the ShaderBytecode class
 		/// </summary>
 		/// <param name="bytecode">Hex string</param>
 		public ShaderBytecode ( string bytecode )

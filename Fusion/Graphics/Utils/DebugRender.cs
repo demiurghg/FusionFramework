@@ -68,7 +68,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Initialization
 		/// </summary>
 		public override void Initialize ()
 		{
@@ -107,7 +107,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Draws line between p0 and p1
 		/// </summary>
 		/// <param name="p0"></param>
 		/// <param name="p1"></param>
@@ -119,7 +119,12 @@ namespace Fusion.Graphics {
 			//DrawLine( p0, p1, color, Matrix.Identity );
 		}
 
-
+		/// <summary>
+		/// Draws line between p0 and p1
+		/// </summary>
+		/// <param name="p0"></param>
+		/// <param name="p1"></param>
+		/// <param name="color"></param>
 		public void DrawLine(Vector2 p0, Vector2 p1, Color color)
 		{
 			vertexDataAccum.Add(new LineVertex() { Pos = new Vector3(p0, 0), Color = color.ToVector4() });

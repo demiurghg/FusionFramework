@@ -60,7 +60,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates a new instance of VertexInputElement class
 		/// </summary>
 		/// <param name="name"></param>
 		/// <param name="index"></param>
@@ -101,7 +101,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Returns empty object
 		/// </summary>
 		public static VertexInputElement[] Empty {
 			get {
@@ -112,7 +112,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates an instance of VertexInputElement from structure
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <returns></returns>
@@ -125,7 +125,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates an instance of VertexInputElement from structure with certain type
 		/// </summary>
 		/// <param name="type"></param>
 		/// <returns></returns>

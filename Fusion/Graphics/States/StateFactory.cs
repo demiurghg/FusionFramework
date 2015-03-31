@@ -27,7 +27,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the StateFactory
 		/// </summary>
 		/// <param name="ubershader"></param>
 		/// <param name="enumType"></param>
@@ -43,7 +43,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the StateFactory
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="enumType"></param>
@@ -61,7 +61,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the StateFactory
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="ubershader"></param>
@@ -80,7 +80,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the StateFactory
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="ubershader"></param>
@@ -101,7 +101,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Disposes
 		/// </summary>
 		/// <param name="disposing"></param>
 		protected override void Dispose ( bool disposing )
