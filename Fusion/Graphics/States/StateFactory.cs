@@ -17,12 +17,9 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// 
 	/// </summary>
-	public sealed class StateFactory : DisposableBase {
+	public sealed class StateFactory : GraphicsResource {
 
-		GraphicsDevice	device;
 		Ubershader		ubershader;
-
-
 		Dictionary<int, PipelineState>	pipelineStates;
 
 
@@ -32,9 +29,8 @@ namespace Fusion.Graphics {
 		/// <param name="ubershader"></param>
 		/// <param name="enumType"></param>
 		/// <param name="enumAction"></param>
-		public StateFactory ( Ubershader ubershader, Type enumType, Action<PipelineState,int> enumAction )
+		public StateFactory ( Ubershader ubershader, Type enumType, Action<PipelineState,int> enumAction ) : base(ubershader.GraphicsDevice)
 		{
-			this.device			= ubershader.Device;
 			this.ubershader		= ubershader;
 
 			Enumerate( enumType, ubershader, enumAction );
@@ -51,9 +47,9 @@ namespace Fusion.Graphics {
 		/// <param name="vertexInputElements"></param>
 		/// <param name="blendState"></param>
 		/// <param name="rasterizerState"></param>
-		public StateFactory ( Ubershader ubershader, Type enumType, Primitive primitive, VertexInputElement[] vertexInputElements )
+		public StateFactory ( Ubershader ubershader, Type enumType, Primitive primitive, VertexInputElement[] vertexInputElements ) 
+		 : base(ubershader.GraphicsDevice)
 		{
-			this.device			= ubershader.Device;
 			this.ubershader		= ubershader;
 
 			Enumerate( enumType, ubershader, (ps,i) => { ps.VertexInputElements = vertexInputElements; ps.Primitive = primitive; } );
@@ -66,8 +62,8 @@ namespace Fusion.Graphics {
 		/// <param name="device"></param>
 		/// <param name="ubershader"></param>
 		public StateFactory ( Ubershader ubershader, Type enumType, Primitive primitive, VertexInputElement[] vertexInputElements, BlendState blendState, RasterizerState rasterizerState )
+		 : base(ubershader.GraphicsDevice)
 		{
-			this.device			= ubershader.Device;
 			this.ubershader		= ubershader;
 
 			Enumerate( enumType, ubershader, (ps,i) => { 
@@ -85,8 +81,8 @@ namespace Fusion.Graphics {
 		/// <param name="device"></param>
 		/// <param name="ubershader"></param>
 		public StateFactory ( Ubershader ubershader, Type enumType, Primitive primitive, VertexInputElement[] vertexInputElements, BlendState blendState, RasterizerState rasterizerState, DepthStencilState depthStencilState )
+		 : base(ubershader.GraphicsDevice)
 		{
-			this.device			= ubershader.Device;
 			this.ubershader		= ubershader;
 
 			Enumerate( enumType, ubershader, (ps,i) => { 

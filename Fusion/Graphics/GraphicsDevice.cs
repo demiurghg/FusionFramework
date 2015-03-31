@@ -205,9 +205,6 @@ namespace Fusion.Graphics {
 
 		HashSet<IDisposable>	toDispose = new HashSet<IDisposable>();
 
-		internal ShaderFactory ShaderFactory { get { return shaderFactory; } }
-		ShaderFactory shaderFactory;
-
 		internal Device			Device			{ get { return device; } }			
 		internal DeviceContext	DeviceContext	{ get { return deviceContext; } }	
 		internal BaseDisplay	Display			{ get { return display; } }
@@ -257,8 +254,6 @@ namespace Fusion.Graphics {
 			device			=	display.d3dDevice;
 			deviceContext	=	device.ImmediateContext;
 
-			shaderFactory	=	new ShaderFactory( this );
-
 			display.CreateDisplayResources();
 
 
@@ -297,8 +292,6 @@ namespace Fusion.Graphics {
 		protected override void Dispose ( bool disposing )
 		{
 			if (disposing) {
-
-				SafeDispose( ref shaderFactory );
 
 				deviceContext.Flush();
 				SafeDispose( ref deviceContext );

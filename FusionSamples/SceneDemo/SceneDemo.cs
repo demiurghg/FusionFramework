@@ -246,7 +246,7 @@ namespace SceneDemo {
 			constData.ViewPos		=	cam.GetCameraPosition4( stereoEye );
 			constData.World			=	Matrix.Identity;
 
-			for (int j = 0; j<1; j++) {
+			for (int j = 0; j<40; j++) {
 
 				GraphicsDevice.PipelineState			=	factory[0];
 				GraphicsDevice.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;

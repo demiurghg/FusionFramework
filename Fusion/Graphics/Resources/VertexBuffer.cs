@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 
 
 namespace Fusion.Graphics {
-	public class VertexBuffer : DisposableBase {
+	public class VertexBuffer : GraphicsResource {
 		
 		/// <summary>
 		/// Vertex stride
@@ -41,7 +41,6 @@ namespace Fusion.Graphics {
 		internal	D3D11.Buffer	Buffer { get { return vertexBuffer; } }
 
 
-		readonly GraphicsDevice device;
 		D3D11.Buffer			vertexBuffer;
 
 
@@ -51,9 +50,8 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="capacity"></param>
-		public VertexBuffer ( GraphicsDevice device, Type vertexType, int capacity, bool enableVertexOutput = false )
+		public VertexBuffer ( GraphicsDevice device, Type vertexType, int capacity, bool enableVertexOutput = false ) : base(device)
 		{
-			this.device			=	device;
 			this.Capacity		=	capacity;
 			this.IsVertexOutputEnabled	=	enableVertexOutput;
 

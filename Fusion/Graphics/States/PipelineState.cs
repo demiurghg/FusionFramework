@@ -29,7 +29,7 @@ namespace Fusion.Graphics {
 	/// Pipeline state represents all GPU states as single object.
 	/// 
 	/// </summary>
-	public sealed class PipelineState : DisposableBase {
+	public sealed class PipelineState : GraphicsResource {
 
 		public int SamplersCount { get { return CommonShaderStage.SamplerRegisterCount; } }
 
@@ -109,7 +109,6 @@ namespace Fusion.Graphics {
 
 		bool					isReady	=	false;
 
-		private GraphicsDevice	device;
 		D3DBlendState			blendState;
 		D3DRasterizerState		rasterState;
 		D3DDepthStencilState	depthStencilState;
@@ -131,9 +130,8 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// 
 		/// </summary>
-		public PipelineState ( GraphicsDevice device )
+		public PipelineState ( GraphicsDevice device ) : base(device)
 		{	
-			this.device	=	device;
 			BlendState			=	BlendState.Opaque;
 			RasterizerState		=	RasterizerState.CullNone;
 			DepthStencilState	=	DepthStencilState.Default;

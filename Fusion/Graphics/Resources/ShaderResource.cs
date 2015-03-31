@@ -12,12 +12,7 @@ using DXGI = SharpDX.DXGI;
 
 
 namespace Fusion.Graphics {
-	public class ShaderResource : DisposableBase {
-
-		/// <summary>
-		/// Gets the GraphicsDevice associated with this GraphicsResource.
-		/// </summary>
-		protected		GraphicsDevice		device { get; private set; }
+	public class ShaderResource : GraphicsResource {
 
 		/// <summary>
 		/// Internal shader resource view
@@ -54,9 +49,8 @@ namespace Fusion.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="device"></param>
-		protected ShaderResource( GraphicsDevice device )
+		protected ShaderResource( GraphicsDevice device ) : base(device)
 		{
-			this.device = device;
 		}
 
 
@@ -65,9 +59,8 @@ namespace Fusion.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="device"></param>
-		internal protected ShaderResource( GraphicsDevice device, ShaderResourceView srv, int w, int h, int d )
+		internal protected ShaderResource( GraphicsDevice device, ShaderResourceView srv, int w, int h, int d ) : base(device)
 		{
-			this.device = device;
 			this.SRV	= srv;
 			this.Width	= w;
 			this.Height	= h;

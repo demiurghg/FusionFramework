@@ -11,9 +11,8 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// The constant buffer collection.
 	/// </summary>
-	public sealed class ConstantBufferCollection {
+	public sealed class ConstantBufferCollection : GraphicsResource {
 
-		readonly GraphicsDevice		device;
 		readonly ConstantBuffer[]	buffers;	
 		readonly CommonShaderStage	stage;
 
@@ -22,10 +21,9 @@ namespace Fusion.Graphics {
 		/// Creates instance of sampler state collection.
 		/// </summary>
 		/// <param name="device"></param>
-		internal ConstantBufferCollection ( GraphicsDevice device, CommonShaderStage stage )
+		internal ConstantBufferCollection ( GraphicsDevice device, CommonShaderStage stage ) : base(device)
 		{
 			buffers		=	new ConstantBuffer[ Count ];
-			this.device	=	device;
 			this.stage	=	stage;
 		}
 

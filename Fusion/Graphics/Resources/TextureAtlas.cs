@@ -27,6 +27,9 @@ namespace Fusion.Graphics {
 		
 
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class TextureAtlas : DisposableBase {
 
 		private	Texture2D	texture;
@@ -41,7 +44,6 @@ namespace Fusion.Graphics {
 
 		List<Element> elements = new List<Element>();
 		Dictionary<string,Element> dictionary;
-
 
 
 		/// <summary>

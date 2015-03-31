@@ -16,10 +16,9 @@ using Fusion.Mathematics;
 
 
 namespace Fusion.Graphics.Display {
-	abstract class BaseDisplay : DisposableBase {
+	abstract class BaseDisplay : GraphicsResource {
 
 		protected readonly	Game Game;
-		protected readonly	GraphicsDevice device;
 		public 		D3D.Device d3dDevice = null;
 
 		protected Ubershader	stereo;
@@ -39,10 +38,9 @@ namespace Fusion.Graphics.Display {
 		/// 
 		/// </summary>
 		/// <param name="parameters"></param>
-		public BaseDisplay( Game game, GraphicsDevice device, GameParameters parameters )
+		public BaseDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base(device)
 		{
 			this.Game	=	game;
-			this.device	=	device;
 
 			ShowAdapterInfo( parameters );
 		}

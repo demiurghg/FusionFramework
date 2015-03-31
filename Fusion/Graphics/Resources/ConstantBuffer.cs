@@ -18,9 +18,8 @@ namespace Fusion.Graphics {
 	/// Wrapper for constant data and buffer
 	/// </summary>
 	/// <typeparam name="ConstDataT"></typeparam>
-	public class ConstantBuffer : DisposableBase {
+	public class ConstantBuffer : GraphicsResource {
 			
-		readonly	GraphicsDevice	device;
 		internal	D3D11.Buffer	buffer;
 
 		int bufferSizeInBytes;
@@ -30,9 +29,8 @@ namespace Fusion.Graphics {
 		/// Constructor
 		/// </summary>
 		/// <param name="rs"></param>
-		public ConstantBuffer( GraphicsDevice device, int sizeInBytes ) 
+		public ConstantBuffer( GraphicsDevice device, int sizeInBytes ) : base(device) 
 		{
-			this.device	=	device;
 			Create( sizeInBytes );
 		}
 
@@ -43,9 +41,8 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="underlayingType"></param>
-		public ConstantBuffer ( GraphicsDevice device, Type dataType )
+		public ConstantBuffer ( GraphicsDevice device, Type dataType ) : base(device)
 		{
-			this.device	=	device;
 			Create( Marshal.SizeOf( dataType ) );
 		}
 
@@ -56,12 +53,11 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="underlayingType"></param>
-		public ConstantBuffer ( GraphicsDevice device, Type dataType, int count )
+		public ConstantBuffer ( GraphicsDevice device, Type dataType, int count ) : base(device)
 		{
 			if (count<1) {
 				throw new ArgumentOutOfRangeException("count must be greater than zero");
 			}
-			this.device	=	device;
 			Create( Marshal.SizeOf( dataType ) * count );
 		}
 

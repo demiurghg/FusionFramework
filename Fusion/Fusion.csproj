@@ -206,6 +206,7 @@
     <Compile Include="Graphics\Collections\ConstantBufferCollection.cs" />
     <Compile Include="Graphics\Collections\SamplerStateCollection.cs" />
     <Compile Include="Graphics\Collections\ShaderResourceCollection.cs" />
+    <Compile Include="Graphics\DeviceChild.cs" />
     <Compile Include="Graphics\Resources\UnorderedAccess.cs" />
     <Compile Include="Graphics\Scene\SceneDrawer.cs" />
     <Compile Include="Graphics\States\StateFactory.cs" />
@@ -219,7 +220,6 @@
     <Compile Include="Graphics\Display\StereoDualHeadDisplay.cs" />
     <Compile Include="Graphics\Display\StereoInterlacedDisplay.cs" />
     <Compile Include="Graphics\Scene\AnimMode.cs" />
-    <Compile Include="Graphics\ShaderFactory.cs" />
     <Compile Include="Graphics\Resources\TextureAtlas.cs" />
     <Compile Include="Graphics\Scene\VertexColorTextureNormal.cs" />
     <Compile Include="Graphics\Scene\SceneLoader.cs" />

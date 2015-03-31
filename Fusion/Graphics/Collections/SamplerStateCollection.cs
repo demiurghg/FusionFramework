@@ -11,9 +11,8 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// The sampler state collection.
 	/// </summary>
-	public sealed class SamplerStateCollection {
+	public sealed class SamplerStateCollection : GraphicsResource {
 
-		readonly GraphicsDevice		device;
 		readonly SamplerState[]		states;	
 		readonly CommonShaderStage	stage;
 
@@ -22,10 +21,9 @@ namespace Fusion.Graphics {
 		/// Creates instance of sampler state collection.
 		/// </summary>
 		/// <param name="device"></param>
-		internal SamplerStateCollection ( GraphicsDevice device, CommonShaderStage stage )
+		internal SamplerStateCollection ( GraphicsDevice device, CommonShaderStage stage ) : base(device)
 		{
 			states		=	new SamplerState[ Count ];
-			this.device	=	device;
 			this.stage	=	stage;
 		}
 

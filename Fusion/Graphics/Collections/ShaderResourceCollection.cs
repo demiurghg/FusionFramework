@@ -11,21 +11,19 @@ namespace Fusion.Graphics {
 	/// <summary>
 	/// The texture collection.
 	/// </summary>
-	public sealed class ShaderResourceCollection {
+	public sealed class ShaderResourceCollection : GraphicsResource {
 
 		readonly ShaderResource[]	resources;	
 		readonly CommonShaderStage	stage;
-		readonly GraphicsDevice		device;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="device"></param>
-		internal ShaderResourceCollection ( GraphicsDevice device, CommonShaderStage stage )
+		internal ShaderResourceCollection ( GraphicsDevice device, CommonShaderStage stage ) : base(device)
 		{
 			resources	=	new ShaderResource[ Count ];
 			this.stage	=	stage;
-			this.device	=	device;
 		}
 
 
