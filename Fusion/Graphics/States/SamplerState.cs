@@ -85,7 +85,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Immediately releases the unmanaged resources used by this object.
 		/// </summary>
 		static internal void DisposeStates ()
 		{
@@ -104,7 +104,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates a new instance of sampler state
 		/// </summary>
 		/// <param name="filter"></param>
 		/// <param name="addressMode"></param>

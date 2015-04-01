@@ -155,7 +155,11 @@ namespace Fusion.Graphics {
 		}
 
 
-
+		/// <summary>
+		/// REturns matrix with camera view
+		/// </summary>
+		/// <param name="eye"></param>
+		/// <returns></returns>
 		public Matrix GetViewMatrix ( StereoEye eye )
 		{
 			if (eye==StereoEye.Mono) return ViewMatrix;
@@ -165,7 +169,11 @@ namespace Fusion.Graphics {
 		}
 
 
-
+		/// <summary>
+		/// Gets projection matrix
+		/// </summary>
+		/// <param name="eye"></param>
+		/// <returns></returns>
 		public Matrix GetProjectionMatrix ( StereoEye eye )
 		{
 			if (eye==StereoEye.Mono) return ProjMatrix;
@@ -175,7 +183,11 @@ namespace Fusion.Graphics {
 		}
 
 
-
+		/// <summary>
+		/// Gets camera matrix
+		/// </summary>
+		/// <param name="eye"></param>
+		/// <returns></returns>
 		public Matrix GetCameraMatrix ( StereoEye eye )
 		{
 			if (eye==StereoEye.Mono) return CameraMatrix;
@@ -184,21 +196,31 @@ namespace Fusion.Graphics {
 			throw new ArgumentException("eye");
 		}
 
-
+		/// <summary>
+		/// Gets vector of camera position
+		/// </summary>
+		/// <param name="eye"></param>
+		/// <returns></returns>
 		public Vector3 GetCameraPosition ( StereoEye eye )
 		{
 			return GetCameraMatrix(eye).TranslationVector;
 		}
 
 
-
+		/// <summary>
+		/// Gets vector of camera position
+		/// </summary>
+		/// <param name="eye"></param>
+		/// <returns></returns>
 		public Vector4 GetCameraPosition4 ( StereoEye eye )
 		{
 			return new Vector4( GetCameraMatrix(eye).TranslationVector, 1 );
 		}
 
 
-
+		/// <summary>
+		/// 
+		/// </summary>
 		public AudioListener Listener {
 			get {
 				return new Audio.AudioListener() {

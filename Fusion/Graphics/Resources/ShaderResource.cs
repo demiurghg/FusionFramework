@@ -70,7 +70,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Disposes
 		/// </summary>
 		/// <param name="disposing"></param>
 		protected override void Dispose(bool disposing)

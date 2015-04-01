@@ -83,7 +83,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates vertex buffer
 		/// </summary>
 		/// <typeparam name="TVertex"></typeparam>
 		/// <param name="device"></param>
@@ -112,7 +112,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		///  Sets the vertex buffer data.
+		/// Sets the vertex buffer data.
 		/// </summary>
 		/// <param name="data"></param>
 		public void SetData<T> ( T[] data, int offset, int count ) where T: struct
@@ -133,7 +133,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Sets the vertex buffer data.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="data"></param>

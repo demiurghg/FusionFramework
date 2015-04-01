@@ -53,7 +53,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates buffer from given indices
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="indices"></param>

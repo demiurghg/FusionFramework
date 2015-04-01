@@ -173,7 +173,7 @@ namespace Fusion.Graphics {
 		
 
 		/// <summary>
-		/// 
+		/// Disposes
 		/// </summary>
 		/// <param name="disposing"></param>
 		protected override void Dispose ( bool disposing )
@@ -211,7 +211,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Sets 3D texture data.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="data"></param>
@@ -223,7 +223,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Sets 3D texture data, specifying a start index and number of elements.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="data"></param>
@@ -237,7 +237,7 @@ namespace Fusion.Graphics {
 
 		
 		/// <summary>
-		/// 
+		/// Sets 3D texture data, specifying a mipmap level, source box, start index, and number of elements.
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
 		/// <param name="level"></param>

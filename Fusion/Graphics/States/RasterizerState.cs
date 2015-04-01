@@ -31,7 +31,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Initializes a new instance of the rasterizer class. 
 		/// </summary>
 		public RasterizerState () {
 			CullMode			=	CullMode.CullNone;
@@ -54,7 +54,14 @@ namespace Fusion.Graphics {
 		}
 
 
-
+		/// <summary>
+		/// Creates a new instance of the rasterizer state.
+		/// </summary>
+		/// <param name="cullMode"></param>
+		/// <param name="fillMode"></param>
+		/// <param name="depthBias"></param>
+		/// <param name="slopeDepthBias"></param>
+		/// <returns></returns>
 		public static RasterizerState Create ( CullMode cullMode, FillMode fillMode = FillMode.Solid, int depthBias = 0, float slopeDepthBias = 0 )
 		{
 			var rs = new RasterizerState();

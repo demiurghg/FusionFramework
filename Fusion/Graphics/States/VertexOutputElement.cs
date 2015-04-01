@@ -61,7 +61,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Creates a new instance of VertexOutputElement class
 		/// </summary>
 		/// <param name="stream">Zero-based, stream number.</param>
 		/// <param name="semanticName">Type of output element; possible values include: "POSITION", "NORMAL", or "TEXCOORD0". Note that if SemanticName is NULL then ComponentCount can be greater than 4 and the described entry will be a gap in the stream out where no data will be written. </param>
@@ -80,7 +80,7 @@ namespace Fusion.Graphics {
 		}
 
 		/// <summary>
-		/// 
+		/// Creates a new instance of VertexOutputElement class
 		/// </summary>
 		/// <param name="semanticName">Type of output element; possible values include: "POSITION", "NORMAL", or "TEXCOORD0". Note that if SemanticName is NULL then ComponentCount can be greater than 4 and the described entry will be a gap in the stream out where no data will be written. </param>
 		/// <param name="semanticIndex">Output element's zero-based index. Should be used if, for example, you have more than one texture coordinate stored in each vertex.</param>
@@ -99,7 +99,7 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		/// 
+		/// Converts VertexOutputElement to StreamOutputElement
 		/// </summary>
 		/// <param name="elements"></param>
 		/// <returns></returns>
