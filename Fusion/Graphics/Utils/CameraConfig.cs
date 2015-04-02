@@ -16,23 +16,23 @@ namespace Fusion.Graphics {
 		[ Description("Enables direct first person camera control. Warning: Enabling free camera will force hiding, clipping and cenetring of the mouse") ]
 		public bool		FreeCamEnabled		{ set; get; }
 
-		[ Category("FreeCamera") ]	public float	FreeCamFov			{ set; get; }
-		[ Category("FreeCamera") ]	public float	FreeCamZFar			{ set; get; }
-		[ Category("FreeCamera") ]	public float	FreeCamZNear		{ set; get; }
-		[ Category("FreeCamera") ]	public float	FreeCamVelocity		{ set; get; }
-		[ Category("FreeCamera") ]	public float	FreeCamSensitivity	{ set; get; }
-		[ Category("FreeCamera") ]	public bool		FreeCamInvertMouse	{ set; get; }
-		[ Category("FreeCamera") ]	public Keys		FreeCamMoveForward	{ set; get; }
-		[ Category("FreeCamera") ]	public Keys		FreeCamMoveBackward	{ set; get; }
-		[ Category("FreeCamera") ]	public Keys		FreeCamMoveLeft		{ set; get; }
-		[ Category("FreeCamera") ]	public Keys		FreeCamMoveRight	{ set; get; }
-		[ Category("FreeCamera") ]	public Keys		FreeCamMoveUp		{ set; get; }
-		[ Category("FreeCamera") ]	public Keys		FreeCamMoveDown		{ set; get; }
-		[ Category("FreeCamera") ]	public float	FreeCamGamepadSensitivity	{ set; get; }
-		[ Category("FreeCamera") ]	public bool		FreeCamGamepadInvert		{ set; get; }
+		[ Category("FreeCamera: Projection") ]	public float	FreeCamFov			{ set; get; }
+		[ Category("FreeCamera: Projection") ]	public float	FreeCamZFar			{ set; get; }
+		[ Category("FreeCamera: Projection") ]	public float	FreeCamZNear		{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public float	FreeCamVelocity		{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public float	FreeCamSensitivity	{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public bool		FreeCamInvertMouse	{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public Keys		FreeCamMoveForward	{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public Keys		FreeCamMoveBackward	{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public Keys		FreeCamMoveLeft		{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public Keys		FreeCamMoveRight	{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public Keys		FreeCamMoveUp		{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public Keys		FreeCamMoveDown		{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public float	FreeCamGamepadSensitivity	{ set; get; }
+		[ Category("FreeCamera: Controls") ]	public bool		FreeCamGamepadInvert		{ set; get; }
 
-		[ Category("Stereo") ]		public float	StereoSeparation		{ set; get; }
-		[ Category("Stereo") ]		public float	StereoConvergenceDist	{ set; get; }
+		[ Category("FreeCamera: Stereo") ]		public float	FreeCamStereoSeparation		{ set; get; }
+		[ Category("FreeCamera: Stereo") ]		public float	FreeCamStereoConvergence	{ set; get; }
 
 
 		public CameraConfig()
@@ -54,8 +54,8 @@ namespace Fusion.Graphics {
 			FreeCamGamepadInvert		=	false;
 			FreeCamGamepadSensitivity	=	90;
 
-			StereoSeparation		=	0.5f;
-			StereoConvergenceDist	=	10.0f;
+			FreeCamStereoSeparation		=	0.5f;
+			FreeCamStereoConvergence	=	10.0f;
 		}
 	}
 }

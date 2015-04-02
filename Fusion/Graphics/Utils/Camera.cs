@@ -17,8 +17,6 @@ namespace Fusion.Graphics {
 		[Config]
 		public CameraConfig Config { get; set; }
 
-
-
 		private Matrix	CameraMatrix		{ get; set; }
 		private Matrix	CameraMatrixL		{ get; set; }
 		private Matrix	CameraMatrixR		{ get; set; }
@@ -32,20 +30,13 @@ namespace Fusion.Graphics {
 		public Vector3	FreeCamPosition		{ get; set; }
 		public float	FreeCamYaw			{ get; set; }
 		public float	FreeCamPitch		{ get; set; }
-
-		//public Listener Listener			{ get; protected set; }
 		
 		public bool		IsFreeCamEnabled	{ get; protected set; }
 
-		public float	FrustumWidth		{ get; protected set; }
-		public float	FrustumHeight		{ get; protected set; }
-		public float	FrustumZNear		{ get; protected set; }
-		public float	FrustumZFar			{ get; protected set; }
-
 		/// <summary>
-		/// Actual free camera velocity
+		/// Actual camera velocity
 		/// </summary>
-		public Vector3	FreeCameraVelocity		{ get; protected set; }
+		public Vector3	CameraVelocity	{ get; protected set; }
 
 
 
@@ -106,57 +97,49 @@ namespace Fusion.Graphics {
 				//input.CenterAndClipMouse	=	true;
 
 				float inv       =	Config.FreeCamInvertMouse ? -1 : 1;
-				FreeCamYaw		-=	input.RelativeMouseOffset.X * Config.FreeCamSensitivity;
-				FreeCamPitch	-=	input.RelativeMouseOffset.Y * Config.FreeCamSensitivity * inv;
-
-				FreeCamPitch	=	MathUtil.Clamp( FreeCamPitch, -90, 90 );
+				FreeCamYaw		-=	input.RelativeMouseOffset.X * MathUtil.DegreesToRadians( Config.FreeCamSensitivity );
+				FreeCamPitch	-=	input.RelativeMouseOffset.Y * MathUtil.DegreesToRadians( Config.FreeCamSensitivity ) * inv;
+				FreeCamPitch	=	MathUtil.Clamp( FreeCamPitch, -MathUtil.Pi*0.499f, MathUtil.Pi*0.499f );
 				
-				SetPose( Vector3.Zero, FreeCamYaw, FreeCamPitch, 0 );
-				SetFov( Config.FreeCamFov, Config.FreeCamZNear, Config.FreeCamZFar );
+				var rotation	=	Matrix.RotationYawPitchRoll( FreeCamYaw, FreeCamPitch, 0 );
 
 				Vector3 relVelocity	=	Vector3.Zero;
 
 				var gamepad	=	Game.InputDevice.GetGamepad(0);
 
-				relVelocity += CameraMatrix.Forward * gamepad.LeftStick.Y * vel;
-				relVelocity += CameraMatrix.Right   * gamepad.LeftStick.X * vel;
-				FreeCamPitch	+= gamepad.RightStick.Y * Config.FreeCamGamepadSensitivity * dt;
-				FreeCamYaw		-= gamepad.RightStick.X * Config.FreeCamGamepadSensitivity * dt;
+				relVelocity += rotation.Forward * gamepad.LeftStick.Y * vel;
+				relVelocity += rotation.Right   * gamepad.LeftStick.X * vel;
+				FreeCamPitch	+= gamepad.RightStick.Y * MathUtil.DegreesToRadians( Config.FreeCamGamepadSensitivity ) * dt;
+				FreeCamYaw		-= gamepad.RightStick.X * MathUtil.DegreesToRadians( Config.FreeCamGamepadSensitivity ) * dt;
 
-				if ( input.IsKeyDown( Config.FreeCamMoveForward		) ) relVelocity	+= 	CameraMatrix.Forward * vel;
-				if ( input.IsKeyDown( Config.FreeCamMoveBackward	) ) relVelocity	+= 	CameraMatrix.Backward * vel;
-				if ( input.IsKeyDown( Config.FreeCamMoveLeft		) ) relVelocity	+= 	CameraMatrix.Left * vel;
-				if ( input.IsKeyDown( Config.FreeCamMoveRight		) ) relVelocity	+= 	CameraMatrix.Right * vel;
+				if ( input.IsKeyDown( Config.FreeCamMoveForward		) ) relVelocity	+= 	rotation.Forward * vel;
+				if ( input.IsKeyDown( Config.FreeCamMoveBackward	) ) relVelocity	+= 	rotation.Backward * vel;
+				if ( input.IsKeyDown( Config.FreeCamMoveLeft		) ) relVelocity	+= 	rotation.Left * vel;
+				if ( input.IsKeyDown( Config.FreeCamMoveRight		) ) relVelocity	+= 	rotation.Right * vel;
 				if ( input.IsKeyDown( Config.FreeCamMoveUp			) ) relVelocity	+= 	Vector3.UnitY * vel;
 				if ( input.IsKeyDown( Config.FreeCamMoveDown		) ) relVelocity	-= 	Vector3.UnitY * vel;
 
 				if ( gamepad.IsKeyPressed( GamepadButtons.A ) ) relVelocity	+= 	Vector3.UnitY * vel;
 				if ( gamepad.IsKeyPressed( GamepadButtons.B ) ) relVelocity	-= 	Vector3.UnitY * vel;
 
-				FreeCameraVelocity	=	relVelocity;
-				FreeCamPosition	+=	relVelocity * dt;
-				/*if ( input.IsKeyDown( Config.FreeCamMoveForward	) ) FreeCamPosition	+= 	CameraMatrix.Forward * vel * dt;
-				if ( input.IsKeyDown( Config.FreeCamMoveBackward	) ) FreeCamPosition	+= 	CameraMatrix.Backward * vel * dt;
-				if ( input.IsKeyDown( Config.FreeCamMoveLeft		) ) FreeCamPosition	+= 	CameraMatrix.Left * vel * dt;
-				if ( input.IsKeyDown( Config.FreeCamMoveRight		) ) FreeCamPosition	+= 	CameraMatrix.Right * vel * dt;
-				if ( input.IsKeyDown( Config.FreeCamMoveUp			) ) FreeCamPosition	+= 	Vector3.UnitY * vel * dt;
-				if ( input.IsKeyDown( Config.FreeCamMoveDown		) ) FreeCamPosition	-= 	Vector3.UnitY * vel * dt;*/
+				FreeCamPosition		+=	relVelocity * dt;
 
-				SetPose( FreeCamPosition, FreeCamYaw, FreeCamPitch, 0 );
+				var near		=	Config.FreeCamZNear;
+				var far			=	Config.FreeCamZFar;
+				var fov			=	MathUtil.DegreesToRadians( Config.FreeCamFov );
+				var separation	=	Config.FreeCamStereoSeparation;
+				var convergence	=	Config.FreeCamStereoConvergence;
+				var origin		=	FreeCamPosition;
+				var target		=	FreeCamPosition + rotation.Forward;
 
+				SetupCamera( origin, target, Vector3.Up, relVelocity, fov, near, far, convergence, separation, -1 );
 			}
-
-			// Sound stuff
-			/*Listener.Velocity = (CameraMatrix.TranslationVector - Listener.Position)/gameTime.ElapsedSec;
-			Listener.Position = CameraMatrix.TranslationVector;
-
-			Listener.OrientTop		= CameraMatrix.Up;
-			Listener.OrientFront	= -CameraMatrix.Forward;*/
 		}
 
 
+
 		/// <summary>
-		/// REturns matrix with camera view
+		/// Returns matrix with camera view
 		/// </summary>
 		/// <param name="eye"></param>
 		/// <returns></returns>
@@ -167,6 +150,7 @@ namespace Fusion.Graphics {
 			if (eye==StereoEye.Right) return ViewMatrixR;
 			throw new ArgumentException("eye");
 		}
+
 
 
 		/// <summary>
@@ -183,6 +167,7 @@ namespace Fusion.Graphics {
 		}
 
 
+
 		/// <summary>
 		/// Gets camera matrix
 		/// </summary>
@@ -196,6 +181,8 @@ namespace Fusion.Graphics {
 			throw new ArgumentException("eye");
 		}
 
+
+
 		/// <summary>
 		/// Gets vector of camera position
 		/// </summary>
@@ -205,6 +192,7 @@ namespace Fusion.Graphics {
 		{
 			return GetCameraMatrix(eye).TranslationVector;
 		}
+
 
 
 		/// <summary>
@@ -218,6 +206,7 @@ namespace Fusion.Graphics {
 		}
 
 
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -227,7 +216,7 @@ namespace Fusion.Graphics {
 					Position	=	CameraMatrix.TranslationVector,
 					Up			=	CameraMatrix.Up,
 					Forward		=	CameraMatrix.Forward,
-					Velocity	=	FreeCameraVelocity,
+					Velocity	=	CameraVelocity,
 				};
 			}
 		}
@@ -235,127 +224,73 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
-		///	Sets projection camera parameters 
+		/// Sets camera up.
 		/// </summary>
-		/// <param name="fovDeg"></param>
-		/// <param name="near"></param>
-		/// <param name="far"></param>
-		public void	SetFov	( float fovDeg, float near=0.1f, float far=12000.0f ) 
+		/// <param name="viewMatrix">View matrix. The left-eye and right-eye view matricies will be constructed from this matrix.</param>
+		/// <param name="height">Frustum with at near plane.</param>
+		/// <param name="width">Frustum height ar near place.</param>
+		/// <param name="near">Camera near clipping plane distance.</param>
+		/// <param name="far">Camera far clipping plane distance.</param>
+		/// <param name="convergenceDistance">Stereo convergence distance. </param>
+		/// <param name="separation">Stereo separation or distance between eyes.</param>
+		public void SetupCamera ( Matrix viewMatrix, Vector3 velocity, float height, float width, float near, float far, float convergence, float separation )
 		{
-			float separation	=	Config.StereoSeparation;
-			float planeDist		=	Config.StereoConvergenceDist;
+			float offset		=	separation / convergence * near / 2;
+			float nearHeight	=	height;
+			float nearWidth		=	width;
 
-			var bounds			=	Game.GraphicsDevice.DisplayBounds;
-
-			float aspect		=	((float)bounds.Width) / (float)bounds.Height;
-
-			float nearHeight	=	near * (float)Math.Tan( MathUtil.DegreesToRadians( fovDeg/2 ) ) * 2;
-			float nearWidth		=	nearHeight * aspect;
-			float offset		=	separation / planeDist * near / 2;
-
-			FrustumWidth		=	nearWidth;
-			FrustumHeight		=	nearHeight;
-			FrustumZNear		=	near;
-			FrustumZFar			=	far;
-
-			//ProjMatrix		=	Matrix.PerspectiveRH( nearWidth, nearHeight, near, far );
+			//	Projection :
 			ProjMatrix		=	Matrix.PerspectiveOffCenterRH( -nearWidth/2, nearWidth/2, -nearHeight/2, nearHeight/2, near, far );
 
 			ProjMatrixR		=	Matrix.PerspectiveOffCenterRH( -nearWidth/2 - offset, nearWidth/2 - offset, -nearHeight/2, nearHeight/2, near, far );
 			ProjMatrixL		=	Matrix.PerspectiveOffCenterRH( -nearWidth/2 + offset, nearWidth/2 + offset, -nearHeight/2, nearHeight/2, near, far );
+																					
+			//	View :
+			ViewMatrix		=	viewMatrix;
+			ViewMatrixL		=	viewMatrix	*	Matrix.Translation( Vector3.UnitX * separation / 2 );
+			ViewMatrixR		=	viewMatrix	*	Matrix.Translation( -Vector3.UnitX * separation / 2 );
 
-			if (OculusRiftSensors.LeftEye != null) {
-				ProjMatrix = OculusRiftSensors.LeftEye.Projection;
-				ProjMatrixL = OculusRiftSensors.LeftEye.Projection;
-				ProjMatrixR = OculusRiftSensors.RightEye.Projection;
-				
-				//var ds = Game.GetService<DebugStrings>();
-				
-				//ds.Add(ProjMatrixL.ToString());
-				//ds.Add(ProjMatrixR.ToString());
-			}
-		}
-
-
-		//public Matrix ComputeStereoCameraMatrix ( b
-
-
-		/// <summary>
-		/// Set camera position and rotation
-		/// </summary>
-		/// <param name="position"></param>
-		/// <param name="yaw"></param>
-		/// <param name="pitch"></param>
-		/// <param name="roll"></param>
-		public void SetPose ( Vector3 position, float yaw, float pitch, float roll )
-		{
-			var separation = Config.StereoSeparation;
-
-			ViewMatrix	=	Matrix.Translation( -position )
-						*	Matrix.Transpose( Matrix.RotationYawPitchRoll( MathUtil.Rad(yaw), MathUtil.Rad(pitch), MathUtil.Rad(roll) ) );
-
-			ViewMatrixL	=	Matrix.Translation( -position )
-						*	Matrix.Transpose( Matrix.RotationYawPitchRoll( MathUtil.Rad(yaw), MathUtil.Rad(pitch), MathUtil.Rad(roll) ) )
-						*	Matrix.Translation( Vector3.UnitX * separation / 2 );
-
-			ViewMatrixR	=	Matrix.Translation( -position )
-						*	Matrix.Transpose( Matrix.RotationYawPitchRoll( MathUtil.Rad(yaw), MathUtil.Rad(pitch), MathUtil.Rad(roll) ) )
-						*	Matrix.Translation( -Vector3.UnitX * separation / 2 );
-
-			CameraMatrix = Matrix.Invert( ViewMatrix );
-
-			CameraMatrixL	=	Matrix.Invert( ViewMatrixL );
-			CameraMatrixR	=	Matrix.Invert( ViewMatrixR );
-			//Listener.Position	=	cameraMatrix.Translation;
-			//Listener.Forward	=	cameraMatrix.Forward;
-			//Listener.Up			=	cameraMatrix.Up;
-			//Listener.Velocity	=	Vector3.Zero;
-
-
-
-			if (OculusRiftSensors.LeftEye != null) {
-				var rot = Quaternion.RotationYawPitchRoll(MathUtil.Rad(yaw), MathUtil.Rad(pitch), MathUtil.Rad(roll));
-
-
-				//ViewMatrix = Matrix.Translation(-position - OculusRiftSensors.HeadPosition*5)
-				//		* Matrix.Transpose(Matrix.RotationQuaternion(OculusRiftSensors.HeadRotation * rot));
-
-				ViewMatrixL = Matrix.Translation(-position)
-							* Matrix.Transpose(Matrix.RotationQuaternion(rot*OculusRiftSensors.LeftEye.Rotation))
-							* Matrix.Translation(-OculusRiftSensors.LeftEye.Position * 1);
-
-				ViewMatrixR = Matrix.Translation(-position)
-							* Matrix.Transpose(Matrix.RotationQuaternion(rot * OculusRiftSensors.RightEye.Rotation))
-							* Matrix.Translation(-OculusRiftSensors.RightEye.Position * 1);
-
-
-				//CameraMatrix	= Matrix.Invert(ViewMatrix);
-				CameraMatrixL	= Matrix.Invert(ViewMatrixL);
-				CameraMatrixR	= Matrix.Invert(ViewMatrixR);
-			}
-		}
-
-
-		/// <summary>
-		/// Sets camera "look at"
-		/// </summary>
-		/// <param name="origin"></param>
-		/// <param name="target"></param>
-		/// <param name="up"></param>
-		public void LookAt ( Vector3 origin, Vector3 target, Vector3 up, float separation = 0 )
-		{
-			ViewMatrix		=	Matrix.LookAtRH( origin, target, up );
-
-			ViewMatrixL		=	Matrix.LookAtRH( origin, target, up )
-							*	Matrix.Translation( Vector3.UnitX * separation / 2 );
-
-			ViewMatrixR		=	Matrix.LookAtRH( origin, target, up )
-							*	Matrix.Translation( -Vector3.UnitX * separation / 2 );
-
+			//	Camera :
 			CameraMatrix	=	Matrix.Invert( ViewMatrix );
 			CameraMatrixL	=	Matrix.Invert( ViewMatrixL );
 			CameraMatrixR	=	Matrix.Invert( ViewMatrixR );
+
+			//	Camera velocity :
+			CameraVelocity	=	velocity;
 		}
+
+
+
+		/// <summary>
+		/// Sets camera up.
+		/// </summary>
+		/// <param name="origin">Camera position.</param>
+		/// <param name="target">Camera's target.</param>
+		/// <param name="up">Camera up vector.</param>
+		/// <param name="fov">Field of view in radians.</param>
+		/// <param name="near">Camera near clipping plane distance.</param>
+		/// <param name="far">Camera far clipping plane distance.</param>
+		/// <param name="convergenceDistance">Stereo convergence distance. </param>
+		/// <param name="separation">Stereo separation or distance between eyes.</param>
+		/// <param name="aspectRatio">Target aspect ratio. Negative value means Display's bounds aspect ratio.</param>
+		public void SetupCamera ( Vector3 origin, Vector3 target, Vector3 up, Vector3 velocity, float fov, float near, float far, float convergence, float separation, float aspectRatio=-1 )
+		{
+			float aspect		=	0;
+			
+			if (aspectRatio<0) {
+				var bounds	=	Game.GraphicsDevice.DisplayBounds;
+				aspect		=	((float)bounds.Width) / (float)bounds.Height;
+			} else {
+				aspect	=	aspectRatio;
+			}
+
+			var nearHeight	=	near * (float)Math.Tan( fov/2 ) * 2;
+			var nearWidth	=	nearHeight * aspect;
+			var view		=	Matrix.LookAtRH( origin, target, up );
+
+			SetupCamera( view, velocity, nearHeight, nearWidth, near, far, convergence, separation );
+		}
+
 
 
 		/// <summary>
