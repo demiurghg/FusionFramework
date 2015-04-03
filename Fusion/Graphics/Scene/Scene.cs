@@ -489,8 +489,7 @@ namespace Fusion.Graphics {
 					scene.nodes.Add( node );
 				}
 
-
-
+				//---------------------------------------------
 				if (!reader.CheckMagic("MESH")) {
 					throw new Exception("Bad scene format. MESH expected.");
 				}
@@ -502,7 +501,6 @@ namespace Fusion.Graphics {
 					mesh.Deserialize( reader );
 					scene.Meshes.Add( mesh );
 				}
-
 			}
 
 			return scene;
@@ -518,6 +516,7 @@ namespace Fusion.Graphics {
 			
 			using( var writer = new BinaryWriter( stream ) ) {
 
+				//---------------------------------------------
 				writer.Write(new[]{'S','C','N','1'});
 
 				writer.Write( StartTime.Ticks );
@@ -526,6 +525,7 @@ namespace Fusion.Graphics {
 				writer.Write( LastFrame	);
 				writer.Write( trackCount );
 
+				//---------------------------------------------
 				writer.Write(new[]{'A','N','I','M'});
 
 				for (int fi=firstFrame; fi<=lastFrame; fi++) {
@@ -534,6 +534,7 @@ namespace Fusion.Graphics {
 					}
 				}
 
+				//---------------------------------------------
 				writer.Write(new[]{'M','T','R','L'});
 
 				writer.Write( Materials.Count );
@@ -548,7 +549,7 @@ namespace Fusion.Graphics {
 					}
 				}
 
-
+				//---------------------------------------------
 				writer.Write(new[]{'N','O','D','E'});
 
 				writer.Write( Nodes.Count );
@@ -562,7 +563,7 @@ namespace Fusion.Graphics {
 					writer.Write( node.BindPose );
 				}
 
-
+				//---------------------------------------------
 				writer.Write(new[]{'M','E','S','H'});
 
 				writer.Write( Meshes.Count );
