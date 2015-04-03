@@ -56,6 +56,7 @@ namespace Fusion.Graphics {
 		}
 
 
+
 		/// <summary>
 		/// Start time of the animation. 
 		/// This value is a overall scene settings and does not affect node animation.
@@ -206,6 +207,22 @@ namespace Fusion.Graphics {
 			for ( int i=0; i<Nodes.Count; i++ ) {
 				destination[i] = Matrix.Invert( Nodes[i].BindPose ) * destination[i];
 			}
+		}
+
+
+
+		/// <summary>
+		/// Creates array of vertex and index buffers for entire scene.
+		/// The number of array entries is equal to number of meshes in scene.
+		/// </summary>
+		/// <param name="device">Graphics device.</param>
+		/// <param name="convert">Convertion function.</param>
+		/// <param name="vertexBuffers">Output vertex buffer array.</param>
+		/// <param name="indexBuffers">Output index buffer array.</param>
+		public void Bake<TVertex> ( GraphicsDevice device, Func<MeshVertex,TVertex> convert, out VertexBuffer[] vertexBuffers, out IndexBuffer[] indexBuffers ) where TVertex: struct
+		{		
+			vertexBuffers	=	Meshes.Select( m => m.CreateVertexBuffer<TVertex>( device, convert ) ).ToArray();
+			indexBuffers	=	Meshes.Select( m => m.CreateIndexBuffer( device ) ).ToArray();
 		}
 
 

@@ -21,11 +21,6 @@ namespace Fusion.Graphics {
 		public int					VertexCount		{ get { return Vertices.Count; } }
 		public int					IndexCount		{ get { return TriangleCount * 3; } }
 
-		/// <summary>
-		/// Gets or sets an object identifying this model.
-		/// </summary>
-		public	object  Tag { get; set; }
-
 
 
 		/// <summary>
@@ -74,6 +69,30 @@ namespace Fusion.Graphics {
 
 
 
+		/// <summary>
+		/// Creates index buffer for given mesh.
+		/// </summary>
+		/// <returns></returns>
+		public IndexBuffer CreateIndexBuffer ( GraphicsDevice device )
+		{
+			return IndexBuffer.Create( device, GetIndices() );
+		}
+
+
+
+		/// <summary>
+		/// Creates vertex buffer for given mesh.
+		/// </summary>
+		/// <typeparam name="TVertex"></typeparam>
+		/// <param name="device"></param>
+		/// <param name="convert"></param>
+		/// <returns></returns>
+		public VertexBuffer CreateVertexBuffer<TVertex> ( GraphicsDevice device, Func<MeshVertex,TVertex> convert )	where TVertex: struct
+		{
+			return VertexBuffer.Create<TVertex>( device, Vertices.Select( v => convert(v) ).ToArray() );
+		}
+
+
 
 		/// <summary>
 		/// This methods check equality of two diferrent mesh by 
@@ -100,21 +119,14 @@ namespace Fusion.Graphics {
 				return true;
 			}
 
-			//	should I check tag object?
-			if (this.Tag!=other.Tag) {
-				return false;
-			}
-
 			if ( this.VertexCount		!= other.VertexCount	) return false;
 			if ( this.TriangleCount		!= other.TriangleCount	) return false;
 			if ( this.IndexCount		!= other.IndexCount		) return false;
 			if ( this.Subsets.Count		!= other.Subsets.Count	) return false;
-			//if ( this.Materials.Count	!= other.Materials.Count) return false;
 			
 			if ( !this.Vertices .SequenceEqual( other.Vertices  ) ) return false;
 			if ( !this.Triangles.SequenceEqual( other.Triangles ) ) return false;
 			if ( !this.Subsets  .SequenceEqual( other.Subsets   ) ) return false;
-			//if ( !this.Materials.SequenceEqual( other.Materials ) ) return false;
 
 			return true;
 		}
