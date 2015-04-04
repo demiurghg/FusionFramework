@@ -84,6 +84,19 @@ namespace Fusion.Graphics {
 		}
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="samples"></param>
+		protected void CheckSamplesCount ( int samples )
+		{
+			if (samples!=1 && samples!=2 && samples!=4 && samples!=8 ) {
+				throw new ArgumentException("Parameter 'samples' must be 1, 2, 4 or 8.");
+			}
+		}
+
+
 		/// <summary>
 		/// Makes SRgb format from UNorm or Typless.
 		/// </summary>

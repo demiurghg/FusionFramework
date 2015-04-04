@@ -46,6 +46,8 @@ namespace Fusion.Graphics {
 		{
 			bool msaa	=	samples > 1;
 
+			CheckSamplesCount( samples );
+
 			SampleCount	=	samples;
 
 			Format		=	format;

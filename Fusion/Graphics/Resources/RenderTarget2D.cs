@@ -122,6 +122,8 @@ namespace Fusion.Graphics {
 		{
 			bool msaa	=	samples > 1;
 
+			CheckSamplesCount( samples );
+
 			if (mips && samples>1) {
 				throw new ArgumentException("Render target should be multisampler either mipmapped");
 			}

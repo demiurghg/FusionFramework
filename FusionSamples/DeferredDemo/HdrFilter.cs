@@ -97,8 +97,10 @@ namespace DeferredDemo {
 			SafeDispose( ref bloom0 );
 			SafeDispose( ref bloom1 );
 
-			bloom0	=	new RenderTarget2D( Game.GraphicsDevice, ColorFormat.Rgba16F, disp.Width / 2, disp.Height / 2, true, false );
-			bloom1	=	new RenderTarget2D( Game.GraphicsDevice, ColorFormat.Rgba16F, disp.Width / 2, disp.Height / 2, true, false );
+			int width	=	( disp.Width/2  ) & 0xFFF0;
+			int height	=	( disp.Height/2 ) & 0xFFF0;
+			bloom0		=	new RenderTarget2D( Game.GraphicsDevice, ColorFormat.Rgba16F, width, height, true, false );
+			bloom1		=	new RenderTarget2D( Game.GraphicsDevice, ColorFormat.Rgba16F, width, height, true, false );
 		}
 
 

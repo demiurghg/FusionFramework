@@ -43,6 +43,8 @@ namespace Fusion.Graphics {
 		/// <param name="format"></param>
 		public DepthStencil2D ( GraphicsDevice device, DepthFormat format, int width, int height, int samples = 1 ) : base( device )
 		{
+			CheckSamplesCount( samples );
+
 			Width		=	width;
 			Height		=	height;
 			Depth		=	1;

@@ -84,12 +84,12 @@ namespace Fusion.Content {
 		{
 			GraphicsProfile	=	GraphicsProfile.HiDef;
 			MatrixPacking	=	ShaderMatrixPacking.RowMajor;
-			PSEntryPoint	=	"PixelShader";
-			VSEntryPoint	=	"VertexShader";
-			GSEntryPoint	=	"GeometryShader";
-			DSEntryPoint	=	"DomainShader";
-			HSEntryPoint	=	"HullShader";
-			CSEntryPoint	=	"ComputeShader";
+			PSEntryPoint	=	"PSMain";
+			VSEntryPoint	=	"VSMain";
+			GSEntryPoint	=	"GSMain";
+			DSEntryPoint	=	"DSMain";
+			HSEntryPoint	=	"HSMain";
+			CSEntryPoint	=	"CSMain";
 		}
 
 			
@@ -280,7 +280,7 @@ namespace Fusion.Content {
 
 			public Stream Open( IncludeType type, string fileName, Stream parentStream )
 			{
-				Log.Information("{0} {1} {2}", type, fileName, parentStream );
+				//Log.Information("{0} {1} {2}", type, fileName, parentStream );
 
 				return File.OpenRead( buildContext.Resolve( fileName ) );
 			}
