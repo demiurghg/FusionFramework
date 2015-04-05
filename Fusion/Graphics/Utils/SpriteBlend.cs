@@ -21,5 +21,6 @@ namespace Fusion.Graphics {
 		Screen				,
 		Multiply			,
 		NegMultiply			,
+		ClearAlpha			,
 	}
 }

@@ -36,6 +36,7 @@ namespace Fusion.Graphics {
 		public static  BlendState	Screen			 { get; private set; }
 		public static  BlendState	Multiply		 { get; private set; }
 		public static  BlendState	NegMultiply		 { get; private set; }
+		public static  BlendState	ClearAlpha		 { get; private set; }
 
 
 
@@ -49,7 +50,8 @@ namespace Fusion.Graphics {
 			Additive			=	Create( ColorChannels.All, Blend.One,			Blend.One,			Blend.One, Blend.One );	
 			Screen				=	Create( ColorChannels.All, Blend.InvDstColor,	Blend.One			);						
 			Multiply			=	Create( ColorChannels.All, Blend.Zero,			Blend.SrcColor		);						
-			NegMultiply			=	Create( ColorChannels.All, Blend.Zero,			Blend.InvSrcColor	);						
+			NegMultiply			=	Create( ColorChannels.All, Blend.Zero,			Blend.InvSrcColor	);
+			ClearAlpha			=	Create(ColorChannels.Alpha, Blend.SrcAlpha, Blend.InvSrcAlpha, Blend.One, Blend.Zero);
 		}
 
 

@@ -172,6 +172,7 @@ namespace Fusion.Graphics {
 				if (blend==SpriteBlend.Screen			) ps.BlendState	=	BlendState.Screen;
 				if (blend==SpriteBlend.Multiply			) ps.BlendState	=	BlendState.Multiply;
 				if (blend==SpriteBlend.NegMultiply		) ps.BlendState	=	BlendState.NegMultiply;
+				if (blend==SpriteBlend.ClearAlpha		) ps.BlendState =	BlendState.ClearAlpha;
 
 				ps.VertexInputElements	=	VertexInputElement.FromStructure( typeof(SpriteVertex) );
 
