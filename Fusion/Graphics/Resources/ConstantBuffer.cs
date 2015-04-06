@@ -70,6 +70,40 @@ namespace Fusion.Graphics {
 
 
 
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="device"></param>
+		/// <param name="data"></param>
+		/// <returns></returns>
+		public static ConstantBuffer Create<T>( GraphicsDevice device, T data ) where T: struct
+		{
+			var cb = new ConstantBuffer( device, typeof(T) );
+			cb.SetData( data );
+			return cb;
+		}
+
+
+
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="device"></param>
+		/// <param name="data"></param>
+		/// <returns></returns>
+		public static ConstantBuffer Create<T>( GraphicsDevice device, T[] data ) where T: struct
+		{
+			var cb = new ConstantBuffer( device, typeof(T), data.Length );
+			cb.SetData( data );
+			return cb;
+		}
+
+
+
 		/// <summary>
 		/// 
 		/// </summary>

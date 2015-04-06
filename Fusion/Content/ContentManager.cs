@@ -278,6 +278,32 @@ namespace Fusion.Content {
 
 
 
+		/// <summary>
+		/// Safe version of ContentManager.Load. If any exception occurs it will try to load fallback object.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="path"></param>
+		/// <param name="fallbackObject"></param>
+		/// <returns></returns>
+		public T Load<T>( string path, string fallbackPath )
+		{
+			if ( string.IsNullOrWhiteSpace(path) ) {
+				throw new ArgumentException("Asset path can not be null, empty or whitespace.");
+			}
+
+			try {
+				return Load<T>(path);
+			} catch ( Exception e ) {
+				Log.Warning("Could not load {0} '{1}' : {2}", typeof(T).Name, path, e.Message);
+				
+				return Load<T>( fallbackPath );
+			}
+		}
+
+
+
+
+
 
 		/// <summary>
 		/// Disposes all data that was loaded by this ContentManager.
