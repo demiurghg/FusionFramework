@@ -262,6 +262,31 @@ namespace Fusion.Graphics {
 
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="viewMatrix"></param>
+		/// <param name="velocity"></param>
+		/// <param name="fov"></param>
+		/// <param name="width"></param>
+		/// <param name="near"></param>
+		/// <param name="far"></param>
+		/// <param name="convergence"></param>
+		/// <param name="separation"></param>
+		public void SetupCameraFromViewAndFov ( Matrix viewMatrix, Vector3 velocity, float fov, float near, float far, float convergence, float separation )
+		{
+			var bounds	=	Game.GraphicsDevice.DisplayBounds;
+			var aspect	=	((float)bounds.Width) / (float)bounds.Height;
+
+			var nearHeight	=	near * (float)Math.Tan( fov/2 ) * 2;
+			var nearWidth	=	nearHeight * aspect;
+			var view		=	viewMatrix;
+
+			SetupCamera( view, velocity, nearHeight, nearWidth, near, far, convergence, separation );
+		}
+
+
+
+		/// <summary>
 		/// Sets camera up.
 		/// </summary>
 		/// <param name="origin">Camera position.</param>
