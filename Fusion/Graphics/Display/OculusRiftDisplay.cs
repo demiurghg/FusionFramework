@@ -195,7 +195,7 @@ namespace Fusion.Graphics.Display {
 			}
 
 			// Specify which head tracking capabilities to enable.
-			hmd.SetEnabledCaps(OVR.HmdCaps.LowPersistence | OVR.HmdCaps.DynamicPrediction);
+			hmd.SetEnabledCaps(OVR.HmdCaps.LowPersistence /*| OVR.HmdCaps.DynamicPrediction*/);
 
 			// Start the sensor which informs of the Rift's pose and motion
 			hmd.ConfigureTracking(OVR.TrackingCaps.ovrTrackingCap_Orientation | OVR.TrackingCaps.ovrTrackingCap_MagYawCorrection | OVR.TrackingCaps.ovrTrackingCap_Position, OVR.TrackingCaps.None);

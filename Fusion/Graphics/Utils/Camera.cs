@@ -235,6 +235,20 @@ namespace Fusion.Graphics {
 		/// <param name="separation">Stereo separation or distance between eyes.</param>
 		public void SetupCamera ( Matrix viewMatrix, Vector3 velocity, float height, float width, float near, float far, float convergence, float separation )
 		{
+			if (Game.Parameters.StereoMode == StereoMode.OculusRift)
+			{
+				//ProjMatrixL = Input.OculusRiftSensors.LeftEye.Projection;
+				width = 0.75f;
+				height = 0.98f;
+				near = 0.36f;
+				far = 5000;
+
+				viewMatrix = viewMatrix * Matrix.Invert(Matrix.RotationQuaternion(OculusRiftSensors.HeadRotation)  * Matrix.Translation(OculusRiftSensors.HeadPosition) );
+
+				//Log.Information("{0}", OculusRiftSensors.HeadPosition);
+			}
+
+
 			float offset		=	separation / convergence * near / 2;
 			float nearHeight	=	height;
 			float nearWidth		=	width;
@@ -249,6 +263,10 @@ namespace Fusion.Graphics {
 			ViewMatrix		=	viewMatrix;
 			ViewMatrixL		=	viewMatrix	*	Matrix.Translation( Vector3.UnitX * separation / 2 );
 			ViewMatrixR		=	viewMatrix	*	Matrix.Translation( -Vector3.UnitX * separation / 2 );
+
+			//ProjMatrixR = Input.OculusRiftSensors.RightEye.Projection;
+
+
 
 			//	Camera :
 			CameraMatrix	=	Matrix.Invert( ViewMatrix );
