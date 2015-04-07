@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ACA97BC3-14F4-43CD-A60F-B76396C4AAF2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Fusion.GIS</RootNamespace>
+    <AssemblyName>Fusion.GIS</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x64</PlatformTarget>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Triangle">
+      <HintPath>$(FUSION_BIN)\Triangle.dll</HintPath>
+    </Reference>
+	<Reference Include="Fusion">
+      <HintPath>$(FUSION_BIN)\Fusion.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataSystem\GeoObjectsSources\OpenStreetMapSource.cs" />
+    <Compile Include="DataSystem\GeoObjectsSources\Triangulator.cs" />
+    <Compile Include="DataSystem\GeoObjectsSources\WikiMapiaSource.API.cs" />
+    <Compile Include="DataSystem\GeoObjectsSources\WikiMapiaSource.cs" />
+    <Compile Include="DataSystem\GeoObjectsSources\WikiMapiaSource.Keys.cs" />
+    <Compile Include="DataSystem\MapSources\BaseMapSource.cs" />
+    <Compile Include="DataSystem\MapSources\GoogleMaps\BaseGoogleMapSource.cs" />
+    <Compile Include="DataSystem\MapSources\GoogleMaps\GoogleSatelliteMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapBox\BaseMapBoxMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapBox\PencilMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapBox\PirateMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapBox\SpaceStationMap.cs" />
+    <Compile Include="DataSystem\MapSources\MapTile.cs" />
+    <Compile Include="DataSystem\MapSources\OpenStreetMaps\BaseOpenStreetMap.cs" />
+    <Compile Include="DataSystem\MapSources\OpenStreetMaps\BaseOpenStreetMapNodes.cs" />
+    <Compile Include="DataSystem\MapSources\Projections\MapProjection.cs" />
+    <Compile Include="DataSystem\MapSources\Projections\MercatorProjection.cs" />
+    <Compile Include="DataSystem\MapSources\Projections\MercatorProjectionYandex.cs" />
+    <Compile Include="DataSystem\MapSources\YandexMaps\BaseYandexMap.cs" />
+    <Compile Include="DataSystem\MapSources\YandexMaps\YandexSatelliteMap.cs" />
+    <Compile Include="DataSystem\WebDownloader.cs" />
+    <Compile Include="GeoHelper.cs" />
+    <Compile Include="GlobeMath\DMathUtil.cs" />
+    <Compile Include="GlobeMath\DMatrix.cs" />
+    <Compile Include="GlobeMath\DQuaternion.cs" />
+    <Compile Include="GlobeMath\DVector2.cs" />
+    <Compile Include="GlobeMath\DVector3.cs" />
+    <Compile Include="GlobeMath\DVector4.cs" />
+    <Compile Include="GlobeMath\Matrix3x3.cs" />
+    <Compile Include="HeatMap.cs" />
+    <Compile Include="LayerService.cs" />
+    <Compile Include="LayerServiceConfig.cs" />
+    <Compile Include="LayerSpace\BaseLayer.cs" />
+    <Compile Include="LayerSpace\Layers\ElevationLayer.cs" />
+    <Compile Include="LayerSpace\Layers\GeoObjectsLayer.cs" />
+    <Compile Include="LayerSpace\Layers\GeoObjectsLayer.MunicipalDivision.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Atmosphere.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Buildings.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Charts.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Dots.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Grid.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.HeatMap.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Lines.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.MunicipalDivision.cs" />
+    <Compile Include="LayerSpace\Layers\GlobeLayer.Tile.cs" />
+    <Compile Include="LayerSpace\Layers\MapLayer.cs" />
+    <Compile Include="LayerSpace\Layers\MapLayer.MapSources.cs" />
+    <Compile Include="LayerSpace\Layers\SimpleBuildings.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
