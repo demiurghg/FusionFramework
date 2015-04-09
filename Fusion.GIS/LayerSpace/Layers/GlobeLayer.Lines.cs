@@ -14,21 +14,17 @@ namespace Fusion.GIS.LayerSpace.Layers
 	public partial class GlobeLayer
 	{
 		VertexBuffer	municipalLinesVB;
-		GeoVert[]			lines;
+		GeoVert[]		lines;
 
 		VertexBuffer	airLinesVB;
-		GeoVert[]			airLines;
+		GeoVert[]		airLines;
 
 
 		VertexBuffer	railRoadsVB;
 		Texture2D		railRoadsTex;
-		Texture2D		trainTex;
 
 
 		VertexBuffer roadsVB;
-
-		VertexBuffer trainVB;
-
 		VertexBuffer debugLinesVB;
 
 
@@ -43,24 +39,6 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 		List<AirDirection> airDirections;
 
-		// Train stuff
-		public class TrainShceduleLine
-		{
-			public string	City;
-			public DVector2	LonLat;
-			public DateTime ArrivalTime;
-			public DateTime DepartureTime;
-			public int		RailroadPointInd;
-
-			public double[] SickPeople;
-			public double[] RecoveredPeople;
-			public double	MaximumPeople;
-			public int Sick = 0;
-			public int Recovered = 0;
-		}
-
-        List<TrainShceduleLine> trainShcedule; 
-
 
 		class RailroadPoint
 		{
@@ -71,6 +49,86 @@ namespace Fusion.GIS.LayerSpace.Layers
 		private RailroadPoint[] railroadCpu;
 
 
+		List<VertexBuffer>	linesBatch = new List<VertexBuffer>();
+		List<GeoVert>		linesBatchVertices; 
+
+		List<VertexBuffer>	linesPolyBatch = new List<VertexBuffer>();
+		List<GeoVert>		linesPolyBatchVertices; 
+
+		public void LinesStart()
+		{
+			linesBatchVertices = new List<GeoVert>();
+		}
+
+
+		public void LinesAdd(DVector2 lonLatPoint0, DVector2 lonLatPoint1, Color color)
+		{
+			linesBatchVertices.Add(new GeoVert {
+				Lon = DMathUtil.DegreesToRadians(lonLatPoint0.X),
+				Lat = DMathUtil.DegreesToRadians(lonLatPoint0.Y),
+				Color		= color,
+				Position	= new Vector3(),
+				Tex			= new Vector4()
+			});
+			linesBatchVertices.Add(new GeoVert {
+				Lon = DMathUtil.DegreesToRadians(lonLatPoint1.X),
+				Lat = DMathUtil.DegreesToRadians(lonLatPoint1.Y),
+				Color		= color,
+				Position	= new Vector3(),
+				Tex			= new Vector4()
+			});
+		}
+
+
+		public void LinesEnd()
+		{
+			if (linesBatchVertices.Count == 0) return;
+
+			var vb = new VertexBuffer(Game.GraphicsDevice, typeof (GeoVert), linesBatchVertices.Count);
+			vb.SetData(linesBatchVertices.ToArray());
+
+			linesBatch.Add(vb);
+
+			linesBatchVertices.Clear();
+		}
+
+
+		public void LinesPolyStart()
+		{
+			linesPolyBatchVertices = new List<GeoVert>();
+		}
+
+
+		public void LinesPolyAdd(DVector2 lonLatPoint0, DVector2 lonLatPoint1, Color color, float width)
+		{
+			linesPolyBatchVertices.Add(new GeoVert {
+				Lon = DMathUtil.DegreesToRadians(lonLatPoint0.X),
+				Lat = DMathUtil.DegreesToRadians(lonLatPoint0.Y),
+				Color		= color,
+				Position	= new Vector3(),
+				Tex			= new Vector4(width, 0, 0, 0)
+			});
+			linesPolyBatchVertices.Add(new GeoVert {
+				Lon = DMathUtil.DegreesToRadians(lonLatPoint1.X),
+				Lat = DMathUtil.DegreesToRadians(lonLatPoint1.Y),
+				Color		= color,
+				Position	= new Vector3(),
+				Tex			= new Vector4(width, 0, 0, 0)
+			});
+		}
+
+
+		public void LinesPolyEnd()
+		{
+			if (linesPolyBatchVertices.Count == 0) return;
+
+			var vb = new VertexBuffer(Game.GraphicsDevice, typeof(GeoVert), linesPolyBatchVertices.Count);
+			vb.SetData(linesPolyBatchVertices.ToArray());
+
+			linesPolyBatch.Add(vb);
+
+			linesPolyBatchVertices.Clear();
+		}
 
 
 		void CreateRoadFromLine(RailroadPoint[] line, double width, out VertexBuffer vb, out IndexBuffer ib)
@@ -194,16 +252,9 @@ namespace Fusion.GIS.LayerSpace.Layers
 		VertexBuffer	railroadsPolyVB;
 		IndexBuffer		railroadsPolyIB;
 
-		public void DrawRailroadPoly()
+		void DrawRailroadPoly()
 		{
 			if (railroadsPolyVB == null) return;
-
-			//string signature;
-			//shader.SetVertexShader((int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER));
-			//shader.SetPixelShader((int)GlobeFlags.DRAW_TEXTURED | (int)GlobeFlags.DRAW_POLY);
-
-			//Game.GraphicsDevice.SetBlendState(BlendState.AlphaBlend);
-			//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
 
 			Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
 					GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_TEXTURED | GlobeFlags.DRAW_VERTEX_POLY,
@@ -218,63 +269,13 @@ namespace Fusion.GIS.LayerSpace.Layers
 			Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
 			Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
 
-			//constBuffer.SetCBufferVS(0);
-			//constBuffer.SetCBufferPS(0);
-
-			//railRoadsTex.SetPS(0);
-			//Game.GraphicsDevice.SetPSSamplerState(0, SamplerState.LinearWrap);
 
 			Game.GraphicsDevice.PixelShaderResources[0] = railRoadsTex;
 			Game.GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap;
 
-			//Game.GraphicsDevice.SetRasterizerState(RasterizerState.CullCW);
-
 			Game.GraphicsDevice.SetupVertexInput(railroadsPolyVB, railroadsPolyIB);
-			Game.GraphicsDevice.DrawIndexed(/*Primitive.TriangleList,*/ railroadsPolyIB.Capacity, 0, 0);
+			Game.GraphicsDevice.DrawIndexed(railroadsPolyIB.Capacity, 0, 0);
 		}
-
-
-		public void InitLines(int maxLinesCount)
-		{
-			if (municipalLinesVB != null) municipalLinesVB.Dispose();
-			municipalLinesVB = new VertexBuffer(Game.GraphicsDevice, typeof (GeoVert), maxLinesCount*2);
-			lines	= new GeoVert[maxLinesCount * 2];
-
-
-			municipalLinesVB.SetData(lines, 0, 2);
-		}
-
-
-
-		public void UpdateLine(int i, DVector2 lonLatDeg0, DVector2 lonLatDeg1, float width0, float width1, Color color0, Color color1)
-		{
-			if (municipalLinesVB == null || i*2 + 1 >= lines.Length) return;
-
-			lines[i*2 + 0] = new GeoVert {
-				Color = color0,
-				Position = Vector3.Zero,
-				Lon = DMathUtil.DegreesToRadians(lonLatDeg0.X),
-				Lat = DMathUtil.DegreesToRadians(lonLatDeg0.Y),
-				Tex = new Vector4(width0, 0.0f, 0, 0)
-			};
-
-			lines[i*2 + 1] = new GeoVert {
-				Color = color1,
-				Position = Vector3.Zero,
-				Lon = DMathUtil.DegreesToRadians(lonLatDeg1.X),
-				Lat = DMathUtil.DegreesToRadians(lonLatDeg1.Y),
-				Tex = new Vector4(width1, 0.0f, 0, 0)
-			};
-		}
-
-
-
-		public void UpdateAllLines()
-		{
-			if (municipalLinesVB == null) return;
-			municipalLinesVB.SetData(lines, 0, lines.Length);
-		}
-
 
 
 		void InitAirLines()
@@ -354,287 +355,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 
 
-		public void SetTrainSchedule(List<TrainShceduleLine> schedule)
-		{
-			trainShcedule = schedule;
-
-			foreach (var line in trainShcedule) {
-				AddGeoObject(8, line.LonLat, new Color(1.0f, 0.0f, 0.0f, 0.5f), 15.0f);
-			}
-
-			//GeoHelper.GetNewPointWithDistance()
-			List<GeoVert> charts = new List<GeoVert>();
-			foreach (var line in trainShcedule) {
-				charts.Add(new GeoVert {
-					Color		= Color.Red,
-					Lon			= DMathUtil.DegreesToRadians(line.LonLat.X),
-					Lat			= DMathUtil.DegreesToRadians(line.LonLat.Y),
-					Position	= Vector3.Zero,
-					Tex			= new Vector4(2.7f, 0.0f, 2.7f, 0.0f)
-				});
-				charts.Add(new GeoVert {
-					Color		= Color.Blue,
-					Lon			= DMathUtil.DegreesToRadians(line.LonLat.X),
-					Lat			= DMathUtil.DegreesToRadians(line.LonLat.Y),
-					Position	= Vector3.Zero,
-					Tex			= new Vector4(2.7f, 0.0f, 2.7f, 0.0f)
-				});
-			}
-
-			UpdateCharts(charts);
-
-			InitRailroadsOSM();
-		}
-
-
-
-		void UpdateTransibCitiesCharts(DateTime time)
-		{
-			for (int i = 0; i < trainShcedule.Count; i++) {
-				if(trainShcedule[i].SickPeople.Length <= 1) continue;
-
-				var arriveTime	= trainShcedule[i].ArrivalTime;
-				var maxDays		= trainShcedule[i].SickPeople.Length;
-				var param		= (time - arriveTime).TotalDays / maxDays;
-
-				if (param < 0) {
-					trainShcedule[i].Sick		= 0;
-					trainShcedule[i].Recovered	= 0;
-					continue;
-				}
-
-				param = DMathUtil.Clamp(param, 0.0, 1.0);
-
-				var ind = (int)((maxDays-1)*param);
-
-				double f = (maxDays-1)*param - ind;
-
-				double sick = 0;
-				double rec	= 0;
-
-				if (ind == maxDays - 1) {
-					sick = trainShcedule[i].SickPeople[ind];
-					rec = trainShcedule[i].RecoveredPeople[ind];
-				}
-				else {
-					sick	= DMathUtil.Lerp(trainShcedule[i].SickPeople[ind], trainShcedule[i].SickPeople[ind + 1], f);
-					rec		= DMathUtil.Lerp(trainShcedule[i].RecoveredPeople[ind], trainShcedule[i].RecoveredPeople[ind + 1], f);
-				}
-
-				trainShcedule[i].Sick		= (int) sick;
-				trainShcedule[i].Recovered	= (int) rec;
-
-				sick /= trainShcedule[i].MaximumPeople;
-				rec /= trainShcedule[i].MaximumPeople;
-
-				float stickHeight = 25.0f;
-
-				var s = chartsCPU[i * 2];
-				s.Tex.Y = (float)sick * stickHeight;
-				chartsCPU[i*2] = s;
-
-				var r = chartsCPU[i*2 + 1];
-				r.Tex.Y = (float)rec * stickHeight;
-				r.Tex.W = (float)sick * stickHeight;
-				chartsCPU[i*2 + 1] = r;
-			}
-
-			UpdateCharts(chartsCPU);
-		}
-
-
-
-		public DVector2 UpdateTrainPosition(DateTime time)
-		{
-			if (trainVB == null || trainShcedule == null) return DVector2.Zero;
-
-			DVector2 position = DVector2.Zero;
-
-			int		start	= 0;
-			int		end		= 0;
-			double	param	= 0.0;
-
-			if (time <= trainShcedule[0].DepartureTime) {
-				position = railroadCpu[trainShcedule[0].RailroadPointInd].LonLat;
-			} else if (time >= trainShcedule.Last().ArrivalTime) {
-				position = railroadCpu[trainShcedule.Last().RailroadPointInd].LonLat;
-			} else {
-				for (int i = 0; i < trainShcedule.Count-1; i++) {
-					if (time >= trainShcedule[i].ArrivalTime && time <= trainShcedule[i].DepartureTime) {
-						position = railroadCpu[trainShcedule[i].RailroadPointInd].LonLat;
-						break;
-					} else if (time > trainShcedule[i].DepartureTime && time < trainShcedule[i + 1].ArrivalTime) {
-						start = trainShcedule[i].RailroadPointInd;
-						end = trainShcedule[i + 1].RailroadPointInd;
-
-						double total = (trainShcedule[i + 1].ArrivalTime - trainShcedule[i].DepartureTime).TotalSeconds;
-						double curre = (time - trainShcedule[i].DepartureTime).TotalSeconds;
-
-						param = curre/total;
-
-						break;
-					}
-
-				}
-
-				if (start != end) {
-					DMathUtil.Clamp(param, 0, 1);
-
-					if (start > end) {
-						var t = end;
-						end = start;
-						start = t;
-						param = 1.0f - param;
-					}
-
-					double currentDistance = (railroadCpu[end].Distance - railroadCpu[start].Distance) * param + railroadCpu[start].Distance;
-
-					
-
-					for (int i = start; i <= end-1; i++) {
-						if (currentDistance >= railroadCpu[i].Distance && currentDistance <= railroadCpu[i + 1].Distance) {
-
-							double p = (currentDistance - railroadCpu[i].Distance) / (railroadCpu[i + 1].Distance - railroadCpu[i].Distance);
-
-							position = DVector2.Lerp(railroadCpu[i].LonLat, railroadCpu[i + 1].LonLat, p);
-
-							break;
-						}
-					}
-
-				}
-
-			}
-
-
-			double height = (Config.CameraDistance - Config.earthRadius) * 1000.0;
-			double f = (height - 1000.0) / (5000000.0 - 1000.0);
-
-			f = DMathUtil.Clamp(f, 0, 1);
-
-			trainVB.SetData(new[] { new GeoVert {
-					Lon			= position.X * (Math.PI / 180.0),
-					Lat			= position.Y * (Math.PI / 180.0),
-					Position	= Vector3.Zero,
-					Tex			= new Vector4(1, 0, 0.05f + 80.0f * (float)f, 0),
-					Color		= Color.Orange
-				}}, 0, 1);
-
-
-			UpdateTransibCitiesCharts(time);
-
-			return position;
-		}
-
-
-
-		void DrawTrain()
-		{
-			if (trainVB == null) return;
-
-			dotsBuf.Data.TexWHST = new Vector4(trainTex.Width, trainTex.Height, 0.0f, 0);
-			dotsBuf.UpdateCBuffer();
-
-			//Game.GraphicsDevice.SetVSConstant(1, dotsBuf);
-			//Game.GraphicsDevice.SetGSConstant(1, dotsBuf);
-
-			Game.GraphicsDevice.VertexShaderConstants[1]	= dotsBuf;
-			Game.GraphicsDevice.GeometryShaderConstants[1]	= dotsBuf;
-			//Game.GraphicsDevice.GeometryShaderConstants[0]	= constBuffer;
-
-			//Game.GraphicsDevice.SetBlendState(BlendState.AlphaBlend);
-			//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-
-			//string signature;
-			//shader.SetVertexShader((int)(GlobeFlags.DRAW_DOTS | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER));
-			//shader.SetPixelShader((int)GlobeFlags.DRAW_DOTS);
-			//shader.SetGeometryShader((int)(GlobeFlags.DRAW_DOTS | GlobeFlags.DOTS_SCREENSPACE));
-
-			Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_VERTEX_DOTS | GlobeFlags.DRAW_DOTS | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DOTS_SCREENSPACE,
-					Primitive.PointList,
-					BlendState.AlphaBlend,
-					RasterizerState.CullCW,
-					DepthStencilState.None);
-
-			//Game.GraphicsDevice.SetPSSamplerState(0, SamplerState.LinearClamp);
-			//Game.GraphicsDevice.SetPSResource(0, trainTex);
-
-			Game.GraphicsDevice.PixelShaderResources[0] = trainTex;
-			Game.GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearClamp;
-
-			Game.GraphicsDevice.SetupVertexInput(trainVB, null);
-			Game.GraphicsDevice.Draw(/*Primitive.PointList,*/ trainVB.Capacity, 0);
-
-			//shader.ResetGeometryShader();
-		}
-
-
-
-		void InitRailroadsOSM()
-		{
-			if(railRoadsVB	!= null)	railRoadsVB.Dispose();
-			if(trainVB		!= null)	trainVB.Dispose();
-			
-			
-			var osm = Game.GetService<LayerService>().OpenStreetMapSource;
-			var lines = new List<GeoVert>();
-
-			var transib = osm.GetLineFromWays(60725029, 916507771);
-			
-			railroadCpu = new RailroadPoint[transib.Count];
-			
-			for (int i = 0; i < transib.Count; i++) {
-				lines.Add(new GeoVert {
-					Lon			= DMathUtil.DegreesToRadians(transib[i].X),
-					Lat			= DMathUtil.DegreesToRadians(transib[i].Y),
-					Position	= new Vector3(1.0f, 0.0f, 0.0f),
-					Color		= Color.Yellow,
-					Tex			= new Vector4(0.06f, 0.0f, 0, 0)
-				});
-
-				if (trainShcedule == null) continue;
-				for (int j = 0; j < trainShcedule.Count; j++) {
-					if ((transib[trainShcedule[j].RailroadPointInd] - trainShcedule[j].LonLat).Length() > (transib[i] - trainShcedule[j].LonLat).Length()) {
-						trainShcedule[j].RailroadPointInd = i;
-					}
-				}
-			}
-
-			
-			railroadCpu[0] = new RailroadPoint();
-			railroadCpu[0].LonLat	= transib[0];
-			railroadCpu[0].Distance = 0;
-			
-			for (int i = 1; i < transib.Count; i++) {
-				railroadCpu[i] = new RailroadPoint();
-				railroadCpu[i].LonLat = transib[i];
-				railroadCpu[i].Distance = railroadCpu[i - 1].Distance + DistanceBetweenTwoPoints(transib[i - 1] * (Math.PI / 180.0), transib[i] * (Math.PI / 180.0));
-			}
-
-
-			trainVB = new VertexBuffer(Game.GraphicsDevice, typeof(GeoVert), 1);
-			trainVB.SetData(new [] { new GeoVert {
-					Lon			= railroadCpu[0].LonLat.X * (Math.PI / 180.0),
-					Lat			= railroadCpu[0].LonLat.Y * (Math.PI / 180.0),
-					Position	= Vector3.Zero,
-					Tex			= new Vector4(1, 0, 10, 0),
-					Color		= Color.Orange
-				}}, 0, 1);
-
-				
-			var railroads = lines.ToArray();
-
-			railRoadsVB = new VertexBuffer(Game.GraphicsDevice, typeof(GeoVert), railroads.Length);
-			railRoadsVB.SetData(railroads, 0, railroads.Length);
-
-
-			CreateRoadFromLine(railroadCpu, 0.025, out railroadsPolyVB, out railroadsPolyIB);
-		}
-
-
-
-		public void SetupRoads(GeoVert[] geoVerts)
+		void SetupRoads(GeoVert[] geoVerts)
 		{
 			if (roadsVB == null || roadsVB.Capacity != geoVerts.Length) {
 				if(roadsVB != null) roadsVB.Dispose();
@@ -683,12 +404,6 @@ namespace Fusion.GIS.LayerSpace.Layers
 				debugLinesVB.SetData(debugVertsCPU.ToArray(), 0, debugVertsCPU.Count);
 			}
 
-			//string signature;
-			//shader.SetVertexShader((int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_CARTCOORDS | GlobeFlags.VERTEX_SHADER));
-			//shader.SetPixelShader((int)GlobeFlags.DRAW_COLOR | (int)GlobeFlags.DRAW_POLY);
-
-			//Game.GraphicsDevice.SetBlendState(BlendState.AlphaBlend);
-			//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
 
 			Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
 					GlobeFlags.DRAW_POLY | GlobeFlags.USE_CARTCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_COLOR | GlobeFlags.DRAW_VERTEX_POLY,
@@ -700,14 +415,11 @@ namespace Fusion.GIS.LayerSpace.Layers
 			constBuffer.Data.Temp = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
 			constBuffer.UpdateCBuffer();
 
-			//constBuffer.SetCBufferVS(0);
-			//constBuffer.SetCBufferPS(0);
-
 			Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
 			Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
 
 			Game.GraphicsDevice.SetupVertexInput(debugLinesVB, null);
-			Game.GraphicsDevice.Draw(/*Primitive.LineList,*/ debugLinesVB.Capacity, 0);
+			Game.GraphicsDevice.Draw(debugLinesVB.Capacity, 0);
 		}
 
 	}

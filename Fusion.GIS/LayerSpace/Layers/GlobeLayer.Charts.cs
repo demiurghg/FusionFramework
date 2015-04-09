@@ -16,7 +16,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		VertexBuffer chartsVB;
 
 
-		public void UpdateCharts(List<GeoVert> charts)
+		void UpdateCharts(List<GeoVert> charts)
 		{
 			chartsCPU = charts;
 
@@ -33,7 +33,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		public void DrawCharts()
+		void DrawCharts()
 		{
 			//#if false
 			if (chartsCPU == null) return;

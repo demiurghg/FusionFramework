@@ -13,10 +13,10 @@ namespace Fusion.GIS.LayerSpace.Layers
 {
 	partial class GlobeLayer
 	{
-		public int HeatMapDim { protected set; get; }
+		int HeatMapDim { set; get; }
 
-		public float[] HeatMapData;
-		public float[] InfectData;
+		float[] HeatMapData;
+		float[] InfectData;
 		double heatMapLeft = 0, heatMapRight = 0, heatMapTop = 0, heatMapBottom = 0;
 
 		VertexBuffer	heatVB;
@@ -47,7 +47,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		public void SetHeatMapCoordinates(double left, double right, double top, double bottom)
+		void SetHeatMapCoordinates(double left, double right, double top, double bottom)
 		{
 			if (heatMapLeft == left && heatMapRight == right && heatMapTop == top && heatMapBottom == bottom) return;
 
@@ -69,7 +69,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 			GenerateTileGrid(10, out heatVB, out heatIB, lt.X, rb.X, lt.Y, rb.Y, 0);
 		}
 
-		public void UpdateHeatMapData()
+		void UpdateHeatMapData()
 		{
 			heatMap.SetData(HeatMapData);
 
@@ -82,7 +82,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		public void UpdateInfectData()
+		void UpdateInfectData()
 		{
 			infectMap.SetData(InfectData);
 			
@@ -92,7 +92,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		public void HeatMapCoords(out double left, out double right, out double top, out double bottom)
+		void HeatMapCoords(out double left, out double right, out double top, out double bottom)
 		{
 			left	= heatMapLeft;
 			right	= heatMapRight;

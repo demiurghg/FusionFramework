@@ -53,31 +53,34 @@ namespace Fusion.GIS.DataSystem.GeoObjectsSources
 
 			InitKeys();
 
+			if (!Directory.Exists("cache")) Directory.CreateDirectory("cache");
+			if (!Directory.Exists("cache/WikiMapia")) Directory.CreateDirectory("cache/WikiMapia");
+
 			//GetByArea(19140, 9526, 15, false);
 
 			//GetByArea(29.275818f, 59.624714f, 30.899048f, 60.262979f, 2);
 
-			var xmlDoc = new System.Xml.XmlDocument();
-			xmlDoc.Load("cache/WikiMapia/area_1.xml");
-			
-			int elementsCount;
-			ParseXmlDocument(xmlDoc, out elementsCount);
-			
-			
-			xmlDoc.Load("cache/WikiMapia/area_2.xml");
-			ParseXmlDocument(xmlDoc, out elementsCount);
+			//var xmlDoc = new System.Xml.XmlDocument();
+			//xmlDoc.Load("cache/WikiMapia/area_1.xml");
+			//
+			//int elementsCount;
+			//ParseXmlDocument(xmlDoc, out elementsCount);
+			//
+			//
+			//xmlDoc.Load("cache/WikiMapia/area_2.xml");
+			//ParseXmlDocument(xmlDoc, out elementsCount);
+			//
+			//
+			//List<int> buildings = new List<int>();
+			//foreach (var p in RamCache) {
+			//	if(p.Value.Tags.ContainsKey("182")) buildings.Add(p.Key);
+			//}
+			//
+			//foreach (var building in buildings) {
+			//	RamCache.Remove(building);
+			//}
 
-
-			List<int> buildings = new List<int>();
-			foreach (var p in RamCache) {
-				if(p.Value.Tags.ContainsKey("182")) buildings.Add(p.Key);
-			}
-			
-			foreach (var building in buildings) {
-				RamCache.Remove(building);
-			}
-
-			GetByID(21869405);
+			//GetByID(21869405);
 
 			//LoadPlaces();
 
@@ -110,35 +113,35 @@ namespace Fusion.GIS.DataSystem.GeoObjectsSources
 
 		public void Update(GameTime gameTime)
 		{
-			int oldVal = index;
-			if (Game.InputDevice.IsKeyDown(Input.Keys.Up))		index++;
-			if (Game.InputDevice.IsKeyDown(Input.Keys.Down))	index--;
-			if (index < 0) index = 0;
-			if (index >= RamCache.Count) index = RamCache.Count-1;
-
-			//if (oldVal != index) UpdateTriangulator(index);
-
-			var rs = Game.GraphicsDevice;
-			//var ds = rs.DebugStrings;
-			//var dr = rs.DebugRender;
-			
-			foreach (var wikiPLace in RamCache) {
-				var placeN = wikiPLace.Value;
-				for (int i = 0; i < placeN.Polygon.Count - 1; i++) {
-					var p = placeN.Polygon;
-			
-					Vector2 w0 = GeoHelper.WorldToTilePos(p[i]);
-					Vector2 w1 = GeoHelper.WorldToTilePos(p[i+1]);
-			
-					Vector2 p0 = w0*Map.Zoom + Map.Offset;
-					Vector2 p1 = w1*Map.Zoom + Map.Offset;
-
-					Vector3 pp0 = new Vector3(p0.X, 0.0f, p0.Y);
-					Vector3 pp1 = new Vector3(p1.X, 0.0f, p1.Y);
-			
-					//dr.DrawLine(pp0, pp1, Color.Red);
-				}
-			}
+			//int oldVal = index;
+			//if (Game.InputDevice.IsKeyDown(Input.Keys.Up))		index++;
+			//if (Game.InputDevice.IsKeyDown(Input.Keys.Down))	index--;
+			//if (index < 0) index = 0;
+			//if (index >= RamCache.Count) index = RamCache.Count-1;
+			//
+			////if (oldVal != index) UpdateTriangulator(index);
+			//
+			//var rs = Game.GraphicsDevice;
+			////var ds = rs.DebugStrings;
+			////var dr = rs.DebugRender;
+			//
+			//foreach (var wikiPLace in RamCache) {
+			//	var placeN = wikiPLace.Value;
+			//	for (int i = 0; i < placeN.Polygon.Count - 1; i++) {
+			//		var p = placeN.Polygon;
+			//
+			//		Vector2 w0 = GeoHelper.WorldToTilePos(p[i]);
+			//		Vector2 w1 = GeoHelper.WorldToTilePos(p[i+1]);
+			//
+			//		Vector2 p0 = w0*Map.Zoom + Map.Offset;
+			//		Vector2 p1 = w1*Map.Zoom + Map.Offset;
+			//
+			//		Vector3 pp0 = new Vector3(p0.X, 0.0f, p0.Y);
+			//		Vector3 pp1 = new Vector3(p1.X, 0.0f, p1.Y);
+			//
+			//		//dr.DrawLine(pp0, pp1, Color.Red);
+			//	}
+			//}
 
 			//foreach (var tr in triangulator.Triangles) {
 			//	var p0 = triangulator.Vertices.ElementAt(tr.P0);

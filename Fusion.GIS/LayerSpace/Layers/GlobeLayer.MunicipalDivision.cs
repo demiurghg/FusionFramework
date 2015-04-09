@@ -23,15 +23,13 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 		Dictionary<string, MD> municipalDivisions = new Dictionary<string, MD>();
 
-		public Texture2D paletteMunDiv0;
-		public Texture2D paletteMunDiv1;
+		Texture2D paletteMunDiv0;
+		Texture2D paletteMunDiv1;
 
-		public Texture2D paletteMunDiv;
-
-
+		Texture2D paletteMunDiv;
+		
 		Random r = new Random();
-
-
+		
 
 		void DrawMunicipalDivisions(GameTime time)
 		{
@@ -126,7 +124,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		public void ChangeMunicipalDivisionPaltte()
+		void ChangeMunicipalDivisionPaltte()
 		{
 			paletteMunDiv = paletteMunDiv == paletteMunDiv0 ? paletteMunDiv1 : paletteMunDiv0;
 		}
@@ -137,7 +135,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		/// </summary>
 		/// <param name="name"></param>
 		/// <param name="contour"></param>
-		public void AddMunicipalDivision(string name, List<DVector2> contour)
+		void AddMunicipalDivision(string name, List<DVector2> contour)
 		{
 			if (municipalDivisions.ContainsKey(name)) return;
 
@@ -230,7 +228,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-	    public void ClearAllMunicipalDivisions()
+	    void ClearAllMunicipalDivisions()
 	    {
 	        foreach (var md in municipalDivisions) {
 	            md.Value.Vertices.Dispose();
@@ -241,7 +239,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 	    }
 
 
-		public void UpdateMunicipalDivision(string name, float value)
+		void UpdateMunicipalDivision(string name, float value)
 		{
 			if (municipalDivisions.ContainsKey(name)) {
 

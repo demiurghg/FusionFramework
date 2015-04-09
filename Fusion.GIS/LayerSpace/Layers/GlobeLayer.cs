@@ -46,7 +46,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 		[StructLayout(LayoutKind.Explicit)]
-		public struct ConstData
+		struct ConstData
 		{
 			[FieldOffset(0)]
 			public Matrix ViewProj;
@@ -63,12 +63,11 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 		Ubershader shader;
-		StateFactory factory;
 		ConstBufferGeneric<ConstData> constBuffer;
 
 
 		[Flags]
-		public enum GlobeFlags : int
+		enum GlobeFlags : int
 		{
 			NONE					= 0x0000,
 			SHOW_FRAMES				= 0x0001,
@@ -110,7 +109,6 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 
 		Texture2D frame;
-		Texture2D beamTexture;
 
 
 		public enum Places
@@ -125,8 +123,8 @@ namespace Fusion.GIS.LayerSpace.Layers
 		double maxPitch = 0;
 		double minPitch = 0;
 
-		public double Yaw { set; get; }
-		public double Pitch
+		double Yaw { set; get; }
+		double Pitch
 		{
 			set
 			{
@@ -137,7 +135,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 			get { return pitch; }
 		}
 
-		public DQuaternion Rotation { get { return DQuaternion.RotationAxis(DVector3.UnitY, Yaw) * DQuaternion.RotationAxis(DVector3.UnitX, Pitch); } }
+		DQuaternion Rotation { get { return DQuaternion.RotationAxis(DVector3.UnitY, Yaw) * DQuaternion.RotationAxis(DVector3.UnitX, Pitch); } }
 
 
 
@@ -159,19 +157,12 @@ namespace Fusion.GIS.LayerSpace.Layers
 		double frustumZNear;
 		double frustumZFar;
 
-		float t = 0.0f;
-
-
-		SpriteFont font;
-		SpriteFont labelFont;
-		SpriteFont labelLightFont;
 
 
 		void EnumFunc(GlobeFlags flags, PipelineState ps)
 		{
 			ps.VertexInputElements = flags.HasFlag(GlobeFlags.USE_CARTCOORDS) ? VertexInputElement.FromStructure<CartVert>() : VertexInputElement.FromStructure<GeoVert>();
 		}
-
 
 
 		class MyMiniFactory
@@ -298,64 +289,23 @@ namespace Fusion.GIS.LayerSpace.Layers
 			shader		= Game.Content.Load<Ubershader>(@"Globe.hlsl");
 			constBuffer = new ConstBufferGeneric<ConstData>(Game.GraphicsDevice);
 
-
 			frame			= Game.Content.Load<Texture2D>("redframe.tga");
-			heatMapPalette	= Game.Content.Load<Texture2D>("palette.tga");
-
 			railRoadsTex	= Game.Content.Load<Texture2D>("Urban/Railroads.tga");
-			trainTex		= Game.Content.Load<Texture2D>("Urban/trainMarker.tga");
-
-			paletteMunDiv0	= Game.Content.Load<Texture2D>("palette3.tga");
-			paletteMunDiv1	= Game.Content.Load<Texture2D>("palette2.tga");
-			paletteMunDiv	= paletteMunDiv0;
-
-			font			= Game.Content.Load<SpriteFont>(@"Fonts\headerFont.bmfc");
-			labelFont		= Game.Content.Load<SpriteFont>(@"Fonts\labelFontAccent.bmfc");
-			labelLightFont	= Game.Content.Load<SpriteFont>(@"Fonts\labelMapCityFont.bmfcc");
-
-			beamTexture		= Game.Content.Load<Texture2D>(@"UI\beam");
 
 			UpdateProjectionMatrix(Game.GraphicsDevice.DisplayBounds.Width, Game.GraphicsDevice.DisplayBounds.Height);
-
-			//Game.InputDevice.KeyDown	+= InputDeviceOnMouseDown;
-			//Game.InputDevice.MouseMove	+= InputDeviceOnMouseMove;
 
 			maxPitch = DMathUtil.DegreesToRadians(87.5);
 			minPitch = DMathUtil.DegreesToRadians(-87.5);
 
 			GoToPlace(Places.SaintPetersburg_VO);
 
-
-			//var divisions = Game.GetService<LayerService>().GeoObjectsLayer.MunicipalDivisions;
-			//foreach (var division in divisions) {
-			//	AddMunicipalDivision(division.Name, division.Contour);				
-			//}
-
 			InitDots();
 
 			InitAirLines();
 
-			//InitBuildings();
-			//InitRailroadsOSM();
-			//trainShcedule = new List<TrainShceduleLine>();
-			//trainShcedule.Add(new TrainShceduleLine
-			//	{
-			//		ArrivalTime = DateTime.Now,
-			//		City = "Moscow",
-			//		DepartureTime = DateTime.Now + TimeSpan.FromDays(2),
-
-			//	});
-
-			InitHeatMap(48);
-			SetHeatMapCoordinates(30.155066037597368, 30.324324155276081, 59.966725082678039, 59.916127185943942);
-			//UpdateHeatMapData();
-
-			InitAtmosphere();
-
 			Game.GetService<LayerService>().MapLayer.OnProjectionChanged += (s) => { updateTiles = true; };
 
 			CreateSphere(100, 50);
-
 
 			//AddDebugLine(new DVector3(10000, 0, 0), Color.Red, new DVector3(0, 0, 0), Color.Red);
 			//AddDebugLine(new DVector3(0, 10000, 0), Color.Green, new DVector3(0, 0, 0), Color.Green);
@@ -363,46 +313,6 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 
 			myMiniFactory = new MyMiniFactory(Game, shader);
-
-			//fac.ProducePipelineState(GlobeFlags.SHOW_FRAMES | GlobeFlags.USE_GEOCOORDS, Primitive.LineList,		BlendState.AlphaBlend,	RasterizerState.CullCCW,	DepthStencilState.None);
-			//fac.ProducePipelineState(GlobeFlags.SHOW_FRAMES | GlobeFlags.USE_GEOCOORDS, Primitive.TriangleList, BlendState.AlphaBlend,	RasterizerState.CullCCW,	DepthStencilState.None);
-			//fac.ProducePipelineState(GlobeFlags.SHOW_FRAMES | GlobeFlags.USE_GEOCOORDS, Primitive.LineList,		BlendState.Additive,	RasterizerState.CullCCW,	DepthStencilState.None);
-			//fac.ProducePipelineState(GlobeFlags.SHOW_FRAMES | GlobeFlags.USE_GEOCOORDS, Primitive.LineList,		BlendState.AlphaBlend,	RasterizerState.CullNone,	DepthStencilState.None);
-			//fac.ProducePipelineState(GlobeFlags.SHOW_FRAMES | GlobeFlags.USE_GEOCOORDS, Primitive.LineList,		BlendState.AlphaBlend,	RasterizerState.CullNone,	DepthStencilState.Default);
-			//
-			//fac.ProducePipelineState(GlobeFlags.SHOW_FRAMES | GlobeFlags.USE_CARTCOORDS, Primitive.LineList, BlendState.AlphaBlend, RasterizerState.CullCCW, DepthStencilState.None);
-			//
-			//fac.ProducePipelineState(GlobeFlags.SHOW_FRAMES | GlobeFlags.USE_GEOCOORDS, Primitive.LineList, BlendState.Additive, RasterizerState.CullCCW, DepthStencilState.None);
-			//fac.ProducePipelineState(GlobeFlags.SHOW_FRAMES | GlobeFlags.USE_GEOCOORDS, Primitive.LineList, BlendState.AlphaBlend, RasterizerState.CullNone, DepthStencilState.Default);
-			//fac.ProducePipelineState(GlobeFlags.SHOW_FRAMES | GlobeFlags.USE_CARTCOORDS, Primitive.LineList, BlendState.AlphaBlend, RasterizerState.CullCCW, DepthStencilState.None);
-		
-		
-			//SetupRoads(new GeoVert[]
-			//	{
-			//		new GeoVert{
-			//			Lon = DMathUtil.DegreesToRadians(30.258579),
-			//			Lat = DMathUtil.DegreesToRadians(59.919151),
-			//			Color		= Color.Red,
-			//			Position	= new Vector3(),
-			//			Tex			= new Vector4()
-			//		}, 
-			//		new GeoVert{
-			//			Lon = DMathUtil.DegreesToRadians(30.230427),
-			//			Lat = DMathUtil.DegreesToRadians(59.961885),
-			//			Color		= Color.Red,
-			//			Position	= new Vector3(),
-			//			Tex			= new Vector4()
-			//		}, 
-			//	});
-
-			//AddBuildingContour(new DVector2[]
-			//	{
-			//		new DVector2(30.257549, 59.918635), 
-			//		new DVector2(30.212231, 59.931796), 
-			//		new DVector2(30.217552, 59.961542), 
-			//		new DVector2(30.306473, 59.944351), 
-			//	}, Color.Red);
-			//UpdateContourBuildings();
 		}
 
 
@@ -430,37 +340,27 @@ namespace Fusion.GIS.LayerSpace.Layers
 		Vector2 previousMousePosition;
 		public void InputDeviceOnMouseMove(object sender, Frame.MouseEventArgs args)
 		{
-			if (Game.InputDevice.IsKeyDown(Keys.LeftButton))
-			{
+			if (Game.InputDevice.IsKeyDown(Keys.LeftButton)) {
 				DVector2 before, after;
 				var beforeHit = ScreenToSpherical(previousMousePosition.X, previousMousePosition.Y, out before);
 				var afterHit = ScreenToSpherical(args.X, args.Y, out after);
 
-				if (beforeHit && afterHit)
-				{
+				if (beforeHit && afterHit) {
 					Yaw -= after.X - before.X;
 					Pitch += after.Y - before.Y;
 				}
-				else
-				{
-
-				}
 			}
-			if (Game.InputDevice.IsKeyDown(Keys.RightButton))
-			{
+			if (Game.InputDevice.IsKeyDown(Keys.RightButton)) {
 				var dif = new Vector2(args.X, args.Y) - previousMousePosition;
 
-				if (dif.Y > 0)
-				{
+				if (dif.Y > 0) {
 					Config.CameraDistance -= (Config.CameraDistance - Config.earthRadius) * 0.04;
 				}
-				else if (dif.Y < 0)
-				{
+				else if (dif.Y < 0) {
 					Config.CameraDistance += (Config.CameraDistance - Config.earthRadius) * 0.04;
 				}
 			}
-			if (Game.InputDevice.IsKeyDown(Keys.Up))
-			{
+			if (Game.InputDevice.IsKeyDown(Keys.Up)) {
 				Config.CameraDistance -= 0.01;
 			}
 
@@ -483,76 +383,26 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 			var pos = new Vector2(args.X, args.Y);
 
-			var nearPoint = new DVector3(pos.X, pos.Y, frustumZNear);
-			var farPoint = new DVector3(pos.X, pos.Y, frustumZFar);
+			var nearPoint	= new DVector3(pos.X, pos.Y, frustumZNear);
+			var farPoint	= new DVector3(pos.X, pos.Y, frustumZFar);
 
-			var vm = DMatrix.LookAtRH(cameraPosition, DVector3.Zero, DVector3.UnitY);
+			var vm	= DMatrix.LookAtRH(cameraPosition, DVector3.Zero, DVector3.UnitY);
 			var mVP = vm * projMatrix;
 
-			var near = DVector3.Unproject(nearPoint, 0, 0, w, h, frustumZNear, frustumZFar, mVP);
-			var far = DVector3.Unproject(farPoint, 0, 0, w, h, frustumZNear, frustumZFar, mVP);
+			var near	= DVector3.Unproject(nearPoint, 0, 0, w, h, frustumZNear, frustumZFar, mVP);
+			var far		= DVector3.Unproject(farPoint,	0, 0, w, h, frustumZNear, frustumZFar, mVP);
 
 			DVector3[] res;
 
-			if (LineIntersection(near, far, Config.earthRadius, out res))
-			{
-				if (res.Length > 0)
-				{
+			if (LineIntersection(near, far, Config.earthRadius, out res)) {
+				if (res.Length > 0) {
 					double lon, lat;
 
 					CartesianToSpherical(res[0], out lon, out lat);
-					//Console.WriteLine(DMathUtil.RadiansToDegrees(lon) + "	" + DMathUtil.RadiansToDegrees(lat));
 
-					var lonLat = new DVector2(lon, lat);
+					var lonLat = new DVector2(DMathUtil.RadiansToDegrees(lon), DMathUtil.RadiansToDegrees(lat));
 
-
-					//var osm = Game.GetService<LayerService>().OpenStreetMapSource;
-					//long nearest = osm.allNodes.First().Key;
-					//
-					//foreach (var node in osm.allNodes) {
-					//	if ((lonLat - new DVector2(osm.allNodes[nearest].Longitude, osm.allNodes[nearest].Latitude)).Length() > (lonLat - new DVector2(node.Value.Longitude, node.Value.Latitude)).Length()) {
-					//		nearest = node.Key;
-					//	}
-					//}
-
-					//Console.WriteLine(nearest);
-
-
-					// Calc cartesian coords
-					//double x, y, z;
-					//SphericalToCartesian(lonLat.X, lonLat.Y, Config.earthRadius, out x, out y, out z);
-					//
-					//var pointPos = new DVector3(x, y, z);
-					//
-					//var normal = pointPos;
-					//normal.Normalize();
-					//
-					////var xAxis = DVector3.Transform(DVector3.UnitX, DQuaternion.RotationAxis(DVector3.UnitY, lonLat.X));
-					//var xAxis = DVector3.TransformNormal(DVector3.UnitX, DMatrix.RotationAxis(DVector3.UnitY, lonLat.X));
-					//xAxis.Normalize();
-					//
-					//var zAxis = DVector3.Cross(xAxis, normal);
-					//
-					//AddDebugLine(pointPos, Color.Green, pointPos + normal*5, Color.Green);
-					//AddDebugLine(pointPos, Color.Red, pointPos + xAxis * 5, Color.Red);
-					//AddDebugLine(pointPos, Color.Blue, pointPos + zAxis * 5, Color.Blue);
-
-
-					if (trainShcedule != null)
-					{
-						int minInd = 0;
-
-						for (int i = 0; i < trainShcedule.Count; i++)
-						{
-							if ((lonLat - trainShcedule[minInd].LonLat).Length() > (lonLat - trainShcedule[i].LonLat).Length())
-							{
-								minInd = i;
-							}
-						}
-
-						if ((lonLat - trainShcedule[minInd].LonLat).Length() < 1.0)
-							Console.WriteLine(trainShcedule[minInd].City);
-					}
+					Console.WriteLine(lonLat);
 				}
 			}
 		}
@@ -564,20 +414,6 @@ namespace Fusion.GIS.LayerSpace.Layers
 		/// <param name="gameTime"></param>
 		public override void Update(GameTime gameTime)
 		{
-			if (Game.InputDevice.IsKeyDown(Keys.Right)) {
-				t += 1;
-				//if (t > 1.0f) t = 1.0f;
-			}
-
-			if (Game.InputDevice.IsKeyDown(Keys.Left)) {
-				t -= 1;
-				if (t < 0.0f) t = 0.0f;
-			}
-
-
-			UpdateAtmosphere(gameTime);
-
-
 			// Update camera position
 			cameraPosition = DVector3.Transform(new DVector3(0, 0, Config.CameraDistance), Rotation);
 
@@ -585,22 +421,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 			Game.GetService<DebugStrings>().Add("Tiles count : " + tilesToRender.Count);
 
-			//UpdateDots(gameTime);
-
 			UpdateCamera();
-
-
-			//if (chartsCPU != null) {
-			//	for (int i = 0; i < chartsCPU.Count; i++) {
-			//		var r = chartsCPU[i];
-			//
-			//		//r.Tex.Y += (float)Math.Sin(Math.PI*gameTime.Total.TotalSeconds)*0.01f;
-			//
-			//		chartsCPU[i] = r;
-			//	}
-			//
-			//	//UpdateCharts(chartsCPU);
-			//}
 		}
 
 
@@ -624,14 +445,11 @@ namespace Fusion.GIS.LayerSpace.Layers
 		{
 			var input = Game.InputDevice;
 
-			if (input.IsKeyDown(Keys.LeftShift) && input.IsKeyDown(Keys.MiddleButton))
-			{
-				FreeCamYaw += input.RelativeMouseOffset.X * 0.003;
-				FreeCamPitch -= input.RelativeMouseOffset.Y * 0.003;
+			if (input.IsKeyDown(Keys.LeftShift) && input.IsKeyDown(Keys.MiddleButton)) {
+				FreeCamYaw		+= input.RelativeMouseOffset.X * 0.003;
+				FreeCamPitch	-= input.RelativeMouseOffset.Y * 0.003;
 
 				FreeCamPitch = DMathUtil.Clamp(FreeCamPitch, -Math.PI / 2.01, 0.0);
-
-				//Console.WriteLine(DMathUtil.RadiansToDegrees(FreeCamPitch));
 			}
 		}
 
@@ -695,16 +513,11 @@ namespace Fusion.GIS.LayerSpace.Layers
 			constBuffer.Data.ViewPositionX = camPos.X;
 			constBuffer.Data.ViewPositionY = camPos.Y;
 			constBuffer.Data.ViewPositionZ = camPos.Z;
-			constBuffer.Data.Temp = new Vector4(t, (float)Config.earthRadius, 0, 0);
+			constBuffer.Data.Temp = new Vector4(0.0f, (float)Config.earthRadius, 0, 0);
 			constBuffer.Data.ViewDir = new Vector4((float)viewDir.X, (float)viewDir.Y, (float)viewDir.Z, 0);
 			constBuffer.UpdateCBuffer();
-			//constBuffer.SetCBufferVS(0);
 
 			Game.GraphicsDevice.VertexShaderConstants[0] = constBuffer;
-
-			//string signature;
-			//shader.SetVertexShader((int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER), out signature);
-			//shader.SetPixelShader( (Config.ShowFrames ? (int)GlobeFlags.SHOW_FRAMES | (int)GlobeFlags.DRAW_POLY : (int)GlobeFlags.DRAW_POLY) | (int)GlobeFlags.DRAW_TEXTURED );
 
 			Game.GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearClamp;
 			Game.GraphicsDevice.PixelShaderResources[1] = frame;
@@ -732,15 +545,12 @@ namespace Fusion.GIS.LayerSpace.Layers
 					rastState,
 					DepthStencilState.Default);
 
-
-			//Game.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
 			foreach (var globeTile in tilesToRender) {
 				var tex = Game.GetService<LayerService>().MapLayer.CurrentMapSource.GetTile(globeTile.Value.X, globeTile.Value.Y, globeTile.Value.Z).Tile;
-				//tex.SetPS(0);
 				dev.PixelShaderResources[0] = tex;
 
 				dev.SetupVertexInput(globeTile.Value.VertexBuf, globeTile.Value.IndexBuf);
-				dev.DrawIndexed(/*Primitive.TriangleList,*/ globeTile.Value.IndexBuf.Capacity, 0, 0);
+				dev.DrawIndexed(globeTile.Value.IndexBuf.Capacity, 0, 0);
 			}
 
 
@@ -748,226 +558,111 @@ namespace Fusion.GIS.LayerSpace.Layers
 			dotsBuf.Data.Proj = projMatrixFloat;
 			dotsBuf.UpdateCBuffer();
 
+			//// Draw simple railroads
+			//if (simpleRailroadsVB != null && Config.ShowRailroads) {
+			//	Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
+			//		GlobeFlags.DRAW_VERTEX_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_SEGMENTED_LINES,
+			//		Primitive.LineList,
+			//		BlendState.AlphaBlend,
+			//		RasterizerState.CullNone,
+			//		DepthStencilState.None);
+			//
+			//	constBuffer.Data.Temp = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+			//	constBuffer.UpdateCBuffer();
+			//
+			//	Game.GraphicsDevice.VertexShaderConstants[1]	= dotsBuf;
+			//	Game.GraphicsDevice.GeometryShaderConstants[1]	= dotsBuf;
+			//	Game.GraphicsDevice.GeometryShaderConstants[0]	= constBuffer;
+			//	Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
+			//	Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
+			//
+			//	Game.GraphicsDevice.PixelShaderResources[0] = railRoadsTex;
+			//	Game.GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap;
+			//
+			//	dev.SetupVertexInput(simpleRailroadsVB, null);
+			//	dev.Draw(simpleRailroadsVB.Capacity, 0);
+			//}
 
-			DrawMunicipalDivisions(gameTime);
+
+			//// Draw buildings
+			//if (contourBuildingsVB != null && Config.ShowBuildingsContours) {
+			//
+			//	Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
+			//		GlobeFlags.DRAW_POLY | GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_COLOR,
+			//		Primitive.LineList,
+			//		BlendState.AlphaBlend,
+			//		RasterizerState.CullNone,
+			//		DepthStencilState.None);
+			//
+			//
+			//	constBuffer.Data.Temp = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+			//	constBuffer.UpdateCBuffer();
+			//
+			//	Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
+			//	Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
+			//
+			//	dev.SetupVertexInput(contourBuildingsVB, null);
+			//	dev.Draw(contourBuildingsVB.Capacity, 0);
+			//}
+
+			// Draw Lines
+			if (linesBatch.Count != 0 && Config.ShowRoads) {
+				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
+					GlobeFlags.DRAW_POLY | GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_COLOR,
+					Primitive.LineList,
+					BlendState.AlphaBlend,
+					RasterizerState.CullNone,
+					DepthStencilState.None);
+			
+			
+				constBuffer.Data.Temp = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
+				constBuffer.UpdateCBuffer();
+			
+				Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
+				Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
+
+				foreach (var vb in linesBatch) {
+					dev.SetupVertexInput(vb, null);
+					dev.Draw(vb.Capacity, 0);
+				}
+			}
+
 
 
 			// Draw simple railroads
-			if (simpleRailroadsVB != null && Config.ShowRailroads) {
-				//shader.SetVertexShader(		(int)(GlobeFlags.DRAW_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER), out signature	);
-				//shader.SetPixelShader(		(int)GlobeFlags.DRAW_SEGMENTED_LINES		);
-				//shader.SetGeometryShader(	(int)GlobeFlags.DRAW_SEGMENTED_LINES		);
-
-				//Game.GraphicsDevice.PipelineState = factory[(int)(GlobeFlags.DRAW_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_SEGMENTED_LINES)];
-				//Game.GraphicsDevice.PipelineState.BlendState = BlendState.AlphaBlend;
-				//Game.GraphicsDevice.PipelineState.RasterizerState = RasterizerState.CullNone;
-				//Game.GraphicsDevice.DepthStencilState = DepthStencilState.None;
-
+			if (linesPolyBatch.Count != 0 && Config.ShowRoads) {
 				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_VERTEX_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_SEGMENTED_LINES,
+					GlobeFlags.DRAW_VERTEX_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_LINES,
 					Primitive.LineList,
 					BlendState.AlphaBlend,
 					RasterizerState.CullNone,
 					DepthStencilState.None);
-
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-
+			
 				constBuffer.Data.Temp = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
 				constBuffer.UpdateCBuffer();
-
-				//dotsBuf.Data.View = viewMatrixFloat;
-				//dotsBuf.Data.Proj = projMatrixFloat;
-				//dotsBuf.UpdateCBuffer();
-
-				//dotsBuf.SetCBufferVS(1);
-				//dotsBuf.SetCBufferGS(1);
-				//constBuffer.SetCBufferGS(0);
-				//constBuffer.SetCBufferVS(0);
-				//constBuffer.SetCBufferPS(0);
-
+			
 				Game.GraphicsDevice.VertexShaderConstants[1]	= dotsBuf;
 				Game.GraphicsDevice.GeometryShaderConstants[1]	= dotsBuf;
 				Game.GraphicsDevice.GeometryShaderConstants[0]	= constBuffer;
 				Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
 				Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
-
-				//dev.SetRasterizerState(RasterizerState.CullNone);
-
-				//railRoadsTex.SetPS(0);
-				//dev.SetPSSamplerState(0, SamplerState.LinearWrap);
-
-				Game.GraphicsDevice.PixelShaderResources[0] = railRoadsTex;
-				Game.GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap;
-
-				dev.SetupVertexInput(simpleRailroadsVB, null);
-				dev.Draw(/*Primitive.LineList,*/ simpleRailroadsVB.Capacity, 0);
+			
+			
+				foreach (var vb in linesPolyBatch) {
+					dev.SetupVertexInput(vb, null);
+					dev.Draw(vb.Capacity, 0);
+				}
 			}
 
 
-			// Draw railroads
-			if (railRoadsVB != null && Config.ShowRailroads) {
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER), out signature);
-				//shader.SetPixelShader((int)GlobeFlags.DRAW_COLOR | (int)GlobeFlags.DRAW_POLY);
-
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-
-				//Game.GraphicsDevice.PipelineState = factory[(int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_COLOR)];
-				//Game.GraphicsDevice.PipelineState.BlendState = BlendState.AlphaBlend;
-				//Game.GraphicsDevice.PipelineState.RasterizerState = RasterizerState.CullNone;
-				//Game.GraphicsDevice.DepthStencilState				= DepthStencilState.None;
-
-
-				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_POLY | GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_COLOR,
-					Primitive.LineStrip,
-					BlendState.AlphaBlend,
-					RasterizerState.CullNone,
-					DepthStencilState.None);
-
-
-				constBuffer.Data.Temp = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
-				constBuffer.UpdateCBuffer();
-
-				//constBuffer.SetCBufferVS(0);
-				//constBuffer.SetCBufferPS(0);
-
-				Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
-				Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
-
-				dev.SetupVertexInput(railRoadsVB, null);
-				dev.Draw(/*Primitive.LineStrip,*/ railRoadsVB.Capacity, 0);
-			}
-
-
-			// Draw Roads
-			if (roadsVB != null && Config.ShowRoads) {
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER), out signature);
-				//shader.SetPixelShader((int)GlobeFlags.DRAW_COLOR | (int)GlobeFlags.DRAW_POLY);
-				//
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-
-
-				//Game.GraphicsDevice.PipelineState = factory[(int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_COLOR)];
-				//Game.GraphicsDevice.PipelineState.BlendState = BlendState.AlphaBlend;
-				//Game.GraphicsDevice.PipelineState.RasterizerState = RasterizerState.CullNone;
-				//Game.GraphicsDevice.DepthStencilState				= DepthStencilState.None;
-
-
-				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_POLY | GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_COLOR,
-					Primitive.LineList,
-					BlendState.AlphaBlend,
-					RasterizerState.CullNone,
-					DepthStencilState.None);
-
-
-				constBuffer.Data.Temp = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
-				constBuffer.UpdateCBuffer();
-
-
-				//constBuffer.SetCBufferVS(0);
-				//constBuffer.SetCBufferPS(0);
-
-				Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
-				Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
-
-				dev.SetupVertexInput(roadsVB, null);
-				dev.Draw(/*Primitive.LineList,*/ roadsVB.Capacity, 0);
-			}
-
-
-			// Draw buildings
-			if (contourBuildingsVB != null && Config.ShowBuildingsContours) {
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER), out signature);
-				//shader.SetPixelShader((int)GlobeFlags.DRAW_COLOR | (int)GlobeFlags.DRAW_POLY);
-				//
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-
-				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_POLY | GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_COLOR,
-					Primitive.LineList,
-					BlendState.AlphaBlend,
-					RasterizerState.CullNone,
-					DepthStencilState.None);
-
-
-				constBuffer.Data.Temp = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
-				constBuffer.UpdateCBuffer();
-
-
-				//constBuffer.SetCBufferVS(0);
-				//constBuffer.SetCBufferPS(0);
-
-				Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
-				Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
-
-				dev.SetupVertexInput(contourBuildingsVB, null);
-				dev.Draw(/*Primitive.LineList,*/ contourBuildingsVB.Capacity, 0);
-			}
-
-
-			/////////////////////////////////////////////////////////////////////////////////////////////
-			//if (simpleBuildings != null) {
-			//	shader.SetVertexShader((int)GlobeFlags.DRAW_LINES, out signature);
-			//	shader.SetPixelShader((int)GlobeFlags.DRAW_SIMPLE_BUILDINGS);
-			//	shader.SetGeometryShader((int)GlobeFlags.DRAW_SIMPLE_BUILDINGS);
-			//
-			//	dev.SetBlendState(BlendState.Opaque);
-			//	Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.Default);
-			//
-			//	dotsBuf.Data.View = vm;
-			//	dotsBuf.Data.Proj = proj;
-			//	dotsBuf.UpdateCBuffer();
-			//	dotsBuf.SetCBufferVS(1);
-			//	dotsBuf.SetCBufferGS(1);
-			//
-			//
-			//	dev.SetRasterizerState(RasterizerState.CullCW);
-			//
-			//
-			//	dev.SetupVertexInput(simpleBuildingsVB, null, signature);
-			//	dev.Draw(Primitive.PointList, simpleBuildingsVB.Capacity, 0);
-			//
-			//	shader.ResetGeometryShader();
-			//
-			//}
-			///////////////////////////////////////////////////////////////////////////////////////////////
 
 			if (Config.ShowPOI) {
-				//dotsBuf.Data.View = viewMatrixFloat;
-				//dotsBuf.Data.Proj = projMatrixFloat;
 				dotsBuf.Data.TexWHST = new Vector4(geoObjects.Width, geoObjects.Height, 164.0f, 0.05f);
 				dotsBuf.UpdateCBuffer();
 
-
-				//dotsBuf.SetCBufferVS(1);
-				//dotsBuf.SetCBufferGS(1);
-
 				Game.GraphicsDevice.VertexShaderConstants[1]	= dotsBuf;
 				Game.GraphicsDevice.GeometryShaderConstants[1]	= dotsBuf;
 				Game.GraphicsDevice.GeometryShaderConstants[0]	= constBuffer;
-
-				//constBuffer.SetCBufferGS(0);
-
-
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-				//
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER), out signature);
-				//shader.SetPixelShader((int)GlobeFlags.DRAW_DOTS);
-				//shader.SetGeometryShader((int)(GlobeFlags.DRAW_DOTS | GlobeFlags.DOTS_WORLDSPACE));
-				//
-				//dev.SetPSSamplerState(0, SamplerState.LinearClamp);
-
-
-				//Game.GraphicsDevice.PipelineState = factory[(int)(GlobeFlags.DRAW_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_DOTS | GlobeFlags.DOTS_WORLDSPACE)];
-				//Game.GraphicsDevice.PipelineState.BlendState = BlendState.AlphaBlend;
-				//Game.GraphicsDevice.PipelineState.RasterizerState = RasterizerState.CullNone;
-				////Game.GraphicsDevice.DepthStencilState				= DepthStencilState.None;
 
 				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
 					GlobeFlags.DRAW_VERTEX_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_DOTS | GlobeFlags.DOTS_WORLDSPACE,
@@ -979,77 +674,20 @@ namespace Fusion.GIS.LayerSpace.Layers
 				Game.GraphicsDevice.PixelShaderResources[0] = geoObjects;
 				Game.GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearClamp;
 
-				//geoObjects.SetPS(0);
-
 				dev.SetupVertexInput(dotsVB, null);
-				dev.Draw(/*Primitive.PointList,*/ dotsVB.Capacity - geoObjectStart, geoObjectStart);
-
-				//shader.ResetGeometryShader();
+				dev.Draw(dotsVB.Capacity - geoObjectStart, geoObjectStart);
 			}
 
-			if (Config.ShowInfectionPoints) {
-
-				//dotsBuf.Data.View = viewMatrixFloat;
-				//dotsBuf.Data.Proj = projMatrixFloat;
-				dotsBuf.Data.TexWHST = new Vector4(infectionDot.Width, infectionDot.Height, 64.0f, 0.03f);
-				dotsBuf.UpdateCBuffer();
-
-				//dotsBuf.SetCBufferVS(1);
-				//dotsBuf.SetCBufferGS(1);
-
-				Game.GraphicsDevice.VertexShaderConstants[1]	= dotsBuf;
-				Game.GraphicsDevice.GeometryShaderConstants[1]	= dotsBuf;
-
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-				//
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER), out signature);
-				//shader.SetPixelShader((int)GlobeFlags.DRAW_DOTS);
-				//shader.SetGeometryShader((int)(GlobeFlags.DRAW_DOTS | GlobeFlags.DOTS_WORLDSPACE));
-
-				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_VERTEX_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_DOTS | GlobeFlags.DOTS_WORLDSPACE,
-					Primitive.PointList,
-					BlendState.AlphaBlend,
-					RasterizerState.CullNone,
-					DepthStencilState.None);
-
-				//dev.SetPSSamplerState(0, SamplerState.LinearClamp);
-				//infectionDot.SetPS(0);
-
-				Game.GraphicsDevice.PixelShaderResources[0] = infectionDot;
-				Game.GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearClamp;
-
-				dev.SetupVertexInput(dotsVB, null);
-				dev.Draw(/*Primitive.PointList,*/ geoObjectStart - infectionStart, infectionStart);
-
-				//shader.ResetGeometryShader();
-			}
+			
 
 			// Draw people
 			if (Config.ShowPeople) {
-				//dotsBuf.Data.View		= vm;
-				//dotsBuf.Data.Proj		= proj;
-
-				//Game.GraphicsDevice.SetVSConstant(1, dotsBuf);
-				//Game.GraphicsDevice.SetGSConstant(1, dotsBuf);
-
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-
-				//dev.SetPSSamplerState(0, SamplerState.LinearClamp);
-
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER), out signature);
-				//shader.SetPixelShader((int) GlobeFlags.DRAW_DOTS);
-				//shader.SetGeometryShader((int)(GlobeFlags.DRAW_DOTS | GlobeFlags.DOTS_WORLDSPACE));
-
-				//socioClasses.SetPS(0);
-
 				dotsBuf.Data.TexWHST = new Vector4(socioClasses.Width, socioClasses.Height, 64.0f, 0.025f);
 				dotsBuf.UpdateCBuffer();
 
 				Game.GraphicsDevice.VertexShaderConstants[1]	= dotsBuf;
 				Game.GraphicsDevice.GeometryShaderConstants[1]	= dotsBuf;
+				Game.GraphicsDevice.GeometryShaderConstants[0] = constBuffer;
 
 				Game.GraphicsDevice.PixelShaderResources[0] = socioClasses;
 				Game.GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearClamp;
@@ -1062,165 +700,101 @@ namespace Fusion.GIS.LayerSpace.Layers
 					DepthStencilState.None);
 
 				dev.SetupVertexInput(dotsVB, null);
-				dev.Draw(/*Primitive.PointList,*/ infectionStart - 1, 0);
-
-				//shader.ResetGeometryShader();
+				dev.Draw(geoObjectStart - 1, 0);
 			}
 
 
 
-			// Draw heatmap
-			if (Config.ShowHeatMap && heatVB != null) {
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER));
-				//shader.SetPixelShader((int)GlobeFlags.DRAW_POLY | (int)GlobeFlags.DRAW_HEAT);
+			//// Draw heatmap
+			//if (Config.ShowHeatMap && heatVB != null) {
+			//	constBuffer.Data.Temp = new Vector4((float)Config.MaxHeatMapLevel, Config.HeatMapTransparency, HeatMapDim, 0);
+			//	constBuffer.UpdateCBuffer();
+			//
+			//	Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
+			//	Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
+			//
+			//	Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
+			//		GlobeFlags.DRAW_POLY | GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_HEAT,
+			//		Primitive.TriangleList,
+			//		BlendState.AlphaBlend,
+			//		RasterizerState.CullNone,
+			//		DepthStencilState.None);
+			//
+			//
+			//	Game.GraphicsDevice.PixelShaderSamplers[0] = SamplerState.LinearClamp;
+			//	Game.GraphicsDevice.PixelShaderSamplers[1] = SamplerState.AnisotropicClamp;
+			//
+			//	Game.GraphicsDevice.PixelShaderResources[0] = heatMap;
+			//	Game.GraphicsDevice.PixelShaderResources[1] = heatMapPalette;
+			//
+			//	Game.GraphicsDevice.SetupVertexInput(heatVB, heatIB);
+			//	Game.GraphicsDevice.DrawIndexed(heatIB.Capacity, 0, 0);
+			//}
 
-				constBuffer.Data.Temp = new Vector4((float)Config.MaxHeatMapLevel, Config.HeatMapTransparency, HeatMapDim, 0);
-				constBuffer.UpdateCBuffer();
-				//constBuffer.SetCBufferVS(0);
-				//constBuffer.SetCBufferPS(0);
-
-				Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
-				Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
-
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-
-				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_POLY | GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_HEAT,
-					Primitive.TriangleList,
-					BlendState.AlphaBlend,
-					RasterizerState.CullNone,
-					DepthStencilState.None);
-
-
-				//dev.SetPSSamplerState(0, SamplerState.LinearClamp);
-				//dev.SetPSSamplerState(1, SamplerState.AnisotropicClamp);
-
-				Game.GraphicsDevice.PixelShaderSamplers[0] = SamplerState.LinearClamp;
-				Game.GraphicsDevice.PixelShaderSamplers[1] = SamplerState.AnisotropicClamp;
-
-				Game.GraphicsDevice.PixelShaderResources[0] = heatMap;
-				Game.GraphicsDevice.PixelShaderResources[1] = heatMapPalette;
-
-				//heatMap.SetPS(0);
-				//heatMapPalette.SetPS(1);
-
-				Game.GraphicsDevice.SetupVertexInput(heatVB, heatIB);
-				Game.GraphicsDevice.DrawIndexed(/*Primitive.TriangleList,*/ heatIB.Capacity, 0, 0);
-
-				//UpdateHeatMapData();
-			}
-
-			// Draw infection map
-			if (Config.ShowInfectHeatMap && heatVB != null) {
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER));
-				//shader.SetPixelShader((int)GlobeFlags.DRAW_POLY | (int)GlobeFlags.DRAW_HEAT);
-
-				constBuffer.Data.Temp = new Vector4((float)Config.MaxInfectLevel, 0.0f, HeatMapDim, 0);
-				constBuffer.UpdateCBuffer();
-				//constBuffer.SetCBufferVS(0);
-				//constBuffer.SetCBufferPS(0);
-
-				Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
-				Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
-
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-
-				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_POLY | GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_HEAT,
-					Primitive.TriangleList,
-					BlendState.AlphaBlend,
-					RasterizerState.CullNone,
-					DepthStencilState.None);
-
-				//dev.SetPSSamplerState(0, SamplerState.LinearClamp);
-				//dev.SetPSSamplerState(1, SamplerState.AnisotropicClamp);
-
-				Game.GraphicsDevice.PixelShaderSamplers[0] = SamplerState.LinearClamp;
-				Game.GraphicsDevice.PixelShaderSamplers[1] = SamplerState.AnisotropicClamp;
-
-				Game.GraphicsDevice.PixelShaderResources[0] = infectMap;
-				Game.GraphicsDevice.PixelShaderResources[1] = heatMapPalette;
-
-				//infectMap.SetPS(0);
-				//heatMapPalette.SetPS(1);
-
-				Game.GraphicsDevice.SetupVertexInput(heatVB, heatIB);
-				Game.GraphicsDevice.DrawIndexed(/*Primitive.TriangleList,*/ heatIB.Capacity, 0, 0);
-
-				//UpdateHeatMapData();
-			}
+			//// Draw infection map
+			//if (Config.ShowInfectHeatMap && heatVB != null) {
+			//	constBuffer.Data.Temp = new Vector4((float)Config.MaxInfectLevel, 0.0f, HeatMapDim, 0);
+			//	constBuffer.UpdateCBuffer();
+			//
+			//	Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
+			//	Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
+			//
+			//	Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
+			//		GlobeFlags.DRAW_POLY | GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_HEAT,
+			//		Primitive.TriangleList,
+			//		BlendState.AlphaBlend,
+			//		RasterizerState.CullNone,
+			//		DepthStencilState.None);
+			//
+			//	Game.GraphicsDevice.PixelShaderSamplers[0] = SamplerState.LinearClamp;
+			//	Game.GraphicsDevice.PixelShaderSamplers[1] = SamplerState.AnisotropicClamp;
+			//
+			//	Game.GraphicsDevice.PixelShaderResources[0] = infectMap;
+			//	Game.GraphicsDevice.PixelShaderResources[1] = heatMapPalette;
+			//
+			//	Game.GraphicsDevice.SetupVertexInput(heatVB, heatIB);
+			//	Game.GraphicsDevice.DrawIndexed(/*Primitive.TriangleList,*/ heatIB.Capacity, 0, 0);
+			//}
 
 
-			//Draw atmosphere
-			if (Config.ShowAtmosphere && atmosVB != null) {
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER));
-				//shader.SetPixelShader((int)GlobeFlags.DRAW_ATMOSPHERE);
-
-				constBuffer.Data.Temp = new Vector4(atmosTime, Config.ArrowsScale, 0.0f, 0);
-				constBuffer.UpdateCBuffer();
-				//constBuffer.SetCBufferVS(0);
-				//constBuffer.SetCBufferPS(0);
-				Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
-				Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
-
-				//dev.SetBlendState(BlendState.AlphaBlend);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.None);
-
-				//atmosTexture.SetPS(0);
-				//heatMapPalette.SetPS(1);
-				//atmosNextTexture.SetPS(2);
-				//arrowTex.SetPS(3);
-
-				Game.GraphicsDevice.PixelShaderResources[0] = atmosTexture;
-				Game.GraphicsDevice.PixelShaderResources[1] = heatMapPalette;
-				Game.GraphicsDevice.PixelShaderResources[2] = atmosNextTexture;
-				Game.GraphicsDevice.PixelShaderResources[3] = arrowTex;
-
-
-				//dev.SetPSSamplerState(0, SamplerState.LinearClamp);
-				//dev.SetPSSamplerState(1, SamplerState.AnisotropicClamp);
-
-				Game.GraphicsDevice.PixelShaderSamplers[0] = SamplerState.LinearClamp;
-				Game.GraphicsDevice.PixelShaderSamplers[1] = SamplerState.AnisotropicClamp;
-
-				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_ATMOSPHERE,
-					Primitive.TriangleList,
-					BlendState.AlphaBlend,
-					RasterizerState.CullNone,
-					DepthStencilState.None);
-
-				Game.GraphicsDevice.SetupVertexInput(atmosVB, atmosIB);
-				Game.GraphicsDevice.DrawIndexed(/*Primitive.TriangleList,*/ atmosIB.Capacity, 0, 0);
-			}
+			////Draw atmosphere
+			//if (Config.ShowAtmosphere && atmosVB != null) {
+			//	constBuffer.Data.Temp = new Vector4(atmosTime, Config.ArrowsScale, 0.0f, 0);
+			//	constBuffer.UpdateCBuffer();
+			//
+			//	Game.GraphicsDevice.VertexShaderConstants[0]	= constBuffer;
+			//	Game.GraphicsDevice.PixelShaderConstants[0]		= constBuffer;
+			//
+			//
+			//	Game.GraphicsDevice.PixelShaderResources[0] = atmosTexture;
+			//	Game.GraphicsDevice.PixelShaderResources[1] = heatMapPalette;
+			//	Game.GraphicsDevice.PixelShaderResources[2] = atmosNextTexture;
+			//	Game.GraphicsDevice.PixelShaderResources[3] = arrowTex;
+			//
+			//
+			//	Game.GraphicsDevice.PixelShaderSamplers[0] = SamplerState.LinearClamp;
+			//	Game.GraphicsDevice.PixelShaderSamplers[1] = SamplerState.AnisotropicClamp;
+			//
+			//	Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
+			//		GlobeFlags.DRAW_VERTEX_POLY | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_ATMOSPHERE,
+			//		Primitive.TriangleList,
+			//		BlendState.AlphaBlend,
+			//		RasterizerState.CullNone,
+			//		DepthStencilState.None);
+			//
+			//	Game.GraphicsDevice.SetupVertexInput(atmosVB, atmosIB);
+			//	Game.GraphicsDevice.DrawIndexed(atmosIB.Capacity, 0, 0);
+			//}
 
 
 			//Draw airlines
 			if (airLinesVB != null && Config.ShowAirLines) {
-				//shader.SetVertexShader((int)(GlobeFlags.DRAW_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER));
-				//shader.SetPixelShader((int)GlobeFlags.DRAW_ARCS);
-				//shader.SetGeometryShader((int)GlobeFlags.DRAW_ARCS);
-
-				//dev.SetBlendState(BlendState.Additive);
-				//Game.GraphicsDevice.SetDepthStencilState(DepthStencilState.Readonly);
-
 				constBuffer.Data.Temp = new Vector4(1.0f, 0.0f, 0.0f, 0.0f);
 				constBuffer.UpdateCBuffer();
-
-				//dotsBuf.Data.View = viewMatrixFloat;
-				//dotsBuf.Data.Proj = projMatrixFloat;
-				//dotsBuf.UpdateCBuffer();
-				//dotsBuf.SetCBufferVS(1);
-				//dotsBuf.SetCBufferGS(1);
-				//constBuffer.SetCBufferGS(0);
 
 				Game.GraphicsDevice.VertexShaderConstants[1]	= dotsBuf;
 				Game.GraphicsDevice.GeometryShaderConstants[0]	= constBuffer;
 				Game.GraphicsDevice.GeometryShaderConstants[1]	= dotsBuf;
-
-				//dev.SetRasterizerState(RasterizerState.CullNone);
 
 				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
 					GlobeFlags.DRAW_VERTEX_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_ARCS,
@@ -1231,17 +805,8 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 				dev.SetupVertexInput(airLinesVB, null);
 				dev.Draw(/*Primitive.LineList,*/ airLinesVB.Capacity, 0);
-
-				//Game.GraphicsDevice.DeviceContext.GeometryShader.Set(null);
-				//shader.ResetGeometryShader();
 			}
 
-			DrawRailroadPoly();
-			
-			DrawTrain();
-			
-			DrawCharts();
-			
 			DrawDebugLines();
 
 			//Game.GetService<DebugStrings>().Add("Cam pos     : " + Game.GetService<Camera>().CameraMatrix.TranslationVector, Color.Red);
@@ -1251,66 +816,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 			//Game.GetService<DebugStrings>().Add("Pitch : " + Pitch, Color.Green);
 			//Game.GetService<DebugStrings>().Add("Width : " + Game.GraphicsDevice.Viewport.Width, Color.Green);
 			Game.GetService<DebugStrings>().Add("Height : " + (Config.CameraDistance - Config.earthRadius) * 1000.0, Color.Green);
-			//
-			//
-			//Game.GetService<DebugStrings>().Add("FPS : " + gameTime.Fps);
 
-			Color labelHeaderColor = new Color(16, 125, 215, 255); //new Color( 99, 132, 181, 255);
-			Color labelBgColor = new Color(0, 0, 0, 92);
-
-
-
-			if (trainShcedule != null) {
-				var sb = Game.GetService<SpriteBatch>();
-
-				//sb.Begin(null, null, null, null, Matrix.OrthoOffCenterLH(vport.X, vport.X + vport.Width, vport.Y  + vport.Height, vport.Y, -9999, 9999));
-				sb.Begin(SpriteBlend.AlphaBlend, null, null, Matrix.OrthoOffCenterLH(vport.X, vport.X + vport.Width, vport.Y + vport.Height, vport.Y, -9999, 9999));
-				foreach (var line in trainShcedule) {
-					double x, y, z;
-					SphericalToCartesian(DMathUtil.DegreesToRadians(line.LonLat.X), DMathUtil.DegreesToRadians(line.LonLat.Y), Config.earthRadius, out x, out y, out z);
-
-					var pos = new DVector3(x, y, z);
-
-					if((pos - cameraPosition).Length() > 1000.0) continue;
-
-					var p	= DVector3.Project(pos, vport.X, vport.Y, vport.Width, vport.Height, (float)camNear, (float)camFar, vvvM * projMatrix);
-
-					int labelFrameWidth = 0;
-					int cityLabelWidth = 300;
-					int cityLabelXOffset = 40;
-					int cityLabelYOffset = 20;
-					int cityLabelTextOffset = 12;
-					
-					if (labelLightFont.MeasureString(line.City.ToUpper()).Width > cityLabelWidth) { cityLabelWidth = labelLightFont.MeasureString(line.City.ToUpper()).Width + cityLabelTextOffset*2;}
-					
-					int cityLabelBgHeight = labelLightFont.AverageCapitalLetterHeight + cityLabelTextOffset*2;
-					int labelGlobalHeight = cityLabelBgHeight + labelFont.AverageCapitalLetterHeight*2 + cityLabelTextOffset*3 + 4;
-
-					float cityLabelStartPosX = (float)p.X + cityLabelXOffset;
-					float cityLabelStartPosY = (float)p.Y + cityLabelYOffset;
-
-					float infectedPos = cityLabelStartPosY + cityLabelBgHeight + labelFont.AverageCapitalLetterHeight + cityLabelTextOffset + 2;
-					float healedPos = infectedPos + labelFont.AverageCapitalLetterHeight + cityLabelTextOffset;
-
-					float infectedXPos = cityLabelStartPosX + cityLabelWidth - labelFont.MeasureString(line.Sick.ToString()).Width - cityLabelTextOffset;
-					float healedXPos = cityLabelStartPosX + cityLabelWidth - labelFont.MeasureString(line.Recovered.ToString()).Width - cityLabelTextOffset;
-
-					sb.Draw(sb.TextureWhite, new Rectangle((int)cityLabelStartPosX - labelFrameWidth,(int)cityLabelStartPosY - labelFrameWidth, cityLabelWidth + labelFrameWidth*2, labelGlobalHeight + labelFrameWidth*2), labelBgColor);
-
-					sb.DrawBeam(beamTexture, new Vector2((float)p.X, (float)p.Y), new Vector2(cityLabelStartPosX, cityLabelStartPosY), labelHeaderColor, labelHeaderColor, 12);
-
-					sb.Draw(sb.TextureWhite, new Rectangle((int)cityLabelStartPosX,(int)cityLabelStartPosY, cityLabelWidth, cityLabelBgHeight), labelHeaderColor);
-					
-					labelLightFont.DrawString(sb, line.City.ToUpper(), (int)cityLabelStartPosX + cityLabelTextOffset, cityLabelStartPosY + labelLightFont.AverageCapitalLetterHeight + cityLabelTextOffset, Color.WhiteSmoke);
-					labelFont.DrawString(sb, "Больных на текущий момент: ", (int)cityLabelStartPosX + cityLabelTextOffset, (int)infectedPos, Color.WhiteSmoke);
-					labelFont.DrawString(sb, line.Sick.ToString(), (int)infectedXPos, (int)infectedPos, Color.OrangeRed);
-					labelFont.DrawString(sb, "Выздоровевших за сутки: ", (int)cityLabelStartPosX + cityLabelTextOffset, (int)healedPos, Color.WhiteSmoke);
-					labelFont.DrawString(sb, line.Recovered.ToString(), (int)healedXPos, (int)healedPos, Color.GreenYellow);
-				}
-				
-
-				sb.End();//*/
-			}
 		}
 
 		Viewport vport;
@@ -1346,16 +852,12 @@ namespace Fusion.GIS.LayerSpace.Layers
 		/// </summary>
 		public override void Dispose()
 		{
-			foreach (var tile in tilesToRender)
-			{
+			foreach (var tile in tilesToRender) {
 				tile.Value.Dispose();
 			}
-			foreach (var tile in tilesFree)
-			{
+			foreach (var tile in tilesFree) {
 				tile.Value.Dispose();
 			}
-
-			ClearAllMunicipalDivisions();
 
 			frame.Dispose();
 			shader.Dispose();
@@ -1365,32 +867,25 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 			socioClasses.Dispose();
 			geoObjects.Dispose();
-			infectionDot.Dispose();
 
-			heatVB.Dispose();
-			heatIB.Dispose();
 
-			heatMapPalette.Dispose();
-			paletteMunDiv0.Dispose();
-			paletteMunDiv1.Dispose();
-
-			if (municipalLinesVB != null) municipalLinesVB.Dispose();
-			if (airLinesVB != null) airLinesVB.Dispose();
-			if (railRoadsVB != null) railRoadsVB.Dispose();
-			if (roadsVB != null) roadsVB.Dispose();
-			if (heatMap != null) heatMap.Dispose();
-			if (infectMap != null) infectMap.Dispose();
-			if (arrowTex != null) arrowTex.Dispose();
-			if (atmosVB != null) atmosVB.Dispose();
-			if (atmosIB != null) atmosIB.Dispose();
-			if (atmosTexture != null) atmosTexture.Dispose();
-			if (atmosNextTexture != null) atmosNextTexture.Dispose();
+			if (municipalLinesVB != null)	municipalLinesVB.Dispose();
+			if (airLinesVB != null)			airLinesVB.Dispose();
+			if (railRoadsVB != null)		railRoadsVB.Dispose();
+			if (roadsVB != null)			roadsVB.Dispose();
+			if (heatMap != null)			heatMap.Dispose();
+			if (infectMap != null)			infectMap.Dispose();
+			if (arrowTex != null)			arrowTex.Dispose();
+			if (atmosVB != null)			atmosVB.Dispose();
+			if (atmosIB != null)			atmosIB.Dispose();
+			if (atmosTexture != null)		atmosTexture.Dispose();
+			if (atmosNextTexture != null)	atmosNextTexture.Dispose();
 			if (contourBuildingsVB != null) contourBuildingsVB.Dispose();
 			railRoadsTex.Dispose();
 
-			if (gridVertexBuffer != null) gridVertexBuffer.Dispose();
-			if (gridIndexBuffer != null) gridIndexBuffer.Dispose();
-			if (gridTex != null) gridTex.Dispose();
+			if (gridVertexBuffer != null)	gridVertexBuffer.Dispose();
+			if (gridIndexBuffer != null)	gridIndexBuffer.Dispose();
+			if (gridTex != null)			gridTex.Dispose();
 
 			base.Dispose();
 		}
@@ -1408,10 +903,8 @@ namespace Fusion.GIS.LayerSpace.Layers
 			DVector3[] res;
 			DVector2 ret = DVector2.Zero;
 
-			if (LineIntersection(nearPoint, farPoint, 1.0, out res))
-			{
-				if (res.Length > 0)
-				{
+			if (LineIntersection(nearPoint, farPoint, 1.0, out res)) {
+				if (res.Length > 0) {
 					CartesianToSpherical(res[0], out ret.X, out ret.Y);
 				}
 			}
@@ -1447,8 +940,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 			DVector3[] res;
 
-			if (LineIntersection(near, far, Config.earthRadius, out res))
-			{
+			if (LineIntersection(near, far, Config.earthRadius, out res)) {
 				CartesianToSpherical(res[0], out lonLat.X, out lonLat.Y);
 				return true;
 			}
@@ -1465,7 +957,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		/// <param name="radius"></param>
 		/// <param name="intersectionPoints"></param>
 		/// <returns></returns>
-		public bool LineIntersection(DVector3 lineOrigin, DVector3 lineEnd, double radius, out DVector3[] intersectionPoints)
+		bool LineIntersection(DVector3 lineOrigin, DVector3 lineEnd, double radius, out DVector3[] intersectionPoints)
 		{
 			intersectionPoints = new DVector3[0];
 
@@ -1522,7 +1014,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		/// <param name="cart"></param>
 		/// <param name="lonLat"></param>
 		/// <param name="radius"></param>
-		public void CartesianToSpherical(DVector3 cart, out double lon, out double lat)
+		void CartesianToSpherical(DVector3 cart, out double lon, out double lat)
 		{
 			var radius = cart.Length();
 
@@ -1538,7 +1030,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		public DVector2 CartesianToSpherical(DVector3 cart)
+		DVector2 CartesianToSpherical(DVector3 cart)
 		{
 			double lon, lat;
 			CartesianToSpherical(cart, out lon, out lat);
@@ -1553,7 +1045,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		/// <param name="lat"></param>
 		/// <param name="radius"></param>
 		/// <param name="cart"></param>
-		public void SphericalToCartesian(double lon, double lat, float radius, out Vector3 cart)
+		void SphericalToCartesian(double lon, double lat, float radius, out Vector3 cart)
 		{
 			cart = Vector3.Zero;
 
@@ -1567,7 +1059,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 
 
-		public void SphericalToCartesian(double lon, double lat, double radius, out double x, out double y, out double z)
+		void SphericalToCartesian(double lon, double lat, double radius, out double x, out double y, out double z)
 		{
 			z = (radius * Math.Cos(lat) * Math.Cos(lon));
 			x = (radius * Math.Cos(lat) * Math.Sin(lon));
@@ -1575,7 +1067,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		public DVector3 SphericalToCartesian(DVector2 lonLat, double radius)
+		DVector3 SphericalToCartesian(DVector2 lonLat, double radius)
 		{
 			double x, y, z;
 			SphericalToCartesian(lonLat.X, lonLat.Y, radius, out x, out y, out z);

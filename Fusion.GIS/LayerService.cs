@@ -22,6 +22,7 @@ namespace Fusion.GIS
 		public GeoObjectsLayer		GeoObjectsLayer		{ get; protected set; }
 		public ElevationLayer		ElevationLayer		{ get; protected set; }
 		public OpenStreetMapSource	OpenStreetMapSource { get; protected set; }
+		public WikiMapiaSource		WikiMapiaSource		{ get; protected set; }
 
 		[Config]
 		public LayerServiceConfig Config { set; get; }
@@ -41,6 +42,8 @@ namespace Fusion.GIS
 			OpenStreetMapSource = new OpenStreetMapSource(Game, MapLayer);
 			//GeoObjectsLayer = new GeoObjectsLayer(Game, Config);
 			GlobeLayer		= new GlobeLayer(Game, Config);
+
+			WikiMapiaSource = new WikiMapiaSource(Game, MapLayer);
 		}
 
 

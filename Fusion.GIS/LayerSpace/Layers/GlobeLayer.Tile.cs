@@ -133,7 +133,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		public static double[] getGeoFromTile(int x, int y, int zoom)
+		static double[] getGeoFromTile(int x, int y, int zoom)
 		{
 			double a, c1, c2, c3, c4, g, z, mercX, mercY;
 			a = 6378137;
@@ -150,7 +150,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 			return new double[] { mercX / a * 180 / Math.PI, z * 180 / Math.PI };
 		}
 
-		public static long[] getTileFromGeo(double lat, double lon, int zoom)
+		static long[] getTileFromGeo(double lat, double lon, int zoom)
 		{
 			double rLon, rLat, a, k, z;
 			rLon = lon * Math.PI / 180;
@@ -162,7 +162,7 @@ namespace Fusion.GIS.LayerSpace.Layers
                 (int) (((20037508.342789 + a * rLon) * 53.5865938 / Math.Pow(2, (23 - zoom))) / 256), (int) (((20037508.342789 - a * Math.Log(z)) * 53.5865938 / Math.Pow(2, (23 - zoom)))) / 256 };
 		}
 
-		public static int[] getMapTileFromCoordinates(double aLat, double aLon, int zoom)
+		static int[] getMapTileFromCoordinates(double aLat, double aLon, int zoom)
 		{
 			int[] outt = new int[2];
 
@@ -179,13 +179,13 @@ namespace Fusion.GIS.LayerSpace.Layers
 			return outt;
 		}
 
-		public static double[] tileToMercator(long[] d)
+		static double[] tileToMercator(long[] d)
 		{
 			return new double[] { Math.Round(d[0] / 53.5865938 - 20037508.342789),
                 Math.Round(20037508.342789 - d[1] / 53.5865938) };
 		}
 		
-		public static double[] geoToMercator(double[] g)
+		static double[] geoToMercator(double[] g)
 		{
 			double d = g[0] * Math.PI / 180, m = g[1] * Math.PI / 180, l = 6378137, k = 0.0818191908426, f = k * Math.Sin(m);
 			double h = Math.Tan(Math.PI / 4 + m / 2), j = Math.Pow(Math.Tan(Math.PI / 4 + Math.Asin(f) / 2), k), i = h / j;
@@ -195,7 +195,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		public static double[] tileCoordinatesToPixels(double[] i, int h)
+		static double[] tileCoordinatesToPixels(double[] i, int h)
 		{
 			double g = Math.Pow(2, (23 - h));
 			return new double[] { (int)i[0] / g, (int)i[1] / g };
@@ -331,19 +331,6 @@ namespace Fusion.GIS.LayerSpace.Layers
 			//var merc	= GeoHelper.WorldToTilePos(lonLat.X, lonLat.Y);
 			var merc = ms.Projection.WorldToTilePos(lonLat.X, lonLat.Y, CurrentLevel);
 
-			//////////////////////////////
-			//var e = getTileFromGeo(lonLat.X, lonLat.Y, CurrentLevel);
-			//var o = geoToMercator(new double[] { lonLat.X, lonLat.Y });
-			//var t = getMapTileFromCoordinates(lonLat.Y, lonLat.X, CurrentLevel);
-			////var f = tileToMercator(t);
-			//var g = getGeoFromTile(t[1], t[0], CurrentLevel);
-			//var k = tileCoordinatesToPixels(new double[] {(double)t[0], (double)t[1]}, CurrentLevel);
-			//
-			//var gg = ms.Projection.WorldToTilePos(0, 0, CurrentLevel);
-			//var tt = ms.Projection.TileToWorldPos(0.5, 0.5, 0);
-			//
-			////////////////////////////////
-
 			// Get tile index under camera
 			int x, y;
 			//GetTileIndexByMerc(merc, CurrentLevel, out x, out y);
@@ -408,25 +395,6 @@ namespace Fusion.GIS.LayerSpace.Layers
 					QuadTreeTraversalDownTop(info, currNode, 0);
 				}
 			}
-
-
-			//var numTiles = 1 << CurrentLevel;
-			//
-			//for (int i = -5; i <= 5; i++) {
-			//	for (int j = -5; j <= 5; j++) {
-			//
-			//		int xInd = x + i;
-			//		int yInd = y + j;
-			//
-			//		if(xInd < 0) xInd = Math.Abs(numTiles + xInd);
-			//
-			//		xInd %= numTiles;
-			//
-			//		if (yInd < 0 || yInd >= numTiles) continue;
-			//
-			//		AddTileToRenderList(xInd, yInd, CurrentLevel);					
-			//	}
-			//}
 
 			foreach (var tile in tilesOld) {
 				tilesFree.Add(tile.Key, tile.Value);

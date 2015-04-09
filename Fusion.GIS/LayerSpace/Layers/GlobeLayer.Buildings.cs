@@ -27,7 +27,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 		List<GeoVert> contourBuildingsList = new List<GeoVert>();
 
-		public void AddBuildingContour(DVector2[] contourPoints, Color color)
+		void AddBuildingContour(DVector2[] contourPoints, Color color)
 		{
 			if (contourPoints.Length < 3) return;
 
@@ -60,7 +60,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 			contourBuildingsList.Add(contourBuildingsList[firstInd]);
 		}
 
-		public void UpdateContourBuildings()
+		void UpdateContourBuildings()
 		{
 			if (contourBuildingsList.Count == 0) return;
 
@@ -191,10 +191,6 @@ namespace Fusion.GIS.LayerSpace.Layers
 			buildingsVB = new VertexBuffer(Game.GraphicsDevice, typeof(GeoVert), buildings.Length);
 			buildingsVB.SetData(buildings, 0, buildings.Length);
 		}
-
-
-
-
 
 	}
 }

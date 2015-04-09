@@ -10,9 +10,9 @@ namespace Fusion.GIS.LayerSpace.Layers
 {
 	public partial class GlobeLayer
 	{
-		VertexBuffer gridVertexBuffer;
-		IndexBuffer gridIndexBuffer;
-		Texture2D gridTex;
+		VertexBuffer	gridVertexBuffer;
+		IndexBuffer		gridIndexBuffer;
+		Texture2D		gridTex;
 
 
 		void CreateSphere(int Stacks, int Slices)
@@ -21,8 +21,8 @@ namespace Fusion.GIS.LayerSpace.Layers
 			int nVertices = (Stacks + 1) * (Slices + 1);
 			int dwIndices = (3 * Stacks * (Slices + 1)) * 2;
 
-			int[] indices = new int[dwIndices];
-			GeoVert[] vertices = new GeoVert[nVertices];
+			int[]		indices		= new int[dwIndices];
+			GeoVert[]	vertices	= new GeoVert[nVertices];
 
 			double stackAngle = Math.PI / Stacks;
 			double sliceAngle = (Math.PI * 2.0) / Slices;
@@ -32,14 +32,12 @@ namespace Fusion.GIS.LayerSpace.Layers
 			int vertcount = 0;
 			int indexcount = 0;
 
-			for (int stack = 0; stack < (Stacks + 1); stack++)
-			{
+			for (int stack = 0; stack < (Stacks + 1); stack++) {
 
 				double phi = stack * stackAngle - Math.PI / 2.0;
 
 				//Generate the group of segments for the current Stack  
-				for (int slice = 0; slice < (Slices + 1); slice++)
-				{
+				for (int slice = 0; slice < (Slices + 1); slice++) {
 
 					double lambda = slice * sliceAngle;
 
@@ -51,8 +49,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 					//vertices[vertcount].TextureCoordinate = new Vector2((float)slice / (float)Slices, (float)stack / (float)Stacks);  
 					vertcount++;
-					if (stack != (Stacks - 1))
-					{
+					if (stack != (Stacks - 1)) {
 						indices[indexcount] = wVertexIndex;
 						indexcount++;
 						indices[indexcount] = wVertexIndex + 1;
@@ -74,8 +71,8 @@ namespace Fusion.GIS.LayerSpace.Layers
 			if (gridIndexBuffer != null) gridIndexBuffer.Dispose();
 			if (gridTex == null) gridTex = Game.Content.Load<Texture2D>("NE2_50M_SR_W_4096.jpg");
 
-			gridVertexBuffer = new VertexBuffer(Game.GraphicsDevice, typeof(GeoVert), vertices.Length);
-			gridIndexBuffer = new IndexBuffer(Game.GraphicsDevice, indices.Length);
+			gridVertexBuffer	= new VertexBuffer(Game.GraphicsDevice, typeof(GeoVert), vertices.Length);
+			gridIndexBuffer		= new IndexBuffer(Game.GraphicsDevice, indices.Length);
 
 			gridVertexBuffer.SetData(vertices, 0, vertices.Length);
 			gridIndexBuffer.SetData(indices, 0, indices.Length);
