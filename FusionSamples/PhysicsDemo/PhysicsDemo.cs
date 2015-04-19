@@ -45,6 +45,9 @@ namespace PhysicsDemo {
 			//	load configuration :
 			LoadConfiguration();
 
+			//	Force to enable free camera.
+			GetService<Camera>().Config.FreeCamEnabled	=	true;
+
 			//	make configuration saved on exit
 			Exiting += FusionGame_Exiting;
 			InputDevice.KeyDown += InputDevice_KeyDown;

@@ -153,6 +153,9 @@ namespace AnimationDemo {
 			//	load configuration for each service :
 			LoadConfiguration();
 
+			//	Force to enable free camera.
+			GetService<Camera>().Config.FreeCamEnabled	=	true;
+
 			//	make configuration saved on exit :
 			Exiting += Game_Exiting;
 		}
