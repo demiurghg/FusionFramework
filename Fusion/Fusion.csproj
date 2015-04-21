@@ -284,6 +284,7 @@
     <Compile Include="Mathematics\Color3.cs" />
     <Compile Include="Mathematics\Color4.cs" />
     <Compile Include="Mathematics\ColorBGRA.cs" />
+    <Compile Include="Mathematics\Int2.cs" />
     <Compile Include="SharpDXHelper.cs" />
     <Compile Include="Mathematics\Enums.cs" />
     <Compile Include="Mathematics\FrustumCameraParams.cs" />
