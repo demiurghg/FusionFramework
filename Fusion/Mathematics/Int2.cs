@@ -31,28 +31,28 @@ namespace Fusion.Mathematics
     public struct Int2 : IEquatable<Int2>, IFormattable
     {
         /// <summary>
-        /// The size of the <see cref = "Int3" /> type, in bytes.
+        /// The size of the <see cref = "Int2" /> type, in bytes.
         /// </summary>
-        public static readonly int SizeInBytes = Marshal.SizeOf(typeof (Int3));
+        public static readonly int SizeInBytes = Marshal.SizeOf(typeof (Int2));
 
         /// <summary>
-        /// A <see cref = "Int3" /> with all of its components set to zero.
+        /// A <see cref = "Int2" /> with all of its components set to zero.
         /// </summary>
         public static readonly Int2 Zero = new Int2();
 
         /// <summary>
-        /// The X unit <see cref = "Int3" /> (1, 0, 0).
+        /// The X unit <see cref = "Int2" /> (1, 0, 0).
         /// </summary>
         public static readonly Int2 UnitX = new Int2(1, 0);
 
         /// <summary>
-        /// The Y unit <see cref = "Int3" /> (0, 1, 0).
+        /// The Y unit <see cref = "Int2" /> (0, 1, 0).
         /// </summary>
         public static readonly Int2 UnitY = new Int2(0, 1);
 
 
         /// <summary>
-        /// A <see cref = "Int3" /> with all of its components set to one.
+        /// A <see cref = "Int2" /> with all of its components set to one.
         /// </summary>
         public static readonly Int2 One = new Int2(1, 1);
 
@@ -67,7 +67,7 @@ namespace Fusion.Mathematics
         public int Y;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Int3" /> struct.
+        /// Initializes a new instance of the <see cref = "Int2" /> struct.
         /// </summary>
         /// <param name = "value">The value that will be assigned to all components.</param>
         public Int2(int value)
@@ -77,7 +77,7 @@ namespace Fusion.Mathematics
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Int3" /> struct.
+        /// Initializes a new instance of the <see cref = "Int2" /> struct.
         /// </summary>
         /// <param name = "x">Initial value for the X component of the vector.</param>
         /// <param name = "y">Initial value for the Y component of the vector.</param>
@@ -90,7 +90,7 @@ namespace Fusion.Mathematics
 
 
         /// <summary>
-        /// Initializes a new instance of the <see cref = "Int3" /> struct.
+        /// Initializes a new instance of the <see cref = "Int2" /> struct.
         /// </summary>
         /// <param name = "values">The values to assign to the X, Y, Z, and W components of the vector. This must be an array with four elements.</param>
         /// <exception cref = "ArgumentNullException">Thrown when <paramref name = "values" /> is <c>null</c>.</exception>
@@ -101,7 +101,7 @@ namespace Fusion.Mathematics
                 throw new ArgumentNullException("values");
             if (values.Length != 2)
                 throw new ArgumentOutOfRangeException("values",
-                                                      "There must be three and only three input values for Int3.");
+                                                      "There must be three and only three input values for Int2.");
 
             X = values[0];
             Y = values[1];
@@ -126,7 +126,7 @@ namespace Fusion.Mathematics
                         return Y;
                 }
 
-                throw new ArgumentOutOfRangeException("index", "Indices for Int3 run from 0 to 1, inclusive.");
+                throw new ArgumentOutOfRangeException("index", "Indices for Int2 run from 0 to 1, inclusive.");
             }
 
             set
@@ -140,7 +140,7 @@ namespace Fusion.Mathematics
                         Y = value;
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException("index", "Indices for Int3 run from 0 to 1, inclusive.");
+                        throw new ArgumentOutOfRangeException("index", "Indices for Int2 run from 0 to 1, inclusive.");
                 }
             }
         }
@@ -160,9 +160,9 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first vector to add.</param>
         /// <param name = "right">The second vector to add.</param>
         /// <param name = "result">When the method completes, contains the sum of the two vectors.</param>
-        public static void Add(ref Int3 left, ref Int3 right, out Int3 result)
+        public static void Add(ref Int2 left, ref Int2 right, out Int2 result)
         {
-            result = new Int3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+            result = new Int2(left.X + right.X, left.Y + right.Y);
         }
 
         /// <summary>
@@ -171,9 +171,9 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first vector to add.</param>
         /// <param name = "right">The second vector to add.</param>
         /// <returns>The sum of the two vectors.</returns>
-        public static Int3 Add(Int3 left, Int3 right)
+        public static Int2 Add(Int2 left, Int2 right)
         {
-            return new Int3(left.X + right.X, left.Y + right.Y, left.Z + right.Z);
+            return new Int2(left.X + right.X, left.Y + right.Y);
         }
 
         /// <summary>
@@ -182,9 +182,9 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first vector to subtract.</param>
         /// <param name = "right">The second vector to subtract.</param>
         /// <param name = "result">When the method completes, contains the difference of the two vectors.</param>
-        public static void Subtract(ref Int3 left, ref Int3 right, out Int3 result)
+        public static void Subtract(ref Int2 left, ref Int2 right, out Int2 result)
         {
-            result = new Int3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+            result = new Int2(left.X - right.X, left.Y - right.Y);
         }
 
         /// <summary>
@@ -193,9 +193,9 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first vector to subtract.</param>
         /// <param name = "right">The second vector to subtract.</param>
         /// <returns>The difference of the two vectors.</returns>
-        public static Int3 Subtract(Int3 left, Int3 right)
+        public static Int2 Subtract(Int2 left, Int2 right)
         {
-            return new Int3(left.X - right.X, left.Y - right.Y, left.Z - right.Z);
+            return new Int2(left.X - right.X, left.Y - right.Y);
         }
 
         /// <summary>
@@ -204,9 +204,9 @@ namespace Fusion.Mathematics
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <param name = "result">When the method completes, contains the scaled vector.</param>
-        public static void Multiply(ref Int3 value, int scale, out Int3 result)
+        public static void Multiply(ref Int2 value, int scale, out Int2 result)
         {
-            result = new Int3(value.X*scale, value.Y*scale, value.Z*scale);
+            result = new Int2(value.X*scale, value.Y*scale);
         }
 
         /// <summary>
@@ -215,9 +215,9 @@ namespace Fusion.Mathematics
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static Int3 Multiply(Int3 value, int scale)
+        public static Int2 Multiply(Int2 value, int scale)
         {
-            return new Int3(value.X*scale, value.Y*scale, value.Z*scale);
+            return new Int2(value.X*scale, value.Y*scale);
         }
 
         /// <summary>
@@ -226,9 +226,9 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first vector to modulate.</param>
         /// <param name = "right">The second vector to modulate.</param>
         /// <param name = "result">When the method completes, contains the modulated vector.</param>
-        public static void Modulate(ref Int3 left, ref Int3 right, out Int3 result)
+        public static void Modulate(ref Int2 left, ref Int2 right, out Int2 result)
         {
-            result = new Int3(left.X*right.X, left.Y*right.Y, left.Z*right.Z);
+            result = new Int2(left.X*right.X, left.Y*right.Y);
         }
 
         /// <summary>
@@ -237,9 +237,9 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first vector to modulate.</param>
         /// <param name = "right">The second vector to modulate.</param>
         /// <returns>The modulated vector.</returns>
-        public static Int3 Modulate(Int3 left, Int3 right)
+        public static Int2 Modulate(Int2 left, Int2 right)
         {
-            return new Int3(left.X*right.X, left.Y*right.Y, left.Z*right.Z);
+            return new Int2(left.X*right.X, left.Y*right.Y);
         }
 
         /// <summary>
@@ -248,9 +248,9 @@ namespace Fusion.Mathematics
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <param name = "result">When the method completes, contains the scaled vector.</param>
-        public static void Divide(ref Int3 value, int scale, out Int3 result)
+        public static void Divide(ref Int2 value, int scale, out Int2 result)
         {
-            result = new Int3(value.X/scale, value.Y/scale, value.Z/scale);
+            result = new Int2(value.X/scale, value.Y/scale);
         }
 
         /// <summary>
@@ -259,9 +259,9 @@ namespace Fusion.Mathematics
         /// <param name = "value">The vector to scale.</param>
         /// <param name = "scale">The amount by which to scale the vector.</param>
         /// <returns>The scaled vector.</returns>
-        public static Int3 Divide(Int3 value, int scale)
+        public static Int2 Divide(Int2 value, int scale)
         {
-            return new Int3(value.X/scale, value.Y/scale, value.Z/scale);
+            return new Int2(value.X/scale, value.Y/scale);
         }
 
         /// <summary>
@@ -269,9 +269,9 @@ namespace Fusion.Mathematics
         /// </summary>
         /// <param name = "value">The vector to negate.</param>
         /// <param name = "result">When the method completes, contains a vector facing in the opposite direction.</param>
-        public static void Negate(ref Int3 value, out Int3 result)
+        public static void Negate(ref Int2 value, out Int2 result)
         {
-            result = new Int3(-value.X, -value.Y, -value.Z);
+            result = new Int2(-value.X, -value.Y);
         }
 
         /// <summary>
@@ -279,9 +279,9 @@ namespace Fusion.Mathematics
         /// </summary>
         /// <param name = "value">The vector to negate.</param>
         /// <returns>A vector facing in the opposite direction.</returns>
-        public static Int3 Negate(Int3 value)
+        public static Int2 Negate(Int2 value)
         {
-            return new Int3(-value.X, -value.Y, -value.Z);
+            return new Int2(-value.X, -value.Y);
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace Fusion.Mathematics
         /// <param name = "min">The minimum value.</param>
         /// <param name = "max">The maximum value.</param>
         /// <param name = "result">When the method completes, contains the clamped value.</param>
-        public static void Clamp(ref Int3 value, ref Int3 min, ref Int3 max, out Int3 result)
+        public static void Clamp(ref Int2 value, ref Int2 min, ref Int2 max, out Int2 result)
         {
             int x = value.X;
             x = (x > max.X) ? max.X : x;
@@ -301,11 +301,11 @@ namespace Fusion.Mathematics
             y = (y > max.Y) ? max.Y : y;
             y = (y < min.Y) ? min.Y : y;
 
-            int z = value.Z;
+            /*int z = value.Z;
             z = (z > max.Z) ? max.Z : z;
-            z = (z < min.Z) ? min.Z : z;
+            z = (z < min.Z) ? min.Z : z;*/
 
-            result = new Int3(x, y, z);
+            result = new Int2(x, y);
         }
 
         /// <summary>
@@ -315,9 +315,9 @@ namespace Fusion.Mathematics
         /// <param name = "min">The minimum value.</param>
         /// <param name = "max">The maximum value.</param>
         /// <returns>The clamped value.</returns>
-        public static Int3 Clamp(Int3 value, Int3 min, Int3 max)
+        public static Int2 Clamp(Int2 value, Int2 min, Int2 max)
         {
-            Int3 result;
+            Int2 result;
             Clamp(ref value, ref min, ref max, out result);
             return result;
         }
@@ -328,11 +328,11 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
         /// <param name = "result">When the method completes, contains an new vector composed of the largest components of the source vectors.</param>
-        public static void Max(ref Int3 left, ref Int3 right, out Int3 result)
+        public static void Max(ref Int2 left, ref Int2 right, out Int2 result)
         {
             result.X = (left.X > right.X) ? left.X : right.X;
             result.Y = (left.Y > right.Y) ? left.Y : right.Y;
-            result.Z = (left.Z > right.Z) ? left.Z : right.Z;
+            //result.Z = (left.Z > right.Z) ? left.Z : right.Z;
         }
 
         /// <summary>
@@ -341,9 +341,9 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
         /// <returns>A vector containing the largest components of the source vectors.</returns>
-        public static Int3 Max(Int3 left, Int3 right)
+        public static Int2 Max(Int2 left, Int2 right)
         {
-            Int3 result;
+            Int2 result;
             Max(ref left, ref right, out result);
             return result;
         }
@@ -354,11 +354,11 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
         /// <param name = "result">When the method completes, contains an new vector composed of the smallest components of the source vectors.</param>
-        public static void Min(ref Int3 left, ref Int3 right, out Int3 result)
+        public static void Min(ref Int2 left, ref Int2 right, out Int2 result)
         {
             result.X = (left.X < right.X) ? left.X : right.X;
             result.Y = (left.Y < right.Y) ? left.Y : right.Y;
-            result.Z = (left.Z < right.Z) ? left.Z : right.Z;
+            ///result.Z = (left.Z < right.Z) ? left.Z : right.Z;
         }
 
         /// <summary>
@@ -367,9 +367,9 @@ namespace Fusion.Mathematics
         /// <param name = "left">The first source vector.</param>
         /// <param name = "right">The second source vector.</param>
         /// <returns>A vector containing the smallest components of the source vectors.</returns>
-        public static Int3 Min(Int3 left, Int3 right)
+        public static Int2 Min(Int2 left, Int2 right)
         {
-            Int3 result;
+            Int2 result;
             Min(ref left, ref right, out result);
             return result;
         }
