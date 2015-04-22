@@ -77,7 +77,7 @@ namespace Fusion.Graphics {
 			var dev		= Game.GraphicsDevice;
 
 			effect		= Game.Content.Load<Ubershader>("debugRender.hlsl");
-			factory		= new StateFactory( effect, typeof(RenderFlags), Primitive.LineList, VertexInputElement.FromStructure( typeof(LineVertex) ) );
+			factory		= new StateFactory( effect, typeof(RenderFlags), Primitive.LineList, VertexInputElement.FromStructure( typeof(LineVertex) ), BlendState.AlphaBlend, RasterizerState.CullNone );
 
 			constData	= new ConstData();
 			constBuffer = new ConstantBuffer(dev, typeof(ConstData));
@@ -237,16 +237,16 @@ namespace Fusion.Graphics {
 		}
 
 
-		public void DrawRing(Vector3 origin, float radius, Color color, int numSegments = 32)
+		public void DrawRing(Vector3 origin, float radius, Color color, int numSegments = 32, float angle = 0)
 		{
 			int N = numSegments;
 			Vector3[] points = new Vector3[N + 1];
 
 			for (int i = 0; i <= N; i++)
 			{
-				points[i].X = origin.X + radius * (float)Math.Cos(Math.PI * 2 * i / N);
+				points[i].X = origin.X + radius * (float)Math.Cos(Math.PI * 2 * i / N + angle);
 				points[i].Y = origin.Y;
-				points[i].Z = origin.Z + radius * (float)Math.Sin(Math.PI * 2 * i / N);
+				points[i].Z = origin.Z + radius * (float)Math.Sin(Math.PI * 2 * i / N + angle);
 			}
 
 			for (int i = 0; i < N; i++)
