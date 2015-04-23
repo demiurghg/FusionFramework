@@ -26,7 +26,7 @@ namespace Fusion.GIS.DataSystem.MapSources.GoogleMaps
 			UrlFormatServer		= "khm";
 			UrlFormatRequest	= "kh";
 			UrlFormat			= "http://{0}{1}.{10}/{2}/v={3}&hl={4}&x={5}{6}&y={7}&z={8}&s={9}";
-			MapVersion			= "158";
+			MapVersion			= "168";
 
 			MaxZoom = 19;
 		}
