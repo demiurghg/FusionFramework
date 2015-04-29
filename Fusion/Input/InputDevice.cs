@@ -104,6 +104,11 @@ namespace Fusion.Input {
 
             Device.RegisterDevice(UsagePage.Generic, UsageId.GenericKeyboard, DeviceFlags.None);
             Device.KeyboardInput += new EventHandler<KeyboardInputEventArgs>(KeyboardHandle);
+
+			if (Game.GraphicsDevice.Display.Window != null && !Game.GraphicsDevice.Display.Window.IsDisposed) {
+				var p				= Game.GraphicsDevice.Display.Window.PointToClient(Forms.Cursor.Position);
+				GlobalMouseOffset	= new Vector2(p.X, p.Y);
+			}
 		}
 
 
