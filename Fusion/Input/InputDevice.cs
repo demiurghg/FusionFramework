@@ -28,6 +28,7 @@ namespace Fusion.Input {
 		public	bool		IsMouseClipped			{ get; set; }
 		public	bool		IsMouseHidden			{ get; set; }
 		public	int			MouseWheelScrollLines	{ get { return System.Windows.Forms.SystemInformation.MouseWheelScrollLines; } }
+		public	int			MouseWheelScrollDelta	{ get { return System.Windows.Forms.SystemInformation.MouseWheelScrollDelta; } }
 		
 		HashSet<Keys>		pressed = new HashSet<Keys>();
 
@@ -42,6 +43,8 @@ namespace Fusion.Input {
 		}
 
 		public class MouseScrollEventArgs : EventArgs {
+			/// <summary>
+			/// </summary>
 			public int WheelDelta;
 		}
 
