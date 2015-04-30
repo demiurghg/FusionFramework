@@ -310,4 +310,13 @@
     <ShowPemutations>true</ShowPemutations>
     <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\SceneDemo\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
   </Asset>
+  <Asset xsi:type="FbxFileSceneAsset">
+    <AssetPath>Sponza.fbx</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>Sponza.fbx</SourceFile>
+    <MergeTolerance>0</MergeTolerance>
+    <ImportAnimation>false</ImportAnimation>
+    <ImportGeometry>true</ImportGeometry>
+  </Asset>
 </ArrayOfAsset>
