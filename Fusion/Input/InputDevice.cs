@@ -44,6 +44,7 @@ namespace Fusion.Input {
 
 		public class MouseScrollEventArgs : EventArgs {
 			/// <summary>
+			/// See: InputDevice.MouseWheelScrollDelta.
 			/// </summary>
 			public int WheelDelta;
 		}
