@@ -26,9 +26,10 @@ namespace TriPlanarMappingDemo
 			public Vector4	ScaleSharp;
 		}
 
-
+		[Flags]
 		enum RenderFlags {
 			None,
+			Wireframe = 0x0001,
 		}
 
 
@@ -44,6 +45,8 @@ namespace TriPlanarMappingDemo
 		StateFactory	factory;
 		CBData			constData;
 
+
+		bool wireframe = false;
 
 		float minLOD			= 1;
 		float maxLOD			= 32;
@@ -111,14 +114,26 @@ namespace TriPlanarMappingDemo
 			float multiplayer = 1.0f;
 			if (InputDevice.IsKeyDown(Keys.LeftShift)) multiplayer = 10.0f;
 
-			if (keyEventArgs.Key == Keys.NumPad7) minDistance -= 1.0f * multiplayer;
-			if (keyEventArgs.Key == Keys.NumPad8) minDistance += 1.0f * multiplayer;
+			if (keyEventArgs.Key == Keys.T) minDistance -= 1.0f * multiplayer;
+			if (keyEventArgs.Key == Keys.Y) minDistance += 1.0f * multiplayer;
 
-			if (keyEventArgs.Key == Keys.NumPad4) maxDistance -= 1.0f * multiplayer;
-			if (keyEventArgs.Key == Keys.NumPad5) maxDistance += 1.0f * multiplayer;
+			if (keyEventArgs.Key == Keys.G) maxDistance -= 1.0f * multiplayer;
+			if (keyEventArgs.Key == Keys.H) maxDistance += 1.0f * multiplayer;
 
-			if (keyEventArgs.Key == Keys.NumPad1) textureScale -= 1.0f * multiplayer;
-			if (keyEventArgs.Key == Keys.NumPad2) textureScale += 1.0f * multiplayer;
+			if (keyEventArgs.Key == Keys.B) textureScale -= 1.0f * multiplayer;
+			if (keyEventArgs.Key == Keys.N) textureScale += 1.0f * multiplayer;
+
+			if (keyEventArgs.Key == Keys.Q) wireframe = !wireframe;
+		}
+
+
+		void EnumFunc(PipelineState p, RenderFlags f)
+		{
+			p.BlendState			= BlendState.Opaque;
+			p.DepthStencilState		= DepthStencilState.Default;
+			p.Primitive				= Primitive.PatchList3CP;
+			p.VertexInputElements	= VertexColorTextureTBN.Elements;
+			p.RasterizerState		= f.HasFlag(RenderFlags.Wireframe) ? RasterizerState.Wireframe : RasterizerState.CullCW;
 		}
 
 
@@ -133,15 +148,17 @@ namespace TriPlanarMappingDemo
 
 			uberShader	=	Content.Load<Ubershader>("render");
 
-			factory		=	new StateFactory( 
-								uberShader, 
-								typeof(RenderFlags), 
-								Primitive.PatchList3CP, 
-								VertexColorTextureTBN.Elements,
-								BlendState.Opaque,
-								RasterizerState.CullCW,
-								DepthStencilState.Default 
-							);
+			//factory		=	new StateFactory( 
+			//					uberShader, 
+			//					typeof(RenderFlags), 
+			//					Primitive.PatchList3CP, 
+			//					VertexColorTextureTBN.Elements,
+			//					BlendState.Opaque,
+			//					RasterizerState.CullCW,
+			//					DepthStencilState.Default 
+			//				);
+
+			factory = new StateFactory(uberShader, typeof(RenderFlags), (x, i) => EnumFunc(x, (RenderFlags)i));
 
 			scene		=	Content.Load<Scene>(@"scene");
 
@@ -238,6 +255,10 @@ namespace TriPlanarMappingDemo
 			ds.Add("F12  - make screenshot");
 			ds.Add("ESC  - exit");
 			ds.Add(" ");
+			ds.Add("Press Q to toggle wireframe mode ");
+			ds.Add("Press T/Y to dec/inc tes min distance");
+			ds.Add("Press G/H to dec/inc tes max distance");
+			ds.Add("Press B/N to dec/inc triplanar texture scale");
 			ds.Add(" ");
 			ds.Add(" ");
 			ds.Add("Min Lod : " + minLOD);
@@ -246,8 +267,9 @@ namespace TriPlanarMappingDemo
 			ds.Add("Min Distance : " + minDistance);
 			ds.Add("Max Distance : " + maxDistance);
 			ds.Add(" ");
-			ds.Add("Texture scale   : " + textureScale);
+			ds.Add("Wireframe : " + wireframe);
 			ds.Add("Blend sharpness : " + blendSharpness);
+			ds.Add("Texture scale   : " + textureScale);
 
 
 
@@ -282,7 +304,7 @@ namespace TriPlanarMappingDemo
 			constData.LodDist		= new Vector4(minLOD, maxLOD, minDistance, maxDistance);
 			constData.ScaleSharp	= new Vector4(textureScale, blendSharpness, 0, 0);
 
-			GraphicsDevice.PipelineState			= factory[0];
+			GraphicsDevice.PipelineState			= factory[wireframe ? (int)RenderFlags.Wireframe : 0];
 			GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearPointWrap;
 			GraphicsDevice.DomainShaderSamplers[0]	= SamplerState.LinearPointWrap;
 			

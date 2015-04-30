@@ -28,7 +28,7 @@ struct VS_OUT {
 cbuffer CBBatch 	: 	register(b0) { BATCH Batch : packoffset( c0 ); }	
 
 #if 0
-$ubershader
+$ubershader Wireframe|None
 #endif
  
 /*-----------------------------------------------------------------------------
@@ -124,7 +124,7 @@ PATCH_OUTPUT HullShaderConstantFunction(InputPatch<VS_OUT, 3> inputPatch, uint p
 ////////////////////////////////////////////////////////////////////////////////
 // Hull Shader
 [domain("tri")]
-[partitioning("integer")]
+[partitioning("pow2")]
 [outputtopology("triangle_cw")]
 [outputcontrolpoints(3)]
 [patchconstantfunc("HullShaderConstantFunction")]
@@ -276,7 +276,7 @@ float4 PSMain( DOMAIN_OUTPUT input ) : SV_Target
 	n = normalize(n + input.Normal);
 	
 	//return float4(c, 1.0f);
-	//return float4((input.Normal), 1.0f);
+	//return float4(n, 1.0f);
 	
 	float decay = (input.WorldPos.y+10)/30.0f;
 	

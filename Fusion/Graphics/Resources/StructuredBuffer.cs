@@ -196,7 +196,7 @@ namespace Fusion.Graphics {
 			lock (device.DeviceContext ) {
 				var db = device.DeviceContext.MapSubresource( bufferStaging, 0, MapMode.Write, D3D11.MapFlags.None );
 
-				SharpDX.Utilities.Write( db.DataPointer, data, 0, data.Length );
+				SharpDX.Utilities.Write( db.DataPointer, data, startIndex, elementCount );
 
 				device.DeviceContext.UnmapSubresource( bufferStaging, 0 );
 
