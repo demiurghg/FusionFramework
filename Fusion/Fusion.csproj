@@ -322,6 +322,7 @@
     </Compile>
     <Compile Include="Graphics\Scene\VertexColorTexture.cs" />
     <Compile Include="Graphics\Scene\VertexColorTextureTBN.cs" />
+    <Compile Include="Shell\Command.cs" />
     <Compile Include="UserInterface\Config.cs" />
     <Compile Include="UserInterface\Context.cs" />
     <Compile Include="UserInterface\Enums.cs" />

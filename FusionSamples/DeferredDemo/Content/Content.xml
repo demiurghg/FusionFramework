@@ -72,7 +72,7 @@
     <Color>true</Color>
     <Alpha>false</Alpha>
     <Normal>false</Normal>
-    <Compression>RGB</Compression>
+    <Compression>BC3</Compression>
     <SourceFile>Textures/q2Wall/techA.tga</SourceFile>
   </Asset>
   <Asset xsi:type="ImageFileTextureAsset">
@@ -293,7 +293,7 @@
     <Color>true</Color>
     <Alpha>false</Alpha>
     <Normal>false</Normal>
-    <Compression>RGB</Compression>
+    <Compression>BC1</Compression>
     <SourceFile>Textures/q2Floor/floorHeavyA.tga</SourceFile>
   </Asset>
   <Asset xsi:type="ImageFileTextureAsset">
