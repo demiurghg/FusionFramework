@@ -11,7 +11,8 @@ using SharpDX.Direct3D11;
 using System.Runtime.InteropServices;
 using Fusion.Content;
 using Fusion.Mathematics;
-using SharpDX.Direct3D;
+using SharpDX.Direct3D;			
+using FusionDDS;
 
 
 namespace Fusion.Graphics {
@@ -21,16 +22,12 @@ namespace Fusion.Graphics {
 		ColorFormat		format;
 		int				mipCount;
 
-		ShaderResource	linearResource;
-		ShaderResource	srgbResource;
-
-
 		[ContentLoader(typeof(Texture2D))]
 		public class Loader : ContentLoader {
 
 			public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
 			{
-				return new Texture2D( game.GraphicsDevice, stream );
+				return new Texture2D( game.GraphicsDevice, stream, false );
 			}
 		}
 		
@@ -40,7 +37,7 @@ namespace Fusion.Graphics {
 		/// Creates texture
 		/// </summary>
 		/// <param name="device"></param>
-		public Texture2D ( GraphicsDevice device, int width, int height, ColorFormat format, bool mips ) : base( device )
+		public Texture2D ( GraphicsDevice device, int width, int height, ColorFormat format, bool mips, bool srgb = false ) : base( device )
 		{
 			this.Width		=	width;
 			this.Height		=	height;
@@ -52,7 +49,7 @@ namespace Fusion.Graphics {
 			texDesc.ArraySize		=	1;
 			texDesc.BindFlags		=	BindFlags.ShaderResource;
 			texDesc.CpuAccessFlags	=	CpuAccessFlags.None;
-			texDesc.Format			=	MakeTypeless( Converter.Convert( format ) );
+			texDesc.Format			=	srgb ? MakeSRgb( Converter.Convert( format ) ) : Converter.Convert( format );
 			texDesc.Height			=	Height;
 			texDesc.MipLevels		=	mipCount;
 			texDesc.OptionFlags		=	ResourceOptionFlags.None;
@@ -61,15 +58,16 @@ namespace Fusion.Graphics {
 			texDesc.Usage			=	ResourceUsage.Default;
 			texDesc.Width			=	Width;
 
+			//var descLinear = new ShaderResourceViewDescription();
+			//descLinear.Format		=	srgb ? MakeSRgb( Converter.Convert( format ) ) : Converter.Convert( format );
+			//descLinear.Dimension	=	ShaderResourceViewDimension.Texture2D;
+			//descLinear.Texture2D.MipLevels = mipCount;
+			//descLinear.Texture2D.MostDetailedMip = 0;
 
-			
-			var descLinear = new ShaderResourceViewDescription();
-			descLinear.Format		=	Converter.Convert( format );
-			descLinear.Dimension	=	ShaderResourceViewDimension.Texture2D;
-			descLinear.Texture2D.MipLevels = mipCount;
-			descLinear.Texture2D.MostDetailedMip = 0;
+			tex2D	=	new D3D.Texture2D( device.Device, texDesc );
+			SRV		=	new ShaderResourceView( device.Device, tex2D/*, srvDesc*/ );
 
-			var descSRGB = new ShaderResourceViewDescription();
+			/*var descSRGB = new ShaderResourceViewDescription();
 			descSRGB.Format		=	MakeSRgb( Converter.Convert( format ) );
 			descSRGB.Dimension	=	ShaderResourceViewDimension.Texture2D;
 			descSRGB.Texture2D.MipLevels = mipCount;
@@ -81,7 +79,7 @@ namespace Fusion.Graphics {
 			linearResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex2D, descLinear ), Width, Height, 1 );
 			srgbResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex2D, descSRGB )  , Width, Height, 1 );
 
-			SRV			=	linearResource.SRV;
+			SRV			=	linearResource.SRV;	*/
 			//SRV		=	new ShaderResourceView( device.Device, tex2D/*, srvDesc*/ );
 		}
 
@@ -92,7 +90,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public ShaderResource SRgb {
 			get {
-				return srgbResource;
+				return this;
 			}
 		}
 
@@ -102,7 +100,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public ShaderResource Linear {
 			get {
-				return linearResource;
+				return this;
 			}
 		}
 
@@ -113,9 +111,9 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="path"></param>
-		public Texture2D ( GraphicsDevice device, Stream stream ) : base( device )
+		public Texture2D ( GraphicsDevice device, Stream stream, bool forceSRgb = false ) : base( device )
 		{
-			CreateFromFile( stream.ReadAllBytes(), stream is FileStream ? (stream as FileStream).Name : "stream" );
+			CreateFromFile( stream.ReadAllBytes(), stream is FileStream ? (stream as FileStream).Name : "stream", forceSRgb );
 		}
 
 
@@ -125,9 +123,9 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="path"></param>
-		public Texture2D ( GraphicsDevice device, byte[] fileInMemory ) : base( device )
+		public Texture2D ( GraphicsDevice device, byte[] fileInMemory, bool forceSRgb = false ) : base( device )
 		{
-			CreateFromFile( fileInMemory, "file in memory" );
+			CreateFromFile( fileInMemory, "file in memory", forceSRgb );
 		}
 
 
@@ -140,9 +138,30 @@ namespace Fusion.Graphics {
 		/// <param name="height"></param>
 		/// <param name="format"></param>
 		/// <param name="mips"></param>
-		void CreateFromFile ( byte[] fileInMemory, string name )
+		void CreateFromFile ( byte[] fileInMemory, string name, bool forceSRgb )
 		{
-			var pii	=	ImageInformation.FromMemory( fileInMemory );
+			IntPtr	resource		=	new IntPtr(0);
+			IntPtr	resourceView	=	new IntPtr(0);
+
+			var r = DdsLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
+
+			if (!r) {	
+				throw new GraphicsException( "Failed to load texture: " + name );
+			}
+
+			tex2D	=	new D3D.Texture2D( resource );
+			SRV		=	new D3D.ShaderResourceView( resourceView );
+
+			Width		=	tex2D.Description.Width;
+			Height		=	tex2D.Description.Height;
+			Depth		=	1;
+			mipCount	=	tex2D.Description.MipLevels;
+			format		=	Converter.Convert( tex2D.Description.Format );
+
+			/*var tex2DDesc	=	tex2D.Description;
+			tex*/
+
+			/*var pii	=	ImageInformation.FromMemory( fileInMemory );
 
 			if (pii==null) {
 				throw new GraphicsException( "Failed to get image information from file {0}", name );
@@ -195,7 +214,7 @@ namespace Fusion.Graphics {
 			linearResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex2D, descLinear ), Width, Height, 1 );
 			srgbResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex2D, descSRGB ), Width, Height, 1 );
 
-			SRV			=	linearResource.SRV;
+			SRV			=	linearResource.SRV;	  */
 		}
 
 
@@ -209,8 +228,8 @@ namespace Fusion.Graphics {
 			if (disposing) {
 				SafeDispose( ref tex2D );
 				SafeDispose( ref SRV );
-				SafeDispose( ref srgbResource );
-				SafeDispose( ref linearResource );
+				//SafeDispose( ref srgbResource );
+				//SafeDispose( ref linearResource );
 			}
 			base.Dispose( disposing );
 		}

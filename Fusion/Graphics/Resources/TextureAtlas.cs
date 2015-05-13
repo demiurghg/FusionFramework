@@ -86,7 +86,7 @@ namespace Fusion.Graphics {
 				
 				var ddsImageBytes	=	br.ReadBytes( ddsFileLength );
 
-				texture	=	new Texture2D( device, ddsImageBytes );
+				texture	=	new Texture2D( device, ddsImageBytes, false );
 			}
 
 

@@ -24,6 +24,7 @@ namespace QuadDemo2D {
 		VertexBuffer		vertexBuffer;
 		ConstantBuffer		constBuffer;
 		Texture2D			texture;
+		Texture2D			textureSRgb;
 		ConstData			cbData;
 		StateFactory		factory;
 
@@ -75,6 +76,7 @@ namespace QuadDemo2D {
 			SafeDispose( ref factory );
 
 			texture		=	Content.Load<Texture2D>("lena.tga" );
+			textureSRgb	=	Content.Load<Texture2D>("lena2.tga" );
 			ubershader	=	Content.Load<Ubershader>("test.hlsl");
 			factory		=	new StateFactory( ubershader, typeof(UberFlags), Primitive.TriangleList, VertexInputElement.FromStructure(typeof(Vertex) ) );
 		}
@@ -134,9 +136,12 @@ namespace QuadDemo2D {
 
 			vertexBuffer.SetData( data, 0, 6 );
 
+			var tex = texture;
+
 			UberFlags flags = UberFlags.NONE;
 			if (InputDevice.IsKeyDown(Keys.D1) ) flags |= UberFlags.USE_TEXTURE;
 			if (InputDevice.IsKeyDown(Keys.D2) ) flags |= UberFlags.USE_VERTEX_COLOR;
+			if (InputDevice.IsKeyDown(Keys.D3) ) tex = textureSRgb;
 
 			//	Update constant buffer and bound it to pipeline:
 			cbData.Transform	=	Matrix.OrthoRH( 4, 3, -2, 2 );
@@ -150,7 +155,7 @@ namespace QuadDemo2D {
 			GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearWrap ;
 
 			//	Setup texture :
-			GraphicsDevice.PixelShaderResources[0]	= texture ;
+			GraphicsDevice.PixelShaderResources[0]	= tex ;
 								
 			//	Setup vertex data and draw :			
 			GraphicsDevice.SetupVertexInput( vertexBuffer, null );

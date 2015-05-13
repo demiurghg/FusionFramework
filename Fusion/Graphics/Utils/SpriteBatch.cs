@@ -132,11 +132,11 @@ namespace Fusion.Graphics {
 			vertices		=	new SpriteVertex[MaxVertices];
 			constBuffer		=	new ConstantBuffer(Game.GraphicsDevice, typeof(ConstData));
 
-			TextureWhite	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false );
-			TextureBlack	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false );
-			TextureRed		=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false );
-			TextureGreen	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false );
-			TextureBlue		=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false );
+			TextureWhite	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
+			TextureBlack	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
+			TextureRed		=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
+			TextureGreen	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
+			TextureBlue		=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
 
 			var range = Enumerable.Range(0, 8*8);
 			TextureWhite	.SetData( range.Select( i => Color.White ).ToArray() ); 

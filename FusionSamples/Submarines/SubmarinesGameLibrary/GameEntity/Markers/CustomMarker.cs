@@ -25,7 +25,7 @@ namespace SubmarinesWars.SubmarinesGameLibrary.GameEntity.Markers
         {
             try
             {
-                textures.Add(name, new Texture2D(_graphicsDevice, File.Open(path, FileMode.Open)));
+                textures.Add(name, new Texture2D(_graphicsDevice, File.Open(path, FileMode.Open), false));
             }
             catch (Exception ex)
             {

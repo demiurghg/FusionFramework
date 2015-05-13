@@ -10,6 +10,7 @@
     <Color>true</Color>
     <Alpha>false</Alpha>
     <Normal>false</Normal>
+    <sRGB>false</sRGB>
     <Compression>RGB</Compression>
     <SourceFile>debugFont.tga</SourceFile>
   </Asset>
@@ -63,6 +64,7 @@
     <Color>true</Color>
     <Alpha>false</Alpha>
     <Normal>false</Normal>
+    <sRGB>false</sRGB>
     <Compression>RGB</Compression>
     <SourceFile>lena.tga</SourceFile>
   </Asset>
@@ -105,5 +107,19 @@
     <SourceFile>stereo.hlsl</SourceFile>
     <ShowPemutations>true</ShowPemutations>
     <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\QuadDemo\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
+  </Asset>
+  <Asset xsi:type="ImageFileTextureAsset">
+    <AssetPath>lena2.tga</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <NoMips>false</NoMips>
+    <Fast>false</Fast>
+    <ToNormal>false</ToNormal>
+    <Color>true</Color>
+    <Alpha>false</Alpha>
+    <Normal>false</Normal>
+    <sRGB>true</sRGB>
+    <Compression>RGB</Compression>
+    <SourceFile>lena2.tga</SourceFile>
   </Asset>
 </ArrayOfAsset>

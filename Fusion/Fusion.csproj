@@ -407,6 +407,10 @@
       <Project>{ea4b3afd-02e3-4fa3-9e26-95390f34687f}</Project>
       <Name>NvApiWrapper</Name>
     </ProjectReference>
+    <ProjectReference Include="..\FusionDDS\FusionDDS.vcxproj">
+      <Project>{53af2c09-5113-4051-98fb-bb8258e268bd}</Project>
+      <Name>FusionDDS</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

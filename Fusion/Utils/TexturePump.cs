@@ -182,7 +182,7 @@ namespace Fusion {
 
 					// Load texture
 					using ( var stream = File.OpenRead( filePath ) ) {
-						item.Texture		= new Texture2D(Game.GraphicsDevice, stream);
+						item.Texture		= new Texture2D(Game.GraphicsDevice, stream, false);
 						item.SizeInBytes	= (int)(item.Texture.Width*item.Texture.Height*4 * 1.3f);
 					}
 
