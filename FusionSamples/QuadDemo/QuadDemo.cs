@@ -76,7 +76,6 @@ namespace QuadDemo2D {
 			SafeDispose( ref factory );
 
 			texture		=	Content.Load<Texture2D>("lena.tga" );
-			textureSRgb	=	Content.Load<Texture2D>("lena2.tga" );
 			ubershader	=	Content.Load<Ubershader>("test.hlsl");
 			factory		=	new StateFactory( ubershader, typeof(UberFlags), Primitive.TriangleList, VertexInputElement.FromStructure(typeof(Vertex) ) );
 		}

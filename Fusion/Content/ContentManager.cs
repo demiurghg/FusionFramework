@@ -80,15 +80,15 @@ namespace Fusion.Content {
 		/// <param name="name"></param>
 		/// <param name="abstractAsset"></param>
 		/// <returns></returns>
-		public void PatchAbstractAsset ( string name, AbstractAsset abstractAsset )
+		public void PatchAbstractAsset ( string name, AbstractAsset sourceAsset )
 		{
 			var targetAsset = content[ name ].Object;
 
-			if (targetAsset.GetType()!=abstractAsset.GetType()) {
-				throw new ContentException(string.Format("Could not patch abstract asset object '{0}' because diferrent types. Target type: {1}. Source type: {2}", name, targetAsset.GetType(), abstractAsset.GetType() ));
+			if (targetAsset.GetType()!=sourceAsset.GetType()) {
+				throw new ContentException(string.Format("Could not patch abstract asset object '{0}' because diferrent types. Target type: {1}. Source type: {2}", name, targetAsset.GetType(), sourceAsset.GetType() ));
 			}
 
-			Misc.CopyPropertyValues( abstractAsset, targetAsset );
+			Misc.CopyPropertyValues( sourceAsset, targetAsset );
 		}
 
 
@@ -104,7 +104,7 @@ namespace Fusion.Content {
 				throw new ArgumentException("Asset path can not be null, empty or whitespace.");
 			}
 
-			return File.Exists( GetFileName( assetPath ) );
+			return File.Exists( GetRealAssetFileName( assetPath ) );
 		}
 
 
@@ -114,11 +114,14 @@ namespace Fusion.Content {
 		/// </summary>
 		/// <param name="path"></param>
 		/// <returns></returns>
-		string GetFileName ( string assetPath )
+		string GetRealAssetFileName ( string assetPath )
 		{
 			if ( string.IsNullOrWhiteSpace(assetPath) ) {
 				throw new ArgumentException("Asset path can not be null, empty or whitespace.");
 			}
+
+			//	take characters until dash '|' :
+			assetPath = new string( assetPath.TakeWhile( ch => ch!='|' ).ToArray() );
 
 			return Path.Combine(contentDirectory, ContentUtils.GetHashedFileName( assetPath, ".asset" ) );
 		}
@@ -132,20 +135,16 @@ namespace Fusion.Content {
 		/// <returns></returns>
 		public Stream OpenStream ( string assetPath )
 		{
-			if ( string.IsNullOrWhiteSpace(assetPath) ) {
-				throw new ArgumentException("Asset path can not be null, empty or whitespace.");
-			}
-
-			var hashedName =  ContentUtils.GetHashedFileName( assetPath, ".asset" );
+			var realName =  GetRealAssetFileName( assetPath );
 
 			try {
-				var fileStream	=	File.OpenRead( GetFileName( assetPath ) );
+				var fileStream	=	File.OpenRead( realName );
 				var zipStream	=	new DeflateStream( fileStream, CompressionMode.Decompress, false );
 
 				return zipStream;
 
 			} catch ( IOException ioex ) {
-				throw new IOException( string.Format("Could not open file: '{0}'\r\nHashed file name: '({1})'", assetPath, hashedName ), ioex );
+				throw new IOException( string.Format("Could not open file: '{0}'\r\nHashed file name: '({1})'", assetPath, realName ), ioex );
 			}
 		}
 
@@ -200,7 +199,7 @@ namespace Fusion.Content {
 				
 					if (item.Object is T) {
 
-						var time = File.GetLastWriteTime( GetFileName( assetPath ) );
+						var time = File.GetLastWriteTime( GetRealAssetFileName( assetPath ) );
 
 						if ( time > item.LoadTime ) {
 							content.Remove(	assetPath );
@@ -225,7 +224,7 @@ namespace Fusion.Content {
 			using (var stream = OpenStream(assetPath) ) {
 				item = new Item() {
 					Object		= loader.Load( Game, stream, typeof(T), assetPath ),
-					LoadTime	= File.GetLastWriteTime( GetFileName( assetPath ) ),
+					LoadTime	= File.GetLastWriteTime( GetRealAssetFileName( assetPath ) ),
 				};
 			}
 

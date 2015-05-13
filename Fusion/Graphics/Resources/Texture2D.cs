@@ -27,7 +27,8 @@ namespace Fusion.Graphics {
 
 			public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
 			{
-				return new Texture2D( game.GraphicsDevice, stream, false );
+				bool srgb = assetPath.ToLowerInvariant().Contains("|srgb");
+				return new Texture2D( game.GraphicsDevice, stream, srgb );
 			}
 		}
 		
