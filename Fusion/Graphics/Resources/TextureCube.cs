@@ -13,6 +13,7 @@ using System.Runtime.InteropServices;
 using Fusion.Content;
 using Fusion.Mathematics;
 using SharpDX.Direct3D;
+using FusionDDS;
 
 
 namespace Fusion.Graphics {
@@ -30,7 +31,8 @@ namespace Fusion.Graphics {
 
 			public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
 			{
-				return new TextureCube( game.GraphicsDevice, stream );
+				bool srgb = assetPath.ToLowerInvariant().Contains("|srgb");
+				return new TextureCube( game.GraphicsDevice, stream, srgb );
 			}
 		}
 		
@@ -40,7 +42,7 @@ namespace Fusion.Graphics {
 		/// Creates texture
 		/// </summary>
 		/// <param name="device"></param>
-		public TextureCube ( GraphicsDevice device, int size, ColorFormat format, bool mips ) : base( device )
+		public TextureCube ( GraphicsDevice device, int size, ColorFormat format, bool mips, bool srgb = false ) : base( device )
 		{
 			this.Width		=	size;
 			this.Depth		=	1;
@@ -51,37 +53,20 @@ namespace Fusion.Graphics {
 			//Log.Warning("CHECK ARRAY SIZE!");
 
 			var texDesc = new Texture2DDescription();
-			texDesc.ArraySize		=	1;
+			texDesc.ArraySize		=	6;
 			texDesc.BindFlags		=	BindFlags.ShaderResource;
 			texDesc.CpuAccessFlags	=	CpuAccessFlags.None;
 			texDesc.Format			=	MakeTypeless( Converter.Convert( format ) );
 			texDesc.Height			=	Height;
 			texDesc.MipLevels		=	mipCount;
-			texDesc.OptionFlags		=	ResourceOptionFlags.None;
+			texDesc.OptionFlags		=	ResourceOptionFlags.TextureCube;
 			texDesc.SampleDescription.Count	=	1;
 			texDesc.SampleDescription.Quality	=	0;
 			texDesc.Usage			=	ResourceUsage.Default;
 			texDesc.Width			=	Width;
 
 			texCube	=	new D3D.Texture2D( device.Device, texDesc );
-
-			
-			var descLinear = new ShaderResourceViewDescription();
-			descLinear.Format		=	Converter.Convert( format );
-			descLinear.Dimension	=	ShaderResourceViewDimension.TextureCube;
-			descLinear.TextureCube.MipLevels		=	mipCount;
-			descLinear.TextureCube.MostDetailedMip	=	0;
-
-			var descSRGB = new ShaderResourceViewDescription();
-			descSRGB.Format		=	MakeSRgb( Converter.Convert( format ) );
-			descSRGB.Dimension	=	ShaderResourceViewDimension.TextureCube;
-			descLinear.TextureCube.MipLevels		=	mipCount;
-			descLinear.TextureCube.MostDetailedMip	=	0;
-
-			linearResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, texCube, descLinear ), size, size, 1 );
-			srgbResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, texCube, descSRGB )  , size, size, 1 );
-
-			SRV			=	linearResource.SRV;
+			SRV		=	new ShaderResourceView( device.Device, texCube );
 
 		}
 					
@@ -92,9 +77,9 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="path"></param>
-		public TextureCube ( GraphicsDevice device, Stream stream ) : base( device )
+		public TextureCube ( GraphicsDevice device, Stream stream, bool forceSRgb ) : base( device )
 		{
-			CreateFromFile( stream.ReadAllBytes(), stream is FileStream ? (stream as FileStream).Name : "stream" );
+			CreateFromFile( stream.ReadAllBytes(), stream is FileStream ? (stream as FileStream).Name : "stream" , forceSRgb);
 		}
 
 
@@ -104,9 +89,9 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="path"></param>
-		public TextureCube ( GraphicsDevice device, byte[] fileInMemory ) : base( device )
+		public TextureCube ( GraphicsDevice device, byte[] fileInMemory, bool forceSRgb ) : base( device )
 		{
-			CreateFromFile( fileInMemory, "in memory");
+			CreateFromFile( fileInMemory, "in memory", forceSRgb);
 		}
 
 
@@ -119,62 +104,25 @@ namespace Fusion.Graphics {
 		/// <param name="height"></param>
 		/// <param name="format"></param>
 		/// <param name="mips"></param>
-		void CreateFromFile ( byte[] fileInMemory, string name )
+		void CreateFromFile ( byte[] fileInMemory, string name, bool forceSRgb )
 		{
-			var pii	=	ImageInformation.FromMemory( fileInMemory );
+			IntPtr	resource		=	new IntPtr(0);
+			IntPtr	resourceView	=	new IntPtr(0);
 
-			if (pii==null) {
-				throw new GraphicsException( "Failed to get image information from file {0}", name );
+			var r = DdsLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
+
+			if (!r) {	
+				throw new GraphicsException( "Failed to load texture: " + name );
 			}
 
-			var ii	=	pii.Value;
-			var ili =	new ImageLoadInformation();
+			texCube	=	new D3D.Texture2D( resource );
+			SRV		=	new D3D.ShaderResourceView( resourceView );
 
-			if (ii.ResourceDimension!=ResourceDimension.Texture2D || ii.ArraySize!=6) {
-				throw new GraphicsException("File {0} does not contain cube texture", name);
-			}
-
-
-			ili.Width			=	ImageLoadInformation.FileDefaultValue;
-			ili.Height			=	ImageLoadInformation.FileDefaultValue;
-			ili.Depth			=	ImageLoadInformation.FileDefaultValue;
-			ili.FirstMipLevel	=	0;
-			ili.MipLevels		=	ii.MipLevels;// ImageLoadInformation.FileDefaultValue;
-			ili.Usage			=	ResourceUsage.Default;// (ResourceUsage) ImageLoadInformation.FileDefaultValue;
-			ili.BindFlags		=	(BindFlags)ImageLoadInformation.FileDefaultValue;
-			ili.CpuAccessFlags	=	(CpuAccessFlags)ImageLoadInformation.FileDefaultValue;
-			ili.OptionFlags		=	(ResourceOptionFlags)ImageLoadInformation.FileDefaultValue;
-			ili.Format			=	MakeTypeless(ii.Format);
-			ili.Filter			=	FilterFlags.None;//(FilterFlags)ImageLoadInformation.FileDefaultValue;
-			ili.MipFilter		=	FilterFlags.None;//(FilterFlags)ImageLoadInformation.FileDefaultValue;
-			ili.PSrcInfo		=	new System.IntPtr(0);
-
-
-			Width			=	ii.Width;
-			Height			=	ii.Height;
-			Depth			=	ii.Depth;
-			mipCount		=	ii.MipLevels;
-
-			texCube			=	D3D.Texture2D.FromMemory( device.Device, fileInMemory, ili ).QueryInterface<D3D.Texture2D>();
-
-
-			var descLinear = new ShaderResourceViewDescription();
-			descLinear.Format		=	Converter.Convert( format );
-			descLinear.Dimension	=	ShaderResourceViewDimension.TextureCube;
-			descLinear.TextureCube.MipLevels		=	mipCount;
-			descLinear.TextureCube.MostDetailedMip	=	0;
-
-			var descSRGB = new ShaderResourceViewDescription();
-			descSRGB.Format		=	MakeSRgb( Converter.Convert( format ) );
-			descSRGB.Dimension	=	ShaderResourceViewDimension.TextureCube;
-			descLinear.TextureCube.MipLevels		=	mipCount;
-			descLinear.TextureCube.MostDetailedMip	=	0;
-
-			linearResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, texCube, descLinear ), Width, Height, 1 );
-			srgbResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, texCube, descSRGB )  , Width, Height, 1 );
-
-			SRV			=	linearResource.SRV;
-
+			Width		=	texCube.Description.Width;
+			Height		=	texCube.Description.Height;
+			Depth		=	1;
+			mipCount	=	texCube.Description.MipLevels;
+			format		=	Converter.Convert( texCube.Description.Format );
 		}
 
 		
@@ -196,26 +144,6 @@ namespace Fusion.Graphics {
 
 
 		
-		/// <summary>
-		/// Returns SRgb version of the current resource.
-		/// </summary>
-		public ShaderResource SRgb {
-			get {
-				return srgbResource;
-			}
-		}
-
-
-		/// <summary>
-		/// Returns linear version of the current resource.
-		/// </summary>
-		public ShaderResource Linear {
-			get {
-				return linearResource;
-			}
-		}
-
-
 		/// <summary>
 		/// Sets cube texture data, specifying a cubemap face.
 		/// </summary>

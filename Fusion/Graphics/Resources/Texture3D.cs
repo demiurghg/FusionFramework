@@ -12,6 +12,7 @@ using System.Runtime.InteropServices;
 using Fusion.Content;
 using Fusion.Mathematics;
 using SharpDX.Direct3D;
+using FusionDDS;
 
 
 namespace Fusion.Graphics {
@@ -21,15 +22,13 @@ namespace Fusion.Graphics {
 		ColorFormat		format;
 		int				mipCount;
 
-		ShaderResource	linearResource;
-		ShaderResource	srgbResource;
-
 		[ContentLoader(typeof(Texture3D))]
 		public class Loader : ContentLoader {
 
 			public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
 			{
-				return new Texture3D( game.GraphicsDevice, stream );
+				bool srgb = assetPath.ToLowerInvariant().Contains("|srgb");
+				return new Texture3D( game.GraphicsDevice, stream, srgb );
 			}
 		}
 		
@@ -39,7 +38,7 @@ namespace Fusion.Graphics {
 		/// Creates texture
 		/// </summary>
 		/// <param name="device"></param>
-		public Texture3D ( GraphicsDevice device, int width, int height, int depth, ColorFormat format, bool mips ) : base( device )
+		public Texture3D ( GraphicsDevice device, int width, int height, int depth, ColorFormat format, bool mips, bool srgb = false ) : base( device )
 		{
 			this.Width		=	width;
 			this.Height		=	height;
@@ -59,25 +58,7 @@ namespace Fusion.Graphics {
 			texDesc.Depth			=	Depth;
 
 			tex3D	=	new D3D.Texture3D( device.Device, texDesc );
-
-
-			var descLinear = new ShaderResourceViewDescription();
-			descLinear.Format		=	Converter.Convert( format );
-			descLinear.Dimension	=	ShaderResourceViewDimension.Texture3D;
-			descLinear.Texture3D.MipLevels			=	mipCount;
-			descLinear.Texture3D.MostDetailedMip	=	0;
-
-
-			var descSRGB = new ShaderResourceViewDescription();
-			descSRGB.Format		=	MakeSRgb( Converter.Convert( format ) );
-			descSRGB.Dimension	=	ShaderResourceViewDimension.Texture3D;
-			descLinear.Texture3D.MipLevels		=	mipCount;
-			descLinear.Texture3D.MostDetailedMip	=	0;
-
-			linearResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex3D, descLinear ), Width, Height, Depth );
-			srgbResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex3D, descSRGB )  , Width, Height, Depth );
-
-			SRV			=	linearResource.SRV;
+			SRV		=	new D3D.ShaderResourceView( device.Device, tex3D );
 		}
 
 
@@ -87,9 +68,9 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="path"></param>
-		public Texture3D ( GraphicsDevice device, Stream stream ) : base( device )
+		public Texture3D ( GraphicsDevice device, Stream stream, bool forceSRgb = false ) : base( device )
 		{
-			CreateFromFile( stream.ReadAllBytes(), stream is FileStream ? (stream as FileStream).Name : "stream" );
+			CreateFromFile( stream.ReadAllBytes(), stream is FileStream ? (stream as FileStream).Name : "stream", forceSRgb );
 		}
 
 
@@ -99,9 +80,9 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="path"></param>
-		public Texture3D ( GraphicsDevice device, byte[] fileInMemory ) : base( device )
+		public Texture3D ( GraphicsDevice device, byte[] fileInMemory, bool forceSRgb = false ) : base( device )
 		{
-			CreateFromFile( fileInMemory, "in memory");
+			CreateFromFile( fileInMemory, "in memory", forceSRgb);
 		}
 
 
@@ -114,60 +95,25 @@ namespace Fusion.Graphics {
 		/// <param name="height"></param>
 		/// <param name="format"></param>
 		/// <param name="mips"></param>
-		void CreateFromFile ( byte[] fileInMemory, string name )
+		void CreateFromFile ( byte[] fileInMemory, string name, bool forceSRgb )
 		{
-			var pii	=	ImageInformation.FromMemory( fileInMemory );
+			IntPtr	resource		=	new IntPtr(0);
+			IntPtr	resourceView	=	new IntPtr(0);
 
-			if (pii==null) {
-				throw new GraphicsException( "Failed to get image information from file {0}", name );
+			var r = DdsLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
+
+			if (!r) {	
+				throw new GraphicsException( "Failed to load texture: " + name );
 			}
 
-			var ii	=	pii.Value;
-			var ili =	new ImageLoadInformation();
+			tex3D	=	new D3D.Texture3D( resource );
+			SRV		=	new D3D.ShaderResourceView( resourceView );
 
-			if (ii.ResourceDimension!=ResourceDimension.Texture3D) {
-				throw new GraphicsException("File {0} does not contain three-dimensional texture", name);
-			}
-
-			ili.Width			=	ImageLoadInformation.FileDefaultValue;
-			ili.Height			=	ImageLoadInformation.FileDefaultValue;
-			ili.Depth			=	ImageLoadInformation.FileDefaultValue;
-			ili.FirstMipLevel	=	0;
-			ili.MipLevels		=	ii.MipLevels;// ImageLoadInformation.FileDefaultValue;
-			ili.Usage			=	ResourceUsage.Default;// (ResourceUsage) ImageLoadInformation.FileDefaultValue;
-			ili.BindFlags		=	(BindFlags)ImageLoadInformation.FileDefaultValue;
-			ili.CpuAccessFlags	=	(CpuAccessFlags)ImageLoadInformation.FileDefaultValue;
-			ili.OptionFlags		=	(ResourceOptionFlags)ImageLoadInformation.FileDefaultValue;
-			ili.Format			=	MakeTypeless( ii.Format );
-			ili.Filter			=	FilterFlags.None;//(FilterFlags)ImageLoadInformation.FileDefaultValue;
-			ili.MipFilter		=	FilterFlags.None;//(FilterFlags)ImageLoadInformation.FileDefaultValue;
-			ili.PSrcInfo		=	new System.IntPtr(0);
-
-			Width			=	ii.Width;
-			Height			=	ii.Height;
-			Depth			=	ii.Depth;
-			mipCount		=	ii.MipLevels;
-
-			tex3D			=	D3D.Texture3D.FromMemory( device.Device, fileInMemory, ili ).QueryInterface<D3D.Texture3D>();
-
-
-			var descLinear = new ShaderResourceViewDescription();
-			descLinear.Format		=	Converter.Convert( format );
-			descLinear.Dimension	=	ShaderResourceViewDimension.Texture3D;
-			descLinear.Texture3D.MipLevels			=	mipCount;
-			descLinear.Texture3D.MostDetailedMip	=	0;
-
-
-			var descSRGB = new ShaderResourceViewDescription();
-			descSRGB.Format		=	MakeSRgb( Converter.Convert( format ) );
-			descSRGB.Dimension	=	ShaderResourceViewDimension.Texture3D;
-			descLinear.Texture3D.MipLevels		=	mipCount;
-			descLinear.Texture3D.MostDetailedMip	=	0;
-
-			linearResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex3D, descLinear ), Width, Height, Depth );
-			srgbResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex3D, descSRGB )  , Width, Height, Depth );
-
-			SRV			=	linearResource.SRV;
+			Width		=	tex3D.Description.Width;
+			Height		=	tex3D.Description.Height;
+			Depth		=	tex3D.Description.Depth;
+			mipCount	=	tex3D.Description.MipLevels;
+			format		=	Converter.Convert( tex3D.Description.Format );
 		}
 
 		
@@ -181,31 +127,8 @@ namespace Fusion.Graphics {
 			if (disposing) {
 				SafeDispose( ref tex3D );
 				SafeDispose( ref SRV );
-				SafeDispose( ref srgbResource );
-				SafeDispose( ref linearResource );
 			}
 			base.Dispose( disposing );
-		}
-
-
-
-		/// <summary>
-		/// Returns SRgb version of the current resource.
-		/// </summary>
-		public ShaderResource SRgb {
-			get {
-				return srgbResource;
-			}
-		}
-
-
-		/// <summary>
-		/// Returns linear version of the current resource.
-		/// </summary>
-		public ShaderResource Linear {
-			get {
-				return linearResource;
-			}
 		}
 
 

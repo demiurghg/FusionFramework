@@ -59,29 +59,8 @@ namespace Fusion.Graphics {
 			texDesc.Usage			=	ResourceUsage.Default;
 			texDesc.Width			=	Width;
 
-			//var descLinear = new ShaderResourceViewDescription();
-			//descLinear.Format		=	srgb ? MakeSRgb( Converter.Convert( format ) ) : Converter.Convert( format );
-			//descLinear.Dimension	=	ShaderResourceViewDimension.Texture2D;
-			//descLinear.Texture2D.MipLevels = mipCount;
-			//descLinear.Texture2D.MostDetailedMip = 0;
-
 			tex2D	=	new D3D.Texture2D( device.Device, texDesc );
-			SRV		=	new ShaderResourceView( device.Device, tex2D/*, srvDesc*/ );
-
-			/*var descSRGB = new ShaderResourceViewDescription();
-			descSRGB.Format		=	MakeSRgb( Converter.Convert( format ) );
-			descSRGB.Dimension	=	ShaderResourceViewDimension.Texture2D;
-			descSRGB.Texture2D.MipLevels = mipCount;
-			descSRGB.Texture2D.MostDetailedMip = 0;
-
-
-			tex2D		=	new D3D.Texture2D( device.Device, texDesc );
-
-			linearResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex2D, descLinear ), Width, Height, 1 );
-			srgbResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex2D, descSRGB )  , Width, Height, 1 );
-
-			SRV			=	linearResource.SRV;	*/
-			//SRV		=	new ShaderResourceView( device.Device, tex2D/*, srvDesc*/ );
+			SRV		=	new ShaderResourceView( device.Device, tex2D );
 		}
 
 
@@ -89,6 +68,7 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// Returns SRgb version of the current resource.
 		/// </summary>
+		[Obsolete]
 		public ShaderResource SRgb {
 			get {
 				return this;
@@ -99,6 +79,7 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// Returns linear version of the current resource.
 		/// </summary>
+		[Obsolete]
 		public ShaderResource Linear {
 			get {
 				return this;
@@ -158,64 +139,6 @@ namespace Fusion.Graphics {
 			Depth		=	1;
 			mipCount	=	tex2D.Description.MipLevels;
 			format		=	Converter.Convert( tex2D.Description.Format );
-
-			/*var tex2DDesc	=	tex2D.Description;
-			tex*/
-
-			/*var pii	=	ImageInformation.FromMemory( fileInMemory );
-
-			if (pii==null) {
-				throw new GraphicsException( "Failed to get image information from file {0}", name );
-			}
-
-			var ii	=	pii.Value;
-			var ili =	new ImageLoadInformation();
-
-			if (ii.ResourceDimension!=ResourceDimension.Texture2D || ii.ArraySize!=1) {
-				throw new GraphicsException("File {0} does not contain two-dimesional texture", name);
-			}
-
-
-			ili.Width			=	ImageLoadInformation.FileDefaultValue;
-			ili.Height			=	ImageLoadInformation.FileDefaultValue;
-			ili.Depth			=	ImageLoadInformation.FileDefaultValue;
-			ili.FirstMipLevel	=	0;
-			ili.MipLevels		=	ii.MipLevels;// ImageLoadInformation.FileDefaultValue;
-			ili.Usage			=	ResourceUsage.Default;// (ResourceUsage) ImageLoadInformation.FileDefaultValue;
-			ili.BindFlags		=	(BindFlags)ImageLoadInformation.FileDefaultValue;
-			ili.CpuAccessFlags	=	(CpuAccessFlags)ImageLoadInformation.FileDefaultValue;
-			ili.OptionFlags		=	(ResourceOptionFlags)ImageLoadInformation.FileDefaultValue;
-			ili.Format			=	MakeTypeless(ii.Format); //(DXGI.Format)ImageLoadInformation.FileDefaultValue;
-			ili.Filter			=	FilterFlags.None;//(FilterFlags)ImageLoadInformation.FileDefaultValue;
-			ili.MipFilter		=	FilterFlags.None;//(FilterFlags)ImageLoadInformation.FileDefaultValue;
-			ili.PSrcInfo		=	new System.IntPtr(0);
-
-
-			Width			=	ii.Width;
-			Height			=	ii.Height;
-			Depth			=	ii.Depth;
-			mipCount		=	ii.MipLevels;
-
-			
-			var descLinear = new ShaderResourceViewDescription();
-			descLinear.Format		=	ii.Format;
-			descLinear.Dimension	=	ShaderResourceViewDimension.Texture2D;
-			descLinear.Texture2D.MipLevels = ii.MipLevels;
-			descLinear.Texture2D.MostDetailedMip = 0;
-
-			var descSRGB = new ShaderResourceViewDescription();
-			descSRGB.Format		=	MakeSRgb( ii.Format );
-			descSRGB.Dimension	=	ShaderResourceViewDimension.Texture2D;
-			descSRGB.Texture2D.MipLevels = ii.MipLevels;
-			descSRGB.Texture2D.MostDetailedMip = 0;
-
-
-			tex2D			=	D3D.Texture2D.FromMemory( device.Device, fileInMemory, ili ).QueryInterface<D3D.Texture2D>();
-
-			linearResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex2D, descLinear ), Width, Height, 1 );
-			srgbResource	=	new ShaderResource( device, new ShaderResourceView( device.Device, tex2D, descSRGB ), Width, Height, 1 );
-
-			SRV			=	linearResource.SRV;	  */
 		}
 
 

@@ -119,7 +119,7 @@ namespace DeferredDemo {
 		/// </summary>
 		public void LoadContent ()
 		{
-			spotAtlas	=	Content.Load<TextureAtlas>("spots");
+			spotAtlas	=	Content.Load<TextureAtlas>("spots|srgb");
 		}
 
 

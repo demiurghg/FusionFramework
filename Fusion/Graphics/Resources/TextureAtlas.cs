@@ -21,7 +21,8 @@ namespace Fusion.Graphics {
 
 		public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
 		{
-			return new TextureAtlas( game.GraphicsDevice, stream );
+			bool srgb = assetPath.ToLowerInvariant().Contains("|srgb");
+			return new TextureAtlas( game.GraphicsDevice, stream, srgb );
 		}
 	}
 		
@@ -61,7 +62,7 @@ namespace Fusion.Graphics {
 		/// Creates texture atlas from stream.
 		/// </summary>
 		/// <param name="device"></param>
-		public TextureAtlas ( GraphicsDevice device, Stream stream )
+		public TextureAtlas ( GraphicsDevice device, Stream stream, bool useSRgb = false )
 		{
 			using ( var br = new BinaryReader(stream) ) {
 			
@@ -86,7 +87,7 @@ namespace Fusion.Graphics {
 				
 				var ddsImageBytes	=	br.ReadBytes( ddsFileLength );
 
-				texture	=	new Texture2D( device, ddsImageBytes, false );
+				texture	=	new Texture2D( device, ddsImageBytes, useSRgb );
 			}
 
 

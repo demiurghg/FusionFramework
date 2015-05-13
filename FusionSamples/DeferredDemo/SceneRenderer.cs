@@ -149,10 +149,10 @@ namespace DeferredDemo {
 
 			surfaceProps	=	scene.Materials
 							.Select( mtrl => new SurfaceProperties() {
-								Diffuse		=	LoadTexture2D( mtrl.TexturePath, ""			, defaultDiffuse ),
-								Specular	=	LoadTexture2D( mtrl.TexturePath, "_spec"	, defaultSpecular ),
-								NormalMap	=	LoadTexture2D( mtrl.TexturePath, "_local"	, defaultNormalMap ),
-								Emission	=	LoadTexture2D( mtrl.TexturePath, "_glow"	, defaultEmission ),
+								Diffuse		=	LoadTexture2D( mtrl.TexturePath, "|srgb"		, defaultDiffuse ),
+								Specular	=	LoadTexture2D( mtrl.TexturePath, "_spec"		, defaultSpecular ),
+								NormalMap	=	LoadTexture2D( mtrl.TexturePath, "_local"		, defaultNormalMap ),
+								Emission	=	LoadTexture2D( mtrl.TexturePath, "_glow|srgb"	, defaultEmission ),
 							} )
 							.ToArray();
 		}
