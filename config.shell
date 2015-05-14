@@ -1,5 +1,0 @@
-target Config:RenderSystem
-set Width		1280
-set Height		720
-set FullScreen	false
-	

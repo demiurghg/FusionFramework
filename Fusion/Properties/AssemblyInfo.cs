@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle( "Fusion" )]
 [assembly: AssemblyDescription( "" )]
 [assembly: AssemblyConfiguration( "" )]
-[assembly: AssemblyCompany( "ITMO University" )]
+[assembly: AssemblyCompany( "" )]
 [assembly: AssemblyProduct( "Fusion" )]
-[assembly: AssemblyCopyright( "Copyright © ITMO University" )]
+[assembly: AssemblyCopyright( "" )]
 [assembly: AssemblyTrademark( "" )]
 [assembly: AssemblyCulture( "" )]
 																							  
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion( "0.9.1.113" )]
+[assembly: AssemblyVersion( "1.1.*" )]
 //[assembly: AssemblyFileVersion( "0.8.*" )]

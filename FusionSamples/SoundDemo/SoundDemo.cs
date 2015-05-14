@@ -101,7 +101,7 @@ namespace SoundDemo {
 
 			if (e.Key==Keys.P) {
 				if (soundInstance==null) {
-					Log.Information("Play sound");
+					Log.Message("Play sound");
 					soundInstance	=	soundEffect.CreateInstance();
 					soundInstance.Apply3D( listener, emitter );
 					soundInstance.IsLooped	=	true;

@@ -340,7 +340,9 @@ namespace Fusion.Content {
 			
 				var result = FX.ShaderBytecode.CompileFromFile( sourceFile, entryPoint, profile, flags, FX.EffectFlags.None, defs, new IncludeHandler(buildContext) );
 			
-				Log.Warning( result.Message );
+				if ( result.Message!=null ) {
+					Log.Warning( result.Message );
+				}
 
 				File.WriteAllText( listing, result.Bytecode.Disassemble( FX.DisassemblyFlags.EnableColorCode, "" ) );
 

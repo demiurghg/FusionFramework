@@ -8,6 +8,7 @@ using Fusion.Mathematics;
 using Fusion.Graphics;
 using Fusion.Input;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 
 
 
@@ -68,6 +69,11 @@ namespace QuadDemo2D {
 			constBuffer		=	new ConstantBuffer( device, typeof(ConstData) );
 
 			Reloading += (s,e) => LoadContent();
+
+			//Trace.Fail("FUCK");
+			//Trace.Assert(true);
+			//Trace.Assert(false);
+			//Trace.Fail("Some epic fail");
 		}
 
 

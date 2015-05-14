@@ -145,7 +145,7 @@ namespace Fusion {
 
 			Instance	=	this;
 
-			Log.Information("{0} {1}", 
+			Log.Message("{0} {1}", 
 				Assembly.GetExecutingAssembly().GetName().Name, 
 				Assembly.GetExecutingAssembly().GetName().Version
 				);
@@ -266,7 +266,7 @@ namespace Fusion {
 				if (SharpDX.Diagnostics.ObjectTracker.FindActiveObjects().Any()) {
 					Log.Warning("{0}", SharpDX.Diagnostics.ObjectTracker.ReportActiveObjects() );
 				} else {
-					Log.Information("Leaked COM objects are not detected.");
+					Log.Message("Leaked COM objects are not detected.");
 				}
 				SharpDX.Configuration.EnableObjectTracking = false;
 			} else {

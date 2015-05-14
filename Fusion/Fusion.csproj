@@ -323,6 +323,7 @@
     <Compile Include="Graphics\Scene\VertexColorTexture.cs" />
     <Compile Include="Graphics\Scene\VertexColorTextureTBN.cs" />
     <Compile Include="Shell\Command.cs" />
+    <Compile Include="Shell\Shell.cs" />
     <Compile Include="UserInterface\Config.cs" />
     <Compile Include="UserInterface\Context.cs" />
     <Compile Include="UserInterface\Enums.cs" />
@@ -336,6 +337,7 @@
     <Compile Include="UserInterface\UserInterface.cs" />
     <Compile Include="UserInterface\Utils.cs" />
     <Compile Include="Utils\CharStream.cs" />
+    <Compile Include="Utils\ColoredTraceListener.cs" />
     <Compile Include="Utils\Image.cs" />
     <Compile Include="Utils\Image.Noise.cs" />
     <Compile Include="Utils\Image.Tga.cs" />
