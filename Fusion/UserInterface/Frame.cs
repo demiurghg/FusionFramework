@@ -1000,7 +1000,7 @@ namespace Fusion.UserInterface {
 			if ( hAlign  > 0 )	x	=	gp.X + (int)( gp.Width - r.Width );
 
 			if ( vAlign  < 0 )	y	=	gp.Y + (int)( 0 );
-			if ( vAlign == 0 )	y	=	gp.Y + (int)( Font.AverageCapitalLetterHeight/2 - Font.BaseLine + gp.Height/2 );
+			if ( vAlign == 0 )	y	=	gp.Y + (int)( Font.CapHeight/2 - Font.BaseLine + gp.Height/2 );
 			if ( vAlign  > 0 )	y	=	gp.Y + (int)( gp.Height - Font.LineHeight );
 			if ( vAlign == 2 )	y	=	gp.Y - Font.BaseLine;
 

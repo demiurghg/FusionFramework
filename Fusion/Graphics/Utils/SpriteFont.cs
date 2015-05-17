@@ -43,10 +43,25 @@ namespace Fusion.Graphics {
 		Texture2D		fontTexture;
 		GraphicsDevice	rs;
 
+		/// <summary>
+		/// Font's baseline.
+		/// </summary>
 		public int BaseLine		{ get { return fontInfo.baseLine; } }
+
+		/// <summary>
+		/// Space with.
+		/// </summary>
 		public int SpaceWidth	{ get; private set; }
+
+		/// <summary>
+		/// Font's line height.
+		/// </summary>
 		public int LineHeight	{ get; private set; }
-		public int AverageCapitalLetterHeight { get; private set; }
+
+		/// <summary>
+		/// Approximate capital letter heights. Measured using median.
+		/// </summary>
+		public int CapHeight { get; private set; }
 
 	
 		/// <summary>
@@ -115,7 +130,7 @@ namespace Fusion.Graphics {
 					.Select( ch2 => ch2.Height )
 					.OrderBy( h => h )
 					.ToList();
-			AverageCapitalLetterHeight	=	letterHeights[ letterHeights.Count/2 ];
+			CapHeight	=	letterHeights[ letterHeights.Count/2 ];
 
 
 
@@ -152,7 +167,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public RectangleF MeasureStringF ( string text, float tracking=0 ) {
+		public Fusion.Mathematics.Size2F MeasureStringF ( string text, float tracking=0 ) {
 			float	x = 0;
 			float	length = text.Length;
 			int		line = 1;
@@ -180,9 +195,20 @@ namespace Fusion.Graphics {
 
 				maxWidth = Math.Max( maxWidth, x );
 			}
-			return new RectangleF( 0, 0, maxWidth, line * fontInfo.lineHeight );
+			return new Fusion.Mathematics.Size2F( maxWidth, line * fontInfo.lineHeight );
 		}
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="ch"></param>
+		/// <returns></returns>
+		public Rectangle MeasureGlyph ( char ch )
+		{
+			var r = GetInfo(ch).dstRect;
+			return new Rectangle( (int)r.Left, (int)r.Top, (int)r.Width, (int)r.Height );
+		}
 
 
 		/// <summary>
@@ -190,10 +216,10 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public Rectangle MeasureString( string text )
+		public Fusion.Mathematics.Size2 MeasureString( string text )
 		{
 			var rectF = MeasureStringF( text, 0 );
-			return new Rectangle( 0, 0, (int)rectF.Width, (int)rectF.Height );
+			return new Fusion.Mathematics.Size2( (int)rectF.Width, (int)rectF.Height );
 		}
 
 
