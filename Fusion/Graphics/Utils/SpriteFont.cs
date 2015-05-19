@@ -167,7 +167,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public Fusion.Mathematics.Size2F MeasureStringF ( string text, float tracking=0 ) {
+		public RectangleF MeasureStringF ( string text, float tracking=0 ) {
 			float	x = 0;
 			float	length = text.Length;
 			int		line = 1;
@@ -195,7 +195,7 @@ namespace Fusion.Graphics {
 
 				maxWidth = Math.Max( maxWidth, x );
 			}
-			return new Fusion.Mathematics.Size2F( maxWidth, line * fontInfo.lineHeight );
+			return new RectangleF( 0, 0, maxWidth, line * fontInfo.lineHeight );
 		}
 
 
@@ -216,10 +216,10 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="text"></param>
 		/// <returns></returns>
-		public Fusion.Mathematics.Size2 MeasureString( string text )
+		public Rectangle MeasureString( string text )
 		{
 			var rectF = MeasureStringF( text, 0 );
-			return new Fusion.Mathematics.Size2( (int)rectF.Width, (int)rectF.Height );
+			return new Rectangle( 0,0, (int)rectF.Width, (int)rectF.Height );
 		}
 
 
