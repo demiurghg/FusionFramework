@@ -31,7 +31,7 @@ namespace Fusion.UserInterface {
 		/// <summary>
 		/// 
 		/// </summary>
-		internal bool		CanAcceptControl	{ get { return Visible && OverallColor.A != 0; } }
+		internal bool		CanAcceptControl	{ get { return Visible && OverallColor.A != 0 && !Ghost; } }
 
 		/// <summary>
 		/// 
