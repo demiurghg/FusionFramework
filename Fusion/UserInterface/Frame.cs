@@ -95,6 +95,12 @@ namespace Fusion.UserInterface {
 		public	Color		ShadowColor			{ get; set; }
 
 		/// <summary>
+		/// Shadow offset
+		/// </summary>
+		public	Vector2		ShadowOffset		{ get; set; }
+
+
+		/// <summary>
 		/// Local X position of the frame
 		/// </summary>
 		public	int			X					{ get; set; }
@@ -372,7 +378,7 @@ namespace Fusion.UserInterface {
 			ForeColor		=	Color.White;
 			Border			=	0;
 			BorderColor		=	Color.White;
-			ShadowColor		=	Color.Black;
+			ShadowColor		=	Color.Zero;
 			OverallColor	=	Color.White;
 		
 			TextAlignment	=	Alignment.TopLeft;
@@ -1019,8 +1025,12 @@ namespace Fusion.UserInterface {
 				y	=	gp.Y - Font.BaseLine;
 			} */
 
-			if (TextEffect==TextEffect.Shadow) {
+			/*if (TextEffect==TextEffect.Shadow) {
 				Font.DrawString( sb, Text, x + TextOffsetX+1, y + TextOffsetY+1, ShadowColor, 0, false );
+			} */
+
+			if (ShadowColor.A!=0) {
+				Font.DrawString( sb, Text, x + TextOffsetX+ShadowOffset.X, y + TextOffsetY+ShadowOffset.Y, ShadowColor, 0, false );
 			}
 
 			Font.DrawString( sb, Text, x + TextOffsetX, y + TextOffsetY, ForeColor, 0, false );
