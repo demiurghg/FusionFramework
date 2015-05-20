@@ -69,7 +69,7 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// Toggles fly mode
 		/// </summary>
-		[Command("Toggle Fly Mode")]
+		[UICommand("Toggle Fly Mode")]
 		public void ToggleFlyMode ()
 		{
 			Config.FreeCamEnabled = !Config.FreeCamEnabled;

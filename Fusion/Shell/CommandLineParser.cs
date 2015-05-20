@@ -8,10 +8,12 @@ using System.Diagnostics;
 using System.Reflection;
 using System.ComponentModel;
 
-namespace Fusion
+namespace Fusion.Shell
 {
-    // Reusable, reflection based helper for parsing commandline options.
-    public class CmdLineParser
+    /// <summary>
+    /// http://blogs.msdn.com/b/shawnhar/archive/2012/04/20/a-reusable-reflection-based-command-line-parser.aspx
+    /// </summary>
+    public class CommandLineParser
     {
         object optionsObject;
 
@@ -22,12 +24,20 @@ namespace Fusion
         List<string> optionalUsageHelp = new List<string>();
 
 		bool throwException = false;
+		readonly string name;
 
-        // Constructor.
-        public CmdLineParser(object optionsObject, bool throwException = false )
+        
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="optionsObject"></param>
+		/// <param name="throwException"></param>
+        public CommandLineParser( object optionsObject, bool throwException = false, string name = null )
         {
             this.optionsObject	= optionsObject;
 			this.throwException	= throwException;
+
+			this.name = name ?? Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().ProcessName);
 
             // Reflect to find what commandline options are available.
             foreach (PropertyInfo field in optionsObject.GetType().GetProperties())
@@ -63,18 +73,39 @@ namespace Fusion
         }
 
 
-		//public HashSet<PropertyInfo> AffectedProperties { get; private set; }
 
 
+		/// <summary>
+		/// http://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp/298990#298990
+		/// </summary>
+		/// <param name="commandLine"></param>
+		/// <returns></returns>
+		public static IEnumerable<string> SplitCommandLine(string commandLine)
+		{
+			bool inQuotes = false;
+
+			return commandLine.Split(c =>
+									 {
+										 if (c == '\"')
+											 inQuotes = !inQuotes;
+
+										 return !inQuotes && c == ' ';
+									 })
+							  .Select(arg => arg.Trim().TrimMatchingQuotes('\"'))
+							  .Where(arg => !string.IsNullOrEmpty(arg));
+		}
+
+
+		/// <summary>
+		/// Parses given args.
+		/// </summary>
+		/// <param name="args"></param>
+		/// <returns></returns>
         public bool ParseCommandLine(string[] args)
         {
-			//AffectedProperties	=	new HashSet<PropertyInfo>();
-
             // Parse each argument in turn.
-            foreach (string arg in args)
-            {
-                if (!ParseArgument(arg.Trim()))
-                {
+            foreach (string arg in args) {
+                if (!ParseArgument(arg.Trim())) {
                     return false;
                 }
             }
@@ -82,8 +113,7 @@ namespace Fusion
             // Make sure we got all the required options.
             PropertyInfo missingRequiredOption = requiredOptions.FirstOrDefault(field => !IsList(field) || GetList(field).Count == 0);
 
-            if (missingRequiredOption != null)
-            {
+            if (missingRequiredOption != null) {
                 ShowError("Missing argument '{0}'", GetOptionName(missingRequiredOption));
                 return false;
             }
@@ -92,6 +122,12 @@ namespace Fusion
         }
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="arg"></param>
+		/// <returns></returns>
         bool ParseArgument(string arg)
         {
             if (arg.StartsWith("/"))
@@ -135,13 +171,14 @@ namespace Fusion
         }
 
 
-		/*public class EventArgs : EventArgs {
-			public PropertyInfo AffectedProperty;
-		}
 
-		EventHandler<EventArgs> */
-
-
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="field"></param>
+		/// <param name="value"></param>
+		/// <returns></returns>
         bool SetOption(PropertyInfo field, string value)
         {
             try
@@ -167,6 +204,13 @@ namespace Fusion
         }
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="type"></param>
+		/// <returns></returns>
         static object ChangeType(string value, Type type)
         {
             TypeConverter converter = TypeDescriptor.GetConverter(type);
@@ -175,18 +219,36 @@ namespace Fusion
         }
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="field"></param>
+		/// <returns></returns>
         static bool IsList(PropertyInfo field)
         {
             return typeof(IList).IsAssignableFrom(field.PropertyType);
         }
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="field"></param>
+		/// <returns></returns>
         IList GetList(PropertyInfo field)
         {
             return (IList)field.GetValue(optionsObject);
         }
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="field"></param>
+		/// <returns></returns>
         static Type ListElementType(PropertyInfo field)
         {
             var interfaces = from i in field.PropertyType.GetInterfaces()
@@ -197,6 +259,12 @@ namespace Fusion
         }
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="field"></param>
+		/// <returns></returns>
         static string GetOptionName(PropertyInfo field)
         {
             var nameAttribute = GetAttribute<NameAttribute>(field);
@@ -212,18 +280,22 @@ namespace Fusion
         }
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="message"></param>
+		/// <param name="args"></param>
         void ShowError(string message, params object[] args)
         {
-            string name = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().ProcessName);
-
-            Console.Error.WriteLine(message, args);
-            Console.Error.WriteLine();
-            Console.Error.WriteLine("Usage: {0} {1}", name, string.Join(" ", requiredUsageHelp));
+            Log.Error(message, args);
+            Log.Error("");
+            Log.Error("Usage: {0} {1}", name, string.Join(" ", requiredUsageHelp));
 
             if (optionalUsageHelp.Count > 0)
             {
-                Console.Error.WriteLine();
-                Console.Error.WriteLine("Options:");
+                Log.Error("");
+                Log.Error("Options:");
 
                 foreach (string optional in optionalUsageHelp)
                 {
@@ -237,27 +309,40 @@ namespace Fusion
         }
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="provider"></param>
+		/// <returns></returns>
         static T GetAttribute<T>(ICustomAttributeProvider provider) where T : Attribute
         {
             return provider.GetCustomAttributes(typeof(T), false).OfType<T>().FirstOrDefault();
         }
 
 
-        // Used on optionsObject fields to indicate which options are required.
+		/// <summary>
+        /// Used on optionsObject fields to indicate which options are required.
+		/// </summary>
         [AttributeUsage(AttributeTargets.Property)]
         public sealed class IgnoreAttribute : Attribute
         { 
         }
 
 
-        // Used on optionsObject fields to indicate which options are required.
+		/// <summary>
+        /// Used on optionsObject fields to indicate which options are required.
+		/// </summary>
         [AttributeUsage(AttributeTargets.Property)]
         public sealed class RequiredAttribute : Attribute
         { 
         }
 
 
-        // Used on an optionsObject field to rename the corresponding commandline option.
+
+		/// <summary>
+        /// Used on an optionsObject field to rename the corresponding commandline option.
+		/// </summary>
         [AttributeUsage(AttributeTargets.Property)]
         public sealed class NameAttribute : Attribute
         {

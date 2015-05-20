@@ -34,6 +34,11 @@ namespace Fusion {
 			Colorize( eventType );
 			Console.Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
 			Console.WriteLine( format, args );
+
+			if (eventType.HasFlag(TraceEventType.Error) || eventType.HasFlag(TraceEventType.Warning)) {
+				Console.Error.WriteLine( format, args );
+			}
+
 			Console.ResetColor();
 		}
 
@@ -43,8 +48,14 @@ namespace Fusion {
 			Colorize( eventType );
 			Console.Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
 			Console.WriteLine( message );
+
+			if (eventType.HasFlag(TraceEventType.Error) || eventType.HasFlag(TraceEventType.Warning)) {
+				Console.Error.WriteLine( message );
+			}
+
 			Console.ResetColor();
 		}
+
 
 
 		void Colorize ( TraceEventType eventType )

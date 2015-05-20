@@ -266,8 +266,8 @@ namespace Fusion.Development {
 
 				var methodDescs = svc.GetType()
 					.GetMethods()
-					.Where( m1 => m1.GetCustomAttribute<CommandAttribute>() != null )
-					.Select( m2 => new { Method = m2, Attr = m2.GetCustomAttribute<CommandAttribute>() } )
+					.Where( m1 => m1.GetCustomAttribute<UICommandAttribute>() != null )
+					.Select( m2 => new { Method = m2, Attr = m2.GetCustomAttribute<UICommandAttribute>() } )
 					.OrderBy( m3 => m3.Attr.GroupIndex )
 					.ToList();
 
@@ -349,7 +349,7 @@ namespace Fusion.Development {
 
 				foreach ( var method in obj.GetType().GetMethods( BindingFlags.Public | BindingFlags.Instance ) ) {
 
-					var ca = (CommandAttribute)method.GetCustomAttributes( typeof(CommandAttribute) ).FirstOrDefault();
+					var ca = (UICommandAttribute)method.GetCustomAttributes( typeof(UICommandAttribute) ).FirstOrDefault();
 
 					if (ca==null) {
 						continue;
@@ -361,7 +361,7 @@ namespace Fusion.Development {
 
 			methodNames = methodNames
 					.DistinctBy( m => m.Name )
-					.OrderBy( m1 => ((CommandAttribute)m1.GetCustomAttribute( typeof(CommandAttribute) )).GroupIndex )
+					.OrderBy( m1 => ((UICommandAttribute)m1.GetCustomAttribute( typeof(UICommandAttribute) )).GroupIndex )
 					.ToList();
 
 			foreach ( var mn in methodNames ) {
@@ -409,7 +409,7 @@ namespace Fusion.Development {
 
 				foreach ( var method in obj.GetType().GetMethods( BindingFlags.Public | BindingFlags.Instance ) ) {
 
-					var ca = (CommandAttribute)method.GetCustomAttributes( typeof(CommandAttribute) ).FirstOrDefault();
+					var ca = (UICommandAttribute)method.GetCustomAttributes( typeof(UICommandAttribute) ).FirstOrDefault();
 
 					if (ca==null) {
 						continue;

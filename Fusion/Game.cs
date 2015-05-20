@@ -3,25 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
 using System.Windows.Forms;
-using System.Xml;
 using System.Xml.Serialization;
 using System.Reflection;
 using Fusion.Audio;
 using System.Globalization;
 using System.Threading;
 using Fusion.Input;
-using SharpDX;
-using System.ComponentModel;
 using System.IO;
-using System.Text;
 using System.Diagnostics;
 using Fusion.Graphics;
 using SharpDX.Windows;
-using SharpDX.Direct3D;
 using Fusion.Development;
 using Fusion.Content;
-using System.IO.Pipes;
 using Fusion.Mathematics;
+using Fusion.Shell;
 
 
 namespace Fusion {
@@ -40,22 +35,27 @@ namespace Fusion {
 		/// <summary>
 		/// Gets the current audio device
 		/// </summary>
-		public	AudioDevice	AudioDevice { get { return audioDevice		; } }
+		public	AudioDevice	AudioDevice { get { return audioDevice; } }
 
 		/// <summary>
 		/// Gets the current input device
 		/// </summary>
-		public	InputDevice	InputDevice { get { return inputDevice		; } }
+		public	InputDevice	InputDevice { get { return inputDevice; } }
 
 		/// <summary>
 		/// Gets the current graphics device
 		/// </summary>
-		public	GraphicsDevice GraphicsDevice { get { return graphicsDevice	; } }
+		public	GraphicsDevice GraphicsDevice { get { return graphicsDevice; } }
 
 		/// <summary>
 		/// Gets current content manager
 		/// </summary>
-		public	ContentManager Content { get { return content			; } }
+		public	ContentManager Content { get { return content; } }
+
+		/// <summary>
+		/// Gets current content manager
+		/// </summary>
+		public	Shell.Shell Shell { get { return shell; } }
 
 		/// <summary>
 		/// Indicates whether the game is initialized.
@@ -70,7 +70,7 @@ namespace Fusion {
 		/// <summary>
 		/// Gets game parameters
 		/// </summary>
-		public	GameParameters		Parameters			{ get { return gameParams; } }
+		public	GameParameters Parameters { get { return gameParams; } }
 
 		/// <summary>
 		/// Raised when the game exiting before disposing
@@ -103,6 +103,7 @@ namespace Fusion {
 		InputDevice			inputDevice			;
 		GraphicsDevice		graphicsDevice		;
 		ContentManager		content				;
+		Shell.Shell			shell			;
 
 		Dictionary<Type, GameService>	serviceMap	=	new Dictionary<Type,GameService>();
 		List<GameService>				serviceList	=	new List<GameService>();
@@ -161,6 +162,7 @@ namespace Fusion {
 			graphicsDevice		=	new GraphicsDevice( this );
 			content				=	new ContentManager( this );
 			gameTimeInternal	=	new GameTime();
+			shell				=	new Shell.Shell(this);
 		}
 
 
@@ -180,7 +182,7 @@ namespace Fusion {
 		/// <summary>
 		/// Manage game to raise Reloading event.
 		/// </summary>
-		[Command("Reload Content", 999998)]
+		[UICommand("Reload Content", 999998)]
 		public void Reload()
 		{
 			if (!IsInitialized) {
@@ -195,7 +197,7 @@ namespace Fusion {
 		/// Request game to exit.
 		/// Game will quit when update & draw loop will be completed.
 		/// </summary>
-		[Command("Exit", 999999)]
+		[UICommand("Exit", 999999)]
 		public void Exit ()
 		{
 			if (!IsInitialized) {
@@ -387,6 +389,8 @@ namespace Fusion {
 
 				InputDevice.EndUpdateInput();
 			}
+
+			shell.Update( gameTimeInternal );
 
 			CheckExitInternal();
 		}
@@ -608,7 +612,7 @@ namespace Fusion {
 		/// Saves configuration to XML file	for each subsystem
 		/// </summary>
 		/// <param name="path"></param>
-		[Command("Save Configuration", 1)]
+		[UICommand("Save Configuration", 1)]
 		public void SaveConfiguration ()
 		{	
 			Log.Message("Saving configuration...");
@@ -643,7 +647,7 @@ namespace Fusion {
 		/// Loads configuration for each subsystem
 		/// </summary>
 		/// <param name="path"></param>
-		[Command("Load Configuration", 1)]
+		[UICommand("Load Configuration", 1)]
 		public void LoadConfiguration ()
 		{
 			Log.Message("Loading configuration...");

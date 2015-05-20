@@ -5,6 +5,7 @@ using namespace System;
 using namespace Fusion;
 using namespace msclr::interop;
 using namespace Fusion::Graphics;
+using namespace Fusion::Shell;
 
 /*
 **	Options class :
@@ -30,44 +31,44 @@ public ref class Options {
 		geom			=	false;
 	}
 
-	[CmdLineParser::Name("in")]
-	[CmdLineParser::Required()]
+	[CommandLineParser::Name("in")]
+	[CommandLineParser::Required()]
 	property string^ Input { 
 		void set(string^ value) { input = value; }
 		string ^get() { return input; }
 	}
 
-	[CmdLineParser::Name("out")]
+	[CommandLineParser::Name("out")]
 	property string^ Output { 
 		void set(string^ value) { output = value; }
 		string ^get() { return output; }
 	}
 
-	[CmdLineParser::Name("merge")]
+	[CommandLineParser::Name("merge")]
 	property float MergeTolerance { 
 		void set(float value) { mergeTolerance = value; } 
 		float get() { return mergeTolerance; } 
 	}
 
-	[CmdLineParser::Name("base")]
+	[CommandLineParser::Name("base")]
 	property string ^BaseDirectory { 
 		void set(string ^value) { base = value; } 
 		string ^get() { return base; } 
 	}
 
-	[CmdLineParser::Name("anim")]
+	[CommandLineParser::Name("anim")]
 	property bool ImportAnimation {
 		void set(bool value) { anim = value; } 
 		bool get() { return anim; } 
 	}
 
-	[CmdLineParser::Name("geom")]
+	[CommandLineParser::Name("geom")]
 	property bool ImportGeometry {
 		void set(bool value) { geom = value; } 
 		bool get() { return geom; } 
 	}
 
-	[CmdLineParser::Name("wait")]
+	[CommandLineParser::Name("wait")]
 	property bool Wait {
 		void set(bool value) { wait = value; } 
 		bool get() { return wait; } 

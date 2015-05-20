@@ -93,7 +93,7 @@ namespace Fusion.Content {
 		}
 
 			
-		[Command("ShowListing", 2)]
+		[UICommand("ShowListing", 2)]
 		public void ShowListing ()
 		{
 			if (!string.IsNullOrEmpty(ListingPath)) {

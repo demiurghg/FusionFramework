@@ -58,7 +58,7 @@ namespace SubmarinesWars
         [Config]
         public SubmarinesConfig cfg { get; set; }
 
-        [Command]
+        [UICommand]
         internal AI LoadAI(int teamId)
         {
             String DllPath = "";

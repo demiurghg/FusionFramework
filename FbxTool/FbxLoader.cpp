@@ -819,7 +819,7 @@ void Fusion::Fbx::FbxLoader::HandleLight( Graphics::Scene ^scene, Graphics::Node
 int main(array<System::String ^> ^args)
 {
 	auto options	=	gcnew Options();
-	auto parser		=	gcnew CmdLineParser( options, true );
+	auto parser		=	gcnew CommandLineParser( options, true, nullptr );
 
 	auto sw = gcnew Stopwatch();
 

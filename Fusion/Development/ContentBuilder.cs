@@ -213,7 +213,7 @@ namespace Fusion.Development {
 		/// <summary>
 		/// Builds content
 		/// </summary>
-		[Command("Build Content", 0)]
+		[UICommand("Build Content", 0)]
 		public void BuildContent ()
 		{
 			BuildContent(false, null);
@@ -223,7 +223,7 @@ namespace Fusion.Development {
 		/// <summary>
 		/// Builds content
 		/// </summary>
-		[Command("Rebuild Content", 0)]
+		[UICommand("Rebuild Content", 0)]
 		public void RebuildContent ()
 		{
 			BuildContent(true, null);
@@ -233,7 +233,7 @@ namespace Fusion.Development {
 		/// <summary>
 		/// Builds content
 		/// </summary>
-		[Command("Rebuild Selection", 0)]
+		[UICommand("Rebuild Selection", 0)]
 		public void RebuildSelection ()
 		{
 			BuildContent(true, developerConsole.GetSelectedNames("Content") );
@@ -243,7 +243,7 @@ namespace Fusion.Development {
 		/// <summary>
 		/// 
 		/// </summary>
-		[Command("Clean Content", 0)]
+		[UICommand("Clean Content", 0)]
 		public void CleanContent ()
 		{
 			var r = MessageBox.Show("Are you shure to clean target content folder?", "Clean Content", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning );
@@ -258,7 +258,7 @@ namespace Fusion.Development {
 		/// <summary>
 		/// 
 		/// </summary>
-		[Command("Add Asset...", 1)]
+		[UICommand("Add Asset...", 1)]
 		public void AddAsset ()
 		{
 			var dict = 
@@ -307,7 +307,7 @@ namespace Fusion.Development {
 		/// <summary>
 		/// Adds content using OpenFileDialog
 		/// </summary>
-		[Command("Create Asset From File...", 1)]
+		[UICommand("Create Asset From File...", 1)]
 		public void CreateAssetFromFile ()
 		{
 			if (ofdDirectory==null) {
@@ -367,7 +367,7 @@ namespace Fusion.Development {
 		/// <summary>
 		/// 
 		/// </summary>
-		[Command("Remove Selected Assets", 1)]
+		[UICommand("Remove Selected Assets", 1)]
 		public void RemoveSelectedAssets ()
 		{
 			if (developerConsole!=null && !developerConsole.IsDisposed) {
@@ -437,7 +437,7 @@ namespace Fusion.Development {
 		/// <summary>
 		/// Save content project
 		/// </summary>
-		[Command("Save Content", 5)]
+		[UICommand("Save Content", 5)]
 		public void SaveContentProject ()
 		{
 			Save();
@@ -449,7 +449,7 @@ namespace Fusion.Development {
 		/// <summary>
 		/// Save content project
 		/// </summary>
-		[Command("Refresh Console", 6)]
+		[UICommand("Refresh Console", 6)]
 		public void RefreshConsole ()
 		{
 			developerConsole.RefreshConsole(true);

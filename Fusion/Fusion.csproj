@@ -323,7 +323,10 @@
     </Compile>
     <Compile Include="Graphics\Scene\VertexColorTexture.cs" />
     <Compile Include="Graphics\Scene\VertexColorTextureTBN.cs" />
+    <Compile Include="Shell\CommandLineParser.cs" />
     <Compile Include="Shell\Command.cs" />
+    <Compile Include="Shell\CommandAttribute.cs" />
+    <Compile Include="Shell\Commands\Exit.cs" />
     <Compile Include="Shell\Shell.cs" />
     <Compile Include="UserInterface\Config.cs" />
     <Compile Include="UserInterface\Context.cs" />
@@ -362,7 +365,6 @@
     <Compile Include="Graphics\Scene\MeshVertex.cs" />
     <Compile Include="Graphics\Scene\Node.cs" />
     <Compile Include="Graphics\Scene\Scene.cs" />
-    <Compile Include="Utils\CmdLineParser.cs" />
     <Compile Include="Utils\Serializer.cs" />
     <Compile Include="Mathematics\Temperature.cs" />
     <Compile Include="Utils\TexturePump.cs" />
