@@ -101,4 +101,10 @@
     <MeleeDamage>100</MeleeDamage>
     <RocketDamage>100</RocketDamage>
   </Asset>
+  <Asset xsi:type="RawFileAsset">
+    <AssetPath>text.txt</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <SourceFile>text.txt</SourceFile>
+  </Asset>
 </ArrayOfAsset>

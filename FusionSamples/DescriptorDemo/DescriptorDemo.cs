@@ -163,8 +163,6 @@ namespace DescriptorDemo {
 		}
 
 
-
-
 		void InputDevice_KeyDown ( object sender, InputDevice.KeyEventArgs e )
 		{
 			if (e.Key == Keys.F1) {
@@ -202,12 +200,18 @@ namespace DescriptorDemo {
 
 
 
+		string text;
+
 		/// <summary>
 		/// Load stuff here
 		/// </summary>
 		protected override void Initialize ()
 		{
 			base.Initialize();
+
+			text = Content.Load<string>("text|utf8");
+
+			Log.Message( text );
 		}
 
 
