@@ -17,8 +17,9 @@ namespace Fusion.Shell {
 
 		object lockObject = new object();
 
-		List<Command> commandQueue = new List<Command>();
-		Stack<Command> history = new Stack<Command>();
+		Queue<Command> queue	= new Queue<Command>();
+		Queue<Command> delayed	= new Queue<Command>();
+		Stack<Command> history	= new Stack<Command>();
 
 
 
@@ -59,7 +60,20 @@ namespace Fusion.Shell {
 
 				parser.ParseCommandLine( argList );
 
-				commandQueue.Add( command );
+				queue.Enqueue( command );
+			}
+		}
+
+		
+
+		/// <summary>
+		/// Executes given string.
+		/// </summary>
+		/// <param name="command"></param>
+		public void Push ( Command command )
+		{
+			lock (lockObject) {
+				queue.Enqueue( command );
 			}
 		}
 		
@@ -75,17 +89,19 @@ namespace Fusion.Shell {
 
 			lock (lockObject) {
 
-				// for each non-delayed commands.
-				foreach ( var cmd in commandQueue ) {
+				delayed.Clear();
+
+				while (queue.Any()) {
+					
+					var cmd = queue.Dequeue();
 
 					if (cmd.Delay<=0) {
-						
 						//	execute :
 						cmd.Execute( this );
 
 						//	break execution :
 						if (cmd.Terminal) {
-							commandQueue.Clear();
+							queue.Clear();
 							break;
 						}
 
@@ -93,16 +109,17 @@ namespace Fusion.Shell {
 						if (!cmd.NoRollback) {
 							history.Push( cmd );
 						}
+					} else {
+
+						cmd.Delay -= delta;
+
+						delayed.Enqueue( cmd );
+
 					}
+
 				}
 
-				commandQueue.RemoveAll( cmd => cmd.Delay <= 0 );
-
-				var toExecute = commandQueue.Where( cmd => cmd.Delay <= 0 );
-			
-				foreach ( var cmd in commandQueue ) {
-					cmd.Delay -= delta;
-				} 
+				Misc.Swap( ref delayed, ref queue );
 			}
 		}
 
@@ -114,6 +131,11 @@ namespace Fusion.Shell {
 		public void Undo ()
 		{
 			lock (lockObject) {
+
+				if (!history.Any()) {
+					throw new Exception("No more commands to undo");
+				}
+
 				var cmd = history.Pop();
 				cmd.Rollback( this );
 			}

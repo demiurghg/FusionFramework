@@ -390,7 +390,11 @@ namespace Fusion {
 				InputDevice.EndUpdateInput();
 			}
 
-			invoker.Update( gameTimeInternal );
+			try {
+				invoker.Update( gameTimeInternal );
+			} catch ( Exception e ) {
+				Log.Error( e.Message );
+			}
 
 			CheckExitInternal();
 		}
@@ -542,7 +546,7 @@ namespace Fusion {
 		/// <returns></returns>
 		internal GameService GetServiceByName( string name )
 		{
-			var obj = serviceMap.First( svc => svc.Value.GetType().Name.ToLower() == name.ToLower() ).Value;
+			var obj = serviceMap.FirstOrDefault( svc => svc.Value.GetType().Name.ToLower() == name.ToLower() ).Value;
 
 			if (obj==null) {
 				throw new InvalidOperationException(string.Format("Service '{0}' not found", name) );
@@ -612,19 +616,6 @@ namespace Fusion {
 			return serviceList
 				.Select( svc => new KeyValuePair<string,object>( svc.GetType().Name, GameService.GetConfigObject( svc ) ) )
 				.ToArray();
-
-			/*var list = new List<KeyValuePair<string,object>>();
-
-			foreach ( var svc in serviceList ) {
-
-				var cfgPropList = GameService.GetConfigProperties( svc.GetType() );
-
-				foreach ( var cfgProp in cfgPropList ) {
-					list.Add( new KeyValuePair<string, object>( svc.GetType().Name, cfgProp.Value.GetValue( svc ) ) );
-				}
-			}
-
-			return list.ToArray();*/
 		}
 
 

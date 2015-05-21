@@ -38,7 +38,12 @@ namespace Fusion.Shell.Commands {
 		public override void Execute ( Invoker invoker )
 		{
 			var cfg = Game.GetConfigObjectByServiceName( Service );
+			
 			var prop = cfg.GetType().GetProperty( Variable );
+
+			if (prop==null) {
+				throw new Exception(string.Format("Service '{0}' does not have config variable '{1}'", Service, Variable));
+			}
 
 			oldValue	=	prop.GetValue( cfg );
 
