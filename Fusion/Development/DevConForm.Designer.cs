@@ -47,6 +47,7 @@
 			this.splitter2 = new System.Windows.Forms.Splitter();
 			this.mainPropertyGrid = new System.Windows.Forms.PropertyGrid();
 			this.messageTextBox = new System.Windows.Forms.TextBox();
+			this.textBox1 = new System.Windows.Forms.TextBox();
 			this.mainMenuStrip.SuspendLayout();
 			this.gridContextMenu.SuspendLayout();
 			this.gridCommandFlowPanel.SuspendLayout();
@@ -119,7 +120,7 @@
 			this.gridCommandFlowPanel.BackColor = System.Drawing.SystemColors.Control;
 			this.gridCommandFlowPanel.Controls.Add(this.flowLayoutPanel1);
 			this.gridCommandFlowPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.gridCommandFlowPanel.Location = new System.Drawing.Point(198, 448);
+			this.gridCommandFlowPanel.Location = new System.Drawing.Point(198, 428);
 			this.gridCommandFlowPanel.Margin = new System.Windows.Forms.Padding(0);
 			this.gridCommandFlowPanel.Name = "gridCommandFlowPanel";
 			this.gridCommandFlowPanel.Size = new System.Drawing.Size(327, 0);
@@ -186,7 +187,7 @@
 			// splitter3
 			// 
 			this.splitter3.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.splitter3.Location = new System.Drawing.Point(0, 531);
+			this.splitter3.Location = new System.Drawing.Point(0, 511);
 			this.splitter3.Name = "splitter3";
 			this.splitter3.Size = new System.Drawing.Size(525, 3);
 			this.splitter3.TabIndex = 14;
@@ -196,7 +197,7 @@
 			// 
 			this.splitter1.Location = new System.Drawing.Point(195, 24);
 			this.splitter1.Name = "splitter1";
-			this.splitter1.Size = new System.Drawing.Size(3, 507);
+			this.splitter1.Size = new System.Drawing.Size(3, 487);
 			this.splitter1.TabIndex = 1;
 			this.splitter1.TabStop = false;
 			// 
@@ -206,7 +207,7 @@
 			this.mainTreeView.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.mainTreeView.Location = new System.Drawing.Point(0, 24);
 			this.mainTreeView.Name = "mainTreeView";
-			this.mainTreeView.Size = new System.Drawing.Size(195, 507);
+			this.mainTreeView.Size = new System.Drawing.Size(195, 487);
 			this.mainTreeView.TabIndex = 0;
 			this.mainTreeView.BeforeSelect += new System.Windows.Forms.TreeViewCancelEventHandler(this.mainTreeView_BeforeSelect);
 			this.mainTreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.mainTreeView_AfterSelect);
@@ -218,7 +219,7 @@
 			this.selectionBox.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.selectionBox.Font = new System.Drawing.Font("Segoe UI", 8F);
 			this.selectionBox.FormattingEnabled = true;
-			this.selectionBox.Location = new System.Drawing.Point(198, 451);
+			this.selectionBox.Location = new System.Drawing.Point(198, 431);
 			this.selectionBox.Name = "selectionBox";
 			this.selectionBox.Size = new System.Drawing.Size(327, 80);
 			this.selectionBox.TabIndex = 4;
@@ -226,7 +227,7 @@
 			// splitter2
 			// 
 			this.splitter2.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.splitter2.Location = new System.Drawing.Point(198, 448);
+			this.splitter2.Location = new System.Drawing.Point(198, 428);
 			this.splitter2.Name = "splitter2";
 			this.splitter2.Size = new System.Drawing.Size(327, 3);
 			this.splitter2.TabIndex = 5;
@@ -240,7 +241,7 @@
 			this.mainPropertyGrid.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.mainPropertyGrid.Location = new System.Drawing.Point(198, 24);
 			this.mainPropertyGrid.Name = "mainPropertyGrid";
-			this.mainPropertyGrid.Size = new System.Drawing.Size(327, 424);
+			this.mainPropertyGrid.Size = new System.Drawing.Size(327, 404);
 			this.mainPropertyGrid.TabIndex = 7;
 			this.mainPropertyGrid.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.mainPropertyGrid_PropertyValueChanged);
 			// 
@@ -248,12 +249,24 @@
 			// 
 			this.messageTextBox.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.messageTextBox.Font = new System.Drawing.Font("Consolas", 8F);
-			this.messageTextBox.Location = new System.Drawing.Point(0, 534);
+			this.messageTextBox.Location = new System.Drawing.Point(0, 514);
 			this.messageTextBox.Multiline = true;
 			this.messageTextBox.Name = "messageTextBox";
 			this.messageTextBox.ReadOnly = true;
 			this.messageTextBox.Size = new System.Drawing.Size(525, 80);
 			this.messageTextBox.TabIndex = 15;
+			// 
+			// textBox1
+			// 
+			this.textBox1.Dock = System.Windows.Forms.DockStyle.Bottom;
+			this.textBox1.Font = new System.Drawing.Font("Consolas", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+			this.textBox1.Location = new System.Drawing.Point(0, 594);
+			this.textBox1.Name = "textBox1";
+			this.textBox1.Size = new System.Drawing.Size(525, 20);
+			this.textBox1.TabIndex = 2;
+			this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+			this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
+			this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
 			// 
 			// DevConForm
 			// 
@@ -269,6 +282,7 @@
 			this.Controls.Add(this.mainMenuStrip);
 			this.Controls.Add(this.splitter3);
 			this.Controls.Add(this.messageTextBox);
+			this.Controls.Add(this.textBox1);
 			this.Controls.Add(this.panel1);
 			this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
 			this.MainMenuStrip = this.mainMenuStrip;
@@ -311,5 +325,6 @@
 		private System.Windows.Forms.Splitter splitter2;
 		private System.Windows.Forms.PropertyGrid mainPropertyGrid;
 		private System.Windows.Forms.TextBox messageTextBox;
+		private System.Windows.Forms.TextBox textBox1;
 	}
 }

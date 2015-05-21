@@ -425,7 +425,7 @@ namespace Fusion.Graphics {
 
 					int count = vertexBuffers.Length;
 
-					#warning Remove allocation!
+					//#warning Remove allocation!
 					var inputVertexBufferBinding = new VertexBufferBinding[count];
 
 					for (int i=0; i<count; i++) {

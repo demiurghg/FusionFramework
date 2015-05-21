@@ -55,7 +55,7 @@ namespace Fusion {
 		/// <summary>
 		/// Gets current content manager
 		/// </summary>
-		public	Shell.Shell Shell { get { return shell; } }
+		public	Invoker Invoker { get { return invoker; } }
 
 		/// <summary>
 		/// Indicates whether the game is initialized.
@@ -103,7 +103,7 @@ namespace Fusion {
 		InputDevice			inputDevice			;
 		GraphicsDevice		graphicsDevice		;
 		ContentManager		content				;
-		Shell.Shell			shell			;
+		Invoker				invoker				;
 
 		Dictionary<Type, GameService>	serviceMap	=	new Dictionary<Type,GameService>();
 		List<GameService>				serviceList	=	new List<GameService>();
@@ -162,7 +162,7 @@ namespace Fusion {
 			graphicsDevice		=	new GraphicsDevice( this );
 			content				=	new ContentManager( this );
 			gameTimeInternal	=	new GameTime();
-			shell				=	new Shell.Shell(this);
+			invoker				=	new Invoker(this);
 		}
 
 
@@ -390,7 +390,7 @@ namespace Fusion {
 				InputDevice.EndUpdateInput();
 			}
 
-			shell.Update( gameTimeInternal );
+			invoker.Update( gameTimeInternal );
 
 			CheckExitInternal();
 		}
@@ -536,6 +536,37 @@ namespace Fusion {
 
 
 		/// <summary>
+		/// Gets service by name.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		internal GameService GetServiceByName( string name )
+		{
+			var obj = serviceMap.First( svc => svc.Value.GetType().Name.ToLower() == name.ToLower() ).Value;
+
+			if (obj==null) {
+				throw new InvalidOperationException(string.Format("Service '{0}' not found", name) );
+			}
+
+			return (GameService)obj;
+		}
+
+
+
+		/// <summary>
+		/// Gets service by name.
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		internal object GetConfigObjectByServiceName( string name )
+		{
+			var svc = GetServiceByName( name );
+			return GameService.GetConfigObject( svc );
+		}
+
+
+
+		/// <summary>
 		/// Checks wether service of given type exist?
 		/// </summary>
 		/// <typeparam name="T"></typeparam>
@@ -578,18 +609,22 @@ namespace Fusion {
 		/// <returns></returns>
 		internal KeyValuePair<string, object>[] GetConfiguration ()
 		{
-			var list = new List<KeyValuePair<string,object>>();
+			return serviceList
+				.Select( svc => new KeyValuePair<string,object>( svc.GetType().Name, GameService.GetConfigObject( svc ) ) )
+				.ToArray();
+
+			/*var list = new List<KeyValuePair<string,object>>();
 
 			foreach ( var svc in serviceList ) {
 
 				var cfgPropList = GameService.GetConfigProperties( svc.GetType() );
 
 				foreach ( var cfgProp in cfgPropList ) {
-					list.Add( new KeyValuePair<string, object>( cfgProp.Key, cfgProp.Value.GetValue( svc ) ) );
+					list.Add( new KeyValuePair<string, object>( svc.GetType().Name, cfgProp.Value.GetValue( svc ) ) );
 				}
 			}
 
-			return list.ToArray();
+			return list.ToArray();*/
 		}
 
 
@@ -619,23 +654,22 @@ namespace Fusion {
 
 			foreach ( var svc in serviceList ) {
 
-				var cfgPropList = GameService.GetConfigProperties( svc.GetType() );
+				string name = GetConfigPath( string.Format("Config.{0}.xml", svc.GetType().Name ) );
+				var cfgProp = GameService.GetConfigProperty( svc.GetType() );
 
-				foreach ( var cfgProp in cfgPropList ) {
+				if (cfgProp==null) {
+					continue;
+				}
 
-					string name = GetConfigPath( string.Format("Config.{0}.xml", cfgProp.Key ) );
-					Directory.CreateDirectory( Path.GetDirectoryName(name) );
+				Log.Message("Saving : {0}", name );
 
-					Log.Message("Saving : {0}", name );
+				Directory.CreateDirectory( Path.GetDirectoryName(name) );
 
-					var cfg = cfgProp.Value.GetValue( svc );
-
-					try {
-						SaveToXml( cfg, cfgProp.Value.PropertyType, name );
-					} catch ( Exception ex ) {
-						Log.Warning("Failed to save configuration:");
-						Log.Warning( ex.Message );
-					}
+				try {
+					SaveToXml( cfgProp.GetValue(svc), cfgProp.PropertyType, name );
+				} catch ( Exception ex ) {
+					Log.Error("Failed to save configuration:");
+					Log.Error( ex.Message );
 				}
 			}
 		}
@@ -654,23 +688,25 @@ namespace Fusion {
 
 			foreach ( var svc in serviceList ) {
 
-				var cfgPropList = GameService.GetConfigProperties( svc.GetType() );
+				string name = GetConfigPath( string.Format("Config.{0}.xml", svc.GetType().Name ) );
+				var cfgProp = GameService.GetConfigProperty( svc.GetType() );
 
-				foreach ( var cfgProp in cfgPropList ) {
+				if (cfgProp==null) {
+					continue;
+				}
 
-					string name = GetConfigPath( string.Format("Config.{0}.xml", cfgProp.Key ) );
+				Log.Message("Loading : {0}", name );
 
-					Log.Message("Loading : {0}", name );
+				Directory.CreateDirectory( Path.GetDirectoryName(name) );
 
-					try {
+				try {
 						
-						var cfg = LoadFromXml( cfgProp.Value.PropertyType, name );
-						cfgProp.Value.SetValue( svc, cfg );
+					var cfg = LoadFromXml( cfgProp.PropertyType, name );
+					cfgProp.SetValue( svc, cfg );
 
-					} catch ( Exception ex ) {
-						Log.Warning("Failed to load configuration:");
-						Log.Warning( ex.Message );
-					}
+				} catch ( Exception ex ) {
+					Log.Warning("Failed to load configuration:");
+					Log.Warning( ex.Message );
 				}
 			}
 		}

@@ -11,17 +11,18 @@ namespace Fusion.Shell {
 	/// </summary>
 	public abstract class Command {
 
+		[CommandLineParser.Ignore]
 		public Game Game { get; private set; }
 
 		/// <summary>
 		/// Execute action
 		/// </summary>
-		public abstract void Execute ();
+		public abstract void Execute ( Invoker invoker );
 
 		/// <summary>
 		/// Rollback action
 		/// </summary>
-		public abstract void Rollback ();
+		public abstract void Rollback ( Invoker invoker );
 
 
 		/// <summary>

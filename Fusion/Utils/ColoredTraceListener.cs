@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.IO;
 
 namespace Fusion {
 	public class ColoredTraceListener : TraceListener {
@@ -23,8 +24,10 @@ namespace Fusion {
 		public override void TraceEvent ( TraceEventCache eventCache, string source, TraceEventType eventType, int id )
 		{
 			Colorize( eventType );
-			Console.Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
-			Console.WriteLine();
+
+			GetWriter(eventType).Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
+			GetWriter(eventType).WriteLine();
+
 			Console.ResetColor();
 		}
 
@@ -32,12 +35,9 @@ namespace Fusion {
 		public override void TraceEvent ( TraceEventCache eventCache, string source, TraceEventType eventType, int id, string format, params object[] args )
 		{
 			Colorize( eventType );
-			Console.Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
-			Console.WriteLine( format, args );
-
-			if (eventType.HasFlag(TraceEventType.Error) || eventType.HasFlag(TraceEventType.Warning)) {
-				Console.Error.WriteLine( format, args );
-			}
+			
+			GetWriter(eventType).Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
+			GetWriter(eventType).WriteLine( format, args );
 
 			Console.ResetColor();
 		}
@@ -46,16 +46,23 @@ namespace Fusion {
 		public override void TraceEvent ( TraceEventCache eventCache, string source, TraceEventType eventType, int id, string message )
 		{
 			Colorize( eventType );
-			Console.Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
-			Console.WriteLine( message );
-
-			if (eventType.HasFlag(TraceEventType.Error) || eventType.HasFlag(TraceEventType.Warning)) {
-				Console.Error.WriteLine( message );
-			}
+			
+			GetWriter(eventType).Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
+			GetWriter(eventType).WriteLine( message );
 
 			Console.ResetColor();
 		}
 
+
+
+		TextWriter GetWriter ( TraceEventType eventType )
+		{
+			if (eventType.HasFlag(TraceEventType.Error) || eventType.HasFlag(TraceEventType.Warning)) {
+				return Console.Error;
+			} else {
+				return Console.Out;
+			}
+		}
 
 
 		void Colorize ( TraceEventType eventType )

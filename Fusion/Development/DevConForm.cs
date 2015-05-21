@@ -625,5 +625,29 @@ namespace Fusion.Development {
 		{
 			contentProject.Save();
 		}
+
+		private void textBox1_TextChanged ( object sender, EventArgs e )
+		{
+
+		}
+
+		private void textBox1_KeyPress ( object sender, KeyPressEventArgs e )
+		{
+
+		}
+
+		private void textBox1_KeyDown ( object sender, KeyEventArgs e )
+		{
+			if (e.KeyCode==Keys.Enter) {
+				Log.Message(">" + textBox1.Text);
+
+				try {
+					game.Invoker.Push( textBox1.Text );
+					textBox1.Text = "";
+				} catch ( Exception ex ) {
+					Log.Error( ex.Message );
+				}
+			}
+		}
 	}
 }

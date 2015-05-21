@@ -121,35 +121,38 @@ namespace Fusion {
 
 
 		/// <summary>
-		/// Gets all configs from 
+		/// Gets config object/
 		/// </summary>
-		/// <returns></returns>
-		static public KeyValuePair<string, PropertyInfo>[] GetConfigProperties ( Type type )
+		/// <param name="service"></param>
+		/// <returns>Null if no config object.</returns>
+		static internal object GetConfigObject ( object service )
 		{
-			string typeName =	type.Name;
+			var prop = GetConfigProperty( service.GetType() );
 
-			var cfgProps	=	type.GetProperties()
-					.Where( prop => prop.GetCustomAttributes(false).Any( propAttr => propAttr is ConfigAttribute ) )
-					.Select( prop2 => {
-								
-						var attr = prop2.GetCustomAttributes(false).FirstOrDefault( a => a is ConfigAttribute ) as ConfigAttribute;
-						var name = typeName + ( attr.Unnamed ? "" : "." + attr.Name );
-								
-						return new KeyValuePair<string, PropertyInfo>( name, prop2 );
-
-					}).ToArray();
-
-			foreach ( var cfgProp in cfgProps ) {
-				//Log.LogMessage( "{0} = {1}", cfgProp.Key, cfgProp.Value.Name );
+			if (prop==null) {
+				return null;
 			}
 
-			foreach ( var prop in cfgProps ) {
-				if ( cfgProps.Count( p => p.Key == prop.Key ) > 1 ) {
-					throw new InvalidOperationException(string.Format("{0} has duplicate config name '{1}'", typeName, prop.Key));
-				}
+			return prop.GetValue( service );
+		}
+
+
+
+		/// <summary>
+		/// Gets config property info from service of given type.
+		/// </summary>
+		/// <returns>Null if no config property defined for this type.</returns>
+		static internal PropertyInfo GetConfigProperty ( Type type )
+		{
+			var configProps = type.GetProperties()
+				.Where( pi => pi.CustomAttributes.Any( ca => ca.AttributeType == typeof(ConfigAttribute) ) )
+				.ToList();
+
+			if (configProps.Count!=1) {
+				return null;
 			}
 
-			return cfgProps;
+			return configProps[0];
 		}
 
 	}

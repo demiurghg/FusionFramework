@@ -299,7 +299,7 @@ namespace Fusion.Shell
 
                 foreach (string optional in optionalUsageHelp)
                 {
-                    Console.Error.WriteLine("    {0}", optional);
+                    Log.Error("    {0}", optional);
                 }
             }
 

@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Fusion.Shell.Commands {
 	
-	[Command("exit")]
-	public class Exit : Command {
+	[Command("undo")]
+	public class Undo : Command {
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="game"></param>
-		public Exit ( Game game ) : base(game)
+		public Undo ( Game game ) : base(game)
 		{
 		}
 
@@ -23,7 +23,7 @@ namespace Fusion.Shell.Commands {
 		/// </summary>
 		public override void Execute ( Invoker invoker )
 		{
-			Game.Exit();
+			invoker.Undo();
 		}
 
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Fusion.Shell {
-	public class Shell {
+	public class Invoker {
 
 		/// <summary>
 		/// Game reference.
@@ -18,17 +18,19 @@ namespace Fusion.Shell {
 		object lockObject = new object();
 
 		List<Command> commandQueue = new List<Command>();
-		List<Command> history = new List<Command>();
+		Stack<Command> history = new Stack<Command>();
 
 
 
 		/// <summary>
 		/// 
 		/// </summary>
-		public Shell ( Game game )
+		public Invoker ( Game game )
 		{
 			Game		=	game;
 			commands	=	Command.GatherCommands().ToDictionary( type => type.GetCustomAttribute<CommandAttribute>().Name );
+
+			Log.Message("Invoker: {0} commands found", commands.Count);
 		}
 
 		
@@ -37,7 +39,7 @@ namespace Fusion.Shell {
 		/// Executes given string.
 		/// </summary>
 		/// <param name="command"></param>
-		public void ExecuteString ( string commandLine )
+		public void Push ( string commandLine )
 		{
 			var argList	=	CommandLineParser.SplitCommandLine( commandLine ).ToArray();
 
@@ -79,17 +81,17 @@ namespace Fusion.Shell {
 					if (cmd.Delay<=0) {
 						
 						//	execute :
-						cmd.Execute();
+						cmd.Execute( this );
 
 						//	break execution :
 						if (cmd.Terminal) {
-							break;
 							commandQueue.Clear();
+							break;
 						}
 
 						//	push to history :
 						if (!cmd.NoRollback) {
-							history.Add( cmd );
+							history.Push( cmd );
 						}
 					}
 				}
@@ -101,6 +103,19 @@ namespace Fusion.Shell {
 				foreach ( var cmd in commandQueue ) {
 					cmd.Delay -= delta;
 				} 
+			}
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Undo ()
+		{
+			lock (lockObject) {
+				var cmd = history.Pop();
+				cmd.Rollback( this );
 			}
 		}
 
