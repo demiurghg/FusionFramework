@@ -223,7 +223,7 @@ namespace Fusion.Graphics {
 		}
 
 
-		Color EscColor ( char ch ) {
+		/*Color EscColor ( char ch ) {
 			if (ch=='0') return Color.White;
 			if (ch=='1') return Color.Red;
 			if (ch=='2') return Color.Orange;
@@ -235,7 +235,7 @@ namespace Fusion.Graphics {
 			if (ch=='8') return Color.Black;
 			if (ch=='9') return Color.Gray;
 			return Color.White;
-		}
+		} */
 
 
 
@@ -288,11 +288,11 @@ namespace Fusion.Graphics {
 				var chi		= GetInfo(ch0);
 				var kerning = GetKerning( ch0, ch1 );
 
-				if (ch0=='^' && char.IsDigit(ch1)) {
+				/*if (ch0=='^' && char.IsDigit(ch1)) {
 					i++;
 					color = EscColor(ch1);
 					continue;
-				}
+				} */
 
 				RectangleF	dstRect = chi.dstRect;
 				RectangleF	srcRect = chi.srcRect;
