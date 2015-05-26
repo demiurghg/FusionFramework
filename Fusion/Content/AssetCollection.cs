@@ -71,7 +71,6 @@ namespace Fusion.Content {
 			int succeeded = 0;
 			int failed = 0;
 
-			Log.Message("");
 			Log.Message("---------- Content Build Started ----------");
 
 
@@ -149,7 +148,6 @@ namespace Fusion.Content {
 			}
 
 			Log.Message("---------- Build: {0} succeeded, {1} failed ----------", succeeded, failed);
-			Log.Message("");
 
 			if (failed==0) {
 				message = string.Format("Build: {0} succeeded, {1} failed", succeeded, failed);

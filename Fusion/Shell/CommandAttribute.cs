@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Fusion.Shell {
-	
+
 	/// <summary>
 	/// Shell command attribute
 	/// </summary>
@@ -16,6 +16,11 @@ namespace Fusion.Shell {
 		/// </summary>
 		public string Name { get; private set; }
 
+		/// <summary>
+		/// Command name
+		/// </summary>
+		public string NiceName { get; private set; }
+
 
 		/// <summary>
 		///
@@ -24,7 +29,18 @@ namespace Fusion.Shell {
 		public CommandAttribute ( string name )
 		{
 			this.Name = name;
+			NiceName = name;
 		}
 
+
+		/// <summary>
+		///
+		/// </summary>
+		/// <param name="name"></param>
+		public CommandAttribute ( string name, string niceName )
+		{
+			this.Name = name;
+			NiceName = niceName;
+		}
 	}
 }

@@ -48,6 +48,8 @@ namespace Fusion {
 		/// Positive or zero values means that service will be drawn after Game
 		/// </summary>
 		public int	DrawOrder { get; set; }
+
+
 		
 		/// <summary>
 		/// Constructor

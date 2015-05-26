@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fusion.Content;
 using Fusion.Development;
 
 namespace Fusion.Development {
@@ -13,6 +14,10 @@ namespace Fusion.Development {
 		static string savedTargetDirectory	= "";
 
 		static DevConForm	devcon = null;
+
+		static public AssetCollection Assets { get { return devcon.Assets; } }
+
+		//static ContentBuilder builder;
 
 		/// <summary>
 		/// 
@@ -25,7 +30,8 @@ namespace Fusion.Development {
 			savedContentProjectPath	=	contentProjectPath;
 			savedTargetDirectory	=	targetDirectory;
 
-			var devcon = new DevConForm( game, contentProjectPath, targetDirectory, "", true );
+
+			var devcon = new DevConForm( game, contentProjectPath, targetDirectory, true );
 			var r = devcon.ShowDialog();
 
 			game.Exiting += game_Exiting;
@@ -60,7 +66,7 @@ namespace Fusion.Development {
 			}
 
 			if (devcon==null || devcon.IsDisposed) {
-				devcon = new DevConForm( game, savedContentProjectPath, savedTargetDirectory, "", false );
+				devcon = new DevConForm( game, savedContentProjectPath, savedTargetDirectory, false );
 			}
 
 			devcon.Show();

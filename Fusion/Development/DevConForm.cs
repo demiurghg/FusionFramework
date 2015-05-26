@@ -12,6 +12,7 @@ using Fusion;
 using Fusion.Mathematics;
 using System.Reflection;
 using Fusion.Content;
+using Fusion.Shell;
 using System.Threading;
 using System.Runtime.InteropServices;
 
@@ -26,8 +27,41 @@ namespace Fusion.Development {
 
 		internal ContentBuilder	contentProject;
 
+
+		public AssetCollection Assets { get { return contentProject.Assets; } }
+
+
 		public static string FusionBinary { get { return Environment.GetEnvironmentVariable("FUSION_BIN"); } }
 		public static string FusionContent { get { return Environment.GetEnvironmentVariable("FUSION_CONTENT"); } }
+
+
+		class FormTraceListener : TraceListener {
+
+			DevConForm devConForm;
+			
+			public FormTraceListener( DevConForm devConForm )
+			{
+				this.devConForm	=	devConForm;
+			}
+
+
+			public override void Write ( string message )
+			{
+				devConForm.messageTextBox.Text += message;
+				devConForm.messageTextBox.SelectionStart = 999999;
+				devConForm.messageTextBox.ScrollToCaret();
+			}
+
+			public override void WriteLine ( string message )
+			{
+				devConForm.messageTextBox.Text += message + "\r\n";
+				devConForm.messageTextBox.SelectionStart = 999999;
+				devConForm.messageTextBox.ScrollToCaret();
+			}
+		}
+
+
+		FormTraceListener formTraceListener;
 
 
 		/// <summary>
@@ -37,8 +71,11 @@ namespace Fusion.Development {
 		/// <param name="modal"></param>
 		/// <param name="buttonText"></param>
 		/// <param name="messageText"></param>
-		internal DevConForm ( Game game, string contentPath, string targetDirectory, string message, bool modal )
+		internal DevConForm ( Game game, string contentPath, string targetDirectory, bool modal )
 		{
+			formTraceListener = new FormTraceListener( this );
+			Trace.Listeners.Add( formTraceListener );
+
 			Instance	=	this;
 			uiThread	=	Thread.CurrentThread;
 			this.game	=	game;
@@ -56,7 +93,7 @@ namespace Fusion.Development {
 			//	setup content project:
 			//
 			contentProject	=	new ContentBuilder( contentPath, targetDirectory, this, game );
-			contentProject.LoadDescriptors();
+			contentProject.Load();
 
 			RefreshConsole(true);
 
@@ -64,24 +101,20 @@ namespace Fusion.Development {
 			if (modal) {
 				launchButton.Text		=	"Launch";
 				launchButton.Click		+=	launchButton_ClickLaunch;
-				messageTextBox.Text		=	MakeLaunchString();
+				//messageTextBox.Text		=	MakeLaunchString();
 				Activated += (s,e) => launchButton.Focus();
 			} else {
 				launchButton.Visible	=	false;
-				messageTextBox.Text		=	MakeLaunchString();
+				//messageTextBox.Text		=	MakeLaunchString();
+				Activated += (s,e) => textBox1.Focus();
 			}
+
+			this.FormClosed += (s,e) => Trace.Listeners.Remove( formTraceListener );
 		}
 
 
+		
 
-		/// <summary>
-		/// Sets message box's text
-		/// </summary>
-		/// <param name="message"></param>
-		public void SetMessage ( string message )
-		{
-			messageTextBox.Text = message;
-		}
 
 
 		private void launchButton_ClickLaunch ( object sender, EventArgs e )
@@ -237,15 +270,8 @@ namespace Fusion.Development {
 				contentProject.Outline(this);
 			}
 
-			//game.GetServiceList().ForEach( svc => svc.Outline() );
-
 			mainMenuStrip.Items.Clear();
 
-			//
-			//	'Refresh' command :
-			//
-			//var refreshButton = new ToolStripMenuItem( "Refresh", null, new EventHandler( (obj,e) => RefreshEditor() ) );
-			//mainMenuStrip.Items.Add( refreshButton );
 
 			//
 			//	Add game service commands :
@@ -255,9 +281,6 @@ namespace Fusion.Development {
 			objList.Insert( 0, game );
 			objList.Insert( 1, contentProject );
 
-			/*if (game.ContentProject!=null) {
-				//objList.Insert( 1, game.contentProject );
-			} */
 
 			foreach ( var svc in objList ) {
 
@@ -291,7 +314,25 @@ namespace Fusion.Development {
 				mainMenuStrip.Items.Add( item );
 			}
 
-			//Log.Message("Editor refreshed!");
+
+			//
+			//	Add command
+			//
+			/*var cmds = Command.GatherCommands();
+			var cmdMenu = new ToolStripMenuItem("Shell Commands");
+
+			foreach ( var cmdType in cmds ) {
+
+				var niceName = cmdType.GetCustomAttribute<CommandAttribute>().NiceName;
+				var cmd		 = cmdType.GetCustomAttribute<CommandAttribute>().Name;
+
+				cmdMenu.DropDownItems.Add( niceName, null, new EventHandler( (obj,e) => { game.Invoker.Push(cmd); game.Invoker.Update(new GameTime()); } ) );
+
+			}
+			
+			mainMenuStrip.Items.Add( cmdMenu );*/
+
+
 			launchButton.Focus();
 		}
 
@@ -639,7 +680,6 @@ namespace Fusion.Development {
 		private void textBox1_KeyDown ( object sender, KeyEventArgs e )
 		{
 			if (e.KeyCode==Keys.Enter) {
-				Log.Message(">" + textBox1.Text);
 
 				try {
 					game.Invoker.Push( textBox1.Text );
@@ -648,6 +688,11 @@ namespace Fusion.Development {
 					Log.Error( ex.Message );
 				}
 			}
+		}
+
+		private void buttonClear_Click ( object sender, EventArgs e )
+		{
+			messageTextBox.Clear();
 		}
 	}
 }

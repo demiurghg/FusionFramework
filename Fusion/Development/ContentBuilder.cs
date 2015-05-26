@@ -23,13 +23,16 @@ namespace Fusion.Development {
 		readonly string			sourceDirectory;
 		readonly string			targetDirectory;
 
-		AssetCollection			descriptors;
+		AssetCollection			assets;
 
 		DevConForm				developerConsole;
 		ContentBuilder			contentBuilder { get { return this; } }
 		Game					game;
 
 		public bool		Modified { get; private set; }
+
+
+		public AssetCollection	Assets { get { return assets; } }
 		
 
 
@@ -46,7 +49,7 @@ namespace Fusion.Development {
 			this.sourceDirectory	=	Path.GetFullPath( Path.GetDirectoryName( contentProject ) );
 			this.targetDirectory	=	targetDirectory;
 
-			descriptors				=	new AssetCollection();
+			assets				=	new AssetCollection();
 		}
 
 
@@ -82,7 +85,7 @@ namespace Fusion.Development {
 		/// </summary>
 		public void DetectAssetHashCollisions ()
 		{
-			var collisions = descriptors.GetHashCollisions();
+			var collisions = assets.GetHashCollisions();
 
 			if (collisions.Any()) {
 				Log.Warning("Detected asset hash collisions:");
@@ -99,20 +102,7 @@ namespace Fusion.Development {
 		/// <param name="type"></param>
 		public void AddAsset ( Asset desc )
 		{
-			descriptors.Add( desc );
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="oldDesc"></param>
-		/// <param name="newDesc"></param>
-		public void Replace ( Asset oldDesc, Asset newDesc )
-		{
-			descriptors.Remove( oldDesc );
-			descriptors.Add( newDesc );
+			assets.Add( desc );
 		}
 
 
@@ -122,7 +112,7 @@ namespace Fusion.Development {
 		/// </summary>
 		public void Outline ( DevConForm devcon )
 		{
-			var descList = descriptors
+			var descList = assets
 				.OrderBy( c0 => c0.AssetPath )
 				.OrderByDescending( c1 => c1.AssetPath.Count( ch => ch=='\\' || ch=='/' ) )
 				.ThenBy( c3 => c3.AssetPath )
@@ -137,12 +127,12 @@ namespace Fusion.Development {
 		/// <summary>
 		/// Loads all possible domains.
 		/// </summary>
-		public void LoadDescriptors ()
+		public void Load ()
 		{
 			Log.Message("Loading content project...");
 
 			try {
-				descriptors	=	AssetCollection.Load( contentProject );
+				assets	=	AssetCollection.Load( contentProject );
 			} catch ( Exception e ) {
 				Log.Error("Failed to load content:");
 				Log.Error("{0}", e.Message);
@@ -163,7 +153,7 @@ namespace Fusion.Development {
 			Log.Message("Saving content project...");
 
 			try {
-				AssetCollection.Save( descriptors, contentProject );
+				AssetCollection.Save( assets, contentProject );
 			} catch ( Exception e ) {
 				Log.Error("Failed to save content:");
 				Log.Error("{0}", e.Message);
@@ -184,9 +174,7 @@ namespace Fusion.Development {
 		public bool BuildContent ( bool forced, IEnumerable<string> selection )
 		{
 			string message;
-			bool result =  descriptors.Build( forced, sourceDirectory, "Content", out message, selection );
-
-			developerConsole.SetMessage( message );
+			bool result =  assets.Build( forced, sourceDirectory, "Content", out message, selection );
 
 			return result;
 		}
@@ -200,7 +188,7 @@ namespace Fusion.Development {
 		public void RemoveDescriptors ( IEnumerable<string> nameList )
 		{
 			//Path.Conver
-			int count = descriptors.RemoveAll( item => nameList.Contains( ContentUtils.BackslashesToSlashes( item.AssetPath ) ) );
+			int count = assets.RemoveAll( item => nameList.Contains( ContentUtils.BackslashesToSlashes( item.AssetPath ) ) );
 			Log.Message("{0} content items removed", count);
 		}
 
@@ -389,48 +377,6 @@ namespace Fusion.Development {
 				}
 			}
 		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		#if false
-		[Command("Change Asset Type...", 1)]
-		public void ChangeAssetType ()
-		{
-			var assetList = developerConsole.GetSelectedObjects().Where( obj => obj is Asset ).Select( obj => (Asset)obj );
-
-			if (!items.Any()) {
-				MessageBox.Show("No content item selected", "Assign Content Processor", MessageBoxButtons.OK, MessageBoxIcon.Information );
-				return;
-			}
-
-			var list = Asset.GatherAssetTypes()
-							.Select( at => at.GetCustomAttribute<AssetAttribute>().Category + ": " + at.GetCustomAttribute<AssetAttribute>().NiceName )
-							.ToList();
-
-
-			if ( ObjectSelector.Show( developerConsole, "Select content processor to assign to selection", "Assign Content Processor", list, out contentProcessor ) ) {
-
-				foreach ( var item in items ) {
-
-					if ( contentProcessor.MatchExt( item.Path ) ) {
-
-						var newItem = contentProcessor.CreateContentItem( item.Path );
-
-						contentProject.Replace( item, newItem );
-
-						changed.Add( item.Path );
-
-					} else {
-						dontMatch.Add( item.Path );
-					}
-				}
-			}
-		}
-		#endif
-
 
 
 

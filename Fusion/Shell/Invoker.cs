@@ -12,8 +12,13 @@ namespace Fusion.Shell {
 		/// </summary>
 		public Game Game { get; private set; }
 
-		Dictionary<string, Type> commands;
 
+		/// <summary>
+		/// Invoker's context object to target invoker and commands to particular object.
+		/// </summary>
+		public object Context { get; private set; }
+
+		Dictionary<string, Type> commands;
 
 		object lockObject = new object();
 
@@ -24,17 +29,43 @@ namespace Fusion.Shell {
 
 
 		/// <summary>
-		/// 
+		/// Creates instance of Invoker.
 		/// </summary>
+		/// <param name="game">Game instance</param>
 		public Invoker ( Game game )
 		{
-			Game		=	game;
-			commands	=	Command.GatherCommands().ToDictionary( type => type.GetCustomAttribute<CommandAttribute>().Name );
+			Initialize( game, Command.GatherCommands() );
+		}
 
-			Log.Message("Invoker: {0} commands found", commands.Count);
+
+
+		/// <summary>
+		/// Creates instance of Invoker with specified command types.
+		/// </summary>
+		/// <param name="game">Game instance</param>
+		/// <param name="types">Specified Command types</param>
+		/// <param name="context">Invoker's context</param>
+		public Invoker ( Game game, Type[] types, object context = null )
+		{
+			Initialize( game, types );
+			Context = context;
 		}
 
 		
+
+		void Initialize ( Game game, Type[] types )
+		{
+			Context		=	null;
+			Game		=	game;
+			commands	=	types
+						.Where( t1 => t1.IsSubclassOf(typeof(Command)) )
+						.Where( t2 => t2.HasAttribute<CommandAttribute>() )
+						.ToDictionary( t3 => t3.GetCustomAttribute<CommandAttribute>().Name );
+						
+			Log.Message("Invoker: {0} commands found", commands.Count);
+		}
+
+
 
 		/// <summary>
 		/// Executes given string.
@@ -47,6 +78,8 @@ namespace Fusion.Shell {
 			if (!argList.Any()) {
 				Log.Warning("Empty command line.");
 				return;
+			} else {
+				Log.Message("> {0}", commandLine );
 			}
 
 			var cmdName	=	argList[0];
@@ -60,7 +93,7 @@ namespace Fusion.Shell {
 
 				parser.ParseCommandLine( argList );
 
-				queue.Enqueue( command );
+				Push( command );
 			}
 		}
 
@@ -73,6 +106,10 @@ namespace Fusion.Shell {
 		public void Push ( Command command )
 		{
 			lock (lockObject) {
+				if (queue.Any() && queue.Last().Terminal) {
+					Log.Warning("Attempt to push command after terminal one. Ignored.");
+					return;
+				}
 				queue.Enqueue( command );
 			}
 		}
@@ -100,10 +137,10 @@ namespace Fusion.Shell {
 						cmd.Execute( this );
 
 						//	break execution :
-						if (cmd.Terminal) {
-							queue.Clear();
-							break;
-						}
+						//if (cmd.Terminal) {
+						//	queue.Clear();
+						//	break;
+						//}
 
 						//	push to history :
 						if (!cmd.NoRollback) {
@@ -167,7 +204,7 @@ namespace Fusion.Shell {
 				return (Command)Activator.CreateInstance( cmdType, Game );
 			}
 			
-			throw new InvalidOperationException(string.Format("Command {0} not found in current app domain assemblies.", name));
+			throw new InvalidOperationException(string.Format("Unknown command '{0}'.", name));
 		}
 	}
 }

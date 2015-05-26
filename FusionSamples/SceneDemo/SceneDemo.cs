@@ -138,7 +138,7 @@ namespace SceneDemo {
 			worldMatricies	=	new Matrix[ scene.Nodes.Count ];
 			scene.CopyAbsoluteTransformsTo( worldMatricies );
 
-			Log.Message("{0}", scene.Nodes.Count( n => n.MeshIndex >= 0 ) );
+			//Log.Message("{0}", scene.Nodes.Count( n => n.MeshIndex >= 0 ) );
 		}
 
 
