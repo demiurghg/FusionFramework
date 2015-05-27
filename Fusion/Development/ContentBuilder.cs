@@ -63,17 +63,14 @@ namespace Fusion.Development {
 		public void CreateAssetFromFile ( string path, Type assetType )
 		{
 			var asset = (Asset)Activator.CreateInstance( assetType );
+
 			asset.AssetPath	=	path;
 
-			if (	!Misc.SetProperty( asset, "SourceFile", path ) 
-				&&	!Misc.SetProperty( asset, "InputFile", path ) 
-				&&	!Misc.SetProperty( asset, "SourcePath", path ) 
-				&&	!Misc.SetProperty( asset, "InputPath", path ) 
-				&&	!Misc.SetProperty( asset, "File", path ) 
-				)
-				{
-					throw new Exception("Could not assign property (SourceFile, InputFile, SourcePath, InputPath or File) of created asset type for '" + path + "'");
-				}
+			if (asset is IFileDerivable) {
+				((IFileDerivable)asset).InitFromFile( path );
+			} else {
+				throw new InvalidOperationException(string.Format("{0} must be IFileDerivable to create from file.", assetType.Name ));
+			}
 
 			AddAsset( asset );
 		}
@@ -255,8 +252,8 @@ namespace Fusion.Development {
 					new KeyValuePair<string,Type>( type.GetCustomAttribute<AssetAttribute>().Category + ": " + type.GetCustomAttribute<AssetAttribute>().NiceName, type ) );
 
 			if (!dict.Any()) {
-				MessageBox.Show("There are not descriptor classes. Make sure that your classes are inherited from Descriptor class and has attribute DescriptorAttribute", 
-								"Add Descriptor", MessageBoxButtons.OK, MessageBoxIcon.Information );
+				MessageBox.Show("There are not asset classes. Make sure that your classes are inherited from Asset class and has attribute AssetAttribute", 
+								"Add Asset", MessageBoxButtons.OK, MessageBoxIcon.Information );
 				return;
 			}
 
@@ -289,6 +286,51 @@ namespace Fusion.Development {
 
 
 		string ofdDirectory = null;
+
+
+
+
+		[UICommand("Create Asset From Asset...", 1)]
+		public void CreateAssetFromAsset ()
+		{
+			var dict = 
+				Asset.GatherAssetTypes()
+				.Select( type => 
+					new KeyValuePair<string,Type>( type.GetCustomAttribute<AssetAttribute>().Category + ": " + type.GetCustomAttribute<AssetAttribute>().NiceName, type ) );
+
+			if (!dict.Any()) {
+				MessageBox.Show("There are not asset classes. Make sure that your classes are inherited from Asset class and has attribute AssetAttribute", 
+								"Add Asset", MessageBoxButtons.OK, MessageBoxIcon.Information );
+				return;
+			}
+
+			Type result;
+
+			if (ObjectSelector.Show(developerConsole, "Select asset type", "Add Asset", dict, out result ) ) {
+				
+				try {
+
+					var objs = developerConsole.GetSelectedObjects().Where( o => o is Asset );
+
+					foreach ( var obj in objs ) {
+						
+						var asset = Activator.CreateInstance( result );
+
+						if (asset is IAssetDerivable) {
+							((IAssetDerivable)asset).InitFromAsset( (Asset)obj );
+						}
+
+					}
+
+				} catch ( Exception e ) {
+					MessageBox.Show(e.Message, "Create Asset From Asset", MessageBoxButtons.OK, MessageBoxIcon.Error );
+				}
+
+
+				Modified = true;
+			}
+		}
+
 
 
 
@@ -335,8 +377,9 @@ namespace Fusion.Development {
 			foreach ( var n in names ) {	
 				string nn = n;
 
-				var contentUri	=	new Uri( sourceDirectory + "\\" );
-				var fileName	=	contentUri.MakeRelativeUri( new Uri(nn) ).ToString();
+				var fileName	=	DevCon.MakeRelativePath( nn );
+				/*var contentUri	=	new Uri( sourceDirectory + "\\" );
+				var fileName	=	contentUri.MakeRelativeUri( new Uri(nn) ).ToString();*/
 
 				try {
 					CreateAssetFromFile( fileName, selectedAssetType );

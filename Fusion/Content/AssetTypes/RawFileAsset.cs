@@ -11,7 +11,7 @@ using Fusion.Mathematics;
 namespace Fusion.Content {
 
 	[Asset("Content", "Raw File", "*.dds;*.*")]
-	public class RawFileAsset : Asset {
+	public class RawFileAsset : Asset, IFileDerivable {
 
 
 		/// <summary>
@@ -27,6 +27,18 @@ namespace Fusion.Content {
 		public override string[] Dependencies
 		{
 			get { return new[]{ SourceFile }; }
+		}
+
+
+
+		/// <summary>
+		/// Inits asset from file
+		/// </summary>
+		/// <param name="path"></param>
+		public void InitFromFile( string path )
+		{
+			AssetPath	=	path;
+			SourceFile	=	path;	
 		}
 
 

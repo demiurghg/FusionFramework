@@ -12,7 +12,7 @@ using Fusion.Mathematics;
 namespace Fusion.Content {
 	
 	[Asset("Content", "BMFC Sprite Font", "*.bmfc")]
-	public class BMFontSpriteFontAsset : Asset {
+	public class BMFontSpriteFontAsset : Asset, IFileDerivable {
 
 		public string SourcePath { get; set; }
 
@@ -23,6 +23,23 @@ namespace Fusion.Content {
 
 
 
+		/// <summary>
+		/// Inits asset from file
+		/// </summary>
+		/// <param name="path"></param>
+		public void InitFromFile( string path )
+		{
+			AssetPath	=	path;
+			SourcePath	=	path;	
+		}
+
+
+
+
+		/// <summary>
+		/// Builds asset
+		/// </summary>
+		/// <param name="buildContext"></param>
 		public override void Build ( BuildContext buildContext )
 		{														   
 			string tempFileName		= buildContext.GetTempFileName( AssetPath, ".fnt", false );

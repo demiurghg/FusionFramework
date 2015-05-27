@@ -10,7 +10,7 @@ using Fusion.Mathematics;
 namespace Fusion.Content {
 
 	[Asset("Content", "FBX File Scene", "*.fbx")]
-	public class FbxFileSceneAsset : Asset {
+	public class FbxFileSceneAsset : Asset, IFileDerivable {
 
 		/// <summary>
 		/// 
@@ -59,6 +59,19 @@ namespace Fusion.Content {
 		{
 			ImportGeometry	=	true;
 		}
+
+
+		
+		/// <summary>
+		/// Inits asset from file
+		/// </summary>
+		/// <param name="path"></param>
+		public void InitFromFile( string path )
+		{
+			AssetPath	=	path;
+			SourceFile	=	path;	
+		}
+
 
 
 		/// <summary>

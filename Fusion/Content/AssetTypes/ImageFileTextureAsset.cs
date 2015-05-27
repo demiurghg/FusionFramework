@@ -11,7 +11,7 @@ using Fusion.Mathematics;
 namespace Fusion.Content {
 
 	[Asset("Content", "Image File Texture", "*.tga;*.png;*.jpg")]
-	public class ImageFileTextureAsset : Asset {
+	public class ImageFileTextureAsset : Asset, IFileDerivable {
 
 		public enum TextureCompression {
 			RGB	,  	BC1	,	BC1N,  	BC1A,
@@ -94,6 +94,18 @@ namespace Fusion.Content {
 		{
 			get { return new[]{ SourceFile }; }
 		}
+
+
+		/// <summary>
+		/// Inits asset from file
+		/// </summary>
+		/// <param name="path"></param>
+		public void InitFromFile( string path )
+		{
+			AssetPath	=	path;
+			SourceFile	=	path;	
+		}
+
 
 
 		public override void Build ( BuildContext buildContext )

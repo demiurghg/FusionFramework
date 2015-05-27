@@ -18,11 +18,18 @@ using SharpDX.D3DCompiler;
 namespace Fusion.Content {
 
 	[Asset("Content", "HLSL Ubershader", "*.hlsl")]
-	public partial class UbershaderAsset : Asset {
+	public partial class UbershaderAsset : Asset, IFileDerivable {
 			
 		public enum ShaderMatrixPacking {
 			RowMajor,
 			ColumnMajor,
+		}
+
+
+		public void InitFromFile( string path )
+		{
+			AssetPath	=	path;
+			SourceFile	=	path;	
 		}
 
 

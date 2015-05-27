@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Fusion.Content;
 using Fusion.Development;
+using System.IO;
 
 namespace Fusion.Development {
 	public static class DevCon {
@@ -12,6 +13,7 @@ namespace Fusion.Development {
 		static bool prepared = false;
 		static string savedContentProjectPath = "";
 		static string savedTargetDirectory	= "";
+		static string sourceDirectory = "";
 
 		static DevConForm	devcon = null;
 
@@ -30,6 +32,8 @@ namespace Fusion.Development {
 			savedContentProjectPath	=	contentProjectPath;
 			savedTargetDirectory	=	targetDirectory;
 
+			sourceDirectory			=	Path.GetFullPath( Path.GetDirectoryName( contentProjectPath ) );
+
 
 			var devcon = new DevConForm( game, contentProjectPath, targetDirectory, true );
 			var r = devcon.ShowDialog();
@@ -45,6 +49,33 @@ namespace Fusion.Development {
 
 
 
+		/// <summary>
+		/// Makes relative path to current content project.
+		/// </summary>
+		/// <param name="absolutePath"></param>
+		/// <returns></returns>
+		static public string MakeRelativePath ( string absolutePath )
+		{
+			var contentUri	=	new Uri( sourceDirectory + "\\" );
+			var fileName	=	contentUri.MakeRelativeUri( new Uri(absolutePath) ).ToString();
+
+			return fileName;
+		}
+
+
+
+		static bool ContentSourceFileExists ( string path )
+		{
+			return File.Exists( Path.Combine( sourceDirectory, path ) );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		static void game_Exiting ( object sender, EventArgs e )
 		{
 			if (devcon!=null && !devcon.IsDisposed) {
