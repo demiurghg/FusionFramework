@@ -22,6 +22,9 @@ namespace Fusion.Shell {
 
 		object lockObject = new object();
 
+		Queue<Command> queue	= new Queue<Command>(10000);
+		Queue<Command> delayed	= new Queue<Command>(10000);
+		Stack<Command> history	= new Stack<Command>(10000);
 
 
 
