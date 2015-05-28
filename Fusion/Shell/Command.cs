@@ -47,14 +47,6 @@ namespace Fusion.Shell {
 
 
 		/// <summary>
-		/// Optional flag for commands that may ask user for something.
-		/// E.g. open file, delete item etc.
-		/// </summary>
-		[CommandLineParser.Name("dialog")]
-		public virtual bool Dialog { get; set; }
-
-
-		/// <summary>
 		/// 
 		/// </summary>
 		public Command ( Game game )
@@ -63,7 +55,6 @@ namespace Fusion.Shell {
 			Delay		=	0;
 			NoRollback	=	false;
 			Terminal	=	false;
-			Dialog		=	false;
 		}
 
 

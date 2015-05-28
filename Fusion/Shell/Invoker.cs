@@ -22,9 +22,6 @@ namespace Fusion.Shell {
 
 		object lockObject = new object();
 
-		Queue<Command> queue	= new Queue<Command>();
-		Queue<Command> delayed	= new Queue<Command>();
-		Stack<Command> history	= new Stack<Command>();
 
 
 
@@ -79,7 +76,7 @@ namespace Fusion.Shell {
 				Log.Warning("Empty command line.");
 				return;
 			} else {
-				Log.Message("> {0}", commandLine );
+				//Log.Message("> {0}", commandLine );
 			}
 
 			var cmdName	=	argList[0];

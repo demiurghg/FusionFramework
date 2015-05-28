@@ -138,7 +138,7 @@ namespace Fusion.Shell
                 string[] split = arg.Substring(1).Split(separators, 2, StringSplitOptions.None);
 
                 string name = split[0];
-                string value = (split.Length > 1) ? split[1] : "true";
+                string value = (split.Length > 1) ? split[1].TrimMatchingQuotes('\"') : "true";
 
                 PropertyInfo field;
 
