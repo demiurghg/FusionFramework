@@ -66,6 +66,25 @@ namespace InputDemo {
 			InputDevice.MouseScroll += InputDevice_MouseScroll;
 			InputDevice.KeyDown += InputDevice_KeyDown;
 			InputDevice.KeyUp += InputDevice_KeyUp;
+			InputDevice.FormKeyPress += InputDevice_KeyPress;
+			InputDevice.FormKeyDown += InputDevice_FormKeyDown;
+			InputDevice.FormKeyUp += InputDevice_FormKeyUp;
+		}
+
+		void InputDevice_FormKeyUp ( object sender, InputDevice.KeyEventArgs e )
+		{
+			Log.Message("Form key up : {0}", e.Key );
+		}
+
+		void InputDevice_FormKeyDown ( object sender, InputDevice.KeyEventArgs e )
+		{
+			Log.Message("Form key down : {0}", e.Key );
+		}
+
+
+		void InputDevice_KeyPress ( object sender, InputDevice.KeyPressArgs e )
+		{
+			Log.Message("Key press : {0}", e.KeyChar );
 		}
 
 

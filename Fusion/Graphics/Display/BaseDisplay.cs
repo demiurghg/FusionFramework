@@ -226,6 +226,8 @@ namespace Fusion.Graphics.Display {
 			}
 
 			form.KeyDown += form_KeyDown;
+			form.KeyUp += form_KeyUp;
+			form.KeyPress += form_KeyPress;
 			form.Resize += (s,e) => Game.InputDevice.RemoveAllPressedKey();
 			form.Move += (s,e) => Game.InputDevice.RemoveAllPressedKey();
 
@@ -234,15 +236,27 @@ namespace Fusion.Graphics.Display {
 
 
 
+		void form_KeyPress ( object sender, KeyPressEventArgs e )
+		{
+			Game.InputDevice.NotifyKeyPress( e.KeyChar );
+		}
+
+
+
+		void form_KeyUp ( object sender, KeyEventArgs e )
+		{
+			Game.InputDevice.NotifyKeyUp( (Fusion.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
+		}
+
+
 
 		void form_KeyDown ( object sender, KeyEventArgs e )
 		{
 			if (e.Alt && e.KeyCode==Forms.Keys.Enter) {
 				Fullscreen = !Fullscreen;
 			}
-			/*if (e.KeyCode==Forms.Keys.F3) {
-				Fullscreen = !Fullscreen;
-			} */
+
+			Game.InputDevice.NotifyKeyDown( (Fusion.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
 		}
 
 

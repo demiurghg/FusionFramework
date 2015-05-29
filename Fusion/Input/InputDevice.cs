@@ -36,10 +36,15 @@ namespace Fusion.Input {
 		public delegate void MouseScrollEventHandler	( object sender, MouseScrollEventArgs e );
 		public delegate void KeyDownEventHandler		( object sender, KeyEventArgs e );
 		public delegate void KeyUpEventHandler			( object sender, KeyEventArgs e );
+		public delegate void KeyPressEventHandler		( object sender, KeyPressArgs e );
 
 
 		public class KeyEventArgs : EventArgs {
 			public Keys	Key;
+		}
+
+		public class KeyPressArgs : EventArgs {
+			public char	KeyChar;
 		}
 
 		public class MouseScrollEventArgs : EventArgs {
@@ -53,11 +58,13 @@ namespace Fusion.Input {
 			public Vector2	Position;
 		}
 
-
 		public event MouseMoveHandlerDelegate	MouseMove;
 		public event MouseScrollEventHandler	MouseScroll;
 		public event KeyDownEventHandler		KeyDown;
 		public event KeyUpEventHandler			KeyUp;
+		public event KeyDownEventHandler		FormKeyDown;
+		public event KeyUpEventHandler			FormKeyUp;
+		public event KeyPressEventHandler		FormKeyPress;
 
 
 
@@ -366,6 +373,31 @@ namespace Fusion.Input {
 		 * 
 		-----------------------------------------------------------------------------------------*/
 
+		internal void NotifyKeyDown ( Keys key, bool alt, bool shift, bool control )
+		{
+			var formKeyDown = FormKeyDown;
+			if (formKeyDown!=null) {
+				formKeyDown( this, new KeyEventArgs(){ Key = key } );
+			}
+		}
+
+
+		internal void NotifyKeyUp  ( Keys key, bool alt, bool shift, bool control )
+		{
+			var formKeyUp = FormKeyUp;
+			if (formKeyUp!=null) {
+				formKeyUp( this, new KeyEventArgs(){ Key = key } );
+			}
+		}
+
+
+		internal void NotifyKeyPress ( char keyChar )
+		{
+			var keyPress = FormKeyPress;
+			if (keyPress!=null) {
+				keyPress( this, new KeyPressArgs(){ KeyChar = keyChar } );
+			}
+		}
 
 
 		/// <summary>
