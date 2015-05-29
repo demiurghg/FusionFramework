@@ -105,8 +105,7 @@ namespace Fusion {
 		ContentManager		content				;
 		Invoker				invoker				;
 
-		Dictionary<Type, GameService>	serviceMap	=	new Dictionary<Type,GameService>();
-		List<GameService>				serviceList	=	new List<GameService>();
+		List<GameService>	serviceList	=	new List<GameService>();
 		GameTime	gameTimeInternal;
 
 		GameParameters	gameParams = new GameParameters();
@@ -227,14 +226,17 @@ namespace Fusion {
 			}
 
 			if (disposing) {
-				//	shutdown registered services in reverse order:
-				serviceList.Reverse();
+				
+				lock ( serviceList ) {
+					//	shutdown registered services in reverse order:
+					serviceList.Reverse();
 
-				foreach ( var svc in serviceList ) {
-					Log.Message("Disposing : {0}", svc.GetType().Name );
-					svc.Dispose();
+					foreach ( var svc in serviceList ) {
+						Log.Message("Disposing : {0}", svc.GetType().Name );
+						svc.Dispose();
+					}
+					serviceList.Clear();
 				}
-				serviceList.Clear();
 
 				content.Dispose();
 
@@ -305,9 +307,13 @@ namespace Fusion {
 
 			//	init game :
 			Log.Message("");
-			Initialize();
 
-			initialized = true;
+
+			lock ( serviceList ) {
+				Initialize();
+				initialized = true;
+			}
+
 
 			Log.Message("---------------------------------------");
 			Log.Message("");
@@ -422,7 +428,13 @@ namespace Fusion {
 		/// <param name="gameTime"></param>
 		protected virtual void Update ( GameTime gameTime )
 		{
-			foreach ( var svc in serviceList.OrderBy( a => a.UpdateOrder ) ) {
+			GameService[] svcList;
+
+			lock (serviceList) {
+				svcList = serviceList.OrderBy( a => a.UpdateOrder ).ToArray();
+			}
+
+			foreach ( var svc in svcList ) {
 					
 				if ( svc.Enabled ) {
 					svc.Update( gameTime );
@@ -440,7 +452,14 @@ namespace Fusion {
 		/// <param name="stereoEye"></param>
 		protected virtual void Draw ( GameTime gameTime, StereoEye stereoEye )
 		{
-			foreach ( var svc in serviceList.OrderBy( a => a.DrawOrder ) ) {
+			GameService[] svcList;
+
+			lock (serviceList) {
+				svcList = serviceList.OrderBy( a => a.DrawOrder ).ToArray();
+			}
+
+
+			foreach ( var svc in svcList ) {
 
 				if ( svc.Visible ) {
 					GraphicsDevice.ResetStates();
@@ -491,12 +510,28 @@ namespace Fusion {
 		/// <param name="service"></param>
 		public void AddService ( GameService service )
 		{
-			if (IsInitialized) {
-				throw new InvalidOperationException("Game service must be added before Game.Initialize called");
-			}
+			lock (serviceList) {
+				if (IsInitialized) {
+					service.Initialize();
+				}
 
-			serviceMap.Add( service.GetType(), service );
-			serviceList.Add( service );	
+				serviceList.Add( service );	
+			}
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void RemoveService ( GameService service )
+		{
+			lock (serviceList) {
+
+				service.Dispose();
+
+				serviceList.Remove( service );	
+			}
 		}
 
 
@@ -509,10 +544,6 @@ namespace Fusion {
 		/// <param name="drawable"></param>
 		public void AddService ( GameService service, bool enabled, bool visible, int updateOrder, int drawOrder )
 		{
-			if (IsInitialized) {
-				throw new InvalidOperationException("Game service must be added before Game.Initialize called");
-			}
-
 			service.Enabled		=	enabled;
 			service.Visible		=	visible;
 			service.DrawOrder	=	drawOrder;
@@ -530,11 +561,16 @@ namespace Fusion {
 		/// <returns></returns>
 		public T GetService<T> () where T : GameService
 		{
-			GameService service = null;
-			if ( !serviceMap.TryGetValue( typeof(T), out service ) ) {
+			lock (serviceList) {
+				
+				foreach ( var svc in serviceList ) {
+					if (svc is T) {
+						return (T)svc;
+					}
+				}
+
 				throw new InvalidOperationException(string.Format("Game service of type \"{0}\" is not added", typeof(T).ToString()));
 			}
-			return (T)service;
 		}
 
 
@@ -546,13 +582,16 @@ namespace Fusion {
 		/// <returns></returns>
 		internal GameService GetServiceByName( string name )
 		{
-			var obj = serviceMap.FirstOrDefault( svc => svc.Value.GetType().Name.ToLower() == name.ToLower() ).Value;
+			lock (serviceList) {
 
-			if (obj==null) {
-				throw new InvalidOperationException(string.Format("Service '{0}' not found", name) );
+				var obj = serviceList.FirstOrDefault( svc => svc.GetType().Name.ToLower() == name.ToLower() );
+
+				if (obj==null) {
+					throw new InvalidOperationException(string.Format("Service '{0}' not found", name) );
+				}
+
+				return (GameService)obj;
 			}
-
-			return (GameService)obj;
 		}
 
 
@@ -577,8 +616,16 @@ namespace Fusion {
 		/// <returns></returns>
 		public bool IsServiceExist<T>() where T : GameService 
 		{
-			GameService service = null;
-			return serviceMap.TryGetValue( typeof(T), out service );
+			lock (serviceList) {
+				
+				foreach ( var svc in serviceList ) {
+					if (svc is T) {
+						return true;
+					}
+				}
+
+				return false;
+			}
 		}
 
 		/*-----------------------------------------------------------------------------------------
