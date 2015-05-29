@@ -27,7 +27,7 @@ namespace Fusion.Shell.Commands {
 		/// 
 		/// </summary>
 		/// <param name="game"></param>
-		public Set ( Game game ) : base(game)
+		public Set ( Invoker invoker ) : base(invoker)
 		{
 		}
 
@@ -35,7 +35,7 @@ namespace Fusion.Shell.Commands {
 		/// <summary>
 		/// Force game to exit.
 		/// </summary>
-		public override void Execute ( Invoker invoker )
+		public override void Execute ()
 		{
 			var cfg = Game.GetConfigObjectByServiceName( Service );
 			
@@ -70,7 +70,7 @@ namespace Fusion.Shell.Commands {
 		/// <summary>
 		/// No rollback.
 		/// </summary>
-		public override void Rollback ( Invoker invoker )
+		public override void Rollback ()
 		{
 			var cfg = Game.GetConfigObjectByServiceName( Service );
 			var prop = cfg.GetType().GetProperty( Variable );

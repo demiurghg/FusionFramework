@@ -14,15 +14,18 @@ namespace Fusion.Shell {
 		[CommandLineParser.Ignore]
 		public Game Game { get; private set; }
 
+		[CommandLineParser.Ignore]
+		public Invoker Invoker { get; private set; }
+
 		/// <summary>
 		/// Execute action
 		/// </summary>
-		public abstract void Execute ( Invoker invoker );
+		public abstract void Execute ();
 
 		/// <summary>
 		/// Rollback action
 		/// </summary>
-		public abstract void Rollback ( Invoker invoker );
+		public abstract void Rollback ();
 
 
 		/// <summary>
@@ -49,9 +52,10 @@ namespace Fusion.Shell {
 		/// <summary>
 		/// 
 		/// </summary>
-		public Command ( Game game )
+		public Command ( Invoker invoker )
 		{
-			Game		=	game;
+			Invoker		=	invoker;
+			Game		=	invoker.Game;
 			Delay		=	0;
 			NoRollback	=	false;
 			Terminal	=	false;

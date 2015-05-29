@@ -391,7 +391,7 @@ namespace Fusion {
 			}
 
 			try {
-				invoker.Update( gameTimeInternal );
+				invoker.ExecuteQueue( gameTimeInternal );
 			} catch ( Exception e ) {
 				Log.Error( e.Message );
 			}

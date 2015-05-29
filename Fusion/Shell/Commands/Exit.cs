@@ -13,7 +13,7 @@ namespace Fusion.Shell.Commands {
 		/// 
 		/// </summary>
 		/// <param name="game"></param>
-		public Exit ( Game game ) : base(game)
+		public Exit ( Invoker invoker ) : base(invoker)
 		{
 		}
 
@@ -21,7 +21,7 @@ namespace Fusion.Shell.Commands {
 		/// <summary>
 		/// Force game to exit.
 		/// </summary>
-		public override void Execute ( Invoker invoker )
+		public override void Execute ()
 		{
 			Game.Exit();
 		}
@@ -31,7 +31,7 @@ namespace Fusion.Shell.Commands {
 		/// <summary>
 		/// No rollback.
 		/// </summary>
-		public override void Rollback ( Invoker invoker )
+		public override void Rollback ()
 		{
 			throw new NotImplementedException();
 		}

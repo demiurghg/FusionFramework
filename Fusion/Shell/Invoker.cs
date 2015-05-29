@@ -53,6 +53,11 @@ namespace Fusion.Shell {
 
 		
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="game"></param>
+		/// <param name="types"></param>
 		void Initialize ( Game game, Type[] types )
 		{
 			Context		=	null;
@@ -71,16 +76,18 @@ namespace Fusion.Shell {
 		/// Executes given string.
 		/// </summary>
 		/// <param name="command"></param>
-		public void Push ( string commandLine )
-		{
+		public void Push ( string commandLine, bool echoCommand )
+		{				  
+			if (echoCommand) {
+				Log.Message(commandLine);
+			}
+
 			var argList	=	CommandLineParser.SplitCommandLine( commandLine ).ToArray();
 
 			if (!argList.Any()) {
 				Log.Warning("Empty command line.");
 				return;
-			} else {
-				//Log.Message("> {0}", commandLine );
-			}
+			} 
 
 			var cmdName	=	argList[0];
 			argList		=	argList.Skip(1).ToArray();
@@ -100,10 +107,10 @@ namespace Fusion.Shell {
 		
 
 		/// <summary>
-		/// Executes given string.
+		/// Parse given string and push parsed command to queue.
 		/// </summary>
 		/// <param name="command"></param>
-		public void Push ( Command command )
+		void Push ( Command command )
 		{
 			lock (lockObject) {
 				if (queue.Any() && queue.Last().Terminal) {
@@ -113,14 +120,32 @@ namespace Fusion.Shell {
 				queue.Enqueue( command );
 			}
 		}
-		
+
 
 
 		/// <summary>
-		/// Updates shell, executes enqueued commands.
+		/// 
+		/// </summary>
+		/// <param name="name"></param>
+		/// <returns></returns>
+		Command GetCommand ( string name )
+		{
+			Type cmdType;
+
+			if (commands.TryGetValue( name, out cmdType )) {
+				return (Command)Activator.CreateInstance( cmdType, this );
+			}
+			
+			throw new InvalidOperationException(string.Format("Unknown command '{0}'.", name));
+		}
+
+
+
+		/// <summary>
+		/// Executes enqueued commands. Updates delayed commands.
 		/// </summary>
 		/// <param name="gameTime"></param>
-		public void Update ( GameTime gameTime )
+		public void ExecuteQueue ( GameTime gameTime, bool forceDelayed = false )
 		{
 			var delta = (int)gameTime.Elapsed.TotalMilliseconds;
 
@@ -132,15 +157,9 @@ namespace Fusion.Shell {
 					
 					var cmd = queue.Dequeue();
 
-					if (cmd.Delay<=0) {
+					if (cmd.Delay<=0 || forceDelayed) {
 						//	execute :
-						cmd.Execute( this );
-
-						//	break execution :
-						//if (cmd.Terminal) {
-						//	queue.Clear();
-						//	break;
-						//}
+						cmd.Execute();
 
 						//	push to history :
 						if (!cmd.NoRollback) {
@@ -163,7 +182,7 @@ namespace Fusion.Shell {
 
 
 		/// <summary>
-		/// 
+		/// Undo one command.
 		/// </summary>
 		public void Undo ()
 		{
@@ -174,14 +193,14 @@ namespace Fusion.Shell {
 				}
 
 				var cmd = history.Pop();
-				cmd.Rollback( this );
+				cmd.Rollback();
 			}
 		}
 
 
 
 		/// <summary>
-		/// Purges all histiry.
+		/// Purges all history.
 		/// </summary>
 		public void PurgeHistory ()
 		{
@@ -191,20 +210,59 @@ namespace Fusion.Shell {
 		}
 
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		Command GetCommand ( string name )
-		{
-			Type cmdType;
+		/*
+		 *	script	=	lines = 
+		 * 
+		 * 
+		*/
 
-			if (commands.TryGetValue( name, out cmdType )) {
-				return (Command)Activator.CreateInstance( cmdType, Game );
+
+		/// <summary>
+		/// Execute's script. Delayed command will be executed later.
+		/// </summary>
+		/// <param name="text"></param>
+		public void ExecuteScript ( string script )
+		{
+			/*
+			int lineNumber = 1;
+
+			CharStream cs		= new CharStream( script );
+			List<string> args	= new List<string>();
+
+			bool quote = false;
+
+			while ( true ) {
+
+				var ch = cs.Read();
+
+				if (ch=='\0') {
+					break;
+				}
+
+				if (ch=='/' && cs.Peek()=='/') {
+					cs.ReadWhile( cc => (cc!='\n') && (cc!='\0') );
+					lineNumber ++;
+					continue;
+				}
+										   
+				cs.ReadWhile( c => c==' '||c=='\t' );
+
+
 			}
 			
-			throw new InvalidOperationException(string.Format("Unknown command '{0}'.", name));
+			
+			#error Начать здесь!
+			#error Пока такой вариант --->
+
+			var lines = script
+				.Split( new[]{ Environment.NewLine }, StringSplitOptions.None )
+				.Select( line => line.TrimStart(' ', '\t').StartsWith("//") ? "" : line )
+				.ToArray();
+
+			var preprocessed = string.Join( lines
+			*/
+			
 		}
+		
 	}
 }

@@ -682,7 +682,7 @@ namespace Fusion.Development {
 			if (e.KeyCode==Keys.Enter) {
 
 				try {
-					game.Invoker.Push( textBox1.Text );
+					game.Invoker.Push( textBox1.Text, true);
 					textBox1.Text = "";
 				} catch ( Exception ex ) {
 					Log.Error( ex.Message );
