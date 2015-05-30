@@ -32,7 +32,7 @@ namespace Fusion.Graphics {
 		/// <summary>
 		/// Capacity of this vertex buffer
 		/// </summary>
-		public bool IsVertexOutputEnabled  { get; private set; }
+		public VertexBufferOptions Options  { get; private set; }
 
 
 		/// <summary>
@@ -50,32 +50,49 @@ namespace Fusion.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="capacity"></param>
-		public VertexBuffer ( GraphicsDevice device, Type vertexType, int capacity, bool enableVertexOutput = false ) : base(device)
+		public VertexBuffer ( GraphicsDevice device, Type vertexType, int capacity, VertexBufferOptions options = VertexBufferOptions.Default ) : base(device)
 		{
-			this.Capacity		=	capacity;
-			this.IsVertexOutputEnabled	=	enableVertexOutput;
+			this.Capacity	=	capacity;
+			this.Options	=	options;
 
 			Stride		=	Marshal.SizeOf( vertexType );
 
-			if (enableVertexOutput) {
+			BufferDescription	desc = new BufferDescription();
+
+			if (options==VertexBufferOptions.Default) {
+
+				desc.BindFlags				=	BindFlags.VertexBuffer;
+				desc.CpuAccessFlags			=	CpuAccessFlags.None;
+				desc.OptionFlags			=	ResourceOptionFlags.None;
+				desc.SizeInBytes			=	Capacity * Stride;
+				desc.StructureByteStride	=	0;
+				desc.Usage					=	ResourceUsage.Default;
+
+			} else if (options==VertexBufferOptions.VertexOutput) {
+
 				if ((Stride/4)*4!=Stride) {
 					throw new GraphicsException("Stride for vertex buffer with enabled vertex output must be multiple of 4.");
 				}
-			}
 
-			BufferDescription	desc = new BufferDescription();
+				desc.BindFlags				=	BindFlags.VertexBuffer | BindFlags.StreamOutput;
+				desc.CpuAccessFlags			=	CpuAccessFlags.None;
+				desc.OptionFlags			=	ResourceOptionFlags.None;
+				desc.SizeInBytes			=	Capacity * Stride;
+				desc.StructureByteStride	=	0;
+				desc.Usage					=	ResourceUsage.Default;
 
-			if (enableVertexOutput) {
-				desc.BindFlags	=	BindFlags.VertexBuffer | BindFlags.StreamOutput;
+			} else if (options==VertexBufferOptions.Dynamic) {
+
+				desc.BindFlags				=	BindFlags.VertexBuffer;
+				desc.CpuAccessFlags			=	CpuAccessFlags.Write;
+				desc.OptionFlags			=	ResourceOptionFlags.None;
+				desc.SizeInBytes			=	Capacity * Stride;
+				desc.StructureByteStride	=	0;
+				desc.Usage					=	ResourceUsage.Dynamic;
+
 			} else {
-				desc.BindFlags	=	BindFlags.VertexBuffer;
+				throw new ArgumentException("options");
 			}
-
-			desc.CpuAccessFlags			=	enableVertexOutput ? CpuAccessFlags.None : CpuAccessFlags.Write;
-			desc.OptionFlags			=	ResourceOptionFlags.None;
-			desc.SizeInBytes			=	Capacity * Stride;
-			desc.StructureByteStride	=	0;
-			desc.Usage					=	enableVertexOutput ? ResourceUsage.Default : ResourceUsage.Dynamic;
 
 			vertexBuffer				=	new D3D11.Buffer( device.Device, desc );
 		}
@@ -117,16 +134,42 @@ namespace Fusion.Graphics {
 		/// <param name="data"></param>
 		public void SetData<T> ( T[] data, int offset, int count ) where T: struct
 		{
-			if (IsVertexOutputEnabled) {
+			if (Options==VertexBufferOptions.VertexOutput) {
 				throw new GraphicsException("Vertex buffer created with enabled vertex output can not be written.");
 			}
 
 			lock (device.DeviceContext) {
-				var dataBox = device.DeviceContext.MapSubresource( vertexBuffer, 0, MapMode.WriteDiscard, D3D11.MapFlags.None );
 
-				SharpDX.Utilities.Write( dataBox.DataPointer, data, offset, count );
+				if (Options==VertexBufferOptions.Dynamic) {
 
-				device.DeviceContext.UnmapSubresource( vertexBuffer, 0 );
+					var dataBox = device.DeviceContext.MapSubresource( vertexBuffer, 0, MapMode.WriteDiscard, D3D11.MapFlags.None );
+
+					SharpDX.Utilities.Write( dataBox.DataPointer, data, offset, count );
+
+					device.DeviceContext.UnmapSubresource( vertexBuffer, 0 );
+				} 
+				else if (Options==VertexBufferOptions.Default) {
+
+					var bufferDesc = new BufferDescription {
+							BindFlags			= BindFlags.None,
+							Usage				= ResourceUsage.Staging,
+							CpuAccessFlags		= CpuAccessFlags.Write | CpuAccessFlags.Read,
+							OptionFlags			= ResourceOptionFlags.None,
+							SizeInBytes			= Capacity * Stride,
+						};
+
+					var bufferStaging		= new D3D11.Buffer(device.Device, bufferDesc);
+
+					var dataBox = device.DeviceContext.MapSubresource( bufferStaging, 0, MapMode.Write, D3D11.MapFlags.None );
+
+					SharpDX.Utilities.Write( dataBox.DataPointer, data, offset, count );
+
+					device.DeviceContext.UnmapSubresource( bufferStaging, 0 );
+
+					device.DeviceContext.CopyResource( bufferStaging, vertexBuffer );
+
+					SafeDispose( ref bufferStaging );
+				}
 			}
 		}
 

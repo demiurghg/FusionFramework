@@ -74,8 +74,8 @@ namespace ParticleDemo2 {
 			paramsCB			=	new ConstantBuffer( Game.GraphicsDevice, typeof(Params) );
 
 			injectionVB		=	new VertexBuffer( Game.GraphicsDevice, typeof(ParticleVertex), MaxInjectingParticles );
-			simulationSrcVB	=	new VertexBuffer( Game.GraphicsDevice, typeof(ParticleVertex), MaxSimulatedParticles, true );
-			simulationDstVB	=	new VertexBuffer( Game.GraphicsDevice, typeof(ParticleVertex), MaxSimulatedParticles, true );
+			simulationSrcVB	=	new VertexBuffer( Game.GraphicsDevice, typeof(ParticleVertex), MaxSimulatedParticles, VertexBufferOptions.VertexOutput );
+			simulationDstVB	=	new VertexBuffer( Game.GraphicsDevice, typeof(ParticleVertex), MaxSimulatedParticles, VertexBufferOptions.VertexOutput );
 
 			base.Initialize();
 

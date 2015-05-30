@@ -145,9 +145,14 @@ namespace Fusion {
 
 			Instance	=	this;
 
-			Log.Message("{0} {1}", 
+			Log.Message("{0} {1} {2}", 
 				Assembly.GetExecutingAssembly().GetName().Name, 
-				Assembly.GetExecutingAssembly().GetName().Version
+				Assembly.GetExecutingAssembly().GetName().Version,
+				#if DEBUG
+					"debug"
+				#else
+					"release"
+				#endif
 				);
 			Log.Message("Startup directory : {0}", AppDomain.CurrentDomain.BaseDirectory );
 			Log.Message("Current directory : {0}", Directory.GetCurrentDirectory() );

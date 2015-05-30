@@ -582,7 +582,7 @@ namespace Fusion.Graphics {
 				throw new ArgumentException("SetupVertexOutput: Offsets must be multiple of 4.");
 			}
 
-			if ( !vertexBuffers.All( vb => vb.IsVertexOutputEnabled) ) {
+			if ( !vertexBuffers.All( vb => vb.Options==VertexBufferOptions.VertexOutput) ) {
 				throw new GraphicsException("SetupVertexOutput: Vertex buffer must be created with enabled vertex output.");
 			}
 

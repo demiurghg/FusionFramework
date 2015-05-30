@@ -210,6 +210,7 @@
     <Compile Include="Graphics\Collections\SamplerStateCollection.cs" />
     <Compile Include="Graphics\Collections\ShaderResourceCollection.cs" />
     <Compile Include="Graphics\GraphicsResource.cs" />
+    <Compile Include="Graphics\Resources\VertexBufferOptions.cs" />
     <Compile Include="Graphics\Resources\UnorderedAccess.cs" />
     <Compile Include="Graphics\Scene\SceneDrawer.cs" />
     <Compile Include="Graphics\States\StateFactory.cs" />

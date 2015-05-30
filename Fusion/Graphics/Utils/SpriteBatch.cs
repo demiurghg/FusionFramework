@@ -107,7 +107,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public override void Initialize ()
 		{
-			vertexBuffer	=	new VertexBuffer( Game.GraphicsDevice, typeof(SpriteVertex), MaxVertices );
+			vertexBuffer	=	new VertexBuffer( Game.GraphicsDevice, typeof(SpriteVertex), MaxVertices, VertexBufferOptions.Dynamic );
 			indexBuffer		=	new IndexBuffer( Game.GraphicsDevice, MaxIndices );
 
 			var indices = new int[MaxIndices];

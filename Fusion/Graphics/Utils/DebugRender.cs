@@ -84,7 +84,7 @@ namespace Fusion.Graphics {
 
 
 			//	create vertex buffer :
-			vertexBuffer		= new VertexBuffer(dev, typeof(LineVertex), vertexBufferSize );
+			vertexBuffer		= new VertexBuffer(dev, typeof(LineVertex), vertexBufferSize, VertexBufferOptions.Dynamic );
 			vertexDataAccum.Capacity = vertexBufferSize;
 		}
 
