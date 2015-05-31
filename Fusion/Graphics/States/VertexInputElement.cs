@@ -177,6 +177,7 @@ namespace Fusion.Graphics {
 			if ( fieldType == typeof( Half2		) )	format	=	VertexFormat.Half2		; else 
 			if ( fieldType == typeof( Half4		) )	format	=	VertexFormat.Half4		; else 
 			if ( fieldType == typeof( UInt32	) )	format	=	VertexFormat.UInt		; else 
+			if ( fieldType == typeof( Int32		) )	format	=	VertexFormat.SInt		; else 
 			if ( fieldType == typeof( Int3		) )	format	=	VertexFormat.SInt3		; else 
 			if ( fieldType == typeof( Int4		) )	format	=	VertexFormat.SInt4		; else 
 			if ( fieldType == typeof( Double	) )	format	=	VertexFormat.UInt2		; else 

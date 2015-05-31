@@ -210,6 +210,7 @@
     <Compile Include="Graphics\Collections\SamplerStateCollection.cs" />
     <Compile Include="Graphics\Collections\ShaderResourceCollection.cs" />
     <Compile Include="Graphics\GraphicsResource.cs" />
+    <Compile Include="Graphics\Resources\FormattedBuffer.cs" />
     <Compile Include="Graphics\Resources\VertexBufferOptions.cs" />
     <Compile Include="Graphics\Resources\UnorderedAccess.cs" />
     <Compile Include="Graphics\Scene\SceneDrawer.cs" />
@@ -347,10 +348,11 @@
     <Compile Include="UserInterface\Utils.cs" />
     <Compile Include="Utils\CharStream.cs" />
     <Compile Include="Utils\ColoredTraceListener.cs" />
+    <Compile Include="Utils\KdTree3.cs" />
     <Compile Include="Utils\Image.cs" />
     <Compile Include="Utils\Image.Noise.cs" />
     <Compile Include="Utils\Image.Tga.cs" />
-    <Compile Include="Utils\KdTree.cs" />
+    <Compile Include="Utils\KdTree2.cs" />
     <Compile Include="Graphics\GraphicsDevice.cs" />
     <Compile Include="Graphics\Utils\CCD.cs" />
     <Compile Include="Utils\ConsoleExt.cs" />

@@ -56,12 +56,16 @@ namespace Fusion.Graphics {
 		ConstData	constData;
 
 
+		public RenderTargetSurface RenderTarget { get; set; }
+		public DepthStencilSurface DepthStencil { get; set; }
+
 
 		/// <summary>
 		/// Constructor
 		/// </summary>
 		public DebugRender(Game game) : base(game)
 		{
+			RenderTarget	= null;
 			Config	=	new DebugRenderConfig();
 		}
 
@@ -149,6 +153,14 @@ namespace Fusion.Graphics {
 			}
 
 			var dev = Game.GraphicsDevice;
+
+
+			if (RenderTarget!=null) {
+				if (DepthStencil==null) {	
+					throw new InvalidOperationException("Both RenderTarget and DepthStencil must be set.");
+				}
+				dev.SetTargets( DepthStencil, RenderTarget );
+			}
 
 
 			constData.Transform = View * Projection;

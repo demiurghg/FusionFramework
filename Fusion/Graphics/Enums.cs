@@ -345,7 +345,33 @@ namespace Fusion.Graphics {
 				case ColorFormat.Dxt5		: return -1;
 			}
 
-			throw new ArgumentException("ColorFormatConverter() : Bad format");
+			throw new ArgumentException("bad format");
+		}
+		
+		
+		public static int SizeOf( VertexFormat format )
+		{
+			switch ( format ) {
+				case VertexFormat.Float		: return 4;
+				case VertexFormat.Vector2	: return 8;
+				case VertexFormat.Vector3	: return 12;
+				case VertexFormat.Vector4	: return 16;
+				case VertexFormat.Color		: return 4;
+				case VertexFormat.Color4	: return 16;
+				case VertexFormat.Byte4		: return 4;
+				case VertexFormat.Half2		: return 4;
+				case VertexFormat.Half4		: return 8;
+				case VertexFormat.UInt		: return 4;
+				case VertexFormat.UInt2		: return 8;
+				case VertexFormat.UInt3		: return 12;
+				case VertexFormat.UInt4		: return 16;
+				case VertexFormat.SInt		: return 4;
+				case VertexFormat.SInt2		: return 8;
+				case VertexFormat.SInt3		: return 12;
+				case VertexFormat.SInt4		: return 16;
+			}
+
+			throw new ArgumentException("bad format");
 		}
 		
 		public static Format Convert ( ColorFormat format )

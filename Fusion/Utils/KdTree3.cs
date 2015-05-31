@@ -13,10 +13,10 @@ namespace Fusion {
 	/// Represents two-dimensional KdTree.
 	/// </summary>
 	/// <typeparam name="T"></typeparam>
-	public class KdTree<T> {
+	public class KdTree3<T> {
 
 		class Node {
-			public	Vector2 Point;
+			public	Vector3 Point;
 			public	T		Value;
 			public	Node[]	KdBranch = new Node[2]{ null, null };
 		}
@@ -30,7 +30,7 @@ namespace Fusion {
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public KdTree ()
+		public KdTree3 ()
 		{
 			
 		}
@@ -41,7 +41,7 @@ namespace Fusion {
 		/// </summary>
 		/// <param name="point"></param>
 		/// <param name="value"></param>
-		public void Add( Vector2 point, T value )
+		public void Add( Vector3 point, T value )
 		{
 			AddNodeToKdTree( ref treeRoot, new Node() { Point = point, Value = value }, 0 );
 		}
@@ -54,7 +54,7 @@ namespace Fusion {
 		/// <param name="target"></param>
 		/// <param name="result"></param>
 		/// <param name="distance"></param>
-		public void Nearest ( Vector2 target, ref T result, ref float distance )
+		public void Nearest ( Vector3 target, ref T result, ref float distance )
 		{
 			Nearest( treeRoot, target, ref result, ref distance, 0 );
 		}
@@ -66,7 +66,7 @@ namespace Fusion {
 		/// <param name="target"></param>
 		/// <param name="result"></param>
 		/// <param name="distance"></param>
-		public void Nearest ( Vector2 target, ref T result )
+		public void Nearest ( Vector3 target, ref T result )
 		{
 			float dummy = 0;
 			Nearest( treeRoot, target, ref result, ref dummy, 0 );
@@ -78,7 +78,7 @@ namespace Fusion {
 		/// </summary>
 		/// <param name="target"></param>
 		/// <param name="result"></param>
-		public void NearestRadius ( Vector2 target, float radius, out List<T> result )
+		public void NearestRadius ( Vector3 target, float radius, out List<T> result )
 		{
 			List<Node> nodes = new List<Node>();
 			List<float> distances = new List<float>();
@@ -95,7 +95,7 @@ namespace Fusion {
 		/// <param name="point"></param>
 		/// <param name="result"></param>
 		/// <returns></returns>
-		void Nearest ( Node root, Vector2 target, ref T result, ref float distance, int depth = 0 )
+		void Nearest ( Node root, Vector3 target, ref T result, ref float distance, int depth = 0 )
 		{
 			if (root==null) {
 				return;
@@ -118,9 +118,8 @@ namespace Fusion {
 				distance = dist;
 			}
 
-			if ( dist<0.0001f ) {
-				//Console.WriteLine("fuck");
-			}
+			/*if ( dist<0.0001f ) {
+			} */
 
 			if ( root.Point==target ) {
 				return;
@@ -145,7 +144,7 @@ namespace Fusion {
 		/// <param name="distances"></param>
 		/// <param name="radius"></param>
 		/// <param name="depth"></param>
-		void NearestRadius ( Node root, Vector2 target, List<Node> nodes, List<float> distances, float radius, int depth=0 )
+		void NearestRadius ( Node root, Vector3 target, List<Node> nodes, List<float> distances, float radius, int depth=0 )
 		{
 			if (root==null) return;
 
@@ -184,11 +183,24 @@ namespace Fusion {
 		/// <param name="point"></param>
 		/// <param name="depth"></param>
 		/// <returns></returns>
-		float KdTreeDelta ( Vector2 pivot, Vector2 point, int depth )
+		float KdTreeDelta ( Vector3 pivot, Vector3 point, int depth )
 		{
+			#if false
 			float pivotX = ((depth%2)==0) ? pivot.X : pivot.Y;
 			float pointX = ((depth%2)==0) ? point.X : point.Y;
 			return pivotX - pointX;
+			#else 
+
+			depth = depth % 3;
+
+			switch (depth) {
+				case 0 : return pivot.X - point.X;
+				case 1 : return pivot.Y - point.Y;
+				case 2 : return pivot.Z - point.Z;
+			}
+
+			throw new ArgumentException("depth");
+			#endif
 		}
 
 
@@ -200,7 +212,7 @@ namespace Fusion {
 		/// <param name="point"></param>
 		/// <param name="depth"></param>
 		/// <returns></returns>
-		int KdTreeBranch ( Vector2 pivot, Vector2 point, int depth )
+		int KdTreeBranch ( Vector3 pivot, Vector3 point, int depth )
 		{
 			float delta = KdTreeDelta( pivot, point, depth );
 			return (delta > 0) ? 1 : 0;
