@@ -124,10 +124,19 @@ namespace Fusion.Graphics {
 		{
 			IntPtr	resource		=	new IntPtr(0);
 			IntPtr	resourceView	=	new IntPtr(0);
+			bool	result;
 
-			var r = DdsLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
+			if ((char)fileInMemory[0]=='D' &&
+				(char)fileInMemory[1]=='D' &&
+				(char)fileInMemory[2]=='S' &&
+				(char)fileInMemory[3]==' ' ) {
+	
+				result = DdsLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
+			} else {
+				result = WicLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
+			}
 
-			if (!r) {	
+			if (!result) {	
 				throw new GraphicsException( "Failed to load texture: " + name );
 			}
 

@@ -12,9 +12,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NvApiWrapper", "Dependencies\NvApiWrapper\NvApiWrapper.vcxproj", "{EA4B3AFD-02E3-4FA3-9E26-95390F34687F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FusionFramework", "FusionFramework", "{2222BAA4-08B2-43BF-B61D-6FF6453C7D73}"
-	ProjectSection(SolutionItems) = preProject
-		FusionDDS\FusionDDS.vcxproj = FusionDDS\FusionDDS.vcxproj
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "FusionSamples", "FusionSamples", "{53ABA7DF-B4AE-4E9B-A616-AB3BB439283E}"
 EndProject

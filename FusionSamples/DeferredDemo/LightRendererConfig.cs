@@ -183,6 +183,7 @@ namespace DeferredDemo {
 
 		public LightRendererConfig ()
 		{
+			CSMDepth		=	1024;
 			CSMSize			=	1024;
 			SplitSize		=	10;
 			SplitFactor		=	2.5f;

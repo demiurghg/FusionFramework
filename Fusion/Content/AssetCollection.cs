@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System;																							 
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
+using System.Diagnostics;
 using Fusion.Mathematics;
 
 
@@ -167,7 +168,13 @@ namespace Fusion.Content {
 		/// <returns></returns>
 		public static AssetCollection Load ( string path )
 		{
-			return	(AssetCollection)Misc.LoadObjectFromXml( typeof(AssetCollection), path, Asset.GatherAssetTypes() );
+			AssetCollection assets;
+			Type[] assetTypes;
+
+			assetTypes	=	Asset.GatherAssetTypes();
+			assets		=	(AssetCollection)Misc.LoadObjectFromXml( typeof(AssetCollection), path, Asset.GatherAssetTypes() );
+
+			return assets;
 		}
 		
 

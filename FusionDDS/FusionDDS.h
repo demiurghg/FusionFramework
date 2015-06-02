@@ -13,4 +13,10 @@ namespace FusionDDS {
 	public:
 		static bool CreateTextureFromMemory ( IntPtr device, array<Byte>^ fileInMemory, bool forceSRgb, IntPtr %resource, IntPtr %srv );
 	};
+
+	public ref class WicLoader
+	{
+	public:
+		static bool CreateTextureFromMemory ( IntPtr device, array<Byte>^ fileInMemory, bool forceSRgb, IntPtr %resource, IntPtr %srv );
+	};
 }
