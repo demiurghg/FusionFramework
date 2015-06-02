@@ -24,6 +24,13 @@ namespace DeferredDemo
 	}
 
 
+
+	public enum RgbSpace {
+		sRGB,
+		CIE_RGB,
+	}
+
+
 	public class Config
 	{
 		[Category("Rotation")]
@@ -45,12 +52,14 @@ namespace DeferredDemo
 		public float	SkySphereSize { get; set; }
 		public float	AerialFogDensity { get; set; }
 		public float	ScatteringLevel { get; set; }
+		public RgbSpace	RgbSpace { get; set; }
 
 		//[Editor(typeof(SurfaceShader.FileLocationEditor), typeof(UITypeEditor))]
 		public string	TexturePath { get; set; }
 
 		public Config()
 		{
+			RgbSpace	= RgbSpace.sRGB;
 			TexturePath = "uffizi_cross.dds";
 			AerialFogDensity = 0.001f;
 			SkySphereSize = 5000.0f;

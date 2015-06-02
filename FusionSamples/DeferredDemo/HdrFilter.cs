@@ -206,7 +206,7 @@ namespace DeferredDemo {
 			device.PixelShaderResources[0]	=	hdrImage;// averageLum;
 			device.PixelShaderResources[1]	=	measuredNew;// averageLum;
 			device.PixelShaderResources[2]	=	bloom0;// averageLum;
-			device.PixelShaderResources[3]	=	bloomMask;// averageLum;
+			device.PixelShaderResources[3]	=	Game.GetService<SpriteBatch>().TextureWhite;
 			device.PixelShaderSamplers[0]	=	SamplerState.LinearClamp;
 
 			Flags op = Flags.LINEAR;

@@ -1,7 +1,7 @@
 
 
 #if 0
-$ubershader  PROCEDURAL_SKY|FOG
+$ubershader  PROCEDURAL_SKY|FOG SRGB|CIERGB
 #endif
 
 cbuffer Constants : register(b0)
@@ -104,10 +104,23 @@ float3 YxyToRGB ( float3 Yxy )
     XYZ.y = clrYxy.x;              
     XYZ.z = (1 - clrYxy.y - clrYxy.z) * clrYxy.x / clrYxy.z; 
 
-    const float3 rCoeffs = float3 ( 2.0413690f, -0.5649464f, -0.3446944f);
+	#ifdef SRGB
+    const float3 rCoeffs = float3 ( 3.2404542f, -1.5371385f, -0.4985314f);
     const float3 gCoeffs = float3 (-0.9692660f,  1.8760108f,  0.0415560f);
-    const float3 bCoeffs = float3 ( 0.0134474f, -0.1183897f,  1.0154096f);
+    const float3 bCoeffs = float3 ( 0.0556434f, -0.2040259f,  1.0572252f);
+	#endif
 
+	#ifdef CIERGB
+    const float3 rCoeffs = float3 ( 2.3706743f, -0.9000405f, -0.4706338f);
+    const float3 gCoeffs = float3 (-0.5138850f,  1.4253036f,  0.0885814f);
+    const float3 bCoeffs = float3 ( 0.0052982f, -0.0146949f,  1.0093968f);
+	#endif
+
+	// old values :
+    // const float3 rCoeffs = float3 ( 2.0413690f, -0.5649464f, -0.3446944f);
+    // const float3 gCoeffs = float3 (-0.9692660f,  1.8760108f,  0.0415560f);
+    // const float3 bCoeffs = float3 ( 0.0134474f, -0.1183897f,  1.0154096f);
+	
 	return float3 ( dot ( rCoeffs, XYZ ), dot ( gCoeffs, XYZ ), dot ( bCoeffs, XYZ ) );
 }
 
@@ -173,7 +186,7 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
   sky = PanoramicSky.Sample(SamplerLinearClamp, float2( atan2(view.z, view.x) * (0.5f / PI) + 0.5f, k - (2.0f * k / PI) * asin(view.y) ) ).rgb;
   sky = pow(sky + sky * sky + sky * sky * sky + sky * sky * sky * sky, 1);
 #else
- 	sky = YxyToRGB( input.skyColor ).xyz * Temperature * 1;
+ 	sky = YxyToRGB( input.skyColor ).xyz;// * Temperature * 1;
 #endif
 
   sky *= SkyIntensity;

@@ -24,6 +24,8 @@ namespace DeferredDemo
 			PANORAMIC_SKY_FULL	= 1 << 2,
 			CUBEMAP_SKY			= 1 << 3,
 			FOG					= 1 << 4,
+			SRGB				= 1 << 5,
+			CIERGB				= 1 << 6,
 		}
 
 		//	row_major float4x4 MatrixWVP;      // Offset:    0 Size:    64 [unused]
@@ -288,6 +290,16 @@ namespace DeferredDemo
 
 
 
+		void ApplyColorSpace ( ref SkyFlags flags )
+		{	
+			switch (Params.RgbSpace) {
+				case RgbSpace.CIE_RGB	: flags |= SkyFlags.CIERGB;	break;
+				case RgbSpace.sRGB		: flags |= SkyFlags.SRGB;		break;
+			}
+		}
+
+
+
 		/// <summary>
 		/// Renders fog look-up table
 		/// </summary>
@@ -299,8 +311,12 @@ namespace DeferredDemo
 			var rotation	=	Matrix.RotationYawPitchRoll( MathUtil.Rad( Params.Yaw ), MathUtil.Rad( Params.Pitch ), MathUtil.Rad( Params.Roll ) );
 			var projection	=	MathUtil.ComputeCubemapProjectionMatrixLH( 0.125f, 10.0f );
 			var cubeWVPS	=	MathUtil.ComputeCubemapViewMatriciesLH( Vector3.Zero, rotation, projection );
+
+			var flags		=	SkyFlags.FOG;
+
+			ApplyColorSpace( ref flags );
 				
-			rs.PipelineState	=	factory[(int)(SkyFlags.FOG)];
+			rs.PipelineState	=	factory[(int)flags];
 //			rs.DepthStencilState = DepthStencilState.None ;
 
 			skyConstsData.SunPosition	= sunPos;
@@ -373,7 +389,13 @@ namespace DeferredDemo
 			rs.VertexShaderConstants[0] = skyConstsCB;
 			rs.PixelShaderConstants[0] = skyConstsCB;
 
-			rs.PipelineState	=	factory[(int)SkyFlags.PROCEDURAL_SKY];
+
+			SkyFlags flags = SkyFlags.PROCEDURAL_SKY;
+
+			ApplyColorSpace( ref flags );
+				
+
+			rs.PipelineState	=	factory[(int)flags];
 						
 			for ( int j=0; j<skySphere.Meshes.Count; j++) {
 				var mesh = skySphere.Meshes[j];
