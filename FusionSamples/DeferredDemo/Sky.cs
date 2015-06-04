@@ -66,6 +66,7 @@ namespace DeferredDemo
 		RenderTargetCube	skyCube;
 		Texture2D			clouds;
 		Texture2D			cirrus;
+		Texture2D			noise;
 
 		#region Sky model
 		float dot ( Vector3 a, Vector3 b ) { return Vector3.Dot(a, b); }
@@ -240,6 +241,7 @@ namespace DeferredDemo
 			skySphere	=	Game.Content.Load<Scene>("skySphere");
 			clouds		=	Game.Content.Load<Texture2D>("clouds|srgb");
 			cirrus		=	Game.Content.Load<Texture2D>("cirrus|srgb");
+			noise		=	Game.Content.Load<Texture2D>("cloudNoise");
 
 
 			vertexBuffers	=	skySphere.Meshes
@@ -445,6 +447,7 @@ namespace DeferredDemo
 			rs.PipelineState			=	factory[(int)flags];
 			rs.PixelShaderResources[0]	=	clouds;
 			rs.PixelShaderResources[1]	=	cirrus;
+			rs.PixelShaderResources[2]	=	noise;
 			rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
 					
 			for ( int j=0; j<skySphere.Meshes.Count; j++) {

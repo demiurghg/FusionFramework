@@ -18,6 +18,7 @@ cbuffer Constants : register(b0)
 
 Texture2D CloudTexture : register(t0);
 Texture2D CirrusTexture : register(t1);
+Texture2D CloudNoise : register(t2);
 SamplerState SamplerLinear : register(s0);
 
 struct VS_INPUT {
@@ -171,6 +172,39 @@ float overlay(float a, float b)
 }
 
 
+
+float4 SampleNoise ( Texture2D tex, float2 uv )
+{
+	float4 result = 0;
+	float weight = 0.5f;
+	float scale  = 1.0f;
+	
+	float2 offset[] = {
+		float2( 0.091683f, 0.498368f ),
+		float2( 0.199773f, 0.461658f ),
+		float2( 0.822414f, 0.099000f ),
+		float2( 0.558276f, 0.040172f ),
+		float2( 0.532656f, 0.879633f ),
+		float2( 0.339746f, 0.301596f ),
+		float2( 0.658573f, 0.710984f ),
+		float2( 0.966779f, 0.170014f ),
+	};
+	
+	for (int i=0; i<8; i++) {
+		float4 sample = tex.Sample( SamplerLinear, uv * scale * 0.2 + offset[i] + Time * 0.001 );
+		sample.xyz = sample.xyz * 2 - 1;
+		result += sample * weight;
+		weight *= 0.6;
+		scale *= 2.0;
+	}
+	
+	result.xyz = normalize(result.xyz);
+
+	return result;
+}
+
+
+
 float4 PSMain( PS_INPUT input ) : SV_TARGET0
 {
 	float3 view = normalize(input.worldPos);
@@ -190,57 +224,30 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 	#endif
 	
 	#ifdef CLOUDS
-		float4 cirrus	=	CirrusTexture.Sample( SamplerLinear, input.worldPos.xz * float2(2,-2) + float2(0.5,0.5f) );
-		cirrus.a *= 0.1f;
 		
-		//return cirrus * float4(200,100,50,1);
-		
-		float4 cloudTex	=	CloudTexture.Sample( SamplerLinear, input.worldPos.xz * float2(3,-3)*2 + float2(0.5,0.5f) + float2(Time,Time)*0.004 );
-		float4 clouds  = 0;
+		float2 uv	=	input.worldPos.xz * float2(1,-1);
+	
+		float shadow = 0;
+		for ( float t=0; t<1; t+=0.05f) {
+			float sm = saturate(SampleNoise( CloudNoise, uv + float2(2,-2)*(0.001f+t*0.001f) ).a * 2 - 1);
+			
+			shadow += sm * 0.05;
+		}
+		shadow = saturate(1-shadow);
+		shadow = pow(shadow,8);
+	
 		float dist		=	length(input.worldPos.xz*2);
 		float fog		=	pow(1-saturate( dist ), 0.5);
+		if (input.worldPos.y<0) fog = 0;
 		
-		clouds.rgb	=	saturate(cloudTex.r) * 1 * pow(cloudTex.g,1);
-		clouds.a	=	cloudTex.a  * fog;
+		float4 clouds = SampleNoise( CloudNoise, uv );
+		
+		float lit	=	shadow;//saturate(dot(clouds.rgb, normalize(float3(1,-1,0))));
+		
+		clouds.rgb = lerp( Ambient, SunColor, lit );
+		clouds.a   = saturate(2*smoothstep(0,1,saturate(clouds.a*8-4)) * fog);
 
-		clouds = lerp(cirrus * fog, clouds, clouds.a );
-		
-		#if 1
-		float4 cloudTex2	=	CloudTexture.Sample( SamplerLinear, input.worldPos.xz * float2(2.7,-2)*2+ float2(1.7,2.5f) + float2(Time,Time)*0.003 );
-		float4 clouds2		= 	0;
-		
-		clouds2.rgb	=	saturate(cloudTex2.r) * 1 * pow(cloudTex2.g,1);
-		clouds2.a	=	cloudTex2.a  * fog;
-		
-		clouds = lerp(clouds, clouds2, clouds2.a );
-
-
-		float4 cloudTex3	=	CloudTexture.Sample( SamplerLinear, input.worldPos.xz * float2(1.7,-1.2)*2 + float2(0.35,0.75f) + float2(Time,Time)*0.002 );
-		float4 clouds3		= 	0;
-		
-		clouds3.rgb	=	saturate(cloudTex3.r) * 1 * pow(cloudTex3.g,1);
-		clouds3.a	=	cloudTex3.a  * fog;
-		
-		clouds = lerp(clouds, clouds3, clouds3.a );
-		
-
-
-		float4 cloudTex4	=	CloudTexture.Sample( SamplerLinear, input.worldPos.xz * float2(0.7,-1.1)*2 + float2(0.65,0.25f) + float2(Time,Time)*0.001 );
-		float4 clouds4		= 	0;
-		
-		clouds4.rgb	=	saturate(cloudTex4.r) * 1 * pow(cloudTex4.g,1);
-		clouds4.a	=	cloudTex4.a  * fog;
-		
-		clouds = lerp(clouds, clouds4, clouds4.a );
-		#endif
-		
-
-
-
-		//clouds.a = pow(clouds.a,0.5);
-		clouds.rgb = lerp(Ambient.rgb, SunColor, pow(clouds.r,2)); 
-
-		return clouds;
+		return clouds * 1;
 	#endif
 
 }
