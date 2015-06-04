@@ -13,7 +13,7 @@ namespace DeferredDemo {
 		[STAThread]
 		static void Main ( string[] args )
 		{
-			Trace.Listeners.Add( new System.Diagnostics.ConsoleTraceListener() );
+			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using (var game = new DeferredDemo()) {
 				if (DevCon.Prepare( game, @"..\..\..\Content\Content.xml", "Content" )) {

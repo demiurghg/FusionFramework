@@ -274,7 +274,7 @@ namespace DeferredDemo {
 			sr.RenderGBuffer ( view, proj, lr.DepthBuffer, hdrTarget, lr.DiffuseBuffer, lr.SpecularBuffer, lr.NormalMapBuffer );
 
 			//	render sky :
-			sky.Render( lr.DepthBuffer.Surface, hdrTarget.Surface, view, proj );
+			sky.Render( gameTime, lr.DepthBuffer.Surface, hdrTarget.Surface, view, proj );
 
 			hbao.Render( view, proj, lr.DepthBuffer, lr.NormalMapBuffer );
 

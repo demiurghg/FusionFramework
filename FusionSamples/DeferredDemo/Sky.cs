@@ -26,6 +26,7 @@ namespace DeferredDemo
 			FOG					= 1 << 4,
 			SRGB				= 1 << 5,
 			CIERGB				= 1 << 6,
+			CLOUDS				= 1 << 7,
 		}
 
 		//	row_major float4x4 MatrixWVP;      // Offset:    0 Size:    64 [unused]
@@ -34,7 +35,7 @@ namespace DeferredDemo
 		//	float Turbidity;                   // Offset:   96 Size:     4 [unused]
 		//	float3 Temperature;                // Offset:  100 Size:    12
 		//	float SkyIntensity;                // Offset:  112 Size:     4
-		[StructLayout(LayoutKind.Explicit, Size=128)]
+		[StructLayout(LayoutKind.Explicit, Size=160)]
 		struct SkyConsts {
 			[FieldOffset(  0)] public Matrix 	MatrixWVP;
 			[FieldOffset( 64)] public Vector3	SunPosition;
@@ -42,6 +43,9 @@ namespace DeferredDemo
 			[FieldOffset( 96)] public float		Turbidity;
 			[FieldOffset(100)] public Vector3	Temperature; 
 			[FieldOffset(112)] public float		SkyIntensity; 
+			[FieldOffset(116)] public Vector3	Ambient;
+			[FieldOffset(128)] public float		Time;
+
 		}
 
 		GraphicsDevice	rs;
@@ -60,6 +64,8 @@ namespace DeferredDemo
 
 		public RenderTargetCube	SkyCube { get { return skyCube; } }
 		RenderTargetCube	skyCube;
+		Texture2D			clouds;
+		Texture2D			cirrus;
 
 		#region Sky model
 		float dot ( Vector3 a, Vector3 b ) { return Vector3.Dot(a, b); }
@@ -232,6 +238,8 @@ namespace DeferredDemo
 			SafeDispose( ref factory );
 
 			skySphere	=	Game.Content.Load<Scene>("skySphere");
+			clouds		=	Game.Content.Load<Texture2D>("clouds|srgb");
+			cirrus		=	Game.Content.Load<Texture2D>("cirrus|srgb");
 
 
 			vertexBuffers	=	skySphere.Meshes
@@ -244,6 +252,7 @@ namespace DeferredDemo
 
 			sky		=	Game.Content.Load<Ubershader>("sky");
 			factory	=	new StateFactory( sky, typeof(SkyFlags), (ps,i) => EnumFunc(ps, (SkyFlags)i) );
+
 		}
 
 
@@ -259,6 +268,10 @@ namespace DeferredDemo
 			ps.RasterizerState		=	RasterizerState.CullNone;
 			ps.BlendState			=	BlendState.Opaque;
 			ps.DepthStencilState	=	flags.HasFlag(SkyFlags.FOG) ? DepthStencilState.None : DepthStencilState.Readonly;
+
+			if (flags.HasFlag(SkyFlags.CLOUDS)) {
+				ps.BlendState	=	BlendState.AlphaBlend;
+			}
 		}
 
 
@@ -308,7 +321,7 @@ namespace DeferredDemo
 			var	sunPos		= GetSunDirection();
 			var sunColor	= GetSunLightColor();
 
-			var rotation	=	Matrix.RotationYawPitchRoll( MathUtil.Rad( Params.Yaw ), MathUtil.Rad( Params.Pitch ), MathUtil.Rad( Params.Roll ) );
+			var rotation	=	Matrix.Identity;
 			var projection	=	MathUtil.ComputeCubemapProjectionMatrixLH( 0.125f, 10.0f );
 			var cubeWVPS	=	MathUtil.ComputeCubemapViewMatriciesLH( Vector3.Zero, rotation, projection );
 
@@ -341,7 +354,7 @@ namespace DeferredDemo
 					var mesh = skySphere.Meshes[j];
 
 					rs.SetupVertexInput( vertexBuffers[j], indexBuffers[j] );
-				rs.DrawIndexed( mesh.IndexCount, 0, 0 );
+					rs.DrawIndexed( mesh.IndexCount, 0, 0 );
 				}
 			}
 
@@ -357,12 +370,12 @@ namespace DeferredDemo
 		/// </summary>
 		/// <param name="rendCtxt"></param>
 		/// <param name="techName"></param>
-		public void Render( DepthStencilSurface depthBuffer, RenderTargetSurface hdrTarget, Matrix view, Matrix projection )
+		public void Render( GameTime gameTime, DepthStencilSurface depthBuffer, RenderTargetSurface hdrTarget, Matrix view, Matrix projection )
 		{
 			var camera = Game.GetService<Camera>();
 
 			var scale		=	Matrix.Scaling( Params.SkySphereSize );
-			var rotation	=	Matrix.RotationYawPitchRoll( MathUtil.Rad( Params.Yaw ), MathUtil.Rad( Params.Pitch ), MathUtil.Rad( Params.Roll ) );
+			var rotation	=	Matrix.Identity;
 
 			var	sunPos		=	GetSunDirection();
 			var sunColor	=	GetSunGlowColor();
@@ -386,17 +399,54 @@ namespace DeferredDemo
 			skyConstsData.SkyIntensity	= Params.SkyIntensity;
 	
 			skyConstsCB.SetData( skyConstsData );
+			
 			rs.VertexShaderConstants[0] = skyConstsCB;
 			rs.PixelShaderConstants[0] = skyConstsCB;
 
 
+			//
+			//	Sky :
+			//
 			SkyFlags flags = SkyFlags.PROCEDURAL_SKY;
 
 			ApplyColorSpace( ref flags );
 				
-
 			rs.PipelineState	=	factory[(int)flags];
 						
+			for ( int j=0; j<skySphere.Meshes.Count; j++) {
+				var mesh = skySphere.Meshes[j];
+
+				rs.SetupVertexInput( vertexBuffers[j], indexBuffers[j] );
+				rs.DrawIndexed( mesh.IndexCount, 0, 0 );
+			}
+
+
+
+			//
+			//	Clouds :
+			//
+			scale		=	Matrix.Scaling( Params.SkySphereSize, Params.SkySphereSize * 0.05f, Params.SkySphereSize );
+			skyConstsData.MatrixWVP		= scale * rotation * MathUtil.Transformation( viewMatrix.Right, viewMatrix.Up, viewMatrix.Backward ) * projMatrix;
+			skyConstsData.SunPosition	= sunPos;
+			skyConstsData.SunColor		= GetSunLightColor();
+			skyConstsData.Turbidity		= Params.SkyTurbidity;
+			skyConstsData.Temperature	= Temperature.Get( Params.SunTemperature ); 
+			skyConstsData.SkyIntensity	= Params.SkyIntensity;
+			skyConstsData.Ambient		= GetAmbientLevel().ToVector3();
+			skyConstsData.Time			= (float)gameTime.Total.TotalSeconds;
+	
+			skyConstsCB.SetData( skyConstsData );
+
+
+			flags = SkyFlags.CLOUDS;
+
+			ApplyColorSpace( ref flags );
+			
+			rs.PipelineState			=	factory[(int)flags];
+			rs.PixelShaderResources[0]	=	clouds;
+			rs.PixelShaderResources[1]	=	cirrus;
+			rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
+					
 			for ( int j=0; j<skySphere.Meshes.Count; j++) {
 				var mesh = skySphere.Meshes[j];
 
@@ -420,6 +470,17 @@ namespace DeferredDemo
 
 
 
+		Color4 SunColor ( Vector3 dir )
+		{
+			Color4 dusk		=	new Color4(Temperature.Get(2000), 1);
+			Color4 zenith	=	new Color4(Temperature.Get(Params.SunTemperature), 1);
+
+			Vector3 ndir	=	dir.Normalized();
+
+			return Color4.Lerp( dusk, zenith, (float)Math.Pow(ndir.Y, 0.5f) );
+		}
+
+
 		/// <summary>
 		/// Gets Sun color.
 		/// </summary>
@@ -427,10 +488,13 @@ namespace DeferredDemo
 		public Color4 GetSunLightColor()
 		{
 			var sunPos = GetSunDirection();
-			var zenithColorYxy = perezZenith( Params.SkyTurbidity, sunPos.Y );
+
+			return SunColor( sunPos ) * Params.SunLightIntensity;
+
+			/*var zenithColorYxy = perezZenith( Params.SkyTurbidity, sunPos.Y );
 			var sunColorYxy = perezSun( Params.SkyTurbidity, sunPos.Y, 10 );
 			
-			return new Color4( YxyToRGB( sunColorYxy * new Vector3( Params.SunLightIntensity, 1, 1 ) ) * Temperature.Get( Params.SunTemperature ), 1 );
+			return new Color4( YxyToRGB( sunColorYxy * new Vector3( Params.SunLightIntensity, 1, 1 ) ) * Temperature.Get( Params.SunTemperature ), 1 );*/
 		}
 
 
@@ -442,10 +506,13 @@ namespace DeferredDemo
 		public Color4 GetSunGlowColor()
 		{
 			var sunPos = GetSunDirection();
-			var zenithColorYxy = perezZenith( Params.SkyTurbidity, sunPos.Y );
+
+			return SunColor( sunPos ) * Params.SunGlowIntensity;
+
+			/*var zenithColorYxy = perezZenith( Params.SkyTurbidity, sunPos.Y );
 			var sunColorYxy = perezSun( Params.SkyTurbidity, sunPos.Y, 10 );
 			
-			return new Color4( YxyToRGB( sunColorYxy * new Vector3( Params.SunGlowIntensity, 1, 1 ) ) * Temperature.Get( Params.SunTemperature ), 1 );
+			return new Color4( YxyToRGB( sunColorYxy * new Vector3( Params.SunGlowIntensity, 1, 1 ) ) * Temperature.Get( Params.SunTemperature ), 1 );*/
 		}
 
 
@@ -459,7 +526,7 @@ namespace DeferredDemo
 			var sunPos = GetSunDirection();
 			var ambientLight = Vector3.Zero;
 
-			var norm = randVectors.Length * 2 * MathUtil.Pi;
+			var norm = randVectors.Length;// * 2 * MathUtil.Pi;
 
 			for (int i = 0; i < randVectors.Length; i++) {
 				var yxy = perezSky( Params.SkyTurbidity, randVectors[i], sunPos );

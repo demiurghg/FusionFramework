@@ -33,34 +33,31 @@ namespace DeferredDemo
 
 	public class Config
 	{
-		[Category("Rotation")]
-		public float Yaw { get; set; }
-
-		[Category("Rotation")]
-		public float Pitch { get; set; }
-
-		[Category("Rotation")]
-		public float Roll { get; set; }
-
-		public SkyType	Sky { get; set; }
+		[Category("Sky Model")]
 		public float	SkyIntensity { get; set; }
+		[Category("Sky Model")]
 		public Vector3	SunDirection { get; set; }
+		[Category("Sky Model")]
 		public float	SunGlowIntensity { get; set; }
+		[Category("Sky Model")]
 		public float	SunLightIntensity { get; set; }
+		[Category("Sky Model")]
 		public int		SunTemperature { get; set; }
+		[Category("Sky Model")]
 		public float	SkyTurbidity { get; set; }
+		[Category("Sky Model")]
 		public float	SkySphereSize { get; set; }
+		[Category("Sky Model")]
 		public float	AerialFogDensity { get; set; }
+		[Category("Sky Model")]
 		public float	ScatteringLevel { get; set; }
+		[Category("Sky Model")]
 		public RgbSpace	RgbSpace { get; set; }
 
-		//[Editor(typeof(SurfaceShader.FileLocationEditor), typeof(UITypeEditor))]
-		public string	TexturePath { get; set; }
 
 		public Config()
 		{
 			RgbSpace	= RgbSpace.sRGB;
-			TexturePath = "uffizi_cross.dds";
 			AerialFogDensity = 0.001f;
 			SkySphereSize = 5000.0f;
 			SkyTurbidity = 4.0f;

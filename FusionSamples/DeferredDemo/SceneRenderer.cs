@@ -253,10 +253,10 @@ namespace DeferredDemo {
 
 					var surf = surfaceProps[ subset.MaterialIndex ];
 					
-					device.PixelShaderResources[0]	=	surf.Diffuse.SRgb;
+					device.PixelShaderResources[0]	=	surf.Diffuse;
 					device.PixelShaderResources[1]	=	surf.Specular;
 					device.PixelShaderResources[2]	=	surf.NormalMap;
-					device.PixelShaderResources[3]	=	surf.Emission.SRgb;
+					device.PixelShaderResources[3]	=	surf.Emission;
 
 					device.DrawIndexed( subset.PrimitiveCount * 3, subset.StartPrimitive * 3, 0 );
 				}

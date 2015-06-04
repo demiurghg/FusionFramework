@@ -528,4 +528,30 @@
     <ShowPemutations>false</ShowPemutations>
     <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\195466673460486A316A52276CBCB830.html</ListingPath>
   </Asset>
+  <Asset xsi:type="ImageFileTextureAsset">
+    <AssetPath>clouds.tga</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <NoMips>false</NoMips>
+    <Fast>false</Fast>
+    <ToNormal>false</ToNormal>
+    <Color>true</Color>
+    <Alpha>false</Alpha>
+    <Normal>false</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>clouds.tga</SourceFile>
+  </Asset>
+  <Asset xsi:type="ImageFileTextureAsset">
+    <AssetPath>cirrus.tga</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <NoMips>false</NoMips>
+    <Fast>false</Fast>
+    <ToNormal>false</ToNormal>
+    <Color>true</Color>
+    <Alpha>false</Alpha>
+    <Normal>false</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>cirrus.tga</SourceFile>
+  </Asset>
 </ArrayOfAsset>

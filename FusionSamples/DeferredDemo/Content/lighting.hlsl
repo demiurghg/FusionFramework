@@ -236,7 +236,7 @@ void CSMain(
 	//-----------------------------------------------------
 	//	OMNI lights :
 	//-----------------------------------------------------
-	
+#if 1	
 	#ifdef OMNI
 		uint lightCount = OMNI_LIGHT_COUNT;
 		
@@ -335,6 +335,7 @@ void CSMain(
 		#endif
 	#endif
 	}
+#endif
 
 	//-----------------------------------------------------
 	//	Ambient & Tonemapping :
@@ -442,9 +443,9 @@ float3	ComputeCSM ( float4 worldPos )
 	}
 
 	#ifdef SHOW_SPLITS
-		return shadow * colorizer;
+		return shadow * shadow * colorizer;
 	#else
-		return shadow;
+		return shadow * shadow;
 	#endif
 }
 

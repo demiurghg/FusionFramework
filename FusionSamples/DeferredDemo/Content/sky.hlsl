@@ -1,7 +1,7 @@
 
 
 #if 0
-$ubershader  PROCEDURAL_SKY|FOG SRGB|CIERGB
+$ubershader  PROCEDURAL_SKY|FOG|CLOUDS SRGB|CIERGB
 #endif
 
 cbuffer Constants : register(b0)
@@ -12,11 +12,13 @@ cbuffer Constants : register(b0)
   float		 Turbidity;
   float3	 Temperature;
   float		 SkyIntensity;
+  float3	Ambient;
+  float		Time;
 };
 
-Texture2D PanoramicSky : register(t0);
-TextureCube CubeMapSky : register(t0);
-SamplerState SamplerLinearClamp : register(s0);
+Texture2D CloudTexture : register(t0);
+Texture2D CirrusTexture : register(t1);
+SamplerState SamplerLinear : register(s0);
 
 struct VS_INPUT {
 	float3 position		: POSITION0;
@@ -150,6 +152,7 @@ float screen(float a, float b)
 	return 1 - (1-a) * (1-b); 
 }
 
+
 float3 screen(float3 a, float3 b) 
 { 
 	return 1 - (1-a) * (1-b); 
@@ -167,44 +170,106 @@ float overlay(float a, float b)
 	return r;
 }
 
+
 float4 PSMain( PS_INPUT input ) : SV_TARGET0
 {
-  float3 view = normalize(input.worldPos);
-  float3 sky = 0.0f;
+	float3 view = normalize(input.worldPos);
+	float3 sky = 0.0f;
 
-#ifdef CUBEMAP_SKY
-  sky = CubeMapSky.Sample(SamplerLinearClamp, input.worldPos).rgb;
-#elif PANORAMIC_SKY_HALF || PANORAMIC_SKY_FULL
-  const float PI=3.1415926f;	
-  
-#ifdef PANORAMIC_SKY_HALF
-  const float k=1.0f;
-#else
-  const float k=0.5f;
-#endif
+	#if defined(PROCEDURAL_SKY) || defined(FOG)
+		sky = YxyToRGB( input.skyColor ).xyz;// * Temperature * 1;
+		sky *= SkyIntensity;
 
-  sky = PanoramicSky.Sample(SamplerLinearClamp, float2( atan2(view.z, view.x) * (0.5f / PI) + 0.5f, k - (2.0f * k / PI) * asin(view.y) ) ).rgb;
-  sky = pow(sky + sky * sky + sky * sky * sky + sky * sky * sky * sky, 1);
-#else
- 	sky = YxyToRGB( input.skyColor ).xyz;// * Temperature * 1;
-#endif
+		#ifdef PROCEDURAL_SKY
+			float  ldv = dot ( normalize(SunPosition), view );
+			float sunFactor = smoothstep( 0.9999f, 0.99991f, ldv );
+			sky.rgb += SunColor * sunFactor;
+		#endif
+		
+		return float4( sky, 1.0f);
+	#endif
+	
+	#ifdef CLOUDS
+		float4 cirrus	=	CirrusTexture.Sample( SamplerLinear, input.worldPos.xz * float2(2,-2) + float2(0.5,0.5f) );
+		cirrus.a *= 0.1f;
+		
+		//return cirrus * float4(200,100,50,1);
+		
+		float4 cloudTex	=	CloudTexture.Sample( SamplerLinear, input.worldPos.xz * float2(3,-3)*2 + float2(0.5,0.5f) + float2(Time,Time)*0.004 );
+		float4 clouds  = 0;
+		float dist		=	length(input.worldPos.xz*2);
+		float fog		=	pow(1-saturate( dist ), 0.5);
+		
+		clouds.rgb	=	saturate(cloudTex.r) * 1 * pow(cloudTex.g,1);
+		clouds.a	=	cloudTex.a  * fog;
 
-  sky *= SkyIntensity;
+		clouds = lerp(cirrus * fog, clouds, clouds.a );
+		
+		#if 1
+		float4 cloudTex2	=	CloudTexture.Sample( SamplerLinear, input.worldPos.xz * float2(2.7,-2)*2+ float2(1.7,2.5f) + float2(Time,Time)*0.003 );
+		float4 clouds2		= 	0;
+		
+		clouds2.rgb	=	saturate(cloudTex2.r) * 1 * pow(cloudTex2.g,1);
+		clouds2.a	=	cloudTex2.a  * fog;
+		
+		clouds = lerp(clouds, clouds2, clouds2.a );
 
-#ifdef PROCEDURAL_SKY
-	/*float  ldv = dot ( normalize(SunPosition), view );
 
-	float sunFactor = smoothstep( 0.999f, 0.9991f, ldv );
-  
-	sky.rgb += SunColor * sunFactor * 100.0f;*/
-#endif
+		float4 cloudTex3	=	CloudTexture.Sample( SamplerLinear, input.worldPos.xz * float2(1.7,-1.2)*2 + float2(0.35,0.75f) + float2(Time,Time)*0.002 );
+		float4 clouds3		= 	0;
+		
+		clouds3.rgb	=	saturate(cloudTex3.r) * 1 * pow(cloudTex3.g,1);
+		clouds3.a	=	cloudTex3.a  * fog;
+		
+		clouds = lerp(clouds, clouds3, clouds3.a );
+		
 
-	float  ldv = dot ( normalize(SunPosition), view );
 
-	float sunFactor = smoothstep( 0.9999f, 0.99991f, ldv );
-  
-	sky.rgb += SunColor * sunFactor * 100.0f;
+		float4 cloudTex4	=	CloudTexture.Sample( SamplerLinear, input.worldPos.xz * float2(0.7,-1.1)*2 + float2(0.65,0.25f) + float2(Time,Time)*0.001 );
+		float4 clouds4		= 	0;
+		
+		clouds4.rgb	=	saturate(cloudTex4.r) * 1 * pow(cloudTex4.g,1);
+		clouds4.a	=	cloudTex4.a  * fog;
+		
+		clouds = lerp(clouds, clouds4, clouds4.a );
+		#endif
+		
 
-  return float4( sky/4, 1.0f);
+
+
+		//clouds.a = pow(clouds.a,0.5);
+		clouds.rgb = lerp(Ambient.rgb, SunColor, pow(clouds.r,2)); 
+
+		return clouds;
+	#endif
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
