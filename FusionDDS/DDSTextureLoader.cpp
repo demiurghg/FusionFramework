@@ -140,7 +140,9 @@ inline void SetDebugObjectName(_In_ ID3D11DeviceChild* resource, _In_ const char
 
 };
 
+#if 0
 //--------------------------------------------------------------------------------------
+// THIS FUNCTION CAUSE FAIL ON WIN7 WHEN CLR
 static HRESULT LoadTextureDataFromFile( _In_z_ const wchar_t* fileName,
                                         std::unique_ptr<uint8_t[]>& ddsData,
                                         DDS_HEADER** header,
@@ -178,7 +180,7 @@ static HRESULT LoadTextureDataFromFile( _In_z_ const wchar_t* fileName,
     // Get the file size
     LARGE_INTEGER FileSize = { 0 };
 
-#if (_WIN32_WINNT >= _WIN32_WINNT_VISTA)
+#if 0//(_WIN32_WINNT >= _WIN32_WINNT_VISTA)
     FILE_STANDARD_INFO fileInfo;
     if ( !GetFileInformationByHandleEx( hFile.get(), FileStandardInfo, &fileInfo, sizeof(fileInfo) ) )
     {
@@ -264,7 +266,7 @@ static HRESULT LoadTextureDataFromFile( _In_z_ const wchar_t* fileName,
 
     return S_OK;
 }
-
+#endif
 
 //--------------------------------------------------------------------------------------
 // Return the BPP for a particular format
@@ -1654,6 +1656,7 @@ HRESULT DirectX::CreateDDSTextureFromMemoryEx( ID3D11Device* d3dDevice,
 }
 
 //--------------------------------------------------------------------------------------
+#if 0
 _Use_decl_annotations_
 HRESULT DirectX::CreateDDSTextureFromFile( ID3D11Device* d3dDevice,
                                            const wchar_t* fileName,
@@ -1804,3 +1807,4 @@ HRESULT DirectX::CreateDDSTextureFromFileEx( ID3D11Device* d3dDevice,
 
     return hr;
 }
+#endif

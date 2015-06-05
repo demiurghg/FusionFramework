@@ -4,6 +4,7 @@
 #include "DDSTextureLoader.h"
 #include "WICTextureLoader.h"
 
+
 using namespace DirectX;
 
 bool FusionDDS::DdsLoader::CreateTextureFromMemory( IntPtr device, array<Byte>^ fileInMemory, bool forceSRgb, IntPtr %resource, IntPtr %srv )
@@ -50,5 +51,5 @@ bool FusionDDS::WicLoader::CreateTextureFromMemory( IntPtr device, array<Byte>^ 
 	resource	=	IntPtr( d3dres );
 	srv			=	IntPtr( d3dsrv );
 
-	return true;
+	return true;//*/
 }

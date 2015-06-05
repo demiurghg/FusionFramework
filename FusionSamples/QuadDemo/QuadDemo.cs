@@ -9,6 +9,7 @@ using Fusion.Graphics;
 using Fusion.Input;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using System.IO;
 
 
 
@@ -81,6 +82,7 @@ namespace QuadDemo2D {
 		{
 			SafeDispose( ref factory );
 
+			//texture		=	new Texture2D( GraphicsDevice, File.ReadAllBytes(@"D:\image.png"), false );
 			texture		=	Content.Load<Texture2D>("lena.tga" );
 			ubershader	=	Content.Load<Ubershader>("test.hlsl");
 			factory		=	new StateFactory( ubershader, typeof(UberFlags), Primitive.TriangleList, VertexInputElement.FromStructure(typeof(Vertex) ) );
