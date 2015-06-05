@@ -309,7 +309,7 @@ namespace DeferredDemo
 		{	
 			switch (Params.RgbSpace) {
 				case RgbSpace.CIE_RGB	: flags |= SkyFlags.CIERGB;	break;
-				case RgbSpace.sRGB		: flags |= SkyFlags.SRGB;		break;
+				case RgbSpace.sRGB		: flags |= SkyFlags.SRGB;	break;
 			}
 		}
 

@@ -16,7 +16,7 @@ bool FusionDDS::DdsLoader::CreateTextureFromMemory( IntPtr device, array<Byte>^ 
 
 	HRESULT	hr = CreateDDSTextureFromMemoryEx( 
 						(ID3D11Device*)device.ToPointer(), 
-						(uint8_t*)dataPtr, dataSize, 0, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0, forceSRgb, false,
+						(uint8_t*)dataPtr, dataSize, 0, D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, 0, forceSRgb,
 						&d3dres, &d3dsrv );
 
 	if (FAILED(hr)) {

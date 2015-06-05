@@ -191,7 +191,7 @@ float4 SampleNoise ( Texture2D tex, float2 uv )
 	};
 	
 	for (int i=0; i<8; i++) {
-		float4 sample = tex.Sample( SamplerLinear, uv * scale * 0.2 + offset[i] + Time * 0.001 );
+		float4 sample = tex.Sample( SamplerLinear, uv * scale * 1 + offset[i] + Time * 0.001 );
 		sample.xyz = sample.xyz * 2 - 1;
 		result += sample * weight;
 		weight *= 0.6;
@@ -229,7 +229,7 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 	
 		float shadow = 0;
 		for ( float t=0; t<1; t+=0.05f) {
-			float sm = saturate(SampleNoise( CloudNoise, uv + float2(2,-2)*(0.001f+t*0.001f) ).a * 2 - 1);
+			float sm = saturate(SampleNoise( CloudNoise, uv + float2(2,-1)*(0.001f+t*0.002f) ).a * 2 - 1);
 			
 			shadow += sm * 0.05;
 		}
