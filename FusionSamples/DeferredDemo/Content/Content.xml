@@ -444,7 +444,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>sky.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\BD405DBE8FD5D988C13660BAA13779FB.html</ListingPath>
+    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\BD405DBE8FD5D988C13660BAA13779FB.html</ListingPath>
   </Asset>
   <Asset xsi:type="FbxFileSceneAsset">
     <AssetPath>skySphere.fbx</AssetPath>

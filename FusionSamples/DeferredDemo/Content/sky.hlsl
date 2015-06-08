@@ -14,6 +14,7 @@ cbuffer Constants : register(b0)
   float		 SkyIntensity;
   float3	Ambient;
   float		Time;
+  float3	ViewPos;
 };
 
 Texture2D CloudTexture : register(t0);
@@ -173,7 +174,7 @@ float overlay(float a, float b)
 
 
 
-float4 SampleNoise ( Texture2D tex, float2 uv )
+float4 SampleNoise ( Texture2D tex, float2 uv, int level = 0 )
 {
 	float4 result = 0;
 	float weight = 0.5f;
@@ -190,15 +191,18 @@ float4 SampleNoise ( Texture2D tex, float2 uv )
 		float2( 0.966779f, 0.170014f ),
 	};
 	
+	//for (int i=7; i>=0; i--) {
 	for (int i=0; i<8; i++) {
-		float4 sample = tex.Sample( SamplerLinear, uv * scale * 1 + offset[i] + Time * 0.001 );
+		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.3f + offset[i] + Time * 0.001, level );
+		uv += sample.rg*0.001;
 		sample.xyz = sample.xyz * 2 - 1;
 		result += sample * weight;
 		weight *= 0.6;
 		scale *= 2.0;
 	}
 	
-	result.xyz = normalize(result.xyz);
+	//result.xyz = normalize(result.xyz);
+	result.z = sqrt(1 - (result.x * result.x) + (result.y * result.y));
 
 	return result;
 }
@@ -224,30 +228,53 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 	#endif
 	
 	#ifdef CLOUDS
-		
-		float2 uv	=	input.worldPos.xz * float2(1,-1);
 	
-		float shadow = 0;
-		for ( float t=0; t<1; t+=0.05f) {
-			float sm = saturate(SampleNoise( CloudNoise, uv + float2(2,-1)*(0.001f+t*0.002f) ).a * 2 - 1);
+		float4 final	=	float4(1,1,1,0);
+		
+		for (int k=0; k<4; k++) {
+			float2 uv	=	input.worldPos.xz * float2(1,-1);
 			
-			shadow += sm * 0.05;
+			if (k==0) uv	=	input.worldPos.xz * float2(1,-1) * 0.7f + float2( 0.091683f, 0.498368f );
+			if (k==1) uv	=	input.worldPos.xz * float2(1,-1) * 0.5f + float2( 0.199773f, 0.461658f );
+			if (k==2) uv	=	input.worldPos.xz * float2(1,-1) * 0.8f + float2( 0.822414f, 0.099000f );
+			if (k==3) uv	=	input.worldPos.xz * float2(1,-1) * 1.1f + float2( 0.558276f, 0.040172f );
+		
+			float shadow = 0;
+			for ( float t=0; t<1; t+=0.05f) {
+				float sm = saturate(SampleNoise( CloudNoise, uv + float2(2,-1)*(0.01f+t*0.01f), 1 ).a * 2 - 1);
+				
+				shadow += sm * 0.05;
+			}
+			shadow = saturate(1-shadow);
+			shadow = 1;//*pow(shadow,8);
+		
+			float dist		=	length(input.worldPos.xz*2);
+			float fog		=	pow(1-saturate( dist ), 2);
+			if (input.worldPos.y<0) fog = 0;
+			
+			float4 clouds = SampleNoise( CloudNoise, uv );
+			
+			//float3	viewDir	=	
+			view.y /= 10;
+			float  ldv  = 	dot ( normalize(SunPosition), normalize(view) ) + 1;
+			/*ldv = pow(ldv/2,100);
+			
+			return float4(ldv,ldv,ldv,1);*/
+			
+			//float lit	=	shadow;//saturate(dot(clouds.rgb, normalize(float3(1,-1,0))));
+			float lit	=	saturate(dot(clouds.rgb, normalize(SunPosition.xzy))) * shadow;// * ldv;
+			
+			clouds.rgb = lerp( Ambient, SunColor, lit );
+			clouds.a   = saturate(1*smoothstep(0,1,pow(saturate(clouds.a*3-2),0.7)) * fog);
+			
+			if (k==0) {
+				final = clouds;
+			} else {
+				final = lerp(final, clouds, clouds.a);
+			}
 		}
-		shadow = saturate(1-shadow);
-		shadow = pow(shadow,8);
-	
-		float dist		=	length(input.worldPos.xz*2);
-		float fog		=	pow(1-saturate( dist ), 0.5);
-		if (input.worldPos.y<0) fog = 0;
-		
-		float4 clouds = SampleNoise( CloudNoise, uv );
-		
-		float lit	=	shadow;//saturate(dot(clouds.rgb, normalize(float3(1,-1,0))));
-		
-		clouds.rgb = lerp( Ambient, SunColor, lit );
-		clouds.a   = saturate(2*smoothstep(0,1,saturate(clouds.a*8-4)) * fog);
 
-		return clouds * 1;
+		return final;
 	#endif
 
 }

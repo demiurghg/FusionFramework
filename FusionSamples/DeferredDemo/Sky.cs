@@ -45,7 +45,7 @@ namespace DeferredDemo
 			[FieldOffset(112)] public float		SkyIntensity; 
 			[FieldOffset(116)] public Vector3	Ambient;
 			[FieldOffset(128)] public float		Time;
-
+			[FieldOffset(132)] public Vector3	ViewPos;
 		}
 
 		GraphicsDevice	rs;
@@ -427,7 +427,7 @@ namespace DeferredDemo
 			//
 			//	Clouds :
 			//
-			scale		=	Matrix.Scaling( Params.SkySphereSize, Params.SkySphereSize * 0.05f, Params.SkySphereSize );
+			scale		=	Matrix.Scaling( Params.SkySphereSize, Params.SkySphereSize * 0.1f, Params.SkySphereSize );
 			skyConstsData.MatrixWVP		= scale * rotation * MathUtil.Transformation( viewMatrix.Right, viewMatrix.Up, viewMatrix.Backward ) * projMatrix;
 			skyConstsData.SunPosition	= sunPos;
 			skyConstsData.SunColor		= GetSunLightColor();
