@@ -58,10 +58,13 @@ namespace Fusion.Graphics {
 			texDesc.SampleDescription.Quality	=	0;
 			texDesc.Usage			=	ResourceUsage.Default;
 			texDesc.Width			=	Width;
-
-			tex2D	=	new D3D.Texture2D( device.Device, texDesc );
-			SRV		=	new ShaderResourceView( device.Device, tex2D );
+													 
+			lock (device.DeviceContext) {
+				tex2D	=	new D3D.Texture2D( device.Device, texDesc );
+				SRV		=	new ShaderResourceView( device.Device, tex2D );
+			}
 		}
+		
 
 
 
@@ -126,22 +129,24 @@ namespace Fusion.Graphics {
 			IntPtr	resourceView	=	new IntPtr(0);
 			bool	result;
 
-			if ((char)fileInMemory[0]=='D' &&
-				(char)fileInMemory[1]=='D' &&
-				(char)fileInMemory[2]=='S' &&
-				(char)fileInMemory[3]==' ' ) {
+			lock (device.DeviceContext) {
+				if ((char)fileInMemory[0]=='D' &&
+					(char)fileInMemory[1]=='D' &&
+					(char)fileInMemory[2]=='S' &&
+					(char)fileInMemory[3]==' ' ) {
 	
-				result = DdsLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
-			} else {
-				result = WicLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
-			}
+					result = DdsLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
+				} else {
+					result = WicLoader.CreateTextureFromMemory( device.Device.NativePointer, fileInMemory, forceSRgb, ref resource, ref resourceView );
+				}
 
-			if (!result) {	
-				throw new GraphicsException( "Failed to load texture: " + name );
-			}
+				if (!result) {	
+					throw new GraphicsException( "Failed to load texture: " + name );
+				}
 
-			tex2D	=	new D3D.Texture2D( resource );
-			SRV		=	new D3D.ShaderResourceView( resourceView );
+				tex2D	=	new D3D.Texture2D( resource );
+				SRV		=	new D3D.ShaderResourceView( resourceView );
+			}
 
 			Width		=	tex2D.Description.Width;
 			Height		=	tex2D.Description.Height;

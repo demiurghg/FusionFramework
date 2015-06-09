@@ -607,34 +607,36 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public void ResetStates ()
 		{
-			deviceContext.ClearState();
+			lock (this.DeviceContext) {
+				deviceContext.ClearState();
 
-			SetTargets( null );
-			SetupVertexInput( null, null );
-			SetupVertexOutput( null, 0 );
+				SetTargets( null );
+				SetupVertexInput( null, null );
+				SetupVertexOutput( null, 0 );
 
-			PixelShaderResources	.Clear();
-			VertexShaderResources 	.Clear();
-			GeometryShaderResources .Clear();
-			ComputeShaderResources 	.Clear();
-			DomainShaderResources 	.Clear();
-			HullShaderResources 	.Clear();
+				PixelShaderResources	.Clear();
+				VertexShaderResources 	.Clear();
+				GeometryShaderResources .Clear();
+				ComputeShaderResources 	.Clear();
+				DomainShaderResources 	.Clear();
+				HullShaderResources 	.Clear();
 
-			PixelShaderSamplers		.Clear();
-			VertexShaderSamplers	.Clear();
-			GeometryShaderSamplers	.Clear();
-			ComputeShaderSamplers	.Clear();
-			DomainShaderSamplers	.Clear();
-			HullShaderSamplers		.Clear();
+				PixelShaderSamplers		.Clear();
+				VertexShaderSamplers	.Clear();
+				GeometryShaderSamplers	.Clear();
+				ComputeShaderSamplers	.Clear();
+				DomainShaderSamplers	.Clear();
+				HullShaderSamplers		.Clear();
 
-			PixelShaderConstants	.Clear();
-			VertexShaderConstants	.Clear();
-			GeometryShaderConstants	.Clear();
-			ComputeShaderConstants	.Clear();
-			DomainShaderConstants	.Clear();
-			HullShaderConstants		.Clear();
+				PixelShaderConstants	.Clear();
+				VertexShaderConstants	.Clear();
+				GeometryShaderConstants	.Clear();
+				ComputeShaderConstants	.Clear();
+				DomainShaderConstants	.Clear();
+				HullShaderConstants		.Clear();
 
-			PipelineState	=	null;
+				PipelineState	=	null;
+			}
 		}
 
 

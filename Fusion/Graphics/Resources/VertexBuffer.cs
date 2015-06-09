@@ -52,6 +52,8 @@ namespace Fusion.Graphics {
 		/// <param name="capacity"></param>
 		public VertexBuffer ( GraphicsDevice device, Type vertexType, int capacity, VertexBufferOptions options = VertexBufferOptions.Default ) : base(device)
 		{
+			//Log.Message("Creation: Vertex Buffer");
+
 			this.Capacity	=	capacity;
 			this.Options	=	options;
 
@@ -94,7 +96,9 @@ namespace Fusion.Graphics {
 				throw new ArgumentException("options");
 			}
 
-			vertexBuffer				=	new D3D11.Buffer( device.Device, desc );
+			lock (device.DeviceContext) {
+				vertexBuffer				=	new D3D11.Buffer( device.Device, desc );
+			}
 		}
 
 
