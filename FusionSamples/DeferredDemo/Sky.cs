@@ -50,6 +50,7 @@ namespace DeferredDemo
 
 		GraphicsDevice	rs;
 		Scene			skySphere;
+		Scene			cloudSphere;
 		Ubershader		sky;
 		ConstantBuffer	skyConstsCB;
 		SkyConsts		skyConstsData;
@@ -191,6 +192,8 @@ namespace DeferredDemo
 		VertexBuffer[]	vertexBuffers;
 		IndexBuffer[]	indexBuffers;
 
+		VertexBuffer[]	cloudVertexBuffers;
+		IndexBuffer[]	cloudIndexBuffers;
 
 
 		/// <summary>
@@ -240,6 +243,7 @@ namespace DeferredDemo
 			SafeDispose( ref factory );
 
 			skySphere	=	Game.Content.Load<Scene>("skySphere");
+			cloudSphere	=	Game.Content.Load<Scene>("cloudSphere");
 			clouds		=	Game.Content.Load<Texture2D>("clouds|srgb");
 			cirrus		=	Game.Content.Load<Texture2D>("cirrus|srgb");
 			noise		=	Game.Content.Load<Texture2D>("cloudNoise");
@@ -251,6 +255,14 @@ namespace DeferredDemo
 							.ToArray();
 
 			indexBuffers	=	skySphere.Meshes
+							.Select( mesh => IndexBuffer.Create( Game.GraphicsDevice, mesh.GetIndices() ) )
+							.ToArray();
+
+			cloudVertexBuffers	=	cloudSphere.Meshes
+							.Select( mesh => VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTextureTBN.Convert( v ) ).ToArray() ) )
+							.ToArray();
+
+			cloudIndexBuffers	=	cloudSphere.Meshes
 							.Select( mesh => IndexBuffer.Create( Game.GraphicsDevice, mesh.GetIndices() ) )
 							.ToArray();
 
@@ -454,10 +466,10 @@ namespace DeferredDemo
 			rs.PixelShaderResources[3]	=	arrows;
 			rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
 					
-			for ( int j=0; j<skySphere.Meshes.Count; j++) {
-				var mesh = skySphere.Meshes[j];
+			for ( int j=0; j<cloudSphere.Meshes.Count; j++) {
+				var mesh = cloudSphere.Meshes[j];
 
-				rs.SetupVertexInput( vertexBuffers[j], indexBuffers[j] );
+				rs.SetupVertexInput( cloudVertexBuffers[j], cloudIndexBuffers[j] );
 				rs.DrawIndexed( mesh.IndexCount, 0, 0 );
 			}
 
