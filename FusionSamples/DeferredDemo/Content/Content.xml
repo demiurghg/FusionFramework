@@ -444,7 +444,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>sky.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\BD405DBE8FD5D988C13660BAA13779FB.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\BD405DBE8FD5D988C13660BAA13779FB.html</ListingPath>
   </Asset>
   <Asset xsi:type="FbxFileSceneAsset">
     <AssetPath>skySphere.fbx</AssetPath>
@@ -566,5 +566,44 @@
     <Normal>false</Normal>
     <Compression>RGB</Compression>
     <SourceFile>cloudNoise.tga</SourceFile>
+  </Asset>
+  <Asset xsi:type="ImageFileTextureAsset">
+    <AssetPath>arrows.tga</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <NoMips>false</NoMips>
+    <Fast>false</Fast>
+    <ToNormal>false</ToNormal>
+    <Color>true</Color>
+    <Alpha>false</Alpha>
+    <Normal>false</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>arrows.tga</SourceFile>
+  </Asset>
+  <Asset xsi:type="ImageFileTextureAsset">
+    <AssetPath>arrowsY.tga</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <NoMips>false</NoMips>
+    <Fast>false</Fast>
+    <ToNormal>false</ToNormal>
+    <Color>true</Color>
+    <Alpha>false</Alpha>
+    <Normal>false</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>arrowsY.tga</SourceFile>
+  </Asset>
+  <Asset xsi:type="ImageFileTextureAsset">
+    <AssetPath>arrowsAll.tga</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <NoMips>false</NoMips>
+    <Fast>false</Fast>
+    <ToNormal>false</ToNormal>
+    <Color>true</Color>
+    <Alpha>false</Alpha>
+    <Normal>false</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>arrowsAll.tga</SourceFile>
   </Asset>
 </ArrayOfAsset>

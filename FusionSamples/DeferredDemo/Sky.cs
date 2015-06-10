@@ -67,6 +67,7 @@ namespace DeferredDemo
 		Texture2D			clouds;
 		Texture2D			cirrus;
 		Texture2D			noise;
+		Texture2D			arrows;
 
 		#region Sky model
 		float dot ( Vector3 a, Vector3 b ) { return Vector3.Dot(a, b); }
@@ -242,6 +243,7 @@ namespace DeferredDemo
 			clouds		=	Game.Content.Load<Texture2D>("clouds|srgb");
 			cirrus		=	Game.Content.Load<Texture2D>("cirrus|srgb");
 			noise		=	Game.Content.Load<Texture2D>("cloudNoise");
+			arrows		=	Game.Content.Load<Texture2D>("arrowsAll");
 
 
 			vertexBuffers	=	skySphere.Meshes
@@ -427,7 +429,8 @@ namespace DeferredDemo
 			//
 			//	Clouds :
 			//
-			scale		=	Matrix.Scaling( Params.SkySphereSize, Params.SkySphereSize * 0.1f, Params.SkySphereSize );
+			scale		=	Matrix.Scaling( Params.SkySphereSize, Params.SkySphereSize, Params.SkySphereSize );
+			//scale		=	Matrix.Scaling( Params.SkySphereSize, Params.SkySphereSize * 0.1f, Params.SkySphereSize );
 			skyConstsData.MatrixWVP		= scale * rotation * MathUtil.Transformation( viewMatrix.Right, viewMatrix.Up, viewMatrix.Backward ) * projMatrix;
 			skyConstsData.SunPosition	= sunPos;
 			skyConstsData.SunColor		= GetSunLightColor();
@@ -448,6 +451,7 @@ namespace DeferredDemo
 			rs.PixelShaderResources[0]	=	clouds;
 			rs.PixelShaderResources[1]	=	cirrus;
 			rs.PixelShaderResources[2]	=	noise;
+			rs.PixelShaderResources[3]	=	arrows;
 			rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
 					
 			for ( int j=0; j<skySphere.Meshes.Count; j++) {

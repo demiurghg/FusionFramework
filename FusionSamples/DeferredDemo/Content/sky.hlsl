@@ -20,6 +20,7 @@ cbuffer Constants : register(b0)
 Texture2D CloudTexture : register(t0);
 Texture2D CirrusTexture : register(t1);
 Texture2D CloudNoise : register(t2);
+Texture2D Arrows : register(t3);
 SamplerState SamplerLinear : register(s0);
 
 struct VS_INPUT {
@@ -228,53 +229,8 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 	#endif
 	
 	#ifdef CLOUDS
-	
-		float4 final	=	float4(1,1,1,0);
 		
-		for (int k=0; k<4; k++) {
-			float2 uv	=	input.worldPos.xz * float2(1,-1);
-			
-			if (k==0) uv	=	input.worldPos.xz * float2(1,-1) * 0.7f + float2( 0.091683f, 0.498368f );
-			if (k==1) uv	=	input.worldPos.xz * float2(1,-1) * 0.5f + float2( 0.199773f, 0.461658f );
-			if (k==2) uv	=	input.worldPos.xz * float2(1,-1) * 0.8f + float2( 0.822414f, 0.099000f );
-			if (k==3) uv	=	input.worldPos.xz * float2(1,-1) * 1.1f + float2( 0.558276f, 0.040172f );
-		
-			float shadow = 0;
-			for ( float t=0; t<1; t+=0.05f) {
-				float sm = saturate(SampleNoise( CloudNoise, uv + float2(2,-1)*(0.01f+t*0.01f), 1 ).a * 2 - 1);
-				
-				shadow += sm * 0.05;
-			}
-			shadow = saturate(1-shadow);
-			shadow = 1;//*pow(shadow,8);
-		
-			float dist		=	length(input.worldPos.xz*2);
-			float fog		=	pow(1-saturate( dist ), 2);
-			if (input.worldPos.y<0) fog = 0;
-			
-			float4 clouds = SampleNoise( CloudNoise, uv );
-			
-			//float3	viewDir	=	
-			view.y /= 10;
-			float  ldv  = 	dot ( normalize(SunPosition), normalize(view) ) + 1;
-			/*ldv = pow(ldv/2,100);
-			
-			return float4(ldv,ldv,ldv,1);*/
-			
-			//float lit	=	shadow;//saturate(dot(clouds.rgb, normalize(float3(1,-1,0))));
-			float lit	=	saturate(dot(clouds.rgb, normalize(SunPosition.xzy))) * shadow;// * ldv;
-			
-			clouds.rgb = lerp( Ambient, SunColor, lit );
-			clouds.a   = saturate(1*smoothstep(0,1,pow(saturate(clouds.a*3-2),0.7)) * fog);
-			
-			if (k==0) {
-				final = clouds;
-			} else {
-				final = lerp(final, clouds, clouds.a);
-			}
-		}
-
-		return final;
+	return  Arrows.Sample( SamplerLinear, input.worldPos.xz );		
 	#endif
 
 }
