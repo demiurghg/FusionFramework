@@ -247,7 +247,7 @@ namespace DeferredDemo
 
 
 			vertexBuffers	=	skySphere.Meshes
-							.Select( mesh => VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTexture.Convert( v ) ).ToArray() ) )
+							.Select( mesh => VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTextureTBN.Convert( v ) ).ToArray() ) )
 							.ToArray();
 
 			indexBuffers	=	skySphere.Meshes
@@ -268,7 +268,7 @@ namespace DeferredDemo
 		/// <param name="flags"></param>
 		void EnumFunc ( PipelineState ps, SkyFlags flags )
 		{
-			ps.VertexInputElements	=	VertexInputElement.FromStructure<VertexColorTexture>();
+			ps.VertexInputElements	=	VertexInputElement.FromStructure<VertexColorTextureTBN>();
 			ps.RasterizerState		=	RasterizerState.CullNone;
 			ps.BlendState			=	BlendState.Opaque;
 			ps.DepthStencilState	=	flags.HasFlag(SkyFlags.FOG) ? DepthStencilState.None : DepthStencilState.Readonly;

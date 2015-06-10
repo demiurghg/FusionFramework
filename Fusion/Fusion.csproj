@@ -154,6 +154,7 @@
     <Compile Include="Content\ContentException.cs" />
     <Compile Include="Content\AssetTypes\ImageFileTextureAsset.cs" />
     <Compile Include="Content\AssetTypes\UbershaderAsset.cs" />
+    <Compile Include="Content\StringArrayLoader.cs" />
     <Compile Include="Content\IAssetDerivable.cs" />
     <Compile Include="Content\IFileDerivable.cs" />
     <Compile Include="Content\StringLoader.cs" />

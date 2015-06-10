@@ -24,14 +24,22 @@ Texture2D Arrows : register(t3);
 SamplerState SamplerLinear : register(s0);
 
 struct VS_INPUT {
-	float3 position		: POSITION0;
+	float3 position		: POSITION;
+	float2 texcoord		: TEXCOORD0;
+	float3 normal		: NORMAL;
+	float3 tangent		: TANGENT;
+	float3 binormal		: BINORMAL;
 };
 	
 
 struct VS_OUTPUT {
 	float4 position		: SV_POSITION;
+	float2 texcoord		: TEXCOORD0;
 	float3 worldPos		: TEXCOORD1;
 	float3 skyColor		: COLOR0;
+	float3 normal		: TEXCOORD2;
+	float3 tangent		: TEXCOORD3;
+	float3 binormal		: TEXCOORD4;
 };
 
 #define PS_INPUT VS_OUTPUT
@@ -145,6 +153,11 @@ VS_OUTPUT VSMain( VS_INPUT input )
 	float3 v = normalize(output.worldPos);
 	float3 l = normalize(SunPosition); 
 	output.skyColor		= perezSky( Turbidity, max ( v.y, 0.0 ) + 0.05, dot ( l, v ), l.y );
+	
+	output.texcoord =	input.texcoord;
+	output.normal	=	input.normal;
+	output.tangent	=	input.tangent;
+	output.binormal	=	input.binormal;
 
 	return output;
 }
@@ -230,7 +243,21 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 	
 	#ifdef CLOUDS
 		
-	return  Arrows.Sample( SamplerLinear, input.worldPos.xz );		
+		float3x3 tbnToWorld	= float3x3(
+				input.tangent.x,	input.tangent.y,	input.tangent.z,	
+				input.binormal.x,	input.binormal.y,	input.binormal.z,	
+				input.normal.x,		input.normal.y,		input.normal.z		
+			);
+
+		float3 normalMap	=	Arrows.SampleLevel( SamplerLinear, input.texcoord.xy, 0 ).xyz * 2 - 1;
+		float  alpha		=	saturate(Arrows.SampleLevel( SamplerLinear, input.texcoord.xy, 0 ).a*8-4);
+		
+		float3	normal		=	mul( normalMap, tbnToWorld );
+		
+		float3 light  = 0.5*SunColor * saturate(0.5+0.5*dot(normal, normalize(SunPosition))) + Ambient;
+		
+		
+	return  float4(light.xyz,alpha);		
 	#endif
 
 }
