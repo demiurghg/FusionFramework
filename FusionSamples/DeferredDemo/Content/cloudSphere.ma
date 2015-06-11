@@ -1,6 +1,6 @@
 //Maya ASCII 2015 scene
 //Name: cloudSphere.ma
-//Last modified: Wed, Jun 10, 2015 04:25:04 PM
+//Last modified: Thu, Jun 11, 2015 05:11:33 PM
 //Codeset: 1251
 requires maya "2015";
 currentUnit -l centimeter -a degree -t film;
@@ -12,12 +12,12 @@ fileInfo "osv" "Microsoft Windows 8 Enterprise Edition, 64-bit  (Build 9200)\n";
 fileInfo "license" "education";
 createNode transform -s -n "persp";
 	setAttr ".v" no;
-	setAttr ".t" -type "double3" -0.67017100036983179 3.0704249463928761 2.6484900061850079 ;
-	setAttr ".r" -type "double3" -48.338352729594696 -14.20000000000014 -8.2019958159775264e-016 ;
+	setAttr ".t" -type "double3" -6.6974872554010085 7.8562640830474697 -0.21047701630949889 ;
+	setAttr ".r" -type "double3" -49.538352729604 -91.800000000001319 2.0355549961366507e-013 ;
 createNode camera -s -n "perspShape" -p "persp";
 	setAttr -k off ".v" no;
 	setAttr ".fl" 34.999999999999993;
-	setAttr ".coi" 4.1098829465111972;
+	setAttr ".coi" 10.325769775334486;
 	setAttr ".imn" -type "string" "persp";
 	setAttr ".den" -type "string" "persp_depth";
 	setAttr ".man" -type "string" "persp_mask";
@@ -64,7 +64,7 @@ createNode camera -s -n "sideShape" -p "side";
 	setAttr ".hc" -type "string" "viewSet -s %camera";
 	setAttr ".o" yes;
 createNode transform -n "pSphere1";
-	setAttr ".s" -type "double3" 1.1526477282747125 1.1526477282747125 1.1526477282747125 ;
+	setAttr ".s" -type "double3" 4 1 4 ;
 createNode mesh -n "pSphereShape1" -p "pSphere1";
 	setAttr -k off ".v";
 	setAttr ".vir" yes;
@@ -2191,8 +2191,6 @@ select -ne :hardwareRenderingGlobals;
 		 0 0 0 0 ;
 select -ne :defaultHardwareRenderGlobals;
 	setAttr ".res" -type "string" "ntsc_4d 646 485 1.333";
-select -ne :ikSystem;
-	setAttr -s 4 ".sol";
 connectAttr "polyPlanarProj1.out" "pSphereShape1.i";
 relationship "link" ":lightLinker1" ":initialShadingGroup.message" ":defaultLightSet.message";
 relationship "link" ":lightLinker1" ":initialParticleSE.message" ":defaultLightSet.message";

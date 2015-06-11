@@ -242,6 +242,8 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 	#endif
 	
 	#ifdef CLOUDS
+	
+		float fog	=	pow(1 - saturate(length( input.worldPos.xz ) / 3), 2);
 		
 		float3x3 tbnToWorld	= float3x3(
 				input.tangent.x,	input.tangent.y,	input.tangent.z,	
@@ -249,15 +251,28 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 				input.normal.x,		input.normal.y,		input.normal.z		
 			);
 
-		float3 normalMap	=	Arrows.SampleLevel( SamplerLinear, input.texcoord.xy, 0 ).xyz * 2 - 1;
-		float  alpha		=	saturate(Arrows.SampleLevel( SamplerLinear, input.texcoord.xy, 0 ).a*8-4);
+		float4 clouds = SampleNoise( CloudNoise, input.texcoord.xy, 0 );
+			
+			float shadow = 0;
+			for ( float t=0; t<1; t+=0.05f) {
+				float sm = saturate(SampleNoise( CloudNoise, input.texcoord.xy + float2(1,-1)*(0.002f+t*0.01f), 0 ).a * 2 - 1);
+				
+				shadow += sm * 0.05;
+			}
+			shadow = saturate(1-shadow);
+			shadow = pow(shadow,4);
+
+			/*float3 normalMap	=	Arrows.SampleLevel( SamplerLinear, input.texcoord.xy*4, 0 ).xyz * 2 - 1;
+		float  alpha		=	saturate(Arrows.SampleLevel( SamplerLinear, input.texcoord.xy*4, 0 ).a*8-4);*/
 		
-		float3	normal		=	mul( normalMap, tbnToWorld );
+		float alpha		=	smoothstep(0,1,saturate(clouds.a * 4 - 2));
 		
-		float3 light  = 0.5*SunColor * saturate(0.5+0.5*dot(normal, normalize(SunPosition))) + Ambient;
+		float3	normal		=	mul( clouds.xyz, tbnToWorld );
+		
+		float3 light  = shadow * SunColor * saturate(dot(normal, normalize(SunPosition))) + Ambient.xyz;
 		
 		
-	return  float4(light.xyz,alpha);		
+	return  float4(light.xyz,alpha * fog);		
 	#endif
 
 }

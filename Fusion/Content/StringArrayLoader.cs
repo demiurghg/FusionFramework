@@ -7,12 +7,11 @@ using System.IO;
 
 namespace Fusion.Content {
 
-
 	/// <summary>
 	/// Loads string from text file.
 	/// </summary>
-	[ContentLoader(typeof(string))]
-	class StringLoader : ContentLoader {
+	[ContentLoader(typeof(string[]))]
+	class StringArrayLoader : ContentLoader {
 
 		/// <summary>
 		/// 
@@ -27,26 +26,26 @@ namespace Fusion.Content {
 			var bytes = stream.ReadAllBytes();
 
 			if (assetPath.ToLowerInvariant().Contains("|default")) {
-				return Encoding.Default.GetString( bytes );
+				return Encoding.Default.GetString( bytes ).Split(new[]{"\r\n","\n"}, StringSplitOptions.None );
 			}
 
 			if (assetPath.ToLowerInvariant().Contains("|utf8")) {
-				return Encoding.UTF8.GetString( bytes );
+				return Encoding.UTF8.GetString( bytes ).Split(new[]{"\r\n","\n"}, StringSplitOptions.None );
 			}
 
 			if (assetPath.ToLowerInvariant().Contains("|utf7")) {
-				return Encoding.UTF7.GetString( bytes );
+				return Encoding.UTF7.GetString( bytes ).Split(new[]{"\r\n","\n"}, StringSplitOptions.None );
 			}
 
 			if (assetPath.ToLowerInvariant().Contains("|utf32")) {
-				return Encoding.UTF32.GetString( bytes );
+				return Encoding.UTF32.GetString( bytes ).Split(new[]{"\r\n","\n"}, StringSplitOptions.None );
 			}
 
 			if (assetPath.ToLowerInvariant().Contains("|ascii")) {
-				return Encoding.ASCII.GetString( bytes );
+				return Encoding.ASCII.GetString( bytes ).Split(new[]{"\r\n","\n"}, StringSplitOptions.None );
 			}
 
-			return Encoding.Default.GetString( bytes );
+			return Encoding.Default.GetString( bytes ).Split(new[]{"\r\n","\n"}, StringSplitOptions.None );
 		}
 	}
 }
