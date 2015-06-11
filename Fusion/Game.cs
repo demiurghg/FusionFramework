@@ -19,6 +19,7 @@ using Fusion.Mathematics;
 using Fusion.Shell;
 
 
+
 namespace Fusion {
 
 	/// <summary>
@@ -124,12 +125,18 @@ namespace Fusion {
 
 
 
+
+
 		/// <summary>
 		/// Initializes a new instance of this class, which provides 
 		/// basic graphics device initialization, game logic, rendering code, and a game loop.
 		/// </summary>
 		public Game ()
 		{
+			using ( var L = new NLua.Lua()) {
+				L.DoString("print(2+3)");
+			}
+
 			Enabled	=	true;
 
 			AppDomain currentDomain = AppDomain.CurrentDomain;
