@@ -17,6 +17,7 @@ using Fusion.Development;
 using Fusion.Content;
 using Fusion.Mathematics;
 using Fusion.Shell;
+using NLua;
 
 
 
@@ -57,6 +58,11 @@ namespace Fusion {
 		/// Gets current content manager
 		/// </summary>
 		public	Invoker Invoker { get { return invoker; } }
+
+		/// <summary>
+		/// Gets Lua state.
+		/// </summary>
+		internal	Lua		Lua { get { return lua; } }
 
 		/// <summary>
 		/// Indicates whether the game is initialized.
@@ -100,11 +106,12 @@ namespace Fusion {
 		bool	requestExit		=	false;
 		bool	requestReload	=	false;
 
-		AudioDevice			audioDevice			;
-		InputDevice			inputDevice			;
-		GraphicsDevice		graphicsDevice		;
-		ContentManager		content				;
-		Invoker				invoker				;
+		AudioDevice			audioDevice		;
+		InputDevice			inputDevice		;
+		GraphicsDevice		graphicsDevice	;
+		ContentManager		content			;
+		Invoker				invoker			;
+		Lua					lua				;
 
 		List<GameService>	serviceList	=	new List<GameService>();
 		GameTime	gameTimeInternal;
@@ -133,10 +140,6 @@ namespace Fusion {
 		/// </summary>
 		public Game ()
 		{
-			using ( var L = new NLua.Lua()) {
-				L.DoString("print(2+3)");
-			}
-
 			Enabled	=	true;
 
 			AppDomain currentDomain = AppDomain.CurrentDomain;
@@ -174,10 +177,23 @@ namespace Fusion {
 			content				=	new ContentManager( this );
 			gameTimeInternal	=	new GameTime();
 			invoker				=	new Invoker(this);
+			lua					=	new Lua();
+
+			lua.RegisterFunction("print", typeof(Game).GetMethod("LuaPrint"));
+			lua.DoString("print(_VERSION)");
 		}
 
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="args"></param>
+		public static void LuaPrint ( params object[] args )
+		{
+			var s = string.Join("\t", args.Select( a => a==null? "nil" : a.ToString() ).ToArray() );
+			Log.Message(s);
+		}
 
 
 
@@ -260,6 +276,8 @@ namespace Fusion {
 
 				Log.Message("Disposing : Graphics Device");
 				SafeDispose( ref graphicsDevice );
+
+				SafeDispose( ref lua );
 			}
 
 			base.Dispose(disposing);

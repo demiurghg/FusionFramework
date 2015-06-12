@@ -681,11 +681,26 @@ namespace Fusion.Development {
 		{
 			if (e.KeyCode==Keys.Enter) {
 
-				try {
-					game.Invoker.Push( textBox1.Text, true);
-					textBox1.Text = "";
-				} catch ( Exception ex ) {
-					Log.Error( ex.Message );
+				if (luaSelector.Checked) {
+
+					Log.Message("Lua: {0}", textBox1.Text);
+
+					try {
+
+						game.Lua.DoString( textBox1.Text );
+						textBox1.Text = "";
+
+					} catch ( NLua.Exceptions.LuaException lex ) {
+						Log.Error( lex.Message );
+					}
+
+				} else {
+					try {
+						game.Invoker.Push( textBox1.Text, true);
+						textBox1.Text = "";
+					} catch ( Exception ex ) {
+						Log.Error( ex.Message );
+					}
 				}
 			}
 		}

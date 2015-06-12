@@ -386,7 +386,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>lighting.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\8B0EEB1A55F9F2CE656147401A6245FB.html</ListingPath>
+    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\8B0EEB1A55F9F2CE656147401A6245FB.html</ListingPath>
   </Asset>
   <Asset xsi:type="UbershaderAsset">
     <AssetPath>stereo.hlsl</AssetPath>

@@ -207,7 +207,7 @@ float4 SampleNoise ( Texture2D tex, float2 uv, int level = 0 )
 	
 	//for (int i=7; i>=0; i--) {
 	for (int i=0; i<8; i++) {
-		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.3f + offset[i] + Time * 0.001, level );
+		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.2f + offset[i] + Time * 0.001, level );
 		uv += sample.rg*0.001;
 		sample.xyz = sample.xyz * 2 - 1;
 		result += sample * weight;
@@ -254,10 +254,10 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 		float4 clouds = SampleNoise( CloudNoise, input.texcoord.xy, 0 );
 			
 			float shadow = 0;
-			for ( float t=0; t<1; t+=0.05f) {
-				float sm = saturate(SampleNoise( CloudNoise, input.texcoord.xy + float2(1,-1)*(0.002f+t*0.01f), 0 ).a * 2 - 1);
+			for ( float t=0; t<1; t+=0.07f) {
+				float sm = saturate(SampleNoise( CloudNoise, input.texcoord.xy + float2(1,-1)*(0.00f+t*0.0001f), 1 ).a * 4 - 2);
 				
-				shadow += sm * 0.05;
+				shadow += sm * 0.07;
 			}
 			shadow = saturate(1-shadow);
 			shadow = pow(shadow,4);
@@ -267,12 +267,16 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 		
 		float alpha		=	smoothstep(0,1,saturate(clouds.a * 4 - 2));
 		
-		float3	normal		=	mul( clouds.xyz, tbnToWorld );
+		float  ldv 		= 	pow(saturate(dot ( normalize(SunPosition), view )), 16 );
+		float3 trans	=	pow( saturate(1 - alpha), 8 ) * SunColor.rgb * ldv * 50;
 		
-		float3 light  = shadow * SunColor * saturate(dot(normal, normalize(SunPosition))) + Ambient.xyz;
+		float3	normal	=	mul( clouds.xyz, tbnToWorld );
+		float3	light	=	SunColor * saturate(dot(normal, normalize(SunPosition)));
+		
+		float3 final  = shadow * (light + trans) + Ambient.xyz;
 		
 		
-	return  float4(light.xyz,alpha * fog);		
+	return  float4(final.xyz,alpha * fog);		
 	#endif
 
 }

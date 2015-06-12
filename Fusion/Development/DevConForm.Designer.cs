@@ -38,6 +38,7 @@
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.buttonClear = new System.Windows.Forms.Button();
 			this.exitButton = new System.Windows.Forms.Button();
 			this.launchButton = new System.Windows.Forms.Button();
 			this.splitter3 = new System.Windows.Forms.Splitter();
@@ -48,7 +49,7 @@
 			this.mainPropertyGrid = new System.Windows.Forms.PropertyGrid();
 			this.messageTextBox = new System.Windows.Forms.TextBox();
 			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.buttonClear = new System.Windows.Forms.Button();
+			this.luaSelector = new System.Windows.Forms.CheckBox();
 			this.mainMenuStrip.SuspendLayout();
 			this.gridContextMenu.SuspendLayout();
 			this.gridCommandFlowPanel.SuspendLayout();
@@ -152,6 +153,7 @@
 			// 
 			// panel1
 			// 
+			this.panel1.Controls.Add(this.luaSelector);
 			this.panel1.Controls.Add(this.buttonClear);
 			this.panel1.Controls.Add(this.exitButton);
 			this.panel1.Controls.Add(this.launchButton);
@@ -160,6 +162,18 @@
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(534, 33);
 			this.panel1.TabIndex = 12;
+			// 
+			// buttonClear
+			// 
+			this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+			this.buttonClear.Location = new System.Drawing.Point(83, 2);
+			this.buttonClear.Name = "buttonClear";
+			this.buttonClear.Size = new System.Drawing.Size(59, 29);
+			this.buttonClear.TabIndex = 2;
+			this.buttonClear.Text = "Clear";
+			this.buttonClear.UseVisualStyleBackColor = true;
+			this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
 			// 
 			// exitButton
 			// 
@@ -271,17 +285,15 @@
 			this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
 			this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
 			// 
-			// buttonClear
+			// luaSelector
 			// 
-			this.buttonClear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-			this.buttonClear.Location = new System.Drawing.Point(83, 2);
-			this.buttonClear.Name = "buttonClear";
-			this.buttonClear.Size = new System.Drawing.Size(59, 29);
-			this.buttonClear.TabIndex = 2;
-			this.buttonClear.Text = "Clear";
-			this.buttonClear.UseVisualStyleBackColor = true;
-			this.buttonClear.Click += new System.EventHandler(this.buttonClear_Click);
+			this.luaSelector.AutoSize = true;
+			this.luaSelector.Location = new System.Drawing.Point(148, 8);
+			this.luaSelector.Name = "luaSelector";
+			this.luaSelector.Size = new System.Drawing.Size(67, 19);
+			this.luaSelector.TabIndex = 3;
+			this.luaSelector.Text = "Use Lua";
+			this.luaSelector.UseVisualStyleBackColor = true;
 			// 
 			// DevConForm
 			// 
@@ -312,6 +324,7 @@
 			this.flowLayoutPanel1.ResumeLayout(false);
 			this.flowLayoutPanel1.PerformLayout();
 			this.panel1.ResumeLayout(false);
+			this.panel1.PerformLayout();
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -342,5 +355,6 @@
 		private System.Windows.Forms.TextBox messageTextBox;
 		private System.Windows.Forms.TextBox textBox1;
 		private System.Windows.Forms.Button buttonClear;
+		private System.Windows.Forms.CheckBox luaSelector;
 	}
 }
