@@ -155,9 +155,22 @@ VS_OUTPUT VSMain( VS_INPUT input )
 	output.skyColor		= perezSky( Turbidity, max ( v.y, 0.0 ) + 0.05, dot ( l, v ), l.y );
 	
 	output.texcoord =	input.texcoord;
-	output.normal	=	input.normal;
-	output.tangent	=	input.tangent;
-	output.binormal	=	input.binormal;
+
+	float3 normalN = -input.position;
+	float c = dot(input.normal, normalN) / (length(input.normal) * length(normalN));
+	float3 axis = (float3) cross(input.normal, normalN) ;
+
+	float s = length( axis) / (length(input.normal) * length(normalN));
+
+	float3x3 rotationMatrix = float3x3(
+				c + (1-c)*axis.x*axis.x,		(1-c)*axis.y*axis.x - s*axis.z,	(1-c)*axis.x*axis.z +s*axis.y, 
+				(1-c)*axis.x*axis.y + s*axis.z,	c+(1-c)*axis.y*axis.y,			(1-c)*axis.y*axis.z - s*axis.x, 
+				(1-c)*axis.x*axis.z - s*axis.y,	(1-c)*axis.y*axis.z+s*axis.y,	c+(1-c)*axis.z*axis.z 
+	);
+
+	output.normal	=	normalize(normalN);
+	output.tangent	=	normalize(mul(input.tangent, rotationMatrix));
+	output.binormal	=	normalize(mul(input.binormal, rotationMatrix));
 
 	return output;
 }
