@@ -176,10 +176,12 @@ namespace Fusion {
 			graphicsDevice		=	new GraphicsDevice( this );
 			content				=	new ContentManager( this );
 			gameTimeInternal	=	new GameTime();
-			invoker				=	new Invoker(this);
 			lua					=	new Lua();
+			invoker				=	new Invoker(this);
 
-			lua.RegisterFunction("print", typeof(Game).GetMethod("LuaPrint"));
+			lua.LoadCLRPackage();
+			lua.DoString (@" import ('Fusion', 'System'); import ('System.Web');");
+			//lua.RegisterFunction("print", typeof(Game).GetMethod("LuaPrint"));
 			lua.DoString("print(_VERSION)");
 		}
 
@@ -191,8 +193,20 @@ namespace Fusion {
 		/// <param name="args"></param>
 		public static void LuaPrint ( params object[] args )
 		{
-			var s = string.Join("\t", args.Select( a => a==null? "nil" : a.ToString() ).ToArray() );
-			Log.Message(s);
+			try {
+				var s = "";
+				
+				if (args==null) {
+					s = "nil";
+				} else {
+					s = string.Join("\t", args.Select( a => a==null? "nil" : a.ToString() ).ToArray() );
+				}
+
+				Log.Message(s);
+
+			} catch ( Exception e ) {
+				Log.Warning(e.Message);
+			}
 		}
 
 

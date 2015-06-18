@@ -68,25 +68,37 @@ namespace Fusion.Shell {
 						.ToDictionary( t3 => t3.GetCustomAttribute<CommandAttribute>().Name );
 						
 			Log.Message("Invoker: {0} commands found", commands.Count);
+
+			Game.Lua.NewTable("game");
+			Game.Lua.RegisterFunction("game.exec", this, GetType().GetMethod("Execute") );
 		}
 
 
 
 		/// <summary>
-		/// Executes given string.
+		/// Immediatly executes command line.
 		/// </summary>
-		/// <param name="command"></param>
-		public void Push ( string commandLine, bool echoCommand )
-		{				  
-			if (echoCommand) {
-				Log.Message(commandLine);
-			}
+		/// <param name="commandLine"></param>
+		public string Execute ( string commandLine )
+		{
+			var cmd = Push( commandLine );
+			ExecuteQueue( new GameTime(), false );
+			return cmd.GetStringResult();
+		}
 
+
+		
+		/// <summary>
+		/// Parses and pushes command to the queue.
+		/// </summary>
+		/// <param name="commandLine"></param>
+		/// <returns></returns>
+		public Command Push ( string commandLine )
+		{				  
 			var argList	=	CommandLineParser.SplitCommandLine( commandLine ).ToArray();
 
 			if (!argList.Any()) {
-				Log.Warning("Empty command line.");
-				return;
+				throw new CommandLineParserException("Empty command line.");
 			} 
 
 			var cmdName	=	argList[0];
@@ -101,6 +113,8 @@ namespace Fusion.Shell {
 				parser.ParseCommandLine( argList );
 
 				Push( command );
+
+				return command;
 			}
 		}
 
@@ -161,6 +175,10 @@ namespace Fusion.Shell {
 						//	execute :
 						cmd.Execute();
 
+						if (cmd.Result!=null) {
+							Log.Message( "// Result: {0} //", cmd.GetStringResult() );
+						}
+
 						//	push to history :
 						if (!cmd.NoRollback) {
 							history.Push( cmd );
@@ -177,6 +195,17 @@ namespace Fusion.Shell {
 
 				Misc.Swap( ref delayed, ref queue );
 			}
+		}
+
+
+
+		/// <summary>
+		/// Gets alphabetically sorted command list.
+		/// </summary>
+		/// <returns></returns>
+		public IEnumerable<string> GetCommandList ()
+		{
+			return commands.Select( e => e.Key ).OrderBy( n => n ).ToList();
 		}
 
 
@@ -208,61 +237,5 @@ namespace Fusion.Shell {
 				history.Clear();
 			}
 		}
-
-
-		/*
-		 *	script	=	lines = 
-		 * 
-		 * 
-		*/
-
-
-		/// <summary>
-		/// Execute's script. Delayed command will be executed later.
-		/// </summary>
-		/// <param name="text"></param>
-		public void ExecuteScript ( string script )
-		{
-			/*
-			int lineNumber = 1;
-
-			CharStream cs		= new CharStream( script );
-			List<string> args	= new List<string>();
-
-			bool quote = false;
-
-			while ( true ) {
-
-				var ch = cs.Read();
-
-				if (ch=='\0') {
-					break;
-				}
-
-				if (ch=='/' && cs.Peek()=='/') {
-					cs.ReadWhile( cc => (cc!='\n') && (cc!='\0') );
-					lineNumber ++;
-					continue;
-				}
-										   
-				cs.ReadWhile( c => c==' '||c=='\t' );
-
-
-			}
-			
-			
-			#error Начать здесь!
-			#error Пока такой вариант --->
-
-			var lines = script
-				.Split( new[]{ Environment.NewLine }, StringSplitOptions.None )
-				.Select( line => line.TrimStart(' ', '\t').StartsWith("//") ? "" : line )
-				.ToArray();
-
-			var preprocessed = string.Join( lines
-			*/
-			
-		}
-		
 	}
 }

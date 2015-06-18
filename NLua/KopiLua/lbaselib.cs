@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
 
 namespace KopiLua
 {
@@ -20,6 +21,32 @@ namespace KopiLua
 		** model but changing `fputs' to put the strings at a proper place
 		** (a console window or a log file, for instance).
 		*/
+	#if TRACE
+		private static int LuaBPrint (LuaState L) {
+		  int n = LuaGetTop(L);  /* number of arguments */
+		  int i;
+		  LuaGetGlobal(L, "tostring");
+
+		  string r = "";
+
+		  for (i=1; i<=n; i++) {
+			CharPtr s;
+			LuaPushValue(L, -1);  /* function to be called */
+			LuaPushValue(L, i);   /* value to print */
+			LuaCall(L, 1, 1);
+			s = LuaToString(L, -1);  /* get result */
+			if (s == null)
+			  return LuaLError(L, LUA_QL("tostring") + " must return a string to " +
+								   LUA_QL("print"));
+			if (i > 1) r += "\t";
+			r += s.ToString();
+			LuaPop(L, 1);  /* pop result */
+		  }
+		  Trace.TraceInformation(r);
+		  return 0;
+		}
+	#else
+
 		private static int LuaBPrint (LuaState L) {
 		  int n = LuaGetTop(L);  /* number of arguments */
 		  int i;
@@ -37,9 +64,10 @@ namespace KopiLua
 			fputs(s, stdout);
 			LuaPop(L, 1);  /* pop result */
 		  }
-		  Console.Write("\n", stdout);
+		  fputs("\n", stdout);
 		  return 0;
 		}
+	#endif
 
 
 		private static int LuaBToNumber (LuaState L) {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel;
 
 namespace Fusion.Shell {
 
@@ -50,6 +51,27 @@ namespace Fusion.Shell {
 
 
 		/// <summary>
+		/// Result of the command.
+		/// </summary>
+		public virtual object Result { get; protected set; }
+
+
+		/// <summary>
+		/// Gets result string.
+		/// Converts result object using type converter.
+		/// </summary>
+		public string GetStringResult ()
+		{
+			if (Result==null) {
+				return null;
+			}
+
+            TypeConverter converter = TypeDescriptor.GetConverter(Result.GetType());
+			return converter.ConvertToString( Result );
+		}
+
+
+		/// <summary>
 		/// 
 		/// </summary>
 		public Command ( Invoker invoker )
@@ -59,6 +81,7 @@ namespace Fusion.Shell {
 			Delay		=	0;
 			NoRollback	=	false;
 			Terminal	=	false;
+			Result		=	null;
 		}
 
 

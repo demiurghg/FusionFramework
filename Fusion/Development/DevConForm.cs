@@ -696,7 +696,8 @@ namespace Fusion.Development {
 
 				} else {
 					try {
-						game.Invoker.Push( textBox1.Text, true);
+						Log.Message( textBox1.Text );
+						game.Invoker.Push( textBox1.Text);
 						textBox1.Text = "";
 					} catch ( Exception ex ) {
 						Log.Error( ex.Message );

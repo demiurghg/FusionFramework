@@ -331,9 +331,11 @@
     <Compile Include="Shell\CommandLineParser.cs" />
     <Compile Include="Shell\Command.cs" />
     <Compile Include="Shell\CommandAttribute.cs" />
+    <Compile Include="Shell\Commands\ListCommands.cs" />
     <Compile Include="Shell\Commands\Undo.cs" />
     <Compile Include="Shell\Commands\Exit.cs" />
     <Compile Include="Shell\Commands\Set.cs" />
+    <Compile Include="Shell\CommandLineParserException.cs" />
     <Compile Include="Shell\Invoker.cs" />
     <Compile Include="UserInterface\Config.cs" />
     <Compile Include="UserInterface\Context.cs" />

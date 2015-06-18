@@ -48,6 +48,8 @@ namespace Fusion.Shell.Commands {
 			oldValue	=	prop.GetValue( cfg );
 
 			prop.SetValue( cfg, ChangeType( Value, prop.PropertyType ) );
+
+			Result = prop.GetValue( cfg );
 		}
 
 

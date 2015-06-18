@@ -304,7 +304,7 @@ namespace Fusion.Shell
             }
 
 			if (throwException) {
-				throw new Exception("Failed to parse arguments, see console for details.");
+				throw new CommandLineParserException("Failed to parse arguments, see console for details.");
 			}
         }
 
