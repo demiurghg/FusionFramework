@@ -38,6 +38,7 @@
 			this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
 			this.flowLayoutPanel2 = new System.Windows.Forms.FlowLayoutPanel();
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.luaSelector = new System.Windows.Forms.CheckBox();
 			this.buttonClear = new System.Windows.Forms.Button();
 			this.exitButton = new System.Windows.Forms.Button();
 			this.launchButton = new System.Windows.Forms.Button();
@@ -49,7 +50,6 @@
 			this.mainPropertyGrid = new System.Windows.Forms.PropertyGrid();
 			this.messageTextBox = new System.Windows.Forms.TextBox();
 			this.textBox1 = new System.Windows.Forms.TextBox();
-			this.luaSelector = new System.Windows.Forms.CheckBox();
 			this.mainMenuStrip.SuspendLayout();
 			this.gridContextMenu.SuspendLayout();
 			this.gridCommandFlowPanel.SuspendLayout();
@@ -162,6 +162,16 @@
 			this.panel1.Name = "panel1";
 			this.panel1.Size = new System.Drawing.Size(534, 33);
 			this.panel1.TabIndex = 12;
+			// 
+			// luaSelector
+			// 
+			this.luaSelector.AutoSize = true;
+			this.luaSelector.Location = new System.Drawing.Point(148, 8);
+			this.luaSelector.Name = "luaSelector";
+			this.luaSelector.Size = new System.Drawing.Size(67, 19);
+			this.luaSelector.TabIndex = 3;
+			this.luaSelector.Text = "Use Lua";
+			this.luaSelector.UseVisualStyleBackColor = true;
 			// 
 			// buttonClear
 			// 
@@ -284,16 +294,6 @@
 			this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
 			this.textBox1.KeyDown += new System.Windows.Forms.KeyEventHandler(this.textBox1_KeyDown);
 			this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox1_KeyPress);
-			// 
-			// luaSelector
-			// 
-			this.luaSelector.AutoSize = true;
-			this.luaSelector.Location = new System.Drawing.Point(148, 8);
-			this.luaSelector.Name = "luaSelector";
-			this.luaSelector.Size = new System.Drawing.Size(67, 19);
-			this.luaSelector.TabIndex = 3;
-			this.luaSelector.Text = "Use Lua";
-			this.luaSelector.UseVisualStyleBackColor = true;
 			// 
 			// DevConForm
 			// 

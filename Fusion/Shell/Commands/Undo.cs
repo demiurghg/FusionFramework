@@ -40,6 +40,7 @@ namespace Fusion.Shell.Commands {
 		/// <summary>
 		/// No rollback.
 		/// </summary>
+		[CommandLineParser.Ignore]
 		public override bool NoRollback
 		{
 			get	{

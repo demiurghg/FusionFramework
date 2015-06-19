@@ -331,6 +331,7 @@
     <Compile Include="Shell\CommandLineParser.cs" />
     <Compile Include="Shell\Command.cs" />
     <Compile Include="Shell\CommandAttribute.cs" />
+    <Compile Include="Shell\Commands\Help.cs" />
     <Compile Include="Shell\Commands\ListCommands.cs" />
     <Compile Include="Shell\Commands\Undo.cs" />
     <Compile Include="Shell\Commands\Exit.cs" />

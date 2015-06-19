@@ -142,7 +142,7 @@ namespace Fusion.Shell {
 		/// </summary>
 		/// <param name="name"></param>
 		/// <returns></returns>
-		Command GetCommand ( string name )
+		internal Command GetCommand ( string name )
 		{
 			Type cmdType;
 

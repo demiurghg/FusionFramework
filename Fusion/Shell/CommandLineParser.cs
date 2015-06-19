@@ -26,6 +26,10 @@ namespace Fusion.Shell
 		bool throwException = false;
 		readonly string name;
 
+
+		public IEnumerable<string> RequiredUsageHelp { get { return requiredUsageHelp; } }
+		public IEnumerable<string> OptionalUsageHelp { get { return optionalUsageHelp; } }
+
         
 		/// <summary>
 		/// 
@@ -307,6 +311,7 @@ namespace Fusion.Shell
 				throw new CommandLineParserException("Failed to parse arguments, see console for details.");
 			}
         }
+
 
 
 		/// <summary>

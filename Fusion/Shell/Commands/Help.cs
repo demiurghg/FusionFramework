@@ -6,14 +6,19 @@ using System.Threading.Tasks;
 
 namespace Fusion.Shell.Commands {
 	
-	[Command("exit", "Exit")]
-	public class Exit : Command {
+	[Command("help", "Exit")]
+	public class Help : Command {
+
+
+		[CommandLineParser.Required]
+		public string CommandName { get; set; }
+
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="game"></param>
-		public Exit ( Invoker invoker ) : base(invoker)
+		public Help ( Invoker invoker ) : base(invoker)
 		{
 		}
 
@@ -23,7 +28,22 @@ namespace Fusion.Shell.Commands {
 		/// </summary>
 		public override void Execute ()
 		{
-			Game.Exit();
+			try {
+				var cmd = Invoker.GetCommand( CommandName );
+
+				var parser = new CommandLineParser( cmd, false, cmd.Name );
+
+				Log.Message("");
+				Log.Message("Usage: {0} {1}", cmd.Name, string.Join(" ", parser.RequiredUsageHelp.ToArray() ));
+				Log.Message("Options:");
+
+				foreach ( var opt in parser.OptionalUsageHelp ) {
+					Log.Message("   {0}", opt );
+				}
+
+			} catch ( Exception e ) {
+				Log.Error( e.Message );
+			}
 		}
 
 

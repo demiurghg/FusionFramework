@@ -53,7 +53,15 @@ namespace Fusion.Shell {
 		/// <summary>
 		/// Result of the command.
 		/// </summary>
+		[CommandLineParser.Ignore]
 		public virtual object Result { get; protected set; }
+
+
+		/// <summary>
+		/// Command name.
+		/// </summary>
+		[CommandLineParser.Ignore]
+		public string Name { get; private set; }
 
 
 		/// <summary>
@@ -82,6 +90,8 @@ namespace Fusion.Shell {
 			NoRollback	=	false;
 			Terminal	=	false;
 			Result		=	null;
+
+			Name		=	GetType().GetCustomAttribute<CommandAttribute>().Name;
 		}
 
 
