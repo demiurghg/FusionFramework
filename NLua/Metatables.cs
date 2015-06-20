@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using NLua.Method;
 using NLua.Extensions;
+using System.ComponentModel;
 
 #if MONOTOUCH
 	using ObjCRuntime;
@@ -183,10 +184,16 @@ namespace NLua
 		{
 			object obj = translator.GetRawNetObject (luaState, 1);
 
-			if (obj != null)
-				translator.Push (luaState, obj.ToString () + ": " + obj.GetHashCode ().ToString());
-			else
+
+			if (obj != null) {
+				TypeConverter converter = TypeDescriptor.GetConverter(obj.GetType());
+				var str = converter.ConvertToInvariantString(obj);
+
+				translator.Push (luaState, str);
+				//translator.Push (luaState, obj.ToString () + ": " + obj.GetHashCode ().ToString());
+			} else {
 				LuaLib.LuaPushNil (luaState);
+			}
 
 			return 1;
 		}
@@ -779,6 +786,7 @@ namespace NLua
 
 		private int SetFieldOrPropertyInternal (LuaState luaState)
  		{
+			// object to set field of.
 			object target = translator.GetRawNetObject (luaState, 1);
 
 			if (target == null) {

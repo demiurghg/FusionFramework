@@ -53,6 +53,10 @@ namespace SpriteDemo {
 			//	load configuration for each service :
 			LoadConfiguration();
 
+
+			Lua["Game"]	=	Parameters;
+
+
 			//	make configuration saved on exit :
 			Exiting += SpriteDemo_Exiting;
 		}

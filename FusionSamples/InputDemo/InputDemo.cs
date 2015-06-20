@@ -40,6 +40,9 @@ namespace InputDemo {
 			Exiting += InputDemo_Exiting;
 			Activated += InputDemo_Activated;
 			Deactivated += InputDemo_Deactivated;
+
+			Lua["Game"]	=	Parameters;
+
 		}
 
 

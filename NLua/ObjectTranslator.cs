@@ -32,6 +32,7 @@ using System.Collections.Generic;
 using NLua.Method;
 using NLua.Exceptions;
 using NLua.Extensions;
+using System.ComponentModel;
 
 #if MONOTOUCH
 	using ObjCRuntime;
@@ -739,7 +740,26 @@ namespace NLua
 		internal object GetAsType (LuaState luaState, int stackPos, Type paramType)
 		{
 			var extractor = typeChecker.CheckLuaType (luaState, stackPos, paramType);
-			return extractor != null ? extractor (luaState, stackPos) : null;
+
+			//	extractor not found:
+			if (extractor==null) {
+				if ( LuaLib.LuaIsString( luaState, stackPos ) ) {
+					var strValue = LuaLib.LuaToString(luaState, stackPos);
+					TypeConverter converter = TypeDescriptor.GetConverter(paramType);
+					
+					try {
+						var obj = converter.ConvertFromInvariantString(strValue);
+						return obj;
+					} catch ( Exception e ) {
+						Console.WriteLine(e.Message);
+						return null;
+					}
+				} else {
+					return null;
+				}
+			} else {
+				return extractor (luaState, stackPos);
+			}
 		}
 
 		/// <summary>

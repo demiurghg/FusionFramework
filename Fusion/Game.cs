@@ -62,7 +62,7 @@ namespace Fusion {
 		/// <summary>
 		/// Gets Lua state.
 		/// </summary>
-		internal	Lua		Lua { get { return lua; } }
+		public	Lua		Lua { get { return lua; } }
 
 		/// <summary>
 		/// Indicates whether the game is initialized.
@@ -180,7 +180,7 @@ namespace Fusion {
 			invoker				=	new Invoker(this);
 
 			lua.LoadCLRPackage();
-			lua.DoString (@" import ('Fusion', 'System', 'System.Drawing', 'System.Windows.Forms'); import ('System.Web');");
+			//lua.DoString (@" import ('Fusion', 'System', 'System.Drawing', 'System.Windows.Forms'); import ('System.Web');");
 			//lua.RegisterFunction("print", typeof(Game).GetMethod("LuaPrint"));
 			lua.DoString("print(_VERSION)");
 		}
