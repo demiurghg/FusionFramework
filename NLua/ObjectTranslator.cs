@@ -751,7 +751,7 @@ namespace NLua
 						var obj = converter.ConvertFromInvariantString(strValue);
 						return obj;
 					} catch ( Exception e ) {
-						Console.WriteLine(e.Message);
+						//Console.WriteLine(e.Message);
 						return null;
 					}
 				} else {
