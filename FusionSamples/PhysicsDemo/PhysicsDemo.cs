@@ -193,6 +193,7 @@ namespace PhysicsDemo {
 			for ( int i = 0; i < numberOfBoxes; i++ ) {
 				Vector3Fusion vector = RandomExt.NextVector3(random, new Vector3Fusion(-10, 20, -10), new Vector3Fusion(10, 80, 10));
 				Box box = new Box(new Vector3BEPU(vector.X, vector.Y, vector.Z), 1, 1, 1, 1);
+
 				box.Tag = RandomExt.NextColor(random);
 				space.Add(box);
 			}
@@ -243,6 +244,12 @@ namespace PhysicsDemo {
 
 			if ( e.Key == Keys.Escape ) {
 				Exit();
+			}
+
+			if (e.Key==Keys.T) {
+				foreach ( var box in space.Entities ) {
+					box.AngularMomentum *= 10.1f;
+				}
 			}
 
 			// pause physics

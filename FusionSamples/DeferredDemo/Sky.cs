@@ -27,6 +27,9 @@ namespace DeferredDemo
 			SRGB				= 1 << 5,
 			CIERGB				= 1 << 6,
 			CLOUDS				= 1 << 7,
+			A					= 1 << 8,
+			B					= 1 << 9,
+			C					= 1 << 10,
 		}
 
 		//	row_major float4x4 MatrixWVP;      // Offset:    0 Size:    64 [unused]
@@ -457,20 +460,27 @@ namespace DeferredDemo
 
 			flags = SkyFlags.CLOUDS;
 
-			ApplyColorSpace( ref flags );
-			
-			rs.PipelineState			=	factory[(int)flags];
-			rs.PixelShaderResources[0]	=	clouds;
-			rs.PixelShaderResources[1]	=	cirrus;
-			rs.PixelShaderResources[2]	=	noise;
-			rs.PixelShaderResources[3]	=	arrows;
-			rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
-					
-			for ( int j=0; j<cloudSphere.Meshes.Count; j++) {
-				var mesh = cloudSphere.Meshes[j];
+			for (int i=0; i<3; i++) {
 
-				rs.SetupVertexInput( cloudVertexBuffers[j], cloudIndexBuffers[j] );
-				rs.DrawIndexed( mesh.IndexCount, 0, 0 );
+				 if (i==0) flags = SkyFlags.CLOUDS| SkyFlags.A;
+				 if (i==1) flags = SkyFlags.CLOUDS| SkyFlags.B;
+				 if (i==2) flags = SkyFlags.CLOUDS| SkyFlags.C;
+
+				ApplyColorSpace( ref flags );
+			
+				rs.PipelineState			=	factory[(int)flags];
+				rs.PixelShaderResources[0]	=	clouds;
+				rs.PixelShaderResources[1]	=	cirrus;
+				rs.PixelShaderResources[2]	=	noise;
+				rs.PixelShaderResources[3]	=	arrows;
+				rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
+					
+				for ( int j=0; j<cloudSphere.Meshes.Count; j++) {
+					var mesh = cloudSphere.Meshes[j];
+
+					rs.SetupVertexInput( cloudVertexBuffers[j], cloudIndexBuffers[j] );
+					rs.DrawIndexed( mesh.IndexCount, 0, 0 );
+				}
 			}
 
 			rs.ResetStates();
