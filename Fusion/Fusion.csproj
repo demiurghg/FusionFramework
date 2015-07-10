@@ -352,6 +352,7 @@
     <Compile Include="UserInterface\Utils.cs" />
     <Compile Include="Utils\CharStream.cs" />
     <Compile Include="Utils\ColoredTraceListener.cs" />
+    <Compile Include="Utils\ColoredTraceListener2.cs" />
     <Compile Include="Utils\KdTree3.cs" />
     <Compile Include="Utils\Image.cs" />
     <Compile Include="Utils\Image.Noise.cs" />

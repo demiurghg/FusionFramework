@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Fusion {
 
-	public class ColoredTraceListener : TraceListener {
+	public class ColoredTraceListener2 : TraceListener {
 
 
 		public override void Fail ( string message )
@@ -27,7 +27,7 @@ namespace Fusion {
 		{
 			Colorize( eventType );
 
-			GetWriter(eventType).Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
+			//GetWriter(eventType).Write("", eventCache.DateTime, eventCache.ThreadId );
 			GetWriter(eventType).WriteLine();
 
 			Console.ResetColor();
@@ -38,7 +38,7 @@ namespace Fusion {
 		{
 			Colorize( eventType );
 			
-			GetWriter(eventType).Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
+			//GetWriter(eventType).Write("", eventCache.DateTime, eventCache.ThreadId );
 			GetWriter(eventType).WriteLine( format, args );
 
 			Console.ResetColor();
@@ -49,7 +49,7 @@ namespace Fusion {
 		{
 			Colorize( eventType );
 			
-			GetWriter(eventType).Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
+			//GetWriter(eventType).Write("[{0:HH:mm:ss}] {1}> : ", eventCache.DateTime, eventCache.ThreadId );
 			GetWriter(eventType).WriteLine( message );
 
 			Console.ResetColor();
@@ -82,14 +82,14 @@ namespace Fusion {
 				Console.BackgroundColor	=	ConsoleColor.Black;
 			} else
 			if (eventType.HasFlag( TraceEventType.Information )) {
-				Console.ForegroundColor	=	ConsoleColor.White;
+				Console.ForegroundColor	=	ConsoleColor.Gray;
 				Console.BackgroundColor	=	ConsoleColor.Black;
 			} else
 			if (eventType.HasFlag( TraceEventType.Verbose )) {
-				Console.ForegroundColor	=	ConsoleColor.Gray;
+				Console.ForegroundColor	=	ConsoleColor.DarkGray;
 				Console.BackgroundColor	=	ConsoleColor.Blue;
 			} else {
-				Console.ForegroundColor	=	ConsoleColor.White;
+				Console.ForegroundColor	=	ConsoleColor.Gray;
 				Console.BackgroundColor	=	ConsoleColor.Black;
 			}
 		}

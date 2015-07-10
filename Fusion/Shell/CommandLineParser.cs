@@ -51,6 +51,7 @@ namespace Fusion.Shell
 				}
 
                 string fieldName = GetOptionName(field);
+				string fieldDesc = GetOptionDescription(field);
 
                 if (GetAttribute<RequiredAttribute>(field) != null)
                 {
@@ -63,14 +64,14 @@ namespace Fusion.Shell
                 {
                     // Record an optional option.
                     optionalOptions.Add(fieldName.ToLowerInvariant(), field);
-
+  
                     if (field.PropertyType == typeof(bool))
                     {
-                        optionalUsageHelp.Add(string.Format("/{0}", fieldName));
+                        optionalUsageHelp.Add(string.Format("{0,-16}{1}", "/" + fieldName, fieldDesc));
                     }
                     else
                     {
-                        optionalUsageHelp.Add(string.Format("/{0}:value", fieldName));
+                        optionalUsageHelp.Add(string.Format("{0,-16}{1}", "/" + fieldName + ":value", fieldDesc));
                     }
                 }
             }
@@ -288,6 +289,27 @@ namespace Fusion.Shell
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="field"></param>
+		/// <returns></returns>
+        static string GetOptionDescription(PropertyInfo field)
+        {
+            var nameAttribute = GetAttribute<NameAttribute>(field);
+
+            if (nameAttribute != null)
+            {
+                return nameAttribute.Description;
+            }
+            else
+            {
+                return "";
+            }
+        }
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="args"></param>
         void ShowError(string message, params object[] args)
@@ -351,12 +373,14 @@ namespace Fusion.Shell
         [AttributeUsage(AttributeTargets.Property)]
         public sealed class NameAttribute : Attribute
         {
-            public NameAttribute(string name)
+            public NameAttribute(string name, string description="")
             {
                 this.Name = name;
+				this.Description = description;
             }
 
             public string Name { get; private set; }
+            public string Description { get; private set; }
         }
     }
 }
