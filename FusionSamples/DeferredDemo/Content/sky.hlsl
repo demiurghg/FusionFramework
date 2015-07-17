@@ -1,7 +1,7 @@
 
 
 #if 0
-$ubershader  PROCEDURAL_SKY|FOG|(CLOUDS A|B|C) SRGB|CIERGB
+$ubershader  PROCEDURAL_SKY|FOG|(CLOUDS A|B|C RED|GREEN|BLUE) SRGB|CIERGB
 #endif
 
 cbuffer Constants : register(b0)
@@ -241,7 +241,7 @@ float4 SampleNoise ( Texture2D tex, float2 uv, int level = 0 )
 	//for (int i=7; i>=0; i--) {
 	for (int i=0; i<8; i++) {
 		#ifdef A
-		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.20f + offset[i] + 0.5*Time * 0.0003, level );
+		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.20f + offset[i] + 0.5*Time * 0.03, level );
 		uv += sample.rg*0.002;
 		sample.xyz = sample.xyz * 2 - 1;
 		result += sample * weight;
@@ -250,7 +250,7 @@ float4 SampleNoise ( Texture2D tex, float2 uv, int level = 0 )
 		#endif
 
 		#ifdef B
-		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.14f + offset[i] + 0.5*Time * 0.0005, level );
+		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.14f + offset[i] + 0.5*Time * 0.05, level );
 		uv += sample.rg*0.001;
 		sample.xyz = sample.xyz * 2 - 1;
 		result += sample * weight;
@@ -259,7 +259,7 @@ float4 SampleNoise ( Texture2D tex, float2 uv, int level = 0 )
 		#endif
 
 		#ifdef C
-		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.09f + offset[i] + 0.5*Time * 0.0007, level );
+		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.09f + offset[i] + 0.5*Time * 0.07, level );
 		uv += sample.rg*0.001;
 		sample.xyz = sample.xyz * 2 - 1;
 		result += sample * weight;
@@ -341,7 +341,7 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 		float3 final  = shadow * (light + trans) + Ambient.xyz;
 		
 		
-	return  float4(final.xyz,alpha * fog);		
+	return  clouds.a;//float4(final.xyz,alpha * fog);		
 	#endif
 
 }

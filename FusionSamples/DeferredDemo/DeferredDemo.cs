@@ -15,6 +15,8 @@ namespace DeferredDemo {
 	public class DeferredDemo : Game {
 
 		RenderTarget2D	ldrTarget;
+		RenderTarget2D	cloudTarget;
+		RenderTarget2D	smallerCloudTarget;
 		RenderTarget2D	hdrTarget;
 		TextureAtlas	spotAtlas;
 
@@ -136,6 +138,8 @@ namespace DeferredDemo {
 
 			hdrTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba16F, vp.Width, vp.Height, true );
 			ldrTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width, vp.Height, true );
+			cloudTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width, vp.Height, true );
+			smallerCloudTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width / 2, vp.Height / 2, true );
 		}
 
 
@@ -149,6 +153,8 @@ namespace DeferredDemo {
 			if (disposing) {		
 				SafeDispose( ref hdrTarget );
 				SafeDispose( ref ldrTarget );
+				SafeDispose( ref cloudTarget );
+				SafeDispose( ref smallerCloudTarget );
 			}
 			base.Dispose( disposing );
 		}
@@ -255,6 +261,7 @@ namespace DeferredDemo {
 			var hbao	=	GetService<SsaoFilter>();
 
 			GraphicsDevice.Clear( hdrTarget.Surface, Color.Black );
+			GraphicsDevice.Clear( cloudTarget.Surface, Color.Transparent );
 
 			lr.ClearGBuffer();
 
@@ -274,7 +281,7 @@ namespace DeferredDemo {
 			sr.RenderGBuffer ( view, proj, lr.DepthBuffer, hdrTarget, lr.DiffuseBuffer, lr.SpecularBuffer, lr.NormalMapBuffer );
 
 			//	render sky :
-			sky.Render( gameTime, lr.DepthBuffer.Surface, hdrTarget.Surface, view, proj );
+			sky.Render( gameTime, lr.DepthBuffer.Surface, hdrTarget.Surface, view, proj, cloudTarget.Surface );
 
 			hbao.Render( view, proj, lr.DepthBuffer, lr.NormalMapBuffer );
 
@@ -287,17 +294,16 @@ namespace DeferredDemo {
 			//	perform FXAA :
 			flt.Fxaa( GraphicsDevice.BackbufferColor.Surface, ldrTarget );
 
-
+			
+			
 			GraphicsDevice.ResetStates();
 			GraphicsDevice.RestoreBackbuffer();
 
-
-			/*sb.Begin( BlendState.Opaque, SamplerState.LinearClamp );
-
+			sb.Begin(SpriteBlend.Opaque);
 				int w = vp.Width  / 2;
 				int h = vp.Height / 2;
 
-				if ( InputDevice.IsKeyDown( Keys.T ) ) {
+				/*if ( InputDevice.IsKeyDown( Keys.T ) ) {
 					
 					sb.Draw( hdrTarget			,	0, 0, w, h, Color.White );
 					sb.Draw( lr.DiffuseBuffer	,	w, 0, w, h, Color.White );
@@ -311,11 +317,14 @@ namespace DeferredDemo {
 
 					sb.Draw( hdrTarget,	0, 0, vp.Width, vp.Height, Color.White );
 
-				}
+				} */
+					sb.Draw( cloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
+					//sb.Draw( smallerCloudTarget,	0, 0, vp.Width/2, vp.Height/2, Color.White );
 
-			sb.End();*/
 
+			sb.End();
 
+			
 			base.Draw( gameTime, stereoEye );
 		}
 	}

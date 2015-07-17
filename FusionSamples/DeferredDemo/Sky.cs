@@ -30,6 +30,9 @@ namespace DeferredDemo
 			A					= 1 << 8,
 			B					= 1 << 9,
 			C					= 1 << 10,
+			RED					= 1 << 11,
+			GREEN				= 1 << 12,
+			BLUE				= 1 << 13,
 		}
 
 		//	row_major float4x4 MatrixWVP;      // Offset:    0 Size:    64 [unused]
@@ -291,6 +294,15 @@ namespace DeferredDemo
 			if (flags.HasFlag(SkyFlags.CLOUDS)) {
 				ps.BlendState	=	BlendState.AlphaBlend;
 			}
+			if (flags.HasFlag(SkyFlags.RED)) {
+				ps.BlendState	=	BlendState.Create(ColorChannels.Red);
+			}
+			if (flags.HasFlag(SkyFlags.BLUE)) {
+				ps.BlendState	=	BlendState.Create(ColorChannels.Blue);
+			}
+			if (flags.HasFlag(SkyFlags.GREEN)) {
+				ps.BlendState	=	BlendState.Create(ColorChannels.Green);
+			}
 		}
 
 
@@ -389,7 +401,7 @@ namespace DeferredDemo
 		/// </summary>
 		/// <param name="rendCtxt"></param>
 		/// <param name="techName"></param>
-		public void Render( GameTime gameTime, DepthStencilSurface depthBuffer, RenderTargetSurface hdrTarget, Matrix view, Matrix projection )
+		public void Render( GameTime gameTime, DepthStencilSurface depthBuffer, RenderTargetSurface hdrTarget, Matrix view, Matrix projection, RenderTargetSurface cloudTarget)
 		{
 			var camera = Game.GetService<Camera>();
 
@@ -457,14 +469,17 @@ namespace DeferredDemo
 	
 			skyConstsCB.SetData( skyConstsData );
 
+			rs.SetTargets(depthBuffer, cloudTarget);
 
 			flags = SkyFlags.CLOUDS;
 
-			for (int i=0; i<3; i++) {
+			//int i = 0;
+			for (int i=0; i<3; i++) 
+			{
 
-				 if (i==0) flags = SkyFlags.CLOUDS| SkyFlags.A;
-				 if (i==1) flags = SkyFlags.CLOUDS| SkyFlags.B;
-				 if (i==2) flags = SkyFlags.CLOUDS| SkyFlags.C;
+				 if (i==0) flags = SkyFlags.CLOUDS| SkyFlags.A | SkyFlags.RED;
+				 if (i==1) flags = SkyFlags.CLOUDS| SkyFlags.B | SkyFlags.GREEN;
+				 if (i==2) flags = SkyFlags.CLOUDS| SkyFlags.C | SkyFlags.BLUE;
 
 				ApplyColorSpace( ref flags );
 			

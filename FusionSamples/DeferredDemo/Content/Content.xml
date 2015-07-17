@@ -31,7 +31,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>debugRender.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\0EC7C2D14F65EFBA65B361728EE70CD3.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\0EC7C2D14F65EFBA65B361728EE70CD3.html</ListingPath>
   </Asset>
   <Asset xsi:type="UbershaderAsset">
     <AssetPath>spriteBatch.hlsl</AssetPath>
@@ -51,7 +51,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>spriteBatch.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\A41575F61A6644F1898EE4AE0783DAF8.html</ListingPath>
   </Asset>
   <Asset xsi:type="FbxFileSceneAsset">
     <AssetPath>Scenes/testScene.fbx</AssetPath>
@@ -353,7 +353,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>surface.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\74B7849DF531107FD8B8E5D9C3A96C7F.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\74B7849DF531107FD8B8E5D9C3A96C7F.html</ListingPath>
   </Asset>
   <Asset xsi:type="ImageFileTextureAsset">
     <AssetPath>Scenes/lena_glow.tga</AssetPath>
@@ -406,7 +406,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>stereo.hlsl</SourceFile>
     <ShowPemutations>true</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\4B9F5097212F68238CEF9BFF980979F4.html</ListingPath>
   </Asset>
   <Asset xsi:type="AssembledTextureAtlasAsset">
     <AssetPath>spots</AssetPath>
@@ -444,7 +444,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>sky.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\BD405DBE8FD5D988C13660BAA13779FB.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\BD405DBE8FD5D988C13660BAA13779FB.html</ListingPath>
   </Asset>
   <Asset xsi:type="FbxFileSceneAsset">
     <AssetPath>skySphere.fbx</AssetPath>
@@ -473,7 +473,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>filter.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\4B34EA50D40957FEFA2ED98C7DF9381F.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\4B34EA50D40957FEFA2ED98C7DF9381F.html</ListingPath>
   </Asset>
   <Asset xsi:type="UbershaderAsset">
     <AssetPath>hdr.hlsl</AssetPath>
@@ -493,7 +493,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>hdr.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\502E823C2F8597A3EFA6135672B891F4.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\502E823C2F8597A3EFA6135672B891F4.html</ListingPath>
   </Asset>
   <Asset xsi:type="ImageFileTextureAsset">
     <AssetPath>bloomMask.tga</AssetPath>
@@ -526,7 +526,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>ssao.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\195466673460486A316A52276CBCB830.html</ListingPath>
+    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\195466673460486A316A52276CBCB830.html</ListingPath>
   </Asset>
   <Asset xsi:type="ImageFileTextureAsset">
     <AssetPath>clouds.tga</AssetPath>
