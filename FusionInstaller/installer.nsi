@@ -11,11 +11,11 @@
 
 
 ; The name of the installer
-Name "Fusion Game Library (v1.0)"
+Name "Fusion Game Library (v1.1)"
 XPStyle on
 
 ; The file to write
-OutFile "FusionInstaller-1.0.exe"
+OutFile "FusionInstaller-1.1.exe"
 
 ; The default installation directory
 InstallDir $PROGRAMFILES\FusionGameLib

@@ -31,7 +31,7 @@ public ref class Options {
 		geom			=	false;
 	}
 
-	[CommandLineParser::Name("in")]
+	[CommandLineParser::Name("in", )]
 	[CommandLineParser::Required()]
 	property string^ Input { 
 		void set(string^ value) { input = value; }
