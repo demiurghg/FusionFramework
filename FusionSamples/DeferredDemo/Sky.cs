@@ -33,6 +33,7 @@ namespace DeferredDemo
 			RED					= 1 << 11,
 			GREEN				= 1 << 12,
 			BLUE				= 1 << 13,
+			BLUR_CLOUD			= 1 << 14,
 		}
 
 		//	row_major float4x4 MatrixWVP;      // Offset:    0 Size:    64 [unused]
@@ -401,7 +402,7 @@ namespace DeferredDemo
 		/// </summary>
 		/// <param name="rendCtxt"></param>
 		/// <param name="techName"></param>
-		public void Render( GameTime gameTime, DepthStencilSurface depthBuffer, RenderTargetSurface hdrTarget, Matrix view, Matrix projection, RenderTargetSurface cloudTarget)
+		public void Render( GameTime gameTime, DepthStencilSurface depthBuffer, RenderTargetSurface hdrTarget, Matrix view, Matrix projection, RenderTarget2D cloudTarget, RenderTarget2D smallerCloudTarget)
 		{
 			var camera = Game.GetService<Camera>();
 
@@ -469,7 +470,7 @@ namespace DeferredDemo
 	
 			skyConstsCB.SetData( skyConstsData );
 
-			rs.SetTargets(depthBuffer, cloudTarget);
+			rs.SetTargets(null, cloudTarget.Surface);
 
 			flags = SkyFlags.CLOUDS;
 
@@ -489,6 +490,8 @@ namespace DeferredDemo
 				rs.PixelShaderResources[2]	=	noise;
 				rs.PixelShaderResources[3]	=	arrows;
 				rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
+
+
 					
 				for ( int j=0; j<cloudSphere.Meshes.Count; j++) {
 					var mesh = cloudSphere.Meshes[j];
@@ -497,6 +500,24 @@ namespace DeferredDemo
 					rs.DrawIndexed( mesh.IndexCount, 0, 0 );
 				}
 			}
+
+			//Blur
+			flags = SkyFlags.BLUR_CLOUD;
+			rs.SetTargets(depthBuffer, smallerCloudTarget.Surface);
+			
+			ApplyColorSpace( ref flags );
+			
+			rs.PipelineState			=	factory[(int)flags];
+			rs.PixelShaderResources[4]	=	cloudTarget;
+			rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
+			
+
+			for ( int j=0; j<cloudSphere.Meshes.Count; j++) {
+					var mesh = cloudSphere.Meshes[j];
+
+					rs.SetupVertexInput( cloudVertexBuffers[j], cloudIndexBuffers[j] );
+					rs.DrawIndexed( mesh.IndexCount, 0, 0 );
+				}
 
 			rs.ResetStates();
 		}

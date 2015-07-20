@@ -139,7 +139,7 @@ namespace DeferredDemo {
 			hdrTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba16F, vp.Width, vp.Height, true );
 			ldrTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width, vp.Height, true );
 			cloudTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width, vp.Height, true );
-			smallerCloudTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width / 2, vp.Height / 2, true );
+			smallerCloudTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width, vp.Height, true );
 		}
 
 
@@ -262,6 +262,7 @@ namespace DeferredDemo {
 
 			GraphicsDevice.Clear( hdrTarget.Surface, Color.Black );
 			GraphicsDevice.Clear( cloudTarget.Surface, Color.Transparent );
+			GraphicsDevice.Clear( smallerCloudTarget.Surface, Color.Transparent );
 
 			lr.ClearGBuffer();
 
@@ -281,7 +282,7 @@ namespace DeferredDemo {
 			sr.RenderGBuffer ( view, proj, lr.DepthBuffer, hdrTarget, lr.DiffuseBuffer, lr.SpecularBuffer, lr.NormalMapBuffer );
 
 			//	render sky :
-			sky.Render( gameTime, lr.DepthBuffer.Surface, hdrTarget.Surface, view, proj, cloudTarget.Surface );
+			sky.Render( gameTime, lr.DepthBuffer.Surface, hdrTarget.Surface, view, proj, cloudTarget, smallerCloudTarget );
 
 			hbao.Render( view, proj, lr.DepthBuffer, lr.NormalMapBuffer );
 
@@ -318,8 +319,8 @@ namespace DeferredDemo {
 					sb.Draw( hdrTarget,	0, 0, vp.Width, vp.Height, Color.White );
 
 				} */
-					sb.Draw( cloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
-					//sb.Draw( smallerCloudTarget,	0, 0, vp.Width/2, vp.Height/2, Color.White );
+					//sb.Draw( cloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
+					sb.Draw( smallerCloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
 
 
 			sb.End();

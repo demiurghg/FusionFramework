@@ -1,7 +1,7 @@
 
 
 #if 0
-$ubershader  PROCEDURAL_SKY|FOG|(CLOUDS A|B|C RED|GREEN|BLUE) SRGB|CIERGB
+$ubershader  PROCEDURAL_SKY|FOG|(CLOUDS A|B|C RED|GREEN|BLUE)|BLUR_CLOUD SRGB|CIERGB
 #endif
 
 cbuffer Constants : register(b0)
@@ -21,6 +21,7 @@ Texture2D CloudTexture : register(t0);
 Texture2D CirrusTexture : register(t1);
 Texture2D CloudNoise : register(t2);
 Texture2D Arrows : register(t3);
+Texture2D InitialCloud : register(t4);
 SamplerState SamplerLinear : register(s0);
 
 struct VS_INPUT {
@@ -342,6 +343,10 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 		
 		
 	return  clouds.a;//float4(final.xyz,alpha * fog);		
+	#endif
+
+	#ifdef BLUR_CLOUD
+		return InitialCloud.Sample( SamplerLinear, input.texcoord );
 	#endif
 
 }
