@@ -240,7 +240,21 @@ namespace DeferredDemo
 			}
 		}
 
+		struct Vertex
+		{
+			[Vertex( "POSITION" )]
+			public Vector3	Position;
+			[Vertex( "TEXCOORD", 0 )]
+			public Vector2	TexCoord;
+			[Vertex( "POSITION" )]
+			public Vector3	Normal;
+			[Vertex( "POSITION" )]
+			public Vector3	Tanget;
+			[Vertex( "POSITION" )]
+			public Vector3	Binormal;
 
+		}
+		VertexBuffer		vertexBufferBlur;
 
 		/// <summary>
 		/// 
@@ -256,7 +270,7 @@ namespace DeferredDemo
 			noise		=	Game.Content.Load<Texture2D>("cloudNoise");
 			arrows		=	Game.Content.Load<Texture2D>("arrowsAll");
 
-
+			vertexBufferBlur = new VertexBuffer( Game.GraphicsDevice, typeof( Vertex ), 6 );
 			vertexBuffers	=	skySphere.Meshes
 							.Select( mesh => VertexBuffer.Create( Game.GraphicsDevice, mesh.Vertices.Select( v => VertexColorTextureTBN.Convert( v ) ).ToArray() ) )
 							.ToArray();
@@ -318,6 +332,7 @@ namespace DeferredDemo
 				SafeDispose( ref sky );
 				SafeDispose( ref skyCube );
 				SafeDispose( ref skyConstsCB );
+				SafeDispose( ref vertexBufferBlur );
 			}
 			base.Dispose( disposing );
 		}
@@ -510,15 +525,25 @@ namespace DeferredDemo
 			rs.PipelineState			=	factory[(int)flags];
 			rs.PixelShaderResources[4]	=	cloudTarget;
 			rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
-			
 
-			for ( int j=0; j<cloudSphere.Meshes.Count; j++) {
-					var mesh = cloudSphere.Meshes[j];
+			var v0	=	new Vertex { Position = new Vector3( -1.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ) };
+			var v1	=	new Vertex { Position = new Vector3( 1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 1, 0 ) };
+			var v2	=	new Vertex { Position = new Vector3( -1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 0, 0 ) };
+			var v3	=	new Vertex { Position = new Vector3( -1.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ) };
+			var v4	=	new Vertex { Position = new Vector3( 1.0f, -1.0f, 0 ),  TexCoord = new Vector2( 1, 1 ) };
+			var v5	=	new Vertex { Position = new Vector3( 1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 1, 0 ) };//*/
 
-					rs.SetupVertexInput( cloudVertexBuffers[j], cloudIndexBuffers[j] );
-					rs.DrawIndexed( mesh.IndexCount, 0, 0 );
-				}
+			var data = new Vertex[] { v0, v1, v2, v3, v4, v5 };
 
+			vertexBufferBlur.SetData( data, 0, 6 );
+			//for ( int j=0; j<cloudSphere.Meshes.Count; j++) {
+			//		var mesh = cloudSphere.Meshes[j];
+
+			//		rs.SetupVertexInput( cloudVertexBuffers[j], cloudIndexBuffers[j] );
+			//		rs.DrawIndexed( mesh.IndexCount, 0, 0 );
+			//	}
+			rs.SetupVertexInput( vertexBufferBlur, null );
+			rs.Draw( 6, 0 );
 			rs.ResetStates();
 		}
 
