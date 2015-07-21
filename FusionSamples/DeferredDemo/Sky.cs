@@ -455,7 +455,6 @@ namespace DeferredDemo
 			//	Sky :
 			//
 			SkyFlags flags = SkyFlags.PROCEDURAL_SKY;
-
 			ApplyColorSpace( ref flags );
 				
 			rs.PipelineState	=	factory[(int)flags];
@@ -485,7 +484,7 @@ namespace DeferredDemo
 	
 			skyConstsCB.SetData( skyConstsData );
 
-			rs.SetTargets(null, cloudTarget.Surface);
+			rs.SetTargets(depthBuffer, cloudTarget.Surface);
 
 			flags = SkyFlags.CLOUDS;
 
@@ -518,13 +517,18 @@ namespace DeferredDemo
 
 			//Blur
 			flags = SkyFlags.BLUR_CLOUD;
-			rs.SetTargets(depthBuffer, smallerCloudTarget.Surface);
-			
+			skyConstsData.MatrixWVP = Matrix.Identity; 
+			skyConstsCB.SetData( skyConstsData );
+
+			rs.SetTargets(null, smallerCloudTarget.Surface);
+
 			ApplyColorSpace( ref flags );
+			rs.VertexShaderConstants[0] = skyConstsCB;
+			rs.PixelShaderConstants[0] = skyConstsCB;
 			
 			rs.PipelineState			=	factory[(int)flags];
 			rs.PixelShaderResources[4]	=	cloudTarget;
-			rs.PixelShaderSamplers[0]	=	SamplerState.AnisotropicWrap;
+			rs.PixelShaderSamplers[1]	=	SamplerState.LinearWrap;
 
 			var v0	=	new Vertex { Position = new Vector3( -1.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ) };
 			var v1	=	new Vertex { Position = new Vector3( 1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 1, 0 ) };
@@ -544,6 +548,7 @@ namespace DeferredDemo
 			//	}
 			rs.SetupVertexInput( vertexBufferBlur, null );
 			rs.Draw( 6, 0 );
+
 			rs.ResetStates();
 		}
 

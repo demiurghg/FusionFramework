@@ -2,6 +2,7 @@
 
 #if 0
 $ubershader  PROCEDURAL_SKY|FOG|(CLOUDS A|B|C RED|GREEN|BLUE)|BLUR_CLOUD SRGB|CIERGB
+//$ubershader SCREEN_SPACE_SHADOW
 #endif
 
 cbuffer Constants : register(b0)
@@ -23,6 +24,7 @@ Texture2D CloudNoise : register(t2);
 Texture2D Arrows : register(t3);
 Texture2D InitialCloud : register(t4);
 SamplerState SamplerLinear : register(s0);
+SamplerState SamplerLinearCloud : register(s1);
 
 struct VS_INPUT {
 	float3 position		: POSITION;
@@ -147,6 +149,8 @@ float3 YxyToRGB ( float3 Yxy )
 VS_OUTPUT VSMain( VS_INPUT input )
 {
 	VS_OUTPUT output;
+	/*#ifdef SCREEN_SPACE_SHADOW
+	#endif*/
 
 	output.position = mul( float4( input.position, 1.0f ), MatrixWVP);
 	output.worldPos = input.position;
@@ -346,7 +350,7 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 	#endif
 
 	#ifdef BLUR_CLOUD
-		return InitialCloud.Sample( SamplerLinear, input.texcoord );
+		return InitialCloud.Sample( SamplerLinearCloud, input.texcoord );
 	#endif
 
 }
