@@ -337,3 +337,47 @@ float PSMain(float4 position : SV_POSITION) : SV_Target
 }
 
 #endif
+
+//-------------------------------------------------------------------------------
+#ifdef RADIAL_BLUR
+
+static const int numberOfSamples = 16;
+
+cbuffer RadialDataCB : register(b0) {
+  float2 blurPoint;
+  float blurStart; // blur offset
+  float blurWidth;
+};
+
+SamplerState SamplerLinearClamp : register(s0);
+Texture2D Source : register(t0);
+
+struct PS_IN {
+    float4 position : SV_POSITION;
+  	float2 uv : TEXCOORD0;
+};
+
+
+PS_IN VSMain(uint VertexID : SV_VertexID)
+{
+	PS_IN output;
+	output.position = float4((VertexID == 0) ? 3.0f : -1.0f, (VertexID == 2) ? 3.0f : -1.0f, 1.0f, 1.0f);
+	output.uv = output.position.xy * float2(0.5f, -0.5f) + 0.5f; - blurPoint;
+	
+
+	return output;
+}
+
+float4 PSMain(PS_IN input) : SV_Target
+{
+	float4 color = 0;
+
+	[unroll]
+	for (int i = 0; i < numberOfSamples; ++i) {
+		float scale = blurStart + blurWidth * ( i / (float) (numberOfSamples - 1) );
+		color += Source.SampleLevel(SamplerLinearClamp, input.uv * scale + blurPoint, 0);
+	}
+	color /= numberOfSamples;
+	return color;
+}
+#endif

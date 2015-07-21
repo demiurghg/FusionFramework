@@ -45,6 +45,7 @@ namespace DeferredDemo
 			TO_CUBE_FACE						= 1 << 17,
 			LINEARIZE_DEPTH						= 1 << 18,
 			RESOLVE_AND_LINEARIZE_DEPTH_MSAA	= 1 << 19,
+			RADIAL_BLUR							= 1 << 20,
 		}
 
 		[StructLayout( LayoutKind.Explicit )]
@@ -58,6 +59,7 @@ namespace DeferredDemo
 		StateFactory	factory;
 		ConstantBuffer	gaussWeightsCB;
 		ConstantBuffer	bufLinearizeDepth;
+		ConstantBuffer	radialDataCB;
 		
 		public Filter( Game game ) : base( game )
 		{
@@ -71,6 +73,7 @@ namespace DeferredDemo
 		/// </summary>
 		public override void Initialize() 
 		{
+			radialDataCB	= new ConstantBuffer( rs, 16 );
 			bufLinearizeDepth	= new ConstantBuffer( rs, 128 );
 			gaussWeightsCB		= new ConstantBuffer( rs, typeof(Vector4), MaxBlurTaps );
 
@@ -104,6 +107,7 @@ namespace DeferredDemo
 				SafeDispose( ref factory );
 				SafeDispose( ref gaussWeightsCB );
 				SafeDispose( ref bufLinearizeDepth );
+				SafeDispose( ref radialDataCB );
 			}
 
 			base.Dispose( disposing );
@@ -410,6 +414,30 @@ namespace DeferredDemo
 			return taps;
 			//bufGaussWeights.UpdateCBuffer();
 			//#endif
+		}
+
+		public void RadialBlur( RenderTargetSurface dst, RenderTarget2D src, Vector2 blurPoint, float offset, float size )
+		{
+			SetDefaultRenderStates();
+
+			var data = new Vector4(blurPoint.X, blurPoint.Y, offset, size);
+			radialDataCB.SetData(data);
+
+			using( new PixEvent() ) {
+
+				rs.SetTargets( null, dst );
+				SetViewport(dst);
+				
+				rs.PipelineState			=	factory[ (int)ShaderFlags.RADIAL_BLUR ];
+				rs.VertexShaderResources[0] =	src;
+				rs.PixelShaderResources[0]	=	src;
+				rs.PixelShaderSamplers[0]	=	SamplerState.LinearPointClamp;
+				rs.PixelShaderConstants[0]	=	radialDataCB;
+				rs.VertexShaderConstants[0] =	radialDataCB;
+
+				rs.Draw( 3, 0 );
+			}
+			rs.ResetStates();
 		}
 	}
 }

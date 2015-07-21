@@ -519,7 +519,8 @@ namespace DeferredDemo
 
 			var filter = Game.GetService<Filter>();
 
-			filter.StretchRect( smallerCloudTarget.Surface, cloudTarget, SamplerState.LinearClamp ); 
+			filter.RadialBlur(smallerCloudTarget.Surface, cloudTarget, new Vector2(0.1f, 0.1f), 1.0f, -0.05f);
+			//filter.StretchRect( smallerCloudTarget.Surface, cloudTarget, SamplerState.LinearClamp ); 
 
 			#if false
 

@@ -319,8 +319,8 @@ namespace DeferredDemo {
 					sb.Draw( hdrTarget,	0, 0, vp.Width, vp.Height, Color.White );
 
 				} */
-					sb.Draw( cloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
-					//sb.Draw( smallerCloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
+					//sb.Draw( cloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
+					sb.Draw( smallerCloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
 
 
 			sb.End();
