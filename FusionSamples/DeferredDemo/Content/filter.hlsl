@@ -362,8 +362,8 @@ PS_IN VSMain(uint VertexID : SV_VertexID)
 {
 	PS_IN output;
 	output.position = float4((VertexID == 0) ? 3.0f : -1.0f, (VertexID == 2) ? 3.0f : -1.0f, 1.0f, 1.0f);
-	output.uv = output.position.xy * float2(0.5f, -0.5f) + 0.5f; - blurPoint;
-	
+	output.uv = output.position.xy * float2(0.5f, -0.5f) + 0.5f- blurPoint;
+	 
 
 	return output;
 }
