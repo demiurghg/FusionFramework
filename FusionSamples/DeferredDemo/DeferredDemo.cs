@@ -139,7 +139,7 @@ namespace DeferredDemo {
 			hdrTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba16F, vp.Width, vp.Height, true );
 			ldrTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width, vp.Height, true );
 			cloudTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width, vp.Height, true );
-			smallerCloudTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width, vp.Height, true );
+			smallerCloudTarget	=	new RenderTarget2D( GraphicsDevice, ColorFormat.Rgba8,   vp.Width/2, vp.Height/2, true );
 		}
 
 
@@ -319,8 +319,8 @@ namespace DeferredDemo {
 					sb.Draw( hdrTarget,	0, 0, vp.Width, vp.Height, Color.White );
 
 				} */
-					//sb.Draw( cloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
-					sb.Draw( smallerCloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
+					sb.Draw( cloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
+					//sb.Draw( smallerCloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
 
 
 			sb.End();

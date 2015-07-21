@@ -151,6 +151,17 @@ VS_OUTPUT VSMain( VS_INPUT input )
 	VS_OUTPUT output;
 	/*#ifdef SCREEN_SPACE_SHADOW
 	#endif*/
+	
+	#ifdef BLUR_CLOUD
+		output.position = mul( float4( input.position, 1.0f ), MatrixWVP);
+		output.worldPos = input.position;
+		output.texcoord =	input.texcoord;
+		output.skyColor	=	float3(1,1,1);
+		output.normal	=	float3(0,0,0);
+		output.tangent	=	float3(0,0,0);
+		output.binormal	=	float3(0,0,0);
+		return output;
+	#endif
 
 	output.position = mul( float4( input.position, 1.0f ), MatrixWVP);
 	output.worldPos = input.position;
@@ -345,8 +356,7 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 		
 		float3 final  = shadow * (light + trans) + Ambient.xyz;
 		
-		
-	return  clouds.a;//float4(final.xyz,alpha * fog);		
+		return  clouds.a;//float4(final.xyz,alpha * fog);		
 	#endif
 
 	#ifdef BLUR_CLOUD

@@ -246,11 +246,11 @@ namespace DeferredDemo
 			public Vector3	Position;
 			[Vertex( "TEXCOORD", 0 )]
 			public Vector2	TexCoord;
-			[Vertex( "POSITION" )]
+			[Vertex( "NORMAL" )]
 			public Vector3	Normal;
-			[Vertex( "POSITION" )]
+			[Vertex( "TANGENT" )]
 			public Vector3	Tanget;
-			[Vertex( "POSITION" )]
+			[Vertex( "BINORMAL" )]
 			public Vector3	Binormal;
 
 		}
@@ -516,6 +516,14 @@ namespace DeferredDemo
 			}
 
 			//Blur
+
+			var filter = Game.GetService<Filter>();
+
+			filter.StretchRect( smallerCloudTarget.Surface, cloudTarget, SamplerState.LinearClamp ); 
+
+			#if false
+
+
 			flags = SkyFlags.BLUR_CLOUD;
 			skyConstsData.MatrixWVP = Matrix.Identity; 
 			skyConstsCB.SetData( skyConstsData );
@@ -530,7 +538,7 @@ namespace DeferredDemo
 			rs.PixelShaderResources[4]	=	cloudTarget;
 			rs.PixelShaderSamplers[1]	=	SamplerState.LinearWrap;
 
-			var v0	=	new Vertex { Position = new Vector3( -1.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ) };
+			var v0	=	new Vertex { Position = new Vector3( -0.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ) };
 			var v1	=	new Vertex { Position = new Vector3( 1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 1, 0 ) };
 			var v2	=	new Vertex { Position = new Vector3( -1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 0, 0 ) };
 			var v3	=	new Vertex { Position = new Vector3( -1.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ) };
@@ -548,6 +556,7 @@ namespace DeferredDemo
 			//	}
 			rs.SetupVertexInput( vertexBufferBlur, null );
 			rs.Draw( 6, 0 );
+			#endif
 
 			rs.ResetStates();
 		}
