@@ -240,19 +240,19 @@ namespace DeferredDemo
 			}
 		}
 
+		
 		struct Vertex
-		{
+		{			
 			[Vertex( "POSITION" )]
-			public Vector3	Position;
+			public Vector3	Position;					
 			[Vertex( "TEXCOORD", 0 )]
-			public Vector2	TexCoord;
+			public Vector2	TexCoord;			
 			[Vertex( "NORMAL" )]
-			public Vector3	Normal;
+			public Vector3	Normal;			
 			[Vertex( "TANGENT" )]
-			public Vector3	Tanget;
+			public Vector3	Tanget;			
 			[Vertex( "BINORMAL" )]
 			public Vector3	Binormal;
-
 		}
 		VertexBuffer		vertexBufferBlur;
 
@@ -536,32 +536,32 @@ namespace DeferredDemo
 			//}
 
 
-			#if false
+			
 
 
 			flags = SkyFlags.BLUR_CLOUD;
 			skyConstsData.MatrixWVP = Matrix.Identity; 
 			skyConstsCB.SetData( skyConstsData );
 
-			rs.SetTargets(null, smallerCloudTarget.Surface);
+			rs.SetTargets(depthBuffer, hdrTarget);
 
 			ApplyColorSpace( ref flags );
 			rs.VertexShaderConstants[0] = skyConstsCB;
 			rs.PixelShaderConstants[0] = skyConstsCB;
 			
 			rs.PipelineState			=	factory[(int)flags];
-			rs.PixelShaderResources[4]	=	cloudTarget;
-			rs.PixelShaderSamplers[1]	=	SamplerState.LinearWrap;
+			rs.PixelShaderResources[0]	=	cloudTarget;
+			rs.PixelShaderSamplers[0]	=	SamplerState.LinearWrap;
 
-			var v0	=	new Vertex { Position = new Vector3( -0.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ) };
-			var v1	=	new Vertex { Position = new Vector3( 1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 1, 0 ) };
-			var v2	=	new Vertex { Position = new Vector3( -1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 0, 0 ) };
-			var v3	=	new Vertex { Position = new Vector3( -1.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ) };
-			var v4	=	new Vertex { Position = new Vector3( 1.0f, -1.0f, 0 ),  TexCoord = new Vector2( 1, 1 ) };
-			var v5	=	new Vertex { Position = new Vector3( 1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 1, 0 ) };//*/
+			var v0	=	new Vertex { Position = new Vector3( -1.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ), Normal = new Vector3( 0.0f, 1.0f, 0 ), Binormal = new Vector3( 0.0f, 1.0f, 0 ), Tanget = new Vector3( 0.0f, 1.0f, 0 )};
+			var v1	=	new Vertex { Position = new Vector3( 1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 1, 0 ),  Normal = new Vector3( 1.0f, 0.0f, 0 ), Binormal = new Vector3( 1.0f, 0.0f, 0 ) };
+			var v2	=	new Vertex { Position = new Vector3( -1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 0, 0 ), Normal = new Vector3( 0.0f, 0.0f, 0 ), Binormal = new Vector3( 0.0f, 0.0f, 0 )};
+			var v3	=	new Vertex { Position = new Vector3( -1.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ), Normal = new Vector3( 0.0f, 1.0f, 0 ), Binormal = new Vector3( 0.0f, 1.0f, 0 )};
+			var v4	=	new Vertex { Position = new Vector3( 1.0f, -1.0f, 0 ),  TexCoord = new Vector2( 1, 1 ), Normal = new Vector3( 1.0f, 1.0f, 0 ), Binormal = new Vector3( 1.0f, 1.0f, 0 ) };
+			var v5	=	new Vertex { Position = new Vector3( 1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 1, 0 ),  Normal = new Vector3( 1.0f, 0.0f, 0 ), Binormal = new Vector3( 1.0f, 0.0f, 0 ) };//*/
 
 			var data = new Vertex[] { v0, v1, v2, v3, v4, v5 };
-
+			//Log.Message(""+v0.TexCoord);
 			vertexBufferBlur.SetData( data, 0, 6 );
 			//for ( int j=0; j<cloudSphere.Meshes.Count; j++) {
 			//		var mesh = cloudSphere.Meshes[j];
@@ -571,6 +571,7 @@ namespace DeferredDemo
 			//	}
 			rs.SetupVertexInput( vertexBufferBlur, null );
 			rs.Draw( 6, 0 );
+			#if false
 			#endif
 
 			rs.ResetStates();

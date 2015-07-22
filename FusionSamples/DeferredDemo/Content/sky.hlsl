@@ -1,7 +1,7 @@
 
 
 #if 0
-$ubershader  PROCEDURAL_SKY|FOG|(CLOUDS (A RED)|(B GREEN)|(C BLUE)) SRGB|CIERGB
+$ubershader  PROCEDURAL_SKY|FOG|(CLOUDS (A RED)|(B GREEN)|(C BLUE))|BLUR_CLOUD SRGB|CIERGB
 //$ubershader SCREEN_SPACE_SHADOW
 #endif
 
@@ -363,7 +363,8 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 	#endif
 
 	#ifdef BLUR_CLOUD
-		return InitialCloud.Sample( SamplerLinearCloud, input.texcoord );
+		//return InitialCloud.Sample( SamplerLinearCloud, float2 (input.position.xy / 100)); //.x * float4(1,1,1,1);
+		return CloudTexture.Sample( SamplerLinear, input.texcoord ); //.x * float4(1,1,1,1);
 	#endif
 
 }
