@@ -364,7 +364,7 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 
 	#ifdef BLUR_CLOUD
 		//return InitialCloud.Sample( SamplerLinearCloud, float2 (input.position.xy / 100)); //.x * float4(1,1,1,1);
-		return CloudTexture.Sample( SamplerLinear, input.texcoord ); //.x * float4(1,1,1,1);
+		return CloudTexture.Sample( SamplerLinear, input.texcoord.xy ); //.x * float4(1,1,1,1);
 	#endif
 
 }
