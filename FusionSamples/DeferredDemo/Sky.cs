@@ -550,8 +550,8 @@ namespace DeferredDemo
 			rs.PixelShaderConstants[0] = skyConstsCB;
 			
 			rs.PipelineState			=	factory[(int)flags];
-			rs.PixelShaderResources[0]	=	cloudTarget;
-			rs.PixelShaderSamplers[0]	=	SamplerState.LinearWrap;
+			rs.PixelShaderResources[4]	=	cloudTarget;
+			rs.PixelShaderSamplers[1]	=	SamplerState.LinearWrap;
 
 			var v0	=	new VertexColorTextureTBN { Position = new Vector3( -1.0f, -1.0f, 0 ), TexCoord = new Vector2( 0, 1 ), };
 			var v1	=	new VertexColorTextureTBN { Position = new Vector3( 1.0f, 1.0f, 0 ),  TexCoord = new Vector2( 1, 0 ),   };
