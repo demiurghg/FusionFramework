@@ -376,7 +376,7 @@ float4 PSMain(PS_IN input) : SV_Target
 	[unroll]
 	for (int i = 0; i < numberOfSamples; i++) {
 		float scale = blurStart + blurWidth * ( i / (float) (numberOfSamples - 1) );
-		color += Source.Sample(SamplerLinearClamp, input.uv * scale + blurPoint);
+		color += Source.Sample(SamplerLinearClamp, input.uv * scale + blurPoint).x * float4(1,1,1,0);
 	}
 	color /= numberOfSamples;
 	return color;

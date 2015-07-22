@@ -484,7 +484,7 @@ namespace DeferredDemo
 	
 			skyConstsCB.SetData( skyConstsData );
 
-			rs.SetTargets(depthBuffer, cloudTarget.Surface);
+			rs.SetTargets(null, cloudTarget.Surface);
 
 			flags = SkyFlags.CLOUDS;
 
