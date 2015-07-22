@@ -341,7 +341,7 @@ float PSMain(float4 position : SV_POSITION) : SV_Target
 //-------------------------------------------------------------------------------
 #ifdef RADIAL_BLUR
 
-static const int numberOfSamples = 16;
+static const int numberOfSamples = 64;
 
 cbuffer RadialDataCB : register(b0) {
   float2 blurPoint;
@@ -362,7 +362,7 @@ PS_IN VSMain(uint VertexID : SV_VertexID)
 {
 	PS_IN output;
 	output.position = float4((VertexID == 0) ? 3.0f : -1.0f, (VertexID == 2) ? 3.0f : -1.0f, 1.0f, 1.0f);
-	output.uv = output.position.xy * float2(0.5f, -0.5f) + 0.5f- blurPoint;
+	output.uv = output.position.xy * float2(0.5f, -0.5f) + 0.5f;
 	 
 
 	return output;
@@ -371,11 +371,12 @@ PS_IN VSMain(uint VertexID : SV_VertexID)
 float4 PSMain(PS_IN input) : SV_Target
 {
 	float4 color = 0;
+	input.uv -=  blurPoint;
 
 	[unroll]
-	for (int i = 0; i < numberOfSamples; ++i) {
+	for (int i = 0; i < numberOfSamples; i++) {
 		float scale = blurStart + blurWidth * ( i / (float) (numberOfSamples - 1) );
-		color += Source.SampleLevel(SamplerLinearClamp, input.uv * scale + blurPoint, 0);
+		color += Source.Sample(SamplerLinearClamp, input.uv * scale + blurPoint);
 	}
 	color /= numberOfSamples;
 	return color;
