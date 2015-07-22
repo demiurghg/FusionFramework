@@ -518,16 +518,13 @@ namespace DeferredDemo
 			//Blur
 			var filter = Game.GetService<Filter>();
 
-			filter.RadialBlur(smallerCloudTarget.Surface, cloudTarget, new Vector2(0.5f, 0.5f), 1.0f, -0.2f);
-			//filter.RadialBlur(smallerCloudTarget.Surface, cloudTarget, new Vector2(1, 0), 1.0f, -0.2f);
+			//filter.RadialBlur(smallerCloudTarget.Surface, cloudTarget, new Vector2(0.5f, 0.5f), 1.0f, -0.2f);
 			
 			//if(Game.InputDevice.IsKeyDown(Keys.LeftButton))
 			//{
-				//Log.Message("" + Game.InputDevice.MousePosition);
 				Vector4 sunProj = Vector4.Transform(new Vector4(sunPos, 0), viewMatrix);
 				sunProj = 	Vector4.Transform(sunProj, projMatrix);
 				sunProj = new Vector4(sunProj.X / sunProj.W, sunProj.Y / sunProj.W, sunProj.Z / sunProj.W, 1);
-				//Log.Message("" + sunProj);
 				Vector2 relSunPosition = new Vector2(0.5f, 0.5f);
 
 				//if ( Math.Abs(sunProj.X ) < 1 && Math.Abs (sunProj.Y) < 1){
@@ -538,7 +535,6 @@ namespace DeferredDemo
 				filter.RadialBlur(smallerCloudTarget.Surface, cloudTarget, relSunPosition, 1.0f, -0.2f);
 			//}
 
-			//filter.StretchRect( smallerCloudTarget.Surface, cloudTarget, SamplerState.LinearClamp ); 
 
 			#if false
 
