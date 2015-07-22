@@ -473,7 +473,7 @@
     <CSEntryPoint>CSMain</CSEntryPoint>
     <SourceFile>filter.hlsl</SourceFile>
     <ShowPemutations>false</ShowPemutations>
-    <ListingPath>C:\GitHub\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\4B34EA50D40957FEFA2ED98C7DF9381F.html</ListingPath>
+    <ListingPath>C:\GITHUB\FusionFramework\FusionSamples\DeferredDemo\Content\Temp\4B34EA50D40957FEFA2ED98C7DF9381F.html</ListingPath>
   </Asset>
   <Asset xsi:type="UbershaderAsset">
     <AssetPath>hdr.hlsl</AssetPath>
