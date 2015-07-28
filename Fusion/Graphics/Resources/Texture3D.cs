@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 using Fusion.Content;
 using Fusion.Mathematics;
 using SharpDX.Direct3D;
-using FusionDDS;
+using Native.Dds;
 
 
 namespace Fusion.Graphics {

@@ -11,7 +11,7 @@ using SharpDX.DXGI;
 using D3D = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using System.Windows.Forms;
-using NvApiWrapper;
+using Native.NvApi;
 using Fusion.Mathematics;
 
 

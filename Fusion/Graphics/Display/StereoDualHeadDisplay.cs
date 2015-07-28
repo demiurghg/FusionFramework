@@ -13,7 +13,7 @@ using DXGI = SharpDX.DXGI;
 using System.Windows.Forms;
 using Drawing = System.Drawing;
 using Fusion.Mathematics;
-using NvApiWrapper;
+using Native.NvApi;
 
 
 namespace Fusion.Graphics.Display {
