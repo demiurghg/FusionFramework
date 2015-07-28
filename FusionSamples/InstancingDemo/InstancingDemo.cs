@@ -96,10 +96,6 @@ namespace InstancingDemo2D {
 		/// <param name="e"></param>
 		void InputDevice_KeyDown ( object sender, InputDevice.KeyEventArgs e )
 		{
-			if (e.Key == Keys.F1) {
-				DevCon.Show(this);
-			}
-
 			if (e.Key == Keys.F2) {
 				Parameters.VSyncInterval = (Parameters.VSyncInterval == 0) ? 1 : 0;
 			}

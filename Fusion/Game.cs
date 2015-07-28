@@ -17,7 +17,6 @@ using Fusion.Development;
 using Fusion.Content;
 using Fusion.Mathematics;
 using Fusion.Shell;
-using NLua;
 
 
 
@@ -58,11 +57,6 @@ namespace Fusion {
 		/// Gets current content manager
 		/// </summary>
 		public	Invoker Invoker { get { return invoker; } }
-
-		/// <summary>
-		/// Gets Lua state.
-		/// </summary>
-		internal	Lua		Lua { get { return lua; } }
 
 		/// <summary>
 		/// Indicates whether the game is initialized.
@@ -111,7 +105,6 @@ namespace Fusion {
 		GraphicsDevice		graphicsDevice	;
 		ContentManager		content			;
 		Invoker				invoker			;
-		Lua					lua				;
 
 		List<GameService>	serviceList	=	new List<GameService>();
 		GameTime	gameTimeInternal;
@@ -176,13 +169,8 @@ namespace Fusion {
 			graphicsDevice		=	new GraphicsDevice( this );
 			content				=	new ContentManager( this );
 			gameTimeInternal	=	new GameTime();
-			lua					=	new Lua();
 			invoker				=	new Invoker(this);
 
-			lua.LoadCLRPackage();
-			lua.DoString (@" import ('Fusion', 'System', 'System.Drawing', 'System.Windows.Forms'); import ('System.Web');");
-			//lua.RegisterFunction("print", typeof(Game).GetMethod("LuaPrint"));
-			lua.DoString("print(_VERSION)");
 		}
 
 
@@ -290,8 +278,6 @@ namespace Fusion {
 
 				Log.Message("Disposing : Graphics Device");
 				SafeDispose( ref graphicsDevice );
-
-				SafeDispose( ref lua );
 			}
 
 			base.Dispose(disposing);

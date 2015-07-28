@@ -16,9 +16,7 @@ namespace InputDemo {
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using ( var game = new InputDemo() ) {
-				if (Fusion.Development.DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
-					game.Run(args);
-				}
+				game.Run(args);
 			}
 		}
 	}

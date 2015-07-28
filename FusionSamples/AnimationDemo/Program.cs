@@ -13,9 +13,9 @@ namespace AnimationDemo {
 		static void Main ( string[] args )
 		{
 			using (var game = new AnimationDemo()) {
-				if (DevCon.Prepare( game, @"..\..\..\Content\Content.xml", "Content" )) {
+				//if (DevCon.Prepare( game, @"..\..\..\Content\Content.xml", "Content" )) {
 					game.Run( args );
-				}
+				//}
 			}
 		}
 	}

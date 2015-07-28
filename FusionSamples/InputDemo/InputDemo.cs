@@ -112,7 +112,7 @@ namespace InputDemo {
 			Log.Message("...key down event : {0}", e.Key );
 
 			if (e.Key == Keys.F1) {
-				DevCon.Show( this );
+				//DevCon.Show( this );
 			}
 
 			if (e.Key == Keys.F2) {

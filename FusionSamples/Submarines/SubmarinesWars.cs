@@ -253,7 +253,7 @@ namespace SubmarinesWars
         {
             if (e.Key == Keys.F1)
             {
-                DevCon.Show(this);
+                //DevCon.Show(this);
             }
 
             if (e.Key == Keys.F5)

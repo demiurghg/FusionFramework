@@ -3,7 +3,7 @@
 
     <ItemGroup>
         <FusionOutputFiles Include="$(OutDir)*.dll;$(OutDir)*.exe"/>
-        <ThirdPartyFiles Include="$(SolutionDir)Libs\FbxSdk\lib\vs2012\x64\$(ConfigurationName)\libfbxsdk.dll"/>
+        <ThirdPartyFiles Include="$(SolutionDir)SDKs\FbxSdk\lib\vs2012\x64\$(ConfigurationName)\libfbxsdk.dll"/>
         <ToolBoxFiles Include="$(SolutionDir)Tools\*.com;$(SolutionDir)Tools\*.exe;$(SolutionDir)Tools\*.dll;"/>
         <ContentFiles Include="$(SolutionDir)FusionContent\*.*"/>
     </ItemGroup>

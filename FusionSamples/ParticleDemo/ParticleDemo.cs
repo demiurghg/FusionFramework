@@ -60,7 +60,7 @@ namespace ParticleDemo {
 		void InputDevice_KeyDown ( object sender, Fusion.Input.InputDevice.KeyEventArgs e )
 		{
 			if (e.Key == Keys.F1) {
-				DevCon.Show(this);
+			//	DevCon.Show(this);
 			}
 
 			if (e.Key == Keys.F2) {

@@ -80,7 +80,7 @@ namespace SoundDemo {
 		void InputDevice_KeyDown(object sender, InputDevice.KeyEventArgs e)
 		{
 			if (e.Key == Keys.F1) {
-				DevCon.Show( this );
+				//DevCon.Show( this );
 			}
 
 			if (e.Key == Keys.F2) {

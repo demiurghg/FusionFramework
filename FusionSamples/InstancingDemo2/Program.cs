@@ -16,9 +16,9 @@ namespace InstancingDemo2 {
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using (var game = new InstancingDemo2()) {
-				if (DevCon.Prepare( game, @"..\..\..\Content\Content.xml", "Content" )) {
+				//if (DevCon.Prepare( game, @"..\..\..\Content\Content.xml", "Content" )) {
 					game.Run( args );
-				}
+				//}
 			}
 		}
 	}

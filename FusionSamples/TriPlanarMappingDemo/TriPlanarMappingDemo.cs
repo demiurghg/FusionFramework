@@ -210,10 +210,6 @@ namespace TriPlanarMappingDemo
 		/// <param name="e"></param>
 		void InputDevice_KeyDown(object sender, Fusion.Input.InputDevice.KeyEventArgs e)
 		{
-			if (e.Key == Keys.F1) {
-				DevCon.Show(this);
-			}
-
 			if (e.Key == Keys.F5) {
 				Reload();
 			}

@@ -68,9 +68,6 @@ namespace Fusion.Shell {
 						.ToDictionary( t3 => t3.GetCustomAttribute<CommandAttribute>().Name );
 						
 			Log.Message("Invoker: {0} commands found", commands.Count);
-
-			Game.Lua.NewTable("game");
-			Game.Lua.RegisterFunction("game.exec", this, GetType().GetMethod("Execute") );
 		}
 
 

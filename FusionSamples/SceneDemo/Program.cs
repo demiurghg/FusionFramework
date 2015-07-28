@@ -16,9 +16,9 @@ namespace SceneDemo {
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using ( var game = new SceneDemo() ) {
-				if (Fusion.Development.DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
+				//if (Fusion.Development.DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
 					game.Run(args);
-				}
+				//}
 			}
 		}
 	}

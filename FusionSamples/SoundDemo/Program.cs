@@ -15,9 +15,9 @@ namespace SoundDemo {
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using ( var game = new SoundDemo() ) {
-				if (Fusion.Development.DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
-					game.Run(args);
-				}
+				//if (Fusion.Development.DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
+				game.Run(args);
+				//}
 			}
 		}
 	}

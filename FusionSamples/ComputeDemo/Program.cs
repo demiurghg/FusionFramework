@@ -13,9 +13,9 @@ namespace ComputeDemo {
 		static void Main ( string[] args )
 		{
 			using ( var game = new ComputeDemo() ) {
-				if (Fusion.Development.DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
-					game.Run(args);
-				}
+				//if (Fusion.Development.DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
+				game.Run(args);
+				//}
 			}
 		}
 	}

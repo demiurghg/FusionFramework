@@ -17,9 +17,7 @@ namespace TriPlanarMappingDemo
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using (var game = new TriPlanarMappingDemo()) {
-				if (DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
-					game.Run(args);
-				}
+				game.Run(args);
 			}
 		}
 	}

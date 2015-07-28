@@ -17,9 +17,7 @@ namespace SpriteDemo {
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using ( var game = new SpriteDemo() ) {
-				if (DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
-					game.Run(args);
-				}
+				game.Run(args);
 			}
 		}
 	}

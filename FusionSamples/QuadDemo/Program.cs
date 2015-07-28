@@ -15,9 +15,7 @@ namespace QuadDemo2D {
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using ( var game = new QuadDemo() ) {
-				if (Fusion.Development.DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
-					game.Run(args);
-				}
+				game.Run(args);
 			}
 		}
 	}

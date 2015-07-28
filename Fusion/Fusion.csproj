@@ -55,58 +55,57 @@
     <Reference Include="OculusWrap">
       <HintPath>..\Libs\OculusWrap\OculusWrap.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.D3DCompiler, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.D3DCompiler.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.D3DCompiler.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Desktop">
-      <HintPath>..\Libs\SharpDX\SharpDX.Desktop.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Direct3D11, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.Desktop, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.Direct3D11.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.Desktop.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Direct3D11.Effects">
-      <HintPath>..\Libs\SharpDX\SharpDX.Direct3D11.Effects.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.DirectInput, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.Direct3D11, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.DirectInput.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.Direct3D11.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.DirectSound, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.DirectInput, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.DirectSound.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.DirectInput.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.DXGI, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.DirectSound, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.DXGI.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.DirectSound.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Mathematics">
-      <HintPath>..\Libs\SharpDX\SharpDX.Mathematics.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.MediaFoundation, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.DXGI, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.MediaFoundation.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.DXGI.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.RawInput, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.Mathematics, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.RawInput.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.Mathematics.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.XACT3, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.MediaFoundation, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.XACT3.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.MediaFoundation.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.XAudio2, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.RawInput, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.XAudio2.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.RawInput.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.XInput, Version=2.6.3.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="SharpDX.XACT3, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Libs\SharpDX\SharpDX.XInput.dll</HintPath>
+      <HintPath>..\SDKs\SharpDX\SharpDX.XACT3.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XAudio2, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SDKs\SharpDX\SharpDX.XAudio2.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.XInput, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\SDKs\SharpDX\SharpDX.XInput.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -173,39 +172,13 @@
     <Compile Include="Design\Vector2Converter.cs" />
     <Compile Include="Design\Vector3Converter.cs" />
     <Compile Include="Design\Vector4Converter.cs" />
-    <Compile Include="Development\ContentBuilder.cs" />
-    <Compile Include="Development\DevCon.cs" />
     <Compile Include="Development\ExceptionDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Development\ExceptionDialog.Designer.cs">
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Development\UserMessage.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Development\UserMessage.Designer.cs">
-      <DependentUpon>UserMessage.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Development\NameDialog.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Development\NameDialog.Designer.cs">
-      <DependentUpon>NameDialog.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Development\ObjectSelector.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Development\ObjectSelector.Designer.cs">
-      <DependentUpon>ObjectSelector.cs</DependentUpon>
-    </Compile>
     <Compile Include="GameParameters.cs" />
-    <Compile Include="Development\DevConForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Development\DevConForm.Designer.cs">
-      <DependentUpon>DevConForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Graphics\BytecodeUtils.cs" />
     <Compile Include="Graphics\Collections\ConstantBufferCollection.cs" />
     <Compile Include="Graphics\Collections\SamplerStateCollection.cs" />
@@ -390,18 +363,6 @@
     <EmbeddedResource Include="Development\ExceptionDialog.resx">
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Development\NameDialog.resx">
-      <DependentUpon>NameDialog.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Development\ObjectSelector.resx">
-      <DependentUpon>ObjectSelector.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Development\DevConForm.resx">
-      <DependentUpon>DevConForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Development\UserMessage.resx">
-      <DependentUpon>UserMessage.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
@@ -428,10 +389,6 @@
     <ProjectReference Include="..\FusionDDS\FusionDDS.vcxproj">
       <Project>{53af2c09-5113-4051-98fb-bb8258e268bd}</Project>
       <Name>FusionDDS</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NLua\NLua.csproj">
-      <Project>{f55cabbb-4108-4a39-94e1-581fd46dc021}</Project>
-      <Name>NLua</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

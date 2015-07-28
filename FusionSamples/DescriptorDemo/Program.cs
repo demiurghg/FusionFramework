@@ -17,9 +17,9 @@ namespace DescriptorDemo {
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using ( var game = new DescriptorDemo() ) {
-				if (DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
-					game.Run(args);
-				}
+				//if (DevCon.Prepare(game, @"..\..\..\Content\Content.xml", "Content")) {
+				game.Run(args);
+				//}
 			}
 		}
 	}

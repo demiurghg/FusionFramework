@@ -373,7 +373,13 @@ namespace Fusion.Shell
         [AttributeUsage(AttributeTargets.Property)]
         public sealed class NameAttribute : Attribute
         {
-            public NameAttribute(string name, string description="")
+            public NameAttribute(string name )
+            {
+                this.Name = name;
+				this.Description = "";
+            }
+
+            public NameAttribute(string name, string description )
             {
                 this.Name = name;
 				this.Description = description;

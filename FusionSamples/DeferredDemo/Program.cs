@@ -16,9 +16,9 @@ namespace DeferredDemo {
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
 			using (var game = new DeferredDemo()) {
-				if (DevCon.Prepare( game, @"..\..\..\Content\Content.xml", "Content" )) {
+				//if (DevCon.Prepare( game, @"..\..\..\Content\Content.xml", "Content" )) {
 					game.Run( args );
-				}
+				//}
 			}
 		}
 	}
