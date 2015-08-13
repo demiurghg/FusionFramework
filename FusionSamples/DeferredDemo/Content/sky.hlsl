@@ -257,7 +257,7 @@ float4 SampleNoise ( Texture2D tex, float2 uv, int level = 0 )
 	//for (int i=7; i>=0; i--) {
 	for (int i=0; i<8; i++) {
 		#ifdef A
-		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.20f + offset[i] + 0.5*Time * 0.03*0, level );
+		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.20f + offset[i] + 0.5*Time * 0.03, level );
 		uv += sample.rg*0.002;
 		sample.xyz = sample.xyz * 2 - 1;
 		result += sample * weight;
@@ -266,7 +266,7 @@ float4 SampleNoise ( Texture2D tex, float2 uv, int level = 0 )
 		#endif
 
 		#ifdef B
-		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.14f + offset[i] + 0.5*Time * 0.05*0, level );
+		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.14f + offset[i] + 0.5*Time * 0.05, level );
 		uv += sample.rg*0.001;
 		sample.xyz = sample.xyz * 2 - 1;
 		result += sample * weight;
@@ -275,7 +275,7 @@ float4 SampleNoise ( Texture2D tex, float2 uv, int level = 0 )
 		#endif
 
 		#ifdef C
-		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.09f + offset[i] + 0.5*Time * 0.07*0, level );
+		float4 sample = tex.SampleLevel( SamplerLinear, uv * scale * 0.09f + offset[i] + 0.5*Time * 0.07, level );
 		uv += sample.rg*0.001;
 		sample.xyz = sample.xyz * 2 - 1;
 		result += sample * weight;
@@ -340,7 +340,9 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 		
 		float alpha		=	smoothstep(0,1,saturate(clouds.a * 2 - 1));
 		
-		return alpha;
+	/*	float3	normal1	=	mul( clouds.xyz, tbnToWorld );
+		float3	light1	=	SunColor * saturate(dot(normal1, normalize(SunPosition)));
+		return float4(light1, 1);*/
 		
 		#ifdef B 
 			alpha *= 0.7;
@@ -359,7 +361,7 @@ float4 PSMain( PS_INPUT input ) : SV_TARGET0
 		
 		float3 final  = shadow * (light + trans) + Ambient.xyz;
 		
-		return  clouds.a;//float4(final.xyz,alpha * fog);		
+		return  float4(final.xyz,alpha * fog);		 //clouds.a;
 	#endif
 
 	#ifdef BLUR_CLOUD

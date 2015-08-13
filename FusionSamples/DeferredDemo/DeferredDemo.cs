@@ -279,7 +279,7 @@ namespace DeferredDemo {
 			}
 
 			//	render G-buffer :
-			sr.RenderGBuffer ( view, proj, lr.DepthBuffer, hdrTarget, lr.DiffuseBuffer, lr.SpecularBuffer, lr.NormalMapBuffer );
+			//sr.RenderGBuffer ( view, proj, lr.DepthBuffer, hdrTarget, lr.DiffuseBuffer, lr.SpecularBuffer, lr.NormalMapBuffer );
 
 			//	render sky :
 			sky.Render( gameTime, lr.DepthBuffer.Surface, hdrTarget.Surface, view, proj, cloudTarget, smallerCloudTarget );
@@ -300,30 +300,30 @@ namespace DeferredDemo {
 			GraphicsDevice.ResetStates();
 			GraphicsDevice.RestoreBackbuffer();
 
-			sb.Begin(SpriteBlend.Opaque);
-				int w = vp.Width  / 2;
-				int h = vp.Height / 2;
+			//sb.Begin(SpriteBlend.Opaque);
+			//	int w = vp.Width  / 2;
+			//	int h = vp.Height / 2;
 
-				/*if ( InputDevice.IsKeyDown( Keys.T ) ) {
+			//	/*if ( InputDevice.IsKeyDown( Keys.T ) ) {
 					
-					sb.Draw( hdrTarget			,	0, 0, w, h, Color.White );
-					sb.Draw( lr.DiffuseBuffer	,	w, 0, w, h, Color.White );
-					sb.Draw( lr.SpecularBuffer	,	0, h, w, h, Color.White );
-					sb.Draw( lr.NormalMapBuffer	,	w, h, w, h, Color.White );
+			//		sb.Draw( hdrTarget			,	0, 0, w, h, Color.White );
+			//		sb.Draw( lr.DiffuseBuffer	,	w, 0, w, h, Color.White );
+			//		sb.Draw( lr.SpecularBuffer	,	0, h, w, h, Color.White );
+			//		sb.Draw( lr.NormalMapBuffer	,	w, h, w, h, Color.White );
 
-					sb.Draw( lr.CSMColor,  0,  0,400,100, Color.White );
-					sb.Draw( lr.SpotColor, 0,100,400,400, Color.White );
+			//		sb.Draw( lr.CSMColor,  0,  0,400,100, Color.White );
+			//		sb.Draw( lr.SpotColor, 0,100,400,400, Color.White );
 
-				} else {
+			//	} else {
 
-					sb.Draw( hdrTarget,	0, 0, vp.Width, vp.Height, Color.White );
+			//		sb.Draw( hdrTarget,	0, 0, vp.Width, vp.Height, Color.White );
 
-				} */
-					//sb.Draw( cloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
-					//sb.Draw( smallerCloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
+			//	} */
+			//		//sb.Draw( cloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
+			//		//sb.Draw( smallerCloudTarget,	0, 0, vp.Width, vp.Height, Color.White );
 
 
-			sb.End();
+			//sb.End();
 
 			
 			base.Draw( gameTime, stereoEye );

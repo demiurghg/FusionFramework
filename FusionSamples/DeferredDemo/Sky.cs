@@ -309,14 +309,17 @@ namespace DeferredDemo
 			if (flags.HasFlag(SkyFlags.CLOUDS)) {
 				ps.BlendState	=	BlendState.AlphaBlend;
 			}
-			if (flags.HasFlag(SkyFlags.RED)) {
-				ps.BlendState	=	BlendState.Create(ColorChannels.Red);
-			}
-			if (flags.HasFlag(SkyFlags.BLUE)) {
-				ps.BlendState	=	BlendState.Create(ColorChannels.Blue);
-			}
-			if (flags.HasFlag(SkyFlags.GREEN)) {
-				ps.BlendState	=	BlendState.Create(ColorChannels.Green);
+			//if (flags.HasFlag(SkyFlags.RED)) {
+			//	ps.BlendState	=	BlendState.Create(ColorChannels.Red);
+			//}
+			//if (flags.HasFlag(SkyFlags.BLUE)) {
+			//	ps.BlendState	=	BlendState.Create(ColorChannels.Blue);
+			//}
+			//if (flags.HasFlag(SkyFlags.GREEN)) {
+			//	ps.BlendState	=	BlendState.Create(ColorChannels.Green);
+			//}
+			if ( flags.HasFlag( SkyFlags.BLUR_CLOUD ) ) {
+				ps.BlendState = BlendState.AlphaBlend;
 			}
 		}
 
@@ -484,7 +487,8 @@ namespace DeferredDemo
 	
 			skyConstsCB.SetData( skyConstsData );
 
-			rs.SetTargets(null, cloudTarget.Surface);
+			rs.SetTargets( depthBuffer, hdrTarget);
+//			rs.SetTargets( null, cloudTarget.Surface );
 
 			flags = SkyFlags.CLOUDS;
 
@@ -514,7 +518,7 @@ namespace DeferredDemo
 					rs.DrawIndexed( mesh.IndexCount, 0, 0 );
 				}
 			}
-
+			#if false
 			//Blur
 			var filter = Game.GetService<Filter>();
 
@@ -543,7 +547,7 @@ namespace DeferredDemo
 			skyConstsData.MatrixWVP = Matrix.Identity; 
 			skyConstsCB.SetData( skyConstsData );
 
-			rs.SetTargets(depthBuffer, hdrTarget);
+			rs.SetTargets(null, hdrTarget);
 
 			ApplyColorSpace( ref flags );
 			rs.VertexShaderConstants[0] = skyConstsCB;
@@ -571,8 +575,8 @@ namespace DeferredDemo
 			//	}
 			rs.SetupVertexInput( vertexBufferBlur, null );
 			rs.Draw( 6, 0 );
-			#if false
-			#endif
+			
+#endif
 
 			rs.ResetStates();
 		}
