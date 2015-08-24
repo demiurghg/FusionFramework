@@ -14,8 +14,8 @@
     <ProjectGuid>{1131387F-6129-4287-A973-8B43DC9EFD49}</ProjectGuid>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <Keyword>ManagedCProj</Keyword>
-    <RootNamespace>FbxLoader2</RootNamespace>
-    <ProjectName>FbxTool</ProjectName>
+    <RootNamespace>Native.Fbx</RootNamespace>
+    <ProjectName>Native.Fbx</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">

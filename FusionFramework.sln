@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FbxTool", "FbxTool\FbxTool.vcxproj", "{1131387F-6129-4287-A973-8B43DC9EFD49}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Native.Fbx", "Native.Fbx\Native.Fbx.vcxproj", "{1131387F-6129-4287-A973-8B43DC9EFD49}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fusion", "Fusion\Fusion.csproj", "{085C9E62-CDDF-4B95-994D-085C74FA90FC}"
 EndProject

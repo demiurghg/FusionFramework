@@ -90,7 +90,7 @@ namespace Fusion.Pipeline.AssetTypes {
 				ImportGeometry ? "/geom":"" 
 			);
 
-			buildContext.RunTool( "FbxTool.exe", cmdLine );
+			buildContext.RunTool( "Native.Fbx.exe", cmdLine );
 
 			using ( var target = buildContext.TargetStream( this ) ) {
 				buildContext.CopyTo( destPath, target );

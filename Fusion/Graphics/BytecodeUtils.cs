@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using SharpDX.D3DCompiler;
 using Fusion.Mathematics;
 
 namespace Fusion.Graphics {

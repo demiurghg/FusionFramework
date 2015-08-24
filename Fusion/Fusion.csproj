@@ -59,10 +59,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SDKs\SharpDX\SharpDX.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.D3DCompiler, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\SDKs\SharpDX\SharpDX.D3DCompiler.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX.Desktop, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SDKs\SharpDX\SharpDX.Desktop.dll</HintPath>

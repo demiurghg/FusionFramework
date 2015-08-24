@@ -8,7 +8,7 @@
 #include "FbxLoader.h"
 
 using namespace Fusion;
-using namespace Fusion::Fbx;
+using namespace Native::Fbx;
 using namespace System::IO;
 using namespace System::Collections;
 using namespace System::Collections::Generic;
@@ -71,7 +71,7 @@ Vector2	FbxVector2ToVector ( FbxVector2 v )
 /*
 **	Fusion::Fbx::FbxLoader::FbxLoader
 */
-Fusion::Fbx::FbxLoader::FbxLoader()
+Native::Fbx::FbxLoader::FbxLoader()
 {
 	Console::WriteLine( "FBX SDK {0}", gcnew string(FbxManager::GetVersion()) );
 	fbxManager		=	FbxManager::Create();
@@ -149,7 +149,7 @@ Graphics::Scene ^ FbxLoader::LoadScene( string ^filename, Options ^options )
 /*
 **	Fusion::Fbx::FbxLoader::IterateChildren
 */
-void Fusion::Fbx::FbxLoader::IterateChildren( FbxNode *fbxNode, FbxScene *fbxScene, Graphics::Scene ^scene, int parentIndex )
+void Native::Fbx::FbxLoader::IterateChildren( FbxNode *fbxNode, FbxScene *fbxScene, Graphics::Scene ^scene, int parentIndex )
 {
 	auto node			=	gcnew Node();
 	node->Name			= 	gcnew string( fbxNode->GetName() );
@@ -224,7 +224,7 @@ void	TryGetDiffuseTexture ( string ^%textureName, FbxProperty pProperty, int pMa
 /*
 **	Fusion::Fbx::FbxLoader::HandleMesh
 */
-void Fusion::Fbx::FbxLoader::HandleMesh( Graphics::Scene ^scene, Graphics::Node ^node, FbxNode *fbxNode )
+void Native::Fbx::FbxLoader::HandleMesh( Graphics::Scene ^scene, Graphics::Node ^node, FbxNode *fbxNode )
 {
 	FbxMesh		*fbxMesh	=	fbxNode->GetMesh();
 
@@ -411,7 +411,7 @@ int GetFbxNodeIndex ( Scene ^scene, FbxNode *fbxNode )
 /*
 **	Fusion::Fbx::FbxLoader::HandleAnimation
 */
-void Fusion::Fbx::FbxLoader::HandleSkinning ( Mesh ^nodeMesh, Scene ^scene, Node ^node, FbxNode *fbxNode, Matrix^ meshTransform, array<Int4> ^skinIndices, array<Vector4>	^skinWeights)
+void Native::Fbx::FbxLoader::HandleSkinning ( Mesh ^nodeMesh, Scene ^scene, Node ^node, FbxNode *fbxNode, Matrix^ meshTransform, array<Int4> ^skinIndices, array<Vector4>	^skinWeights)
 {
 	FbxMesh		*fbxMesh	=	fbxNode->GetMesh();
 
@@ -502,7 +502,7 @@ void Fusion::Fbx::FbxLoader::HandleSkinning ( Mesh ^nodeMesh, Scene ^scene, Node
 /*
 **	Gets custom properties :
 */
-void Fusion::Fbx::FbxLoader::GetCustomProperties( Graphics::Node ^node, FbxNode *fbxNode )
+void Native::Fbx::FbxLoader::GetCustomProperties( Graphics::Node ^node, FbxNode *fbxNode )
 {
 	FbxProperty lProperty = fbxNode->GetFirstProperty();
     while (lProperty.IsValid()) {
@@ -632,7 +632,7 @@ void AddTextureToDictionaryByProperty( Dictionary<string^, string^> ^dict, FbxPr
 /*
 **	Fusion::Fbx::FbxLoader::HandleMaterial
 */
-void Fusion::Fbx::FbxLoader::HandleMaterial( Graphics::MeshSubset ^sg, FbxSurfaceMaterial *material )
+void Native::Fbx::FbxLoader::HandleMaterial( Graphics::MeshSubset ^sg, FbxSurfaceMaterial *material )
 {
 
 }
@@ -643,7 +643,7 @@ void Fusion::Fbx::FbxLoader::HandleMaterial( Graphics::MeshSubset ^sg, FbxSurfac
 -----------------------------------------------------------------------------*/
 
 
-void Fusion::Fbx::FbxLoader::GetColorForVertex( Graphics::MeshVertex *vertex, FbxMesh *fbxMesh, int vertexIdCount, int ctrlPointId )
+void Native::Fbx::FbxLoader::GetColorForVertex( Graphics::MeshVertex *vertex, FbxMesh *fbxMesh, int vertexIdCount, int ctrlPointId )
 {
 	FbxGeometryElementVertexColor *colorElement = fbxMesh->GetElementVertexColor();
 
@@ -691,7 +691,7 @@ void Fusion::Fbx::FbxLoader::GetColorForVertex( Graphics::MeshVertex *vertex, Fb
 /*
 **	Fusion::Fbx::FbxLoader::GetNormalForVertex
 */
-void Fusion::Fbx::FbxLoader::GetNormalForVertex( Graphics::MeshVertex *vertex, FbxMesh *fbxMesh, int vertexIdCount, int ctrlPointId )
+void Native::Fbx::FbxLoader::GetNormalForVertex( Graphics::MeshVertex *vertex, FbxMesh *fbxMesh, int vertexIdCount, int ctrlPointId )
 {
 	FbxGeometryElementNormal *normalElement = fbxMesh->GetElementNormal();
 
@@ -737,7 +737,7 @@ void Fusion::Fbx::FbxLoader::GetNormalForVertex( Graphics::MeshVertex *vertex, F
 /*
 **	Fusion::Fbx::FbxLoader::GetTextureForVertex
 */
-void Fusion::Fbx::FbxLoader::GetTextureForVertex( Graphics::MeshVertex *vertex, FbxMesh *fbxMesh, int vertexIdCount, int vertexId )
+void Native::Fbx::FbxLoader::GetTextureForVertex( Graphics::MeshVertex *vertex, FbxMesh *fbxMesh, int vertexIdCount, int vertexId )
 {
 	FbxStringList NameListOfUV;
 	fbxMesh->GetUVSetNames(NameListOfUV);
@@ -794,7 +794,7 @@ void Fusion::Fbx::FbxLoader::GetTextureForVertex( Graphics::MeshVertex *vertex, 
 /*
 **	Fusion::Fbx::FbxLoader::HandleNull
 */
-void Fusion::Fbx::FbxLoader::HandleCamera( Graphics::Scene ^scene, Graphics::Node ^node, FbxNode *fbxNode )
+void Native::Fbx::FbxLoader::HandleCamera( Graphics::Scene ^scene, Graphics::Node ^node, FbxNode *fbxNode )
 {
 
 }
@@ -803,7 +803,7 @@ void Fusion::Fbx::FbxLoader::HandleCamera( Graphics::Scene ^scene, Graphics::Nod
 /*
 **	Fusion::Fbx::FbxLoader::HandleLight
 */
-void Fusion::Fbx::FbxLoader::HandleLight( Graphics::Scene ^scene, Graphics::Node ^node, FbxNode *fbxNode )
+void Native::Fbx::FbxLoader::HandleLight( Graphics::Scene ^scene, Graphics::Node ^node, FbxNode *fbxNode )
 {
 
 }
@@ -818,6 +818,8 @@ void Fusion::Fbx::FbxLoader::HandleLight( Graphics::Scene ^scene, Graphics::Node
 */
 int main(array<System::String ^> ^args)
 {
+	Trace::Listeners->Add( gcnew ColoredTraceListener2() );
+
 	auto options	=	gcnew Options();
 	auto parser		=	gcnew CommandLineParser( options, true, nullptr );
 

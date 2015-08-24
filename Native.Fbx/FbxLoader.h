@@ -8,7 +8,7 @@ using namespace msclr::interop;
 using namespace Fusion::Graphics;
 using namespace Fusion::Mathematics;
 
-namespace Fusion {
+namespace Native {
 	namespace Fbx {
 
 		public ref class FbxLoader {
