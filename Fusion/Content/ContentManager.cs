@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
 using Fusion.Mathematics;
+using Fusion.Content;
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 	
 	public class ContentManager : DisposableBase {
 
@@ -80,6 +81,7 @@ namespace Fusion.Content {
 		/// <param name="name"></param>
 		/// <param name="abstractAsset"></param>
 		/// <returns></returns>
+		/*
 		public void PatchAbstractAsset ( string name, AbstractAsset sourceAsset )
 		{
 			var targetAsset = content[ name ].Object;
@@ -90,6 +92,7 @@ namespace Fusion.Content {
 
 			Misc.CopyPropertyValues( sourceAsset, targetAsset );
 		}
+		*/
 
 
 

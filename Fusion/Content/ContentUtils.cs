@@ -8,7 +8,7 @@ using System.Security.Cryptography;
 using Fusion.Mathematics;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 	public static class ContentUtils {
 
 

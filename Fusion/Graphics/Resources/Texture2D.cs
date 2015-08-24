@@ -9,7 +9,7 @@ using D3D = SharpDX.Direct3D11;
 using SharpDX;
 using SharpDX.Direct3D11;
 using System.Runtime.InteropServices;
-using Fusion.Content;
+using Fusion.Pipeline;
 using Fusion.Mathematics;
 using SharpDX.Direct3D;			
 using Native.Dds;

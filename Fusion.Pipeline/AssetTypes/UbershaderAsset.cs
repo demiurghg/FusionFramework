@@ -15,7 +15,7 @@ using FX = SharpDX.D3DCompiler;
 using SharpDX.D3DCompiler;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline.AssetTypes {
 
 	[Asset("Content", "HLSL Ubershader", "*.hlsl")]
 	public partial class UbershaderAsset : Asset, IFileDerivable {

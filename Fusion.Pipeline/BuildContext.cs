@@ -7,8 +7,10 @@ using System.IO;
 using System.Diagnostics;
 using System.IO.Compression;
 using Fusion.Mathematics;
+using Fusion.Content;
 
-namespace Fusion.Content {
+
+namespace Fusion.Pipeline {
 
 	/// <summary>
 	/// 

@@ -6,7 +6,7 @@ using System.IO;
 using Fusion.Mathematics;
 
 
-namespace Fusion {
+namespace Fusion.Pipeline.Utils {
 	internal partial class Image {
 
 		public int	Width	{ get; protected set; }

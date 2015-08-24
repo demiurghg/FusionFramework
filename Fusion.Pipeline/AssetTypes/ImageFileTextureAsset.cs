@@ -8,7 +8,7 @@ using System.IO;
 using Fusion.Mathematics;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline.AssetTypes {
 
 	[Asset("Content", "Image File Texture", "*.tga;*.png;*.jpg")]
 	public class ImageFileTextureAsset : Asset, IFileDerivable {

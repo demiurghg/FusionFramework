@@ -8,7 +8,7 @@ using System.IO;
 using Fusion.Mathematics;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 
 	[ContentLoader(typeof(AbstractAsset))]
 	public class AbstractAssetLoader : ContentLoader {

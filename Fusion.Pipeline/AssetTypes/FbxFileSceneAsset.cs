@@ -7,7 +7,7 @@ using System.ComponentModel;
 using Fusion.Mathematics;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline.AssetTypes {
 
 	[Asset("Content", "FBX File Scene", "*.fbx")]
 	public class FbxFileSceneAsset : Asset, IFileDerivable {

@@ -8,7 +8,7 @@ using SharpDX;
 using Fusion.Graphics;
 using System.Diagnostics;
 using System.ComponentModel;
-using Fusion.Content;
+using Fusion.Pipeline;
 
 
 namespace Fusion.Graphics {

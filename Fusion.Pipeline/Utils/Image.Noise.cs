@@ -6,7 +6,7 @@ using System.IO;
 using SharpDX;
 using Fusion.Mathematics;
 
-namespace Fusion {
+namespace Fusion.Pipeline.Utils {
 	internal partial class Image {
 
 		static Random rand = new Random();

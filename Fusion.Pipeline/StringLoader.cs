@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 
 	/// <summary>
 	/// Loads string from text file.

@@ -7,7 +7,7 @@ using System.ComponentModel;
 using System.IO;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 
 	public class AbstractAsset : Asset {
 

@@ -7,9 +7,10 @@ using System.ComponentModel;
 using System.IO;
 using Fusion.Graphics;
 using Fusion.Mathematics;
+using Fusion.Pipeline.Utils;
 
 
-namespace Fusion.Content.AssetTypes {
+namespace Fusion.Pipeline.AssetTypes {
 
 	[Asset("Content", "Assembled Texture Atlas")]
 	public class AssembledTextureAtlasAsset : Asset {

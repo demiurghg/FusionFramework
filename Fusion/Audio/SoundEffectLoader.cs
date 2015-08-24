@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using Fusion.Content;
+using Fusion.Pipeline;
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
 using SharpDX.X3DAudio;

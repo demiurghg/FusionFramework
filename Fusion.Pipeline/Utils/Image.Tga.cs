@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 using Fusion.Mathematics;
 
 
-namespace Fusion {
+namespace Fusion.Pipeline.Utils {
 	internal partial class Image {
 
 		/*-----------------------------------------------------------------------------------------

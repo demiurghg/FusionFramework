@@ -8,27 +8,26 @@ using System.IO;
 using Fusion.Mathematics;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline.AssetTypes {
 
-	[Asset("Content", "Raw File", "*.dds;*.*")]
-	public class RawFileAsset : Asset, IFileDerivable {
+	[Asset("Content", "WAV File Sound Effect", "*.wav")]
+	public class WaveFileSoundEffectAsset : Asset, IFileDerivable {
 
 
 		/// <summary>
-		/// 
+		/// Source file
 		/// </summary>
 		public string SourceFile { get; set; }
 
 
 
 		/// <summary>
-		/// 
+		/// Dependencies
 		/// </summary>
 		public override string[] Dependencies
 		{
 			get { return new[]{ SourceFile }; }
 		}
-
 
 
 		/// <summary>
@@ -44,7 +43,7 @@ namespace Fusion.Content {
 
 
 		/// <summary>
-		/// 
+		/// Builds asset
 		/// </summary>
 		/// <param name="buildContext"></param>
 		public override void Build ( BuildContext buildContext )

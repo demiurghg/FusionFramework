@@ -12,7 +12,7 @@ using System.Diagnostics;
 using Fusion.Mathematics;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 	public class AssetCollection : List<Asset> {
 
 		public AssetCollection () : base() {

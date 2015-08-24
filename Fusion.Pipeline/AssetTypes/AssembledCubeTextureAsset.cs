@@ -9,7 +9,7 @@ using Fusion.Mathematics;
 using Fusion.Graphics;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 	
 	[Asset("Content", "Assembled Cube Texture")]
 	public class AssembledCubeTextureAsset : Asset {

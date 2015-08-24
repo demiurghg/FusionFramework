@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using Fusion;
 using Fusion.Graphics;
-using Fusion.Content;
+using Fusion.Pipeline;
 
 namespace Fusion {
 	public partial class TexturePump : GameService {

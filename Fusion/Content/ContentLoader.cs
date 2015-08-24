@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Fusion.Mathematics;
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 	public abstract class ContentLoader {
 
 		/// <summary>

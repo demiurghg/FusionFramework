@@ -8,9 +8,10 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using Fusion.Mathematics;
+using Fusion.Content;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 
 	/// <summary>
 	/// Asset represent of designers' or artists' product (like scene, texture or game object) and its description in suitable for game form.

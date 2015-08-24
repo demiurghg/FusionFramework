@@ -15,7 +15,7 @@ using System.Net;
 
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 
 	[Serializable]
 	public class ToolException : System.Exception {

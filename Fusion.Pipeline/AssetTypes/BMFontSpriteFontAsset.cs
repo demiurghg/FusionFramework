@@ -7,9 +7,10 @@ using System.IO;
 using Fusion;
 using Fusion.Graphics;
 using Fusion.Mathematics;
+using Fusion.Content;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline.AssetTypes {
 	
 	[Asset("Content", "BMFC Sprite Font", "*.bmfc")]
 	public class BMFontSpriteFontAsset : Asset, IFileDerivable {

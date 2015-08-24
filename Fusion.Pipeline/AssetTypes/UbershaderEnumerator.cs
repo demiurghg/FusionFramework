@@ -13,7 +13,7 @@ using System.Threading;
 using Fusion.Mathematics;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline.AssetTypes {
 
 	/// <summary>
 	/// Creates definition list by declaration.

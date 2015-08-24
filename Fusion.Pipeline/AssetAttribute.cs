@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Fusion.Mathematics;
 
 
-namespace Fusion.Content {
+namespace Fusion.Pipeline {
 
 	/// <summary>
 	/// Asset attribute.
