@@ -28,7 +28,7 @@ namespace Fusion.Pipeline {
 		/// <param name="buildContext"></param>
 		public override void Build ( BuildContext buildContext )
 		{
-			Misc.SaveObjectToXml( this, GetType(), buildContext.TargetStream( this ) );
+			Misc.SaveObjectToXml( this, GetType(), buildContext.OpenTargetStream( this ) );
 		}
 	}
 }

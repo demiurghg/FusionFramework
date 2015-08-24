@@ -160,7 +160,7 @@ namespace Fusion.Pipeline {
 		/// </summary>
 		/// <param name="asset"></param>
 		/// <returns></returns>
-		public Stream TargetStream ( Asset asset )
+		public Stream OpenTargetStream ( Asset asset )
 		{
 			var targetPath	= TargetPath( asset );			
 

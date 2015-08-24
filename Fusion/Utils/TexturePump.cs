@@ -11,6 +11,7 @@ using SharpDX;
 using Fusion;
 using Fusion.Graphics;
 using Fusion.Pipeline;
+using Fusion.Content;
 
 namespace Fusion {
 	public partial class TexturePump : GameService {

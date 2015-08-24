@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
 using Fusion.Mathematics;
+using Fusion.Content;
 
 
 namespace Fusion.Pipeline {

@@ -234,7 +234,7 @@ namespace Fusion.Pipeline.AssetTypes {
 			//
 			//	Write ubershader :
 			//
-			using ( var fs = buildContext.TargetStream( this ) ) {
+			using ( var fs = buildContext.OpenTargetStream( this ) ) {
 
 				using ( var bw = new BinaryWriter( fs ) ) {
 

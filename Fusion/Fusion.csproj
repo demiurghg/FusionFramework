@@ -287,6 +287,9 @@
     <Compile Include="Shell\Commands\Set.cs" />
     <Compile Include="Shell\CommandLineParserException.cs" />
     <Compile Include="Shell\Invoker.cs" />
+    <Compile Include="Test\TestAttribute.cs" />
+    <Compile Include="Test\Tester.cs" />
+    <Compile Include="Test\TestException.cs" />
     <Compile Include="UserInterface\Config.cs" />
     <Compile Include="UserInterface\Context.cs" />
     <Compile Include="UserInterface\Enums.cs" />
@@ -325,10 +328,6 @@
     <Compile Include="Graphics\Scene\Scene.cs" />
     <Compile Include="Utils\Serializer.cs" />
     <Compile Include="Mathematics\Temperature.cs" />
-    <Compile Include="Utils\TexturePump.cs" />
-    <Compile Include="Utils\TexturePump.Item.cs" />
-    <Compile Include="Utils\TexturePumpConfig.cs" />
-    <Compile Include="Utils\TexturePumpStatus.cs" />
     <Compile Include="Utils\WebDownloaderService.cs" />
     <Compile Include="Utils\Wildcard.cs" />
   </ItemGroup>

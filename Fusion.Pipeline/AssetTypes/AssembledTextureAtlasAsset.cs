@@ -118,7 +118,7 @@ namespace Fusion.Pipeline.AssetTypes {
 			//
 			//	Write binary blob (text + dds texture):
 			//
-			using ( var fs = buildContext.TargetStream( this ) ) {
+			using ( var fs = buildContext.OpenTargetStream( this ) ) {
 				var bw = new BinaryWriter( fs );
 
 				bw.Write(new[]{'A','T','L','S'});

@@ -92,7 +92,7 @@ namespace Fusion.Pipeline.AssetTypes {
 
 			buildContext.RunTool( "Native.Fbx.exe", cmdLine );
 
-			using ( var target = buildContext.TargetStream( this ) ) {
+			using ( var target = buildContext.OpenTargetStream( this ) ) {
 				buildContext.CopyTo( destPath, target );
 			}
 		}

@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.IO;
 using System.Security.Cryptography;
 using Fusion.Mathematics;
+using Fusion.Test;
+using System.Runtime.InteropServices;
 
 
-namespace Fusion.Pipeline {
+namespace Fusion.Content {
 	public static class ContentUtils {
 
 
@@ -42,9 +45,34 @@ namespace Fusion.Pipeline {
 		/// <returns></returns>
 		public static string BackslashesToSlashes ( string input ) 
 		{
-			return input.Replace('\\', '/');
+			var words	=	input.Split(new[]{'\\', '/'}, StringSplitOptions.RemoveEmptyEntries);
+			var path	 =	string.Join( "/", words );
+
+			return path;
 		}
 
+
+		[Test]
+		static void TestBackslashesToSlashes()
+		{
+			var a = @"C:/Test/text.txt";
+			var b = BackslashesToSlashes(@"\/C:////Test\\text.txt/");
+			Tester.AreEqual( a, b, "{0} != {1}", a, b );
+
+			/*var c = @"./text.txt";
+			var d = BackslashesToSlashes(@"\text.txt/");
+			Tester.AreEqual( c, d, "{0} != {1}", c, d );*/
+		}
+
+
+
+		[Test]
+		static void TestHashEquality ()
+		{
+			var a = GetHashedFileName(@"test/text.jpg", ".hash");
+			var b = GetHashedFileName(@"\//Test\\\text.txt", ".hash");
+			Tester.AreEqual( a, b, "{0} != {1}", a, b );
+		}
 
 
 		/// <summary>
@@ -67,7 +95,7 @@ namespace Fusion.Pipeline {
 		/// <returns></returns>
 		public static string GetHashedFileName ( string assetPath, string ext )
 		{
-			return CalculateMD5Hash( GetPathWithoutExtension(assetPath).ToLower() ) + ext;
+			return CalculateMD5Hash( GetPathWithoutExtension( BackslashesToSlashes(assetPath).ToLower()) ) + ext;
 		}
 
 
@@ -135,5 +163,71 @@ namespace Fusion.Pipeline {
 
 			return IsCachedFileUpToDate( cachedFileName, srcFileName, dependencies );
 		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="?"></param>
+		/// <returns></returns>
+		public static bool WildcardPathMatch( string text, string pattern, bool caseSensitive )
+		{
+			var regexPattern = "^" + Regex.Escape( pattern ).
+									 Replace( "\\*", ".*" ).
+									 Replace( "\\?", "." ) + "$";
+
+			var regex = new Regex( regexPattern, caseSensitive ? RegexOptions.None : RegexOptions.IgnoreCase );
+
+			return regex.IsMatch( text );
+
+		}
+
+
+
+		/// <summary>
+		/// Class for path comaprison
+		/// </summary>
+		public class PathComparer : IComparer<string> {
+
+			[DllImport("shlwapi.dll", CharSet=CharSet.Unicode, ExactSpelling=true)]
+			static extern int StrCmpLogicalW(String x, String y);
+
+			public int Compare(string x, string y) {
+
+				var pathX = x.Split( new[]{'/', '\\'}, StringSplitOptions.RemoveEmptyEntries );
+				var pathY = y.Split( new[]{'/', '\\'}, StringSplitOptions.RemoveEmptyEntries );
+
+				var min	  = Math.Min( pathX.Length, pathY.Length );
+
+				
+				for ( int i = 0; i<min; i++ ) {
+
+					if ( i == min-1 ) {
+						
+						var lenD = pathY.Length - pathX.Length;
+						var extD = StrCmpLogicalW( Path.GetExtension(pathX[i]), Path.GetExtension(pathY[i]) );
+						
+						if (lenD!=0) {
+							return lenD;
+						} else if (extD!=0) {
+							return extD;
+						} else {
+							return StrCmpLogicalW( pathX[i], pathY[i] );
+						}
+					}
+
+					int cmp = StrCmpLogicalW( pathX[i], pathY[i] );
+
+					if (cmp!=0) {
+						return cmp;
+					}
+				}
+
+				return 0;
+			}
+
+		}
+
 	}
 }

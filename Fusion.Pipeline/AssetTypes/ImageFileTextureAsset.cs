@@ -115,7 +115,7 @@ namespace Fusion.Pipeline.AssetTypes {
 
 			RunNVCompress( buildContext, src, dst, NoMips, Fast, ToNormal, Color, Alpha, Normal, Compression );
 
-			using ( var target = buildContext.TargetStream( this ) ) {
+			using ( var target = buildContext.OpenTargetStream( this ) ) {
 				buildContext.CopyTo( dst, target );
 			}
 		}

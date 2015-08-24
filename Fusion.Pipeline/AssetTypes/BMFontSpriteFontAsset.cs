@@ -86,7 +86,7 @@ namespace Fusion.Pipeline.AssetTypes {
 				p.File	=	newAssetPath;
 			}
 
-			using ( var stream = buildContext.TargetStream( this ) ) {
+			using ( var stream = buildContext.OpenTargetStream( this ) ) {
 				SpriteFont.FontLoader.Save( stream, font );
 			}
 		}

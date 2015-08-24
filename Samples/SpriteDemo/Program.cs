@@ -16,6 +16,8 @@ namespace SpriteDemo {
 		{
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
+			Fusion.Test.Tester.Run();
+
 			using ( var game = new SpriteDemo() ) {
 				game.Run(args);
 			}

@@ -49,7 +49,7 @@ namespace Fusion.Pipeline.AssetTypes {
 		/// <param name="buildContext"></param>
 		public override void Build ( BuildContext buildContext )
 		{
-			using ( var target = buildContext.TargetStream( this ) ) {
+			using ( var target = buildContext.OpenTargetStream( this ) ) {
 				buildContext.CopyTo( SourceFile, target );
 			}
 		}
