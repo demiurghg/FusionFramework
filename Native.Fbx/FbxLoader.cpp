@@ -818,7 +818,7 @@ void Native::Fbx::FbxLoader::HandleLight( Graphics::Scene ^scene, Graphics::Node
 */
 int main(array<System::String ^> ^args)
 {
-	Trace::Listeners->Add( gcnew ColoredTraceListener2() );
+	Trace::Listeners->Add( gcnew StdTraceListener() );
 
 	auto options	=	gcnew Options();
 	auto parser		=	gcnew CommandLineParser( options, true, nullptr );

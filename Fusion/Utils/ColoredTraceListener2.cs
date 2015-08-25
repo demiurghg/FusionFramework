@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Fusion {
 
-	public class ColoredTraceListener2 : TraceListener {
+	public class StdTraceListener : TraceListener {
 
 
 		public override void Fail ( string message )
