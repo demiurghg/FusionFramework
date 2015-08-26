@@ -20,6 +20,8 @@ struct PS_IN {
 	float2 tc  : TEXCOORD;
 };
 
+/// test
+
 
 cbuffer 		CBBatch 	: 	register(b0) { BATCH Batch : packoffset( c0 ); }	
 SamplerState	Sampler		: 	register(s0);

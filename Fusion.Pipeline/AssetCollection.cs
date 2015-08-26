@@ -73,7 +73,7 @@ namespace Fusion.Pipeline {
 			int succeeded = 0;
 			int failed = 0;
 
-			Log.Message("---------- Content Build Started ----------");
+			///Log.Message("---------- Content Build Started ----------");
 
 
 			HashSet<string> selectedNames = null;
@@ -149,7 +149,7 @@ namespace Fusion.Pipeline {
 				}
 			}
 
-			Log.Message("---------- Build: {0} succeeded, {1} failed ----------", succeeded, failed);
+			//Log.Message("---------- Build: {0} succeeded, {1} failed ----------", succeeded, failed);
 
 			if (failed==0) {
 				message = string.Format("Build: {0} succeeded, {1} failed", succeeded, failed);

@@ -18,6 +18,7 @@ namespace SpriteDemo {
 
 			Fusion.Test.Tester.Run();
 
+
 			using ( var game = new SpriteDemo() ) {
 				game.Run(args);
 			}

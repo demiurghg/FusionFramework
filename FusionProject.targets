@@ -1,6 +1,7 @@
 <Project DefaultTargets="Compile"
     xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
+	<!-- Include core assemblies --> 
     <ItemGroup>
 		<Reference Include="Fusion">
 		  <HintPath>$(FUSION_BIN)\Fusion.dll</HintPath>
@@ -12,4 +13,25 @@
 		  <HintPath>$(FUSION_BIN)\BEPUutilities.dll</HintPath>
 		</Reference>
     </ItemGroup>
+	
+	<!-- Get all Fusion Content References and store them in a list -->
+    <ItemGroup>
+        <FusionContent Include="@(FusionContentReference)"/>
+	</ItemGroup>
+	
+	<!-- This disables the IDE feature that skips executing msbuild in some build situations. --> 
+	<PropertyGroup>
+		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
+	</PropertyGroup>
+	
+	<Target Name="Prepare">
+
+        <!--Condition="!Exists('$(MonoGameContentBuilderExe)')" -->
+    <Error
+        Text="The MonoGame content builder executable could not be located at '$(MonoGameContentBuilderExe)'!"
+      />
+	
+	</Target>
+	
+	
 </Project>
