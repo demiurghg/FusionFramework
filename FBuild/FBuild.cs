@@ -32,7 +32,7 @@ namespace FBuild {
 				var sourceDir	=	Path.GetDirectoryName( Path.GetFullPath( options.ProjectFile ) );
 				var outputDir	=	options.OutputDirectory;
 				var message		=	"";
-				var items		=	options.Items.Any() ? options.Items : null;
+				var items		=	options.Items.Any() ? options.Items : null;	  
 
 				assetCollection.Build( force, sourceDir, outputDir,	out message, items );
 

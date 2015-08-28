@@ -24,14 +24,36 @@
 		<DisableFastUpToDateCheck>true</DisableFastUpToDateCheck>
 	</PropertyGroup>
 	
-	<Target Name="Prepare">
+	
+	<!-- Build content -->
+	<Target Name="Build">
 
-        <!--Condition="!Exists('$(MonoGameContentBuilderExe)')" -->
-    <Error
-        Text="The MonoGame content builder executable could not be located at '$(MonoGameContentBuilderExe)'!"
-      />
+		<Exec Command='echo Building content projects...'/>
+		<Exec Command='echo &quot;%(FusionContent.FullPath)&quot;'/>
+
+		<Exec Command='$(FUSION_BIN)\FBuild &quot;%(FusionContent.FullPath)&quot; /out:$(TargetDir)\Content' />
 	
 	</Target>
-	
-	
+
+	<!-- Rebuild content -->
+	<Target Name="Rebuild">
+
+		<Exec Command='echo Rebuilding content projects...'/>
+		<Exec Command='echo &quot;%(FusionContent.FullPath)&quot;'/>
+
+		<Exec Command='$(FUSION_BIN)\FBuild &quot;%(FusionContent.FullPath)&quot; /force /out:$(TargetDir)\Content' />
+
+	</Target>
+
+	<!-- Rebuild content -->
+	<Target Name="Clean">
+
+		<Exec Command='echo Cleaning content...'/>
+		<Exec Command='echo &quot;%(FusionContent.FullPath)&quot;'/>
+
+		<Exec Command='del &quot;$(TargetDir)\Content&quot; /Q' />
+
+	</Target>
+
+
 </Project>

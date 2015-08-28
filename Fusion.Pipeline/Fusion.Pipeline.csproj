@@ -72,6 +72,7 @@
     <Compile Include="AssetTypes\UbershaderEnumerator.cs" />
     <Compile Include="AssetTypes\WaveFileSoundEffectAsset.cs" />
     <Compile Include="BuildContext.cs" />
+    <Compile Include="ContentProject.cs" />
     <Compile Include="IAssetDerivable.cs" />
     <Compile Include="IFileDerivable.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
