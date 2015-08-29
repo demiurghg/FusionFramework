@@ -45,13 +45,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>$(ProjectDir)..\SDKs\FbxSdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)..\SDKs\FbxSdk\lib\vs2012\x64\debug\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)..\SDKs\FbxSdk\lib\x64\debug\;$(LibraryPath)</LibraryPath>
     <OutDir>$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <IncludePath>$(ProjectDir)..\SDKs\FbxSdk\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)..\SDKs\FbxSdk\lib\vs2012\x64\release\;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(ProjectDir)..\SDKs\FbxSdk\lib\x64\release\;$(LibraryPath)</LibraryPath>
     <OutDir>$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
