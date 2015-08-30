@@ -58,7 +58,7 @@ namespace Fusion.Pipeline {
 
 		string contentFolder;
 		string targetFolder;
-		AssetCollection assetCollection;
+		List<Asset> assetCollection;
 
 		
 
@@ -67,11 +67,11 @@ namespace Fusion.Pipeline {
 		/// Creates instance of BuildContext
 		/// </summary>
 		/// <param name="contentFolder"></param>
-		internal BuildContext ( string contentFolder, string targetFolder, AssetCollection assetCollection )
+		internal BuildContext ( string contentFolder, string targetFolder, ContentProject contentProject )
 		{
 			this.contentFolder		=	contentFolder;
 			this.targetFolder		=	targetFolder;
-			this.assetCollection	=	assetCollection;
+			this.assetCollection	=	new List<Asset>();
 		}
 
 

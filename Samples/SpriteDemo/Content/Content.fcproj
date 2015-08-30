@@ -2,23 +2,29 @@
 <ContentProject>
 
 	<ContentDirectories>
-		<Item>$(FUSION_CONTENT)</Item>
+		<Item>$(FUSION_BIN)</Item>
+		<Item>$(FUSION_BIN)</Item>
+		<Item>$(FUSION_BIN)</Item>
+		<Item>$(FUSION_BIN)</Item>
 	</ContentDirectories>
 
 	<BinaryDirectories>
 		<Item>$(FUSION_BIN)</Item>
+		<Item>$(FUSION_BIN)</Item>
+		<Item>$(FUSION_BIN)</Item>
+		<Item>$(FUSION_BIN)</Item>
 	</BinaryDirectories>
 	
 	<Assemblies>
-		<Item>SharpDX.dll</Item>
-	</Assemblies>
+		<Item>..\MyContentProcessor.dll</Item>
+	<Assemblies>
 	
 	<Asset Path="lena.tga" Type="ImageFileTextureAsset">
 		<SourceFile>lena.tga</SourceFile>
 		<ToNormal>False</ToNormal>
 	</Asset>
 	
-	<Asset Path="manul.tga" Type="ImageFileTextureAsset">
+	<Asset Path="manul.tga">
 		<SourceFile>manul.tga</SourceFile>
 		<ToNormal>False</ToNormal>
 	</Asset>

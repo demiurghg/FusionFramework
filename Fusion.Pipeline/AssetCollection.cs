@@ -70,6 +70,7 @@ namespace Fusion.Pipeline {
 		/// <returns></returns>
 		public bool Build ( bool forced, string sourceDirectory, string targetDirectory, out string message, IEnumerable<string> selection )
 		{
+		#if false
 			int succeeded = 0;
 			int failed = 0;
 
@@ -104,7 +105,7 @@ namespace Fusion.Pipeline {
 			Directory.CreateDirectory( targetDirectory );
 
 			//	create build context :
-			var buildContext = new BuildContext( sourceDirectory, targetDirectory, this );
+			//var buildContext = new BuildContext( sourceDirectory, targetDirectory, this );
 			
 			//	build items :
 			for ( int i = 0; i<Count; i++ ) {
@@ -158,6 +159,10 @@ namespace Fusion.Pipeline {
 				message = string.Format("Build: {0} succeeded, {1} failed\r\n", succeeded, failed) + errors.ToString();
 				return false;
 			}
+		#else
+			message = "";
+			return false;
+		#endif
 		}
 
 

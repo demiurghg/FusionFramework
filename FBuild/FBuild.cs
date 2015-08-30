@@ -14,6 +14,12 @@ using Fusion.Pipeline;
 namespace FBuild {
 	class FBuild {
 
+		/// <summary>
+		/// Run with following arguments:
+		/// 
+		/// </summary>
+		/// <param name="args"></param>
+		/// <returns></returns>
 		static int Main ( string[] args )
 		{
 			Thread.CurrentThread.CurrentCulture	=	System.Globalization.CultureInfo.InvariantCulture;
@@ -26,15 +32,14 @@ namespace FBuild {
 			try {
 				parser.ParseCommandLine( args );
 
-				var assetCollection = AssetCollection.Load( options.ProjectFile );
+				var contentProject	=	new ContentProject( options.ProjectFile );
 
 				var force		=	options.ForceRebuild;
 				var sourceDir	=	Path.GetDirectoryName( Path.GetFullPath( options.ProjectFile ) );
 				var outputDir	=	options.OutputDirectory;
-				var message		=	"";
 				var items		=	options.Items.Any() ? options.Items : null;	  
 
-				assetCollection.Build( force, sourceDir, outputDir,	out message, items );
+				contentProject.Build( force, sourceDir, outputDir, items );
 
 			} catch ( Exception ex ) {
 
