@@ -28,18 +28,18 @@
 	<!-- Build content -->
 	<Target Name="Build">
 
-		<Exec Command='echo Building content projects...'/>
-		<Exec Command='echo &quot;%(FusionContent.FullPath)&quot;'/>
+		<Message Text='Building content projects...' Importance="high" />
+		<Message Text='&quot;%(FusionContent.FullPath)&quot;' Importance="high" />
 
-		<Exec Command='$(FUSION_BIN)\FBuild &quot;%(FusionContent.FullPath)&quot; /out:$(TargetDir)\Content' />
+		<Exec Command='$(FUSION_BIN)\FBuild &quot;%(FusionContent.FullPath)&quot; /out:&quot;$(TargetDir)Content&quot; /temp:&quot;%(FusionContent.RootDir)%(FusionContent.Directory)' />
 	
 	</Target>
 
 	<!-- Rebuild content -->
 	<Target Name="Rebuild">
 
-		<Exec Command='echo Rebuilding content projects...'/>
-		<Exec Command='echo &quot;%(FusionContent.FullPath)&quot;'/>
+		<Message Text='Rebuilding content projects...' Importance="high" />
+		<Message Text='&quot;%(FusionContent.FullPath)&quot;' Importance="high" />
 
 		<Exec Command='$(FUSION_BIN)\FBuild &quot;%(FusionContent.FullPath)&quot; /force /out:$(TargetDir)\Content' />
 
@@ -48,8 +48,8 @@
 	<!-- Rebuild content -->
 	<Target Name="Clean">
 
-		<Exec Command='echo Cleaning content...'/>
-		<Exec Command='echo &quot;%(FusionContent.FullPath)&quot;'/>
+		<Message Text='Cleaning content...' Importance="high" />				  
+		<Message Text='&quot;%(FusionContent.FullPath)&quot;' Importance="high" />
 
 		<Exec Command='del &quot;$(TargetDir)\Content&quot; /Q' />
 
