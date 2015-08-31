@@ -31,7 +31,7 @@ namespace Fusion.Pipeline {
 
 
 		/// <summary>
-		/// Path to this path
+		/// Gets hash of the current asset.
 		/// </summary>
 		[Category("General")]
 		[ReadOnly(true)]
@@ -41,14 +41,6 @@ namespace Fusion.Pipeline {
 				return ContentUtils.GetHashedFileName( AssetPath, "" ); 
 				} 
 			}
-
-
-		/// <summary>
-		/// Asset's build order. Default value 0.
-		/// </summary>
-		[Category("General")]
-		[ReadOnly(true)]
-		public int BuildOrder { get; set; }
 
 
 		/// <summary>
@@ -65,7 +57,6 @@ namespace Fusion.Pipeline {
 		/// </summary>
 		public Asset ()
 		{
-			BuildOrder	=	0;
 		}
 
 

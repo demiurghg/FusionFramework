@@ -43,8 +43,8 @@ namespace Fusion.Pipeline.AssetTypes {
 		/// <param name="buildContext"></param>
 		public override void Build ( BuildContext buildContext )
 		{														   
-			string tempFileName		= buildContext.GetTempFileName( AssetPath, ".fnt", false );
-			string tempFileNameR	= buildContext.GetTempFileName( AssetPath, ".fnt", true );
+			string tempFileName		= buildContext.GetTempFileName( AssetPath, ".fnt" );
+			string tempFileNameR	= buildContext.GetTempFileName( AssetPath, ".fnt");
 			string resolvedPath		= buildContext.Resolve( SourcePath );	
 
 			//	Launch 'bmfont.com' with temporary output file :
@@ -74,13 +74,11 @@ namespace Fusion.Pipeline.AssetTypes {
 
 					var asset			=	buildContext.AddAsset<RawFileAsset>( newAssetPath );
 					asset.SourceFile	=	newSrcPath;
-					asset.BuildOrder	=	BuildOrder + 1;
 
 				} else {
 
 					var asset			=	buildContext.AddAsset<ImageFileTextureAsset>( newAssetPath );
 					asset.SourceFile	=	newSrcPath;
-					asset.BuildOrder	=	BuildOrder + 1;
 				}
 
 				p.File	=	newAssetPath;

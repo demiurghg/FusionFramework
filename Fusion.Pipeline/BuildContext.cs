@@ -58,6 +58,7 @@ namespace Fusion.Pipeline {
 
 		string contentFolder;
 		string targetFolder;
+		string tempFolder;
 		List<Asset> assetCollection;
 
 		
@@ -67,10 +68,11 @@ namespace Fusion.Pipeline {
 		/// Creates instance of BuildContext
 		/// </summary>
 		/// <param name="contentFolder"></param>
-		internal BuildContext ( string contentFolder, string targetFolder, ContentProject contentProject )
+		internal BuildContext ( string contentFolder, string tempFolder, string targetFolder, ContentProject contentProject )
 		{
 			this.contentFolder		=	contentFolder;
 			this.targetFolder		=	targetFolder;
+			this.tempFolder			=	tempFolder;
 			this.assetCollection	=	new List<Asset>();
 		}
 
@@ -113,18 +115,11 @@ namespace Fusion.Pipeline {
 		/// <param name="ext">Desired extension with leading dot</param>
 		/// <param name="resolve">Whether returned path is resolved relative to current directory</param>
 		/// <returns></returns>
-		public string GetTempFileName ( string key, string ext, bool resolve )
+		public string GetTempFileName ( string key, string ext )
 		{
-			var di = Directory.CreateDirectory( Path.Combine( contentFolder, "Temp") );
-			di.Attributes = FileAttributes.Directory|FileAttributes.Hidden;
-
 			var fileName	=	ContentUtils.CalculateMD5Hash( key.ToLower(), true );
 
-			if (resolve) {
-				return Path.Combine( contentFolder, "Temp", fileName ) + ext;
-			} else {
-				return Path.Combine( "Temp", fileName ) + ext;
-			}
+			return Path.Combine( tempFolder, fileName ) + ext;
 		}
 
 

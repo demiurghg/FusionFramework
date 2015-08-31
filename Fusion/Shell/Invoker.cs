@@ -105,9 +105,11 @@ namespace Fusion.Shell {
 			lock (lockObject) {
 				var command	=	GetCommand( cmdName );
 
-				var parser	=	new CommandLineParser( command, true, cmdName );
+				var parser	=	new CommandLineParser( command, cmdName );
 
-				parser.ParseCommandLine( argList );
+				if (!parser.ParseCommandLine( argList )) {
+					throw new CommandLineParserException("Failed to parse command line");
+				}
 
 				Push( command );
 

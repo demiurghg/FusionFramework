@@ -31,7 +31,7 @@ namespace Fusion.Shell.Commands {
 			try {
 				var cmd = Invoker.GetCommand( CommandName );
 
-				var parser = new CommandLineParser( cmd, false, cmd.Name );
+				var parser = new CommandLineParser( cmd, cmd.Name );
 
 				Log.Message("");
 				Log.Message("Usage: {0} {1}", cmd.Name, string.Join(" ", parser.RequiredUsageHelp.ToArray() ));

@@ -20,7 +20,11 @@
 	
 	<Asset Path="manul.tga" Type="ImageFileTextureAsset">
 		<SourceFile>manul.tga</SourceFile>
-		<ToNormal>False</ToNormal>
+		<ToNormal>true</ToNormal>
+		<Normal>true</Normal>
+		<Color>false</Color>
+		<Alpha>false</Alpha>
+		<Normal>false</Normal>
 	</Asset>
 
 </ContentProject>

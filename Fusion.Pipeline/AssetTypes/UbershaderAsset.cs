@@ -169,7 +169,7 @@ namespace Fusion.Pipeline.AssetTypes {
 			//
 			//	Start listing builder :
 			//	
-			ListingPath	=	buildContext.GetTempFileName( AssetPath, ".html", true );
+			ListingPath	=	buildContext.GetTempFileName( AssetPath, ".html" );
 			var htmlBuilder = new StringBuilder();
 
 			htmlBuilder.AppendFormat("<pre>");
@@ -194,19 +194,19 @@ namespace Fusion.Pipeline.AssetTypes {
 
 				var id		=	defineList.IndexOf( defines );
 
-				var psbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".PS.dxbc", true );
-				var vsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".VS.dxbc", true );
-				var gsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".GS.dxbc", true );
-				var hsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".HS.dxbc", true );
-				var dsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".DS.dxbc", true );
-				var csbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".CS.dxbc", true );
+				var psbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".PS.dxbc" );
+				var vsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".VS.dxbc" );
+				var gsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".GS.dxbc" );
+				var hsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".HS.dxbc" );
+				var dsbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".DS.dxbc" );
+				var csbc	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".CS.dxbc" );
 
-				var pshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".PS.html", true );
-				var vshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".VS.html", true );
-				var gshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".GS.html", true );
-				var hshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".HS.html", true );
-				var dshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".DS.html", true );
-				var cshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".CS.html", true );
+				var pshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".PS.html" );
+				var vshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".VS.html" );
+				var gshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".GS.html" );
+				var hshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".HS.html" );
+				var dshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".DS.html" );
+				var cshtm	=	buildContext.GetTempFileName(AssetPath, "." + id.ToString("D4") + ".CS.html" );
 
 				var ps = Compile( buildContext, SourceFile, "ps_5_0", PSEntryPoint, defines, psbc, pshtm );
 				var vs = Compile( buildContext, SourceFile, "vs_5_0", VSEntryPoint, defines, vsbc, vshtm );
@@ -228,7 +228,7 @@ namespace Fusion.Pipeline.AssetTypes {
 				usdb.Add( new UsdbEntry( defines, ps, vs, gs, hs, ds, cs ) );
 			}
 
-			File.WriteAllText( buildContext.GetTempFileName(AssetPath, ".html", true), htmlBuilder.ToString() );
+			File.WriteAllText( buildContext.GetTempFileName(AssetPath, ".html"), htmlBuilder.ToString() );
 
 
 			//

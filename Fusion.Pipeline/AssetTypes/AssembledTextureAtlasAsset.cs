@@ -107,8 +107,8 @@ namespace Fusion.Pipeline.AssetTypes {
 			//
 			//	Save and compress :
 			//
-			var tgaOutput	=	buildContext.GetTempFileName( AssetPath, ".tga", true );
-			var ddsOutput	=	buildContext.GetTempFileName( AssetPath, ".dds", true );
+			var tgaOutput	=	buildContext.GetTempFileName( AssetPath, ".tga" );
+			var ddsOutput	=	buildContext.GetTempFileName( AssetPath, ".dds" );
 			Image.SaveTga( targetImage, tgaOutput );
 
 			var compression =	UseDXT ? ImageFileTextureAsset.TextureCompression.BC3 : ImageFileTextureAsset.TextureCompression.RGB;

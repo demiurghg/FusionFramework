@@ -6,9 +6,74 @@ using System.Text;
 using System.IO;
 using System.Xml.Serialization;
 using System.Windows.Forms;
+using System.Reflection;
+using System.ComponentModel;
 
 namespace Fusion {
 	public static class Misc {
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="value"></param>
+		/// <param name="type"></param>
+		/// <returns></returns>
+        public static object ConvertType (string value, Type type)
+        {
+            TypeConverter converter = TypeDescriptor.GetConverter(type);
+
+            return converter.ConvertFromInvariantString(value);
+        }
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="field"></param>
+		/// <returns></returns>
+        public static bool IsList(this PropertyInfo field)
+        {
+            return typeof(IList).IsAssignableFrom(field.PropertyType);
+        }
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="field"></param>
+		/// <returns></returns>
+        public static IList GetList(this PropertyInfo field, object obj)
+        {
+            return (IList)field.GetValue(obj);
+        }
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="field"></param>
+		/// <returns></returns>
+        public static Type GetListElementType(this PropertyInfo field)
+        {
+            var interfaces = from i in field.PropertyType.GetInterfaces()
+                             where i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IEnumerable<>)
+                             select i;
+
+            return interfaces.First().GetGenericArguments()[0];
+        }
+
+
+
+		public static IList CreateList(Type type)
+		{
+			Type genericListType = typeof(List<>).MakeGenericType(type);
+			return (IList)Activator.CreateInstance(genericListType);
+		}
+
 
 		/// <summary>
 		/// http://stackoverflow.com/questions/298830/split-string-containing-command-line-parameters-into-string-in-c-sharp/298990#298990

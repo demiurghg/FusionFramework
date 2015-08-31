@@ -26,23 +26,35 @@ namespace FBuild {
 			Trace.Listeners.Add( new StdTraceListener() );
 
 			var options = new BuildOptions();
-			var parser = new CommandLineParser( options, true );
+			var parser = new CommandLineParser( options );
 
 
 			try {
-				parser.ParseCommandLine( args );
+				if ( !parser.ParseCommandLine( args ) ) {
+					return 1;
+				}
 
 				var contentProject	=	new ContentProject( options.ProjectFile );
 
 				var force		=	options.ForceRebuild;
 				var sourceDir	=	Path.GetDirectoryName( Path.GetFullPath( options.ProjectFile ) );
 				var outputDir	=	options.OutputDirectory;
+				var tempDir		=	options.TempDirectory;
 				var items		=	options.Items.Any() ? options.Items : null;	  
 
-				contentProject.Build( force, sourceDir, outputDir, items );
+				if ( outputDir==null ) {
+					parser.ShowError("Output directory is not specified (/out:)");
+					return 1;
+				}
+				if ( tempDir==null ) {
+					parser.ShowError("Temporary directory is not specified (/temp:)");
+					return 1;
+				}
+
+				contentProject.Build( force, sourceDir, tempDir, outputDir, items );
+
 
 			} catch ( Exception ex ) {
-
 				Log.Error( ex.Message );
 				return 1;
 			}

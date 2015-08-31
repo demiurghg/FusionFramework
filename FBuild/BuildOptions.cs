@@ -18,6 +18,9 @@ namespace FBuild {
 		[CommandLineParser.Name("out", "Output directory")]
 		public string OutputDirectory { get; set; }
 			
+		[CommandLineParser.Name("temp", "Temporary directory")]
+		public string TempDirectory { get; set; }
+			
 		[CommandLineParser.Name("force", "Force rebuild")]
 		public bool ForceRebuild { get; set; }
 			

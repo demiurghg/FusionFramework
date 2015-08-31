@@ -23,7 +23,6 @@ namespace Fusion.Shell
         List<string> requiredUsageHelp = new List<string>();
         List<string> optionalUsageHelp = new List<string>();
 
-		bool throwException = false;
 		readonly string name;
 
 
@@ -36,10 +35,9 @@ namespace Fusion.Shell
 		/// </summary>
 		/// <param name="optionsObject"></param>
 		/// <param name="throwException"></param>
-        public CommandLineParser( object optionsObject, bool throwException = false, string name = null )
+        public CommandLineParser( object optionsObject, string name = null )
         {
             this.optionsObject	= optionsObject;
-			this.throwException	= throwException;
 
 			this.name = name ?? Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().ProcessName);
 
@@ -99,6 +97,7 @@ namespace Fusion.Shell
 							  .Select(arg => arg.Trim().TrimMatchingQuotes('\"'))
 							  .Where(arg => !string.IsNullOrEmpty(arg));
 		}
+
 
 
 		/// <summary>
@@ -312,7 +311,7 @@ namespace Fusion.Shell
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="args"></param>
-        void ShowError(string message, params object[] args)
+        public void ShowError(string message, params object[] args)
         {
             Log.Error(message, args);
             Log.Error("");
@@ -321,17 +320,15 @@ namespace Fusion.Shell
             if (optionalUsageHelp.Count > 0)
             {
                 Log.Error("");
-                Log.Error("Options:");
+                //Log.Error("Options:");
 
                 foreach (string optional in optionalUsageHelp)
                 {
                     Log.Error("    {0}", optional);
                 }
-            }
 
-			if (throwException) {
-				throw new CommandLineParserException("Failed to parse arguments, see console for details.");
-			}
+                Log.Error("");
+            }
         }
 
 

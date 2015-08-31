@@ -9,6 +9,7 @@ using System.Reflection;
 using Fusion;
 using Fusion.Content;
 using Microsoft.Win32;
+using System.ComponentModel;
 
 
 namespace Fusion.Pipeline {
@@ -62,7 +63,6 @@ namespace Fusion.Pipeline {
 							.Cast<XmlNode>()
 							.Select( n => n.InnerText )
 							.Distinct()
-							.Select( p => ConvertPath( p ) )
 							.ToList();
 
 			contentDirs.Insert( 0, Path.GetDirectoryName( fileName ) );
@@ -72,7 +72,6 @@ namespace Fusion.Pipeline {
 							.Cast<XmlNode>()
 							.Select( n => n.InnerText )
 							.Distinct()
-							.Select( p => ConvertPath( p ) )
 							.ToList();
 
 			assemblies	=	doc
@@ -100,46 +99,132 @@ namespace Fusion.Pipeline {
 		/// <param name="targetDirectory"></param>
 		/// <param name="message"></param>
 		/// <param name="selection"></param>
-		public bool Build ( bool forced, string sourceDirectory, string targetDirectory, IEnumerable<string> selection )
+		public bool Build ( bool forced, string sourceDirectory, string tempDirectory, string targetDirectory, IEnumerable<string> selection )
 		{
-			Log.Message("Building content...");
-			Log.Message("");
+			int succeeded = 0;
+			int failed = 0;
+
+			var contentDirs	=	this.contentDirs.Select( p => ConvertPath( p ) ).ToList();
+			var binaryDirs	=	this.binaryDirs.Select( p => ConvertPath( p ) ).ToList();
+
+			Log.Message("---------- Content Build Started ----------");
+
+			Log.Message("Source directory: {0}", Path.GetFullPath(sourceDirectory) );
+			Log.Message("Target directory: {0}", Path.GetFullPath(targetDirectory) );
+			Log.Message("Temp directory:   {0}", Path.GetFullPath(tempDirectory) );
+
+			var targetDI = Directory.CreateDirectory( Path.GetFullPath(targetDirectory) );
+			var tempDI = Directory.CreateDirectory( Path.GetFullPath(tempDirectory) );
+			tempDI.Attributes = FileAttributes.Directory|FileAttributes.Hidden;
+
+
 
 			Log.Message("Search content directories:");
 			foreach ( var dir in contentDirs ) {
-				Log.Message("  {0}", dir );
+				Log.Message("  - {0}", dir );
 			}
-			Log.Message("");
 
 			Log.Message("Search binary directories:");
 			foreach ( var dir in binaryDirs ) {
-				Log.Message("  {0}", dir );
+				Log.Message("  - {0}", dir );
 			}
-			Log.Message("");
 
 			Log.Message("Assemblies:");
 			foreach ( var asm in this.assemblies ) {
-				Log.Message("  {0}", asm );
+				Log.Message("  - {0}", asm );
 			}
-			Log.Message("");
 
 			var assemblies = this.assemblies
 						.Select( p => ResolvePath( p, binaryDirs ) )
 						.ToList();
 
+
+			//
 			//	Load assemblies :
+			//
 			foreach ( var a in assemblies ) {
 				Assembly.LoadFrom( a );
 			}
 
 			Log.Message("{0} assets found", assetsDesc.Count );
 
+
+			//
 			//	Gather asset types :
+			//
 			var types = Asset.GatherAssetTypes();
 			Log.Message("{0} assets types found", types.Length );
 
 
+			//
+			//	Build content :
+			//
+			assets = assetsDesc
+					.Select( a => CreateAssetFromDescription( a, types ) )
+					.ToList();
 
+
+			HashSet<string> selectedNames = null;
+			if ( selection!=null ) {
+				selectedNames = new HashSet<string>( selection.Select( n => ContentUtils.GetHashedFileName( n, "") ) );
+			}
+
+
+			var buildContext	=	new BuildContext( sourceDirectory, tempDirectory, targetDirectory, this );
+
+			//	check collisions :
+			var collisions = GetHashCollisions(assets);
+
+			if (collisions.Any()) {
+				throw new ContentException("Hash collisions have been detected!");
+				foreach (var coll in collisions) {
+					Log.Error("  {0}", coll);
+				}
+			}
+
+			//	build :
+			foreach ( var asset in assets ) {
+
+				if (selectedNames!=null) {
+					if ( !selectedNames.Contains( asset.Hash ) ) {
+						continue;
+					}
+				}
+
+				try {
+					
+					if ( buildContext.IsOutOfDate( asset, forced ) ) {
+						Log.Message("...building: {0}", asset.AssetPath );
+						asset.Build( buildContext );
+					}
+
+					succeeded ++;
+
+				} catch ( AggregateException ae ) {
+
+					foreach ( var e in ae.InnerExceptions ) {
+
+						Log.Error("{0}: {1}", asset.AssetPath, e.Message );
+
+						/*errors.AppendFormat("{0}: {1}", asset.AssetPath, e.Message );
+						errors.AppendFormat( "\r\n" );*/
+					}
+
+					failed++;
+
+				} catch ( Exception e )	{
+
+					Log.Error("{0}: {1}", asset.AssetPath, e.Message );
+
+					/*errors.AppendFormat("{0}: {1}", asset.AssetPath, e.Message );
+					errors.AppendFormat( "\r\n" );*/
+
+					failed++;
+				}
+			}
+
+
+			Log.Message("---------- Build: {0} succeeded, {1} failed ----------", succeeded, failed);
 
 			//	get assembly dlls
 			//	load assemblies	- warning on missing dlls
@@ -152,6 +237,101 @@ namespace Fusion.Pipeline {
 			//AppDomain.CurrentDomain.Load( 
 			return false;
 		}
+
+
+
+		/// <summary>
+		/// Searchs for all possible hash collisions.
+		/// Returns list of collided asset paths.
+		/// </summary>
+		/// <returns></returns>
+		public string[] GetHashCollisions ( ICollection<Asset> assets )
+		{
+			return assets
+				.Select( a => a.Hash )
+				.GroupBy( tp => tp )
+				.Where( tpg => tpg.Count()>1 )
+				.Select( tpg1 => tpg1.First() )
+				.Distinct()
+				.ToArray();
+		}
+
+
+
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="desc"></param>
+		/// <param name="types"></param>
+		/// <returns></returns>
+		Asset CreateAssetFromDescription ( AssetDesc desc, Type[] types )
+		{
+			var type = types.FirstOrDefault( t => t.Name == desc.Type );
+
+			if (type==null) {
+				throw new ContentException(string.Format( "Asset type '{0}' not found", desc.Type ) );
+			}
+
+			var asset = (Asset)Activator.CreateInstance( type );
+
+
+			asset.AssetPath	=	desc.Path;
+
+			AssignProperties( asset, desc.Parameters );
+
+			return asset;
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <param name="parameters"></param>
+		void AssignProperties ( object obj, IEnumerable<KeyValuePair<string,string>> parameters )
+		{
+			var type	=	obj.GetType();
+			var props	=	type.GetProperties().ToDictionary( p => p.Name );
+
+			
+			foreach ( var keyValue in parameters ) {
+
+				if ( props.ContainsKey( keyValue.Key ) ) {
+
+					var prop		= props[ keyValue.Key ];
+
+					if ( prop.IsList() ) {
+
+						var propType	=	prop.GetListElementType();
+						var converter 	=	TypeDescriptor.GetConverter( propType );
+
+						/*if (prop.GetValue(obj)==null) {
+							prop.SetValue(obj, Misc.CreateList(propType));
+						}*/
+
+						prop.GetList(obj).Add( Misc.ConvertType( keyValue.Value, propType ) );
+						
+					} else {
+
+						var propType	=	prop.PropertyType;
+						var converter 	=	TypeDescriptor.GetConverter( propType );
+						
+						prop.SetValue( obj, Misc.ConvertType( keyValue.Value, propType ) );
+					}
+
+
+				} else {
+					//	Ignore.
+				}
+
+			}
+
+		}
+
 
 
 

@@ -81,7 +81,7 @@ namespace Fusion.Pipeline.AssetTypes {
 		public override void Build ( BuildContext buildContext )
 		{
 			var resolvedPath	=	buildContext.Resolve( SourceFile );
-			var destPath		=	buildContext.GetTempFileName( Hash, ".scene", true );
+			var destPath		=	buildContext.GetTempFileName( Hash, ".scene" );
 			var cmdLine			=	string.Format("\"{0}\" /out:\"{1}\" /merge:{2} /base:\"{3}\" {4} {5}", 
 				resolvedPath, destPath, 
 				MergeTolerance, 

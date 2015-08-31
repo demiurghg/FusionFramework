@@ -111,7 +111,7 @@ namespace Fusion.Pipeline.AssetTypes {
 		public override void Build ( BuildContext buildContext )
 		{
 			var src	=	buildContext.Resolve( SourceFile );
-			var dst	=	buildContext.GetTempFileName( Hash, ".dds", true );
+			var dst	=	buildContext.GetTempFileName( Hash, ".dds" );
 
 			RunNVCompress( buildContext, src, dst, NoMips, Fast, ToNormal, Color, Alpha, Normal, Compression );
 
