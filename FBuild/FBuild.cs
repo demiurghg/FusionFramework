@@ -53,6 +53,8 @@ namespace FBuild {
 
 				contentProject.Build( force, sourceDir, tempDir, outputDir, items );
 
+				contentProject.SaveToFile( options.ProjectFile );
+
 
 			} catch ( Exception ex ) {
 				Log.Error( ex.Message );

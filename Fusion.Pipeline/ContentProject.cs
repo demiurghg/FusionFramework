@@ -15,31 +15,6 @@ using System.ComponentModel;
 namespace Fusion.Pipeline {
 	public class ContentProject {
 
-		class AssetDesc {
-			public string Path;
-			public string Type;
-			public List<KeyValuePair<string, string>> Parameters;
-
-			public AssetDesc ( XmlNode node ) 
-			{
-				if (node.Attributes["Path"]==null) {
-					throw new ContentException("Missing 'Path' attribute in asset node");
-				}
-
-				if (node.Attributes["Type"]==null) {
-					throw new ContentException("Missing 'Type' attribute in asset node");
-				}
-
-				Path		=	node.Attributes["Path"].Value;
-				Type		=	node.Attributes["Type"].Value;
-
-				Parameters	=	node
-								.ChildNodes
-								.Cast<XmlNode>()
-								.Select( n => new KeyValuePair<string, string>( n.Name, n.InnerText ) )
-								.ToList();
-			}
-		}
 
 		List<string>	contentDirs;
 		List<string>	binaryDirs;
@@ -87,6 +62,55 @@ namespace Fusion.Pipeline {
 							.Select( n => new AssetDesc( n ) )
 							.ToList();
 
+		}
+
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		public void SaveToFile (string path)
+		{
+			var doc		=	new XmlDocument();
+
+			var root	=	doc.CreateElement("ContentProject");
+			doc.AppendChild( root );
+
+			var xmlContentDirs	=	doc.CreateElement("ContentDirectories");
+			var xmlBinaryDirs	=	doc.CreateElement("BinaryDirectories");
+			var xmlAssemblies	=	doc.CreateElement("Assemblies");
+
+			root.AppendChild( doc.CreateComment(@"Directories to search for content.") );
+			root.AppendChild( doc.CreateComment(@"Non-existing directories will be ignored.") );
+			root.AppendChild( doc.CreateComment(@"Possible formats:") );
+			root.AppendChild( doc.CreateComment(@"  Full path: ""C:\MyProject\BinaryDir\""") );
+			root.AppendChild( doc.CreateComment(@"  Relative path: ""..\MyProject\BinaryDir""") );
+			root.AppendChild( doc.CreateComment(@"  Environment variable: ""$(MY_ENV_VARIABLE)""") );
+			root.AppendChild( doc.CreateComment(@"  Registry variable: ""$(HOTKEY_LOCAL_MACHINE\MyVariable)""") );
+			root.AppendChild( doc.CreateComment(@"Note: Provide both x86 and x64 registry variables.") );
+			root.AppendChild( xmlContentDirs );
+
+			root.AppendChild( doc.CreateComment(@"Directories to search for executable tools and assemblies.") );
+			root.AppendChild( doc.CreateComment(@"Non-existing directories will be ignored.") );
+			root.AppendChild( doc.CreateComment(@"Possible formats:") );
+			root.AppendChild( doc.CreateComment(@"  Full path: ""C:\MyProject\ContentDir\""") );
+			root.AppendChild( doc.CreateComment(@"  Relative path: ""..\MyProject\ContentDir""") );
+			root.AppendChild( doc.CreateComment(@"  Environment variable: ""$(MY_ENV_VARIABLE)""") );
+			root.AppendChild( doc.CreateComment(@"  Registry variable: ""$(HOTKEY_LOCAL_MACHINE\MyVariable)""") );
+			root.AppendChild( doc.CreateComment(@"Note: Provide both x86 and x64 registry variables.") );
+			root.AppendChild( xmlBinaryDirs );
+
+			root.AppendChild( doc.CreateComment(@"Assemblies to load.") );
+			root.AppendChild( doc.CreateComment(@"Non-existing assemblies will cause build error.") );
+			root.AppendChild( xmlAssemblies );
+
+			foreach ( var cdir in contentDirs ) {
+				//doc.AppendChild( doc.
+			}
+
+			doc.Save( path );
 		}
 
 
@@ -160,7 +184,7 @@ namespace Fusion.Pipeline {
 			//	Build content :
 			//
 			assets = assetsDesc
-					.Select( a => CreateAssetFromDescription( a, types ) )
+					.Select( a => a.CreateAsset( types ) )
 					.ToList();
 
 
@@ -176,11 +200,12 @@ namespace Fusion.Pipeline {
 			var collisions = GetHashCollisions(assets);
 
 			if (collisions.Any()) {
-				throw new ContentException("Hash collisions have been detected!");
 				foreach (var coll in collisions) {
 					Log.Error("  {0}", coll);
 				}
+				throw new ContentException("Hash collisions have been detected!");
 			}
+
 
 			//	build :
 			foreach ( var asset in assets ) {
@@ -255,83 +280,6 @@ namespace Fusion.Pipeline {
 				.Distinct()
 				.ToArray();
 		}
-
-
-
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="desc"></param>
-		/// <param name="types"></param>
-		/// <returns></returns>
-		Asset CreateAssetFromDescription ( AssetDesc desc, Type[] types )
-		{
-			var type = types.FirstOrDefault( t => t.Name == desc.Type );
-
-			if (type==null) {
-				throw new ContentException(string.Format( "Asset type '{0}' not found", desc.Type ) );
-			}
-
-			var asset = (Asset)Activator.CreateInstance( type );
-
-
-			asset.AssetPath	=	desc.Path;
-
-			AssignProperties( asset, desc.Parameters );
-
-			return asset;
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="obj"></param>
-		/// <param name="parameters"></param>
-		void AssignProperties ( object obj, IEnumerable<KeyValuePair<string,string>> parameters )
-		{
-			var type	=	obj.GetType();
-			var props	=	type.GetProperties().ToDictionary( p => p.Name );
-
-			
-			foreach ( var keyValue in parameters ) {
-
-				if ( props.ContainsKey( keyValue.Key ) ) {
-
-					var prop		= props[ keyValue.Key ];
-
-					if ( prop.IsList() ) {
-
-						var propType	=	prop.GetListElementType();
-						var converter 	=	TypeDescriptor.GetConverter( propType );
-
-						/*if (prop.GetValue(obj)==null) {
-							prop.SetValue(obj, Misc.CreateList(propType));
-						}*/
-
-						prop.GetList(obj).Add( Misc.ConvertType( keyValue.Value, propType ) );
-						
-					} else {
-
-						var propType	=	prop.PropertyType;
-						var converter 	=	TypeDescriptor.GetConverter( propType );
-						
-						prop.SetValue( obj, Misc.ConvertType( keyValue.Value, propType ) );
-					}
-
-
-				} else {
-					//	Ignore.
-				}
-
-			}
-
-		}
-
 
 
 

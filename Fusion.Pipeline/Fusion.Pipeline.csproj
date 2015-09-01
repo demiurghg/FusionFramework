@@ -60,6 +60,7 @@
     <Compile Include="Asset.cs" />
     <Compile Include="AssetAttribute.cs" />
     <Compile Include="AssetCollection.cs" />
+    <Compile Include="AssetDescription.cs" />
     <Compile Include="AssetTypes\AbstractAsset.cs" />
     <Compile Include="AssetTypes\AbstractAssetLoader.cs" />
     <Compile Include="AssetTypes\AssembledCubeTextureAsset.cs" />
