@@ -117,7 +117,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 			Vladivostok,
 		}
 
-
+		public int MaxDotsToDraw = 0;
 
 		double pitch = 0.0f;
 		double maxPitch = 0;
@@ -142,8 +142,8 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 
 		// Camera stuff
-		DMatrix viewMatrix;
-		DMatrix projMatrix;
+		public static DMatrix viewMatrix;
+		public static DMatrix projMatrix;
 		Matrix	viewMatrixFloat;
 		Matrix	projMatrixFloat;
 		
@@ -419,7 +419,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 			DetermineTiles();
 
-			Game.GetService<DebugStrings>().Add("Tiles count : " + tilesToRender.Count);
+			//Game.GetService<DebugStrings>().Add("Tiles count : " + tilesToRender.Count);
 
 			UpdateCamera();
 		}
@@ -700,7 +700,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 					DepthStencilState.None);
 
 				dev.SetupVertexInput(dotsVB, null);
-				dev.Draw(geoObjectStart - 1, 0);
+				dev.Draw( MaxDotsToDraw == 0 ? geoObjectStart - 1 : MaxDotsToDraw, 0);
 			}
 
 
@@ -815,7 +815,8 @@ namespace Fusion.GIS.LayerSpace.Layers
 			//Game.GetService<DebugStrings>().Add("CamDistance : " + Config.CameraDistance, Color.Green);
 			//Game.GetService<DebugStrings>().Add("Pitch : " + Pitch, Color.Green);
 			//Game.GetService<DebugStrings>().Add("Width : " + Game.GraphicsDevice.Viewport.Width, Color.Green);
-			Game.GetService<DebugStrings>().Add("Height : " + (Config.CameraDistance - Config.earthRadius) * 1000.0, Color.Green);
+			Game.GetService<DebugStrings>().Add("", Color.Green);
+			//Game.GetService<DebugStrings>().Add("Height : " + (Config.CameraDistance - Config.earthRadius) * 1000.0, Color.Green);
 
 		}
 
@@ -1045,7 +1046,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		/// <param name="lat"></param>
 		/// <param name="radius"></param>
 		/// <param name="cart"></param>
-		void SphericalToCartesian(double lon, double lat, float radius, out Vector3 cart)
+		public void SphericalToCartesian(double lon, double lat, float radius, out Vector3 cart)
 		{
 			cart = Vector3.Zero;
 
@@ -1067,7 +1068,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		DVector3 SphericalToCartesian(DVector2 lonLat, double radius)
+		public DVector3 SphericalToCartesian(DVector2 lonLat, double radius)
 		{
 			double x, y, z;
 			SphericalToCartesian(lonLat.X, lonLat.Y, radius, out x, out y, out z);

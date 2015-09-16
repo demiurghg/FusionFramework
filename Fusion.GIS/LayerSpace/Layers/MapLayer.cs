@@ -171,7 +171,6 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 			float currentLevel = Zoom / CurrentMapSource.TileSize;
 			Level = (float)Math.Log(currentLevel, 2);
-
 			base.Update(gameTime);
 		}
 

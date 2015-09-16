@@ -20,8 +20,8 @@ namespace Fusion.GIS.LayerSpace.Layers
 		Texture2D socioClasses;
 		Texture2D geoObjects;
 
-		int geoObjectStart	= 250000;
-		int geoObjectOffset = 250000;
+		int geoObjectStart	= 25000;
+		int geoObjectOffset = 25000;
 
 		[StructLayout(LayoutKind.Explicit)]
 		unsafe struct DotsConstData 
@@ -44,7 +44,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 			//var r = new Random();
 			
-			Dots = new GeoVert[505000];
+			Dots = new GeoVert[55000];
 			
 			dotsVB = new VertexBuffer(Game.GraphicsDevice, typeof(GeoVert), Dots.Length);
 
@@ -119,7 +119,8 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 			//dotsVB.SetData(Dots, 0, Dots.Length);
 
-			socioClasses	= Game.Content.Load<Texture2D>("Urban/SocioClasses.tga");
+			//socioClasses	= Game.Content.Load<Texture2D>("Urban/SocioClasses.tga");
+			socioClasses	= Game.Content.Load<Texture2D>("Urban/circles.tga");
 			geoObjects		= Game.Content.Load<Texture2D>("Urban/geoObjects.tga");
 		}
 

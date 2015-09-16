@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-	<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Debug\</OutputPath>
@@ -43,11 +43,11 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Triangle">
-      <HintPath>$(FUSION_BIN)\Triangle.dll</HintPath>
-    </Reference>
-	<Reference Include="Fusion">
+    <Reference Include="Fusion">
       <HintPath>$(FUSION_BIN)\Fusion.dll</HintPath>
+    </Reference>
+    <Reference Include="Triangle">
+      <HintPath>..\Dependencies\Triangle.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
