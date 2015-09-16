@@ -11,6 +11,16 @@ namespace Fusion.Pipeline {
 
 	public class AbstractAsset : Asset {
 
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="assetPath"></param>
+		public AbstractAsset ( string assetPath ) : base( assetPath )
+		{
+		}
+
+
 
 		/// <summary>
 		/// 

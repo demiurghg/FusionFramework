@@ -44,7 +44,7 @@ namespace Fusion.Pipeline.AssetTypes {
 		/// <summary>
 		/// 
 		/// </summary>
-		public AssembledTextureAtlasAsset ()
+		public AssembledTextureAtlasAsset ( string path ) : base(path)
 		{
 			Files		=	"";
 			Width		=	256;

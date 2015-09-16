@@ -46,6 +46,28 @@ namespace Fusion.Pipeline {
 
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		public XmlElement ToXmlElement ( XmlDocument document )
+		{
+			var element = document.CreateElement("Asset");
+			element.SetAttribute("Path", this.Path );
+			element.SetAttribute("Type", this.Type );
+
+			foreach ( var p in Parameters ) {
+				var pElement = document.CreateElement( p.Key );
+				pElement.InnerText = p.Value;
+
+				element.AppendChild( pElement );
+			}
+
+			return element;
+		}
+
+
+
+		/// <summary>
 		///	Create asset description from asset.
 		/// </summary>
 		/// <param name="asset"></param>
@@ -56,6 +78,10 @@ namespace Fusion.Pipeline {
 			Parameters	=	new List<KeyValuePair<string,string>>();
 
 			foreach ( var prop in asset.GetType().GetProperties() ) {
+
+				if (!prop.CanWrite || !prop.CanRead) {
+					continue;
+				}
 
 				if (prop.IsList()) {
 
@@ -92,10 +118,7 @@ namespace Fusion.Pipeline {
 				throw new ContentException(string.Format( "Asset type '{0}' not found", Type ) );
 			}
 
-			var asset = (Asset)Activator.CreateInstance( type );
-
-
-			asset.AssetPath	=	Path;
+			var asset = (Asset)Activator.CreateInstance( type, Path );
 
 			AssignProperties( asset, Parameters );
 

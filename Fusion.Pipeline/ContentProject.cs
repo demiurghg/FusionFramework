@@ -18,6 +18,8 @@ namespace Fusion.Pipeline {
 
 		List<string>	contentDirs;
 		List<string>	binaryDirs;
+		List<string>	contentDirsExpanded;
+		List<string>	binaryDirsExpanded;
 		List<string>	assemblies;
 		List<AssetDesc>	assetsDesc;
 		List<Asset>		assets;
@@ -40,8 +42,6 @@ namespace Fusion.Pipeline {
 							.Distinct()
 							.ToList();
 
-			contentDirs.Insert( 0, Path.GetDirectoryName( fileName ) );
-
 			binaryDirs	=	doc
 							.SelectNodes( "/ContentProject/BinaryDirectories/Item")
 							.Cast<XmlNode>()
@@ -57,11 +57,10 @@ namespace Fusion.Pipeline {
 							.ToList();
 
 	
-		   assetsDesc	=	doc.SelectNodes( "/ContentProject/Asset")
+			assetsDesc	=	doc.SelectNodes( "/ContentProject/Asset")
 							.Cast<XmlNode>()
 							.Select( n => new AssetDesc( n ) )
 							.ToList();
-
 		}
 
 
@@ -81,7 +80,7 @@ namespace Fusion.Pipeline {
 			var xmlContentDirs	=	doc.CreateElement("ContentDirectories");
 			var xmlBinaryDirs	=	doc.CreateElement("BinaryDirectories");
 			var xmlAssemblies	=	doc.CreateElement("Assemblies");
-
+			
 			root.AppendChild( doc.CreateComment(@"Directories to search for content.") );
 			root.AppendChild( doc.CreateComment(@"Non-existing directories will be ignored.") );
 			root.AppendChild( doc.CreateComment(@"Possible formats:") );
@@ -90,6 +89,7 @@ namespace Fusion.Pipeline {
 			root.AppendChild( doc.CreateComment(@"  Environment variable: ""$(MY_ENV_VARIABLE)""") );
 			root.AppendChild( doc.CreateComment(@"  Registry variable: ""$(HOTKEY_LOCAL_MACHINE\MyVariable)""") );
 			root.AppendChild( doc.CreateComment(@"Note: Provide both x86 and x64 registry variables.") );
+			root.AppendChild( doc.CreateComment(@"Note: Source directory (project) and current directory have highest priority.") );
 			root.AppendChild( xmlContentDirs );
 
 			root.AppendChild( doc.CreateComment(@"Directories to search for executable tools and assemblies.") );
@@ -100,6 +100,7 @@ namespace Fusion.Pipeline {
 			root.AppendChild( doc.CreateComment(@"  Environment variable: ""$(MY_ENV_VARIABLE)""") );
 			root.AppendChild( doc.CreateComment(@"  Registry variable: ""$(HOTKEY_LOCAL_MACHINE\MyVariable)""") );
 			root.AppendChild( doc.CreateComment(@"Note: Provide both x86 and x64 registry variables.") );
+			root.AppendChild( doc.CreateComment(@"Note: Current directory has highest priority.") );
 			root.AppendChild( xmlBinaryDirs );
 
 			root.AppendChild( doc.CreateComment(@"Assemblies to load.") );
@@ -107,8 +108,40 @@ namespace Fusion.Pipeline {
 			root.AppendChild( xmlAssemblies );
 
 			foreach ( var cdir in contentDirs ) {
-				//doc.AppendChild( doc.
+				var item = doc.CreateElement("Item");
+				item.InnerText = cdir;
+				xmlContentDirs.AppendChild( item );
 			}
+
+			foreach ( var bdir in binaryDirs ) {
+				var item = doc.CreateElement("Item");
+				item.InnerText = bdir;
+				xmlBinaryDirs.AppendChild( item );
+			}
+
+			foreach ( var assembly in assemblies ) {
+				var item = doc.CreateElement("Item");
+				item.InnerText = assembly;
+				xmlAssemblies.AppendChild( item );
+			}
+
+
+			root.AppendChild( doc.CreateComment(@"Asset list.") );
+			root.AppendChild( doc.CreateComment(@"Attributes 'Path' and 'Type' are required.") );
+			root.AppendChild( doc.CreateComment(@"Path is unique asset identifier.") );
+			root.AppendChild( doc.CreateComment(@"Type is an asset's class name.") );
+			root.AppendChild( doc.CreateComment(@"Each child element is an asset parameter.") );
+			root.AppendChild( doc.CreateComment(@"Parameters are parsed using TypeConverter.") );
+			root.AppendChild( doc.CreateComment(@"Examples:") );
+			root.AppendChild( doc.CreateComment(@"<A>3.14</A>    - float parameter A") );
+			root.AppendChild( doc.CreateComment(@"<B>Foo</B>     - string parameter B") );
+			root.AppendChild( doc.CreateComment(@"<C>8,8,8,8</C> - vector or color parameter C") );
+			root.AppendChild( doc.CreateComment(@"<L>1</L>       - first element of list L") );
+			root.AppendChild( doc.CreateComment(@"<L>2</L>       - second element of list L") );
+
+			foreach ( var desc in assetsDesc )	{
+				root.AppendChild( desc.ToXmlElement(doc) );
+			} 
 
 			doc.Save( path );
 		}
@@ -128,8 +161,15 @@ namespace Fusion.Pipeline {
 			int succeeded = 0;
 			int failed = 0;
 
-			var contentDirs	=	this.contentDirs.Select( p => ConvertPath( p ) ).ToList();
-			var binaryDirs	=	this.binaryDirs.Select( p => ConvertPath( p ) ).ToList();
+			contentDirsExpanded	=	this.contentDirs.Select( p => ConvertPath( p ) ).ToList();
+			binaryDirsExpanded	=	this.binaryDirs.Select( p => ConvertPath( p ) ).ToList();
+
+			//	add source and current directory :
+			contentDirsExpanded.Insert( 0, sourceDirectory );
+			contentDirsExpanded.Insert( 1, Directory.GetCurrentDirectory() );
+
+			//	add current directory :
+			binaryDirsExpanded.Insert( 0, Directory.GetCurrentDirectory() );
 
 			Log.Message("---------- Content Build Started ----------");
 
@@ -144,12 +184,12 @@ namespace Fusion.Pipeline {
 
 
 			Log.Message("Search content directories:");
-			foreach ( var dir in contentDirs ) {
+			foreach ( var dir in contentDirsExpanded ) {
 				Log.Message("  - {0}", dir );
 			}
 
 			Log.Message("Search binary directories:");
-			foreach ( var dir in binaryDirs ) {
+			foreach ( var dir in binaryDirsExpanded ) {
 				Log.Message("  - {0}", dir );
 			}
 
@@ -185,6 +225,11 @@ namespace Fusion.Pipeline {
 			//
 			assets = assetsDesc
 					.Select( a => a.CreateAsset( types ) )
+					.ToList();
+
+			//	reflect assets back to description :
+			assetsDesc = assets
+					.Select( a => new AssetDesc(a) )
 					.ToList();
 
 
@@ -311,6 +356,30 @@ namespace Fusion.Pipeline {
 			}
 
 			throw new ContentException(string.Format("Path '{0}' not resolved", path));
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		internal string ResolveContentPath ( string path )
+		{
+			return ResolvePath( path, contentDirsExpanded );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		internal string ResolveBinaryPath ( string path )
+		{
+			return ResolvePath( path, binaryDirsExpanded );
 		}
 
 

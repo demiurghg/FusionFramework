@@ -23,6 +23,16 @@ namespace Fusion.Pipeline {
 		public string FaceNegZ { get; set; }
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="assetPath"></param>
+		public AssembledCubeTextureAsset ( string assetPath ) : base( assetPath )
+		{
+		}
+
+
+
 		public override string[] Dependencies
 		{
 			get { return new[]{ FacePosX, FacePosY, FacePosZ, FaceNegX, FaceNegY, FaceNegZ }; }

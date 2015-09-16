@@ -13,7 +13,7 @@ using Fusion.Content;
 namespace Fusion.Pipeline.AssetTypes {
 	
 	[Asset("Content", "BMFC Sprite Font", "*.bmfc")]
-	public class BMFontSpriteFontAsset : Asset, IFileDerivable {
+	public class BMFontSpriteFontAsset : Asset {
 
 		public string SourcePath { get; set; }
 
@@ -24,16 +24,9 @@ namespace Fusion.Pipeline.AssetTypes {
 
 
 
-		/// <summary>
-		/// Inits asset from file
-		/// </summary>
-		/// <param name="path"></param>
-		public void InitFromFile( string path )
+		public BMFontSpriteFontAsset ( string path ) : base(path)
 		{
-			AssetPath	=	path;
-			SourcePath	=	path;	
 		}
-
 
 
 

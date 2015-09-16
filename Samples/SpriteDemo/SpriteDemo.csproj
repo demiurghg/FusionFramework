@@ -54,9 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <FusionContentReference Include="Content\content.xml" />
+    <FusionContentReference Include="Content\Content.fcproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(FUSION_BUILD)\FusionProject.targets" />

@@ -17,50 +17,11 @@ namespace Fusion.Pipeline {
 	/// </summary>
 	public class BuildContext {
 
-		/// <summary>
-		/// Fusion binary folder
-		/// </summary>
-		string FusionBinary { 
-			get { 
-				return Environment.GetEnvironmentVariable("FUSION_BIN"); 
-			} 
-		}
-
-		/// <summary>
-		/// Fusion content folders
-		/// </summary>
-		string FusionContent { 
-			get { 
-				return Environment.GetEnvironmentVariable("FUSION_CONTENT"); 
-			} 
-		}
-
-
-		/// <summary>
-		/// Fusion content directories
-		/// </summary>
-		ICollection<string> FusionContentDirs {
-			get {
-				return new[]{ FusionContent };//FusionContent.Split( new[]{';'}, StringSplitOptions.RemoveEmptyEntries );
-			}
-		}
-
-
-
-		/// <summary>
-		/// Full path to content folder
-		/// </summary>
-		public string ContentDirectory {
-			get {
-				return Path.GetFullPath( contentFolder );
-			}
-		}
-
 		string contentFolder;
 		string targetFolder;
 		string tempFolder;
 		List<Asset> assetCollection;
-
+		ContentProject	contentProject;
 		
 
 
@@ -73,6 +34,7 @@ namespace Fusion.Pipeline {
 			this.contentFolder		=	contentFolder;
 			this.targetFolder		=	targetFolder;
 			this.tempFolder			=	tempFolder;
+			this.contentProject		=	contentProject;
 			this.assetCollection	=	new List<Asset>();
 		}
 
@@ -82,8 +44,11 @@ namespace Fusion.Pipeline {
 		/// 
 		/// </summary>
 		/// <param name="asset"></param>
+		[Obsolete]
 		public T AddAsset<T>( string keyPath ) where T: Asset
 		{	
+			return null;
+			#if false
 			var existingAsset = assetCollection.FirstOrDefault( a => a.AssetPath == keyPath );
 
 			if (existingAsset==null) {
@@ -104,6 +69,7 @@ namespace Fusion.Pipeline {
 					throw new ContentException(string.Format("Attempt to add asset of different type: {0}", keyPath ));
 				}
 			}
+			#endif
 		}
 
 
@@ -176,32 +142,7 @@ namespace Fusion.Pipeline {
 		/// <returns></returns>
 		public string Resolve ( string path )
 		{
-			if (path==null) {
-				throw new ArgumentNullException("path");
-			}
-
-			if ( Path.IsPathRooted( path ) ) {
-				//Log.Warning("Rooted path: {0}", path);
-				return path;
-			}
-
-			//
-			//	make search list :
-			//
-			var searchDirs	=	new List<string>();
-
-			searchDirs.Add( contentFolder );
-			searchDirs.AddRange( FusionContentDirs );
-
-			foreach ( var dir in searchDirs ) {
-				//Log.Message("...{0}", dir );
-				var fullPath = Path.GetFullPath( Path.Combine( dir, path ) );
-				if ( File.Exists( fullPath ) ) {
-					return fullPath;
-				}
-			}
-
-			throw new ContentException(string.Format("Path '{0}' not resolved", path));
+			return contentProject.ResolveContentPath( path );
 		}
 
 
@@ -268,9 +209,9 @@ namespace Fusion.Pipeline {
 			}
 
 
-			if (asset!=null && !asset.IgnoreToolChanges) {
+			/*if (asset!=null /*&& !asset.IgnoreToolChanges) {
 				dependencies.Add( asset.GetType().Assembly.Location );
-			}// */
+			} */
 
 			var dstTime	=	File.GetLastWriteTime( targetFile );
 
@@ -285,6 +226,7 @@ namespace Fusion.Pipeline {
 		}
 
 
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -292,17 +234,7 @@ namespace Fusion.Pipeline {
 		/// <returns></returns>
 		string ResolveToolPath ( string exePath )
 		{
-			if (File.Exists( exePath )) {
-				return exePath;
-			}
-
-			var path = Path.Combine( FusionBinary, exePath );
-			
-			if (File.Exists(path)) {
-				return path;
-			}
-
-			throw new ToolException( string.Format( "Path to '{0}' is not resolved", exePath ) );
+			return contentProject.ResolveBinaryPath( exePath );
 		}
 
 

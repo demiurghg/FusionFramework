@@ -821,7 +821,7 @@ int main(array<System::String ^> ^args)
 	Trace::Listeners->Add( gcnew StdTraceListener() );
 
 	auto options	=	gcnew Options();
-	auto parser		=	gcnew CommandLineParser( options, true, nullptr );
+	auto parser		=	gcnew CommandLineParser( options, nullptr );
 
 	auto sw = gcnew Stopwatch();
 

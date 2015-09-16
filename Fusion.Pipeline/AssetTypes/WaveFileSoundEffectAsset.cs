@@ -11,13 +11,19 @@ using Fusion.Mathematics;
 namespace Fusion.Pipeline.AssetTypes {
 
 	[Asset("Content", "WAV File Sound Effect", "*.wav")]
-	public class WaveFileSoundEffectAsset : Asset, IFileDerivable {
+	public class WaveFileSoundEffectAsset : Asset {
 
 
 		/// <summary>
 		/// Source file
 		/// </summary>
 		public string SourceFile { get; set; }
+
+
+
+		public WaveFileSoundEffectAsset( string path ) : base(path)
+		{
+		}
 
 
 
@@ -28,18 +34,6 @@ namespace Fusion.Pipeline.AssetTypes {
 		{
 			get { return new[]{ SourceFile }; }
 		}
-
-
-		/// <summary>
-		/// Inits asset from file
-		/// </summary>
-		/// <param name="path"></param>
-		public void InitFromFile( string path )
-		{
-			AssetPath	=	path;
-			SourceFile	=	path;	
-		}
-
 
 
 		/// <summary>

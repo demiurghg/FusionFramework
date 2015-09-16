@@ -27,7 +27,7 @@ namespace Fusion.Pipeline {
 		/// </summary>
 		[Category("General")]
 		[ReadOnly(true)]
-		public string AssetPath { get; set; }
+		public string AssetPath { get; private set; }
 
 
 		/// <summary>
@@ -46,17 +46,18 @@ namespace Fusion.Pipeline {
 		/// <summary>
 		/// Asset's type assembly update will be ignored.
 		/// </summary>
-		[Category("General")]
+		/*[Category("General")]
 		[Description("Asset's type assembly update will be ignored.")]
-		public bool IgnoreToolChanges { get; set; }
+		public bool IgnoreToolChanges { get; set; }*/
 
 
 
 		/// <summary>
 		/// Creates asset's instance
 		/// </summary>
-		public Asset ()
+		public Asset ( string assetPath )
 		{
+			this.AssetPath = assetPath;
 		}
 
 

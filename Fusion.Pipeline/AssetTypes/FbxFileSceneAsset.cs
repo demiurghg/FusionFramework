@@ -10,7 +10,7 @@ using Fusion.Mathematics;
 namespace Fusion.Pipeline.AssetTypes {
 
 	[Asset("Content", "FBX File Scene", "*.fbx")]
-	public class FbxFileSceneAsset : Asset, IFileDerivable {
+	public class FbxFileSceneAsset : Asset {
 
 		/// <summary>
 		/// 
@@ -55,22 +55,11 @@ namespace Fusion.Pipeline.AssetTypes {
 		/// <summary>
 		/// Ctor
 		/// </summary>
-		public FbxFileSceneAsset()
+		public FbxFileSceneAsset(string path) : base(path)
 		{
 			ImportGeometry	=	true;
 		}
 
-
-		
-		/// <summary>
-		/// Inits asset from file
-		/// </summary>
-		/// <param name="path"></param>
-		public void InitFromFile( string path )
-		{
-			AssetPath	=	path;
-			SourceFile	=	path;	
-		}
 
 
 
@@ -82,10 +71,10 @@ namespace Fusion.Pipeline.AssetTypes {
 		{
 			var resolvedPath	=	buildContext.Resolve( SourceFile );
 			var destPath		=	buildContext.GetTempFileName( Hash, ".scene" );
-			var cmdLine			=	string.Format("\"{0}\" /out:\"{1}\" /merge:{2} /base:\"{3}\" {4} {5}", 
+			var cmdLine			=	string.Format("\"{0}\" /out:\"{1}\" /merge:{2} {4} {5}", 
 				resolvedPath, destPath, 
 				MergeTolerance, 
-				buildContext.ContentDirectory, 
+				null, 
 				ImportAnimation ? "/anim":"", 
 				ImportGeometry ? "/geom":"" 
 			);

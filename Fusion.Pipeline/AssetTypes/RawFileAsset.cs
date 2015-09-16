@@ -11,7 +11,7 @@ using Fusion.Mathematics;
 namespace Fusion.Pipeline.AssetTypes {
 
 	[Asset("Content", "Raw File", "*.dds;*.*")]
-	public class RawFileAsset : Asset, IFileDerivable {
+	public class RawFileAsset : Asset {
 
 
 		/// <summary>
@@ -21,24 +21,18 @@ namespace Fusion.Pipeline.AssetTypes {
 
 
 
+		public RawFileAsset ( string path ) : base(path)
+		{
+		}
+
+
+
 		/// <summary>
 		/// 
 		/// </summary>
 		public override string[] Dependencies
 		{
 			get { return new[]{ SourceFile }; }
-		}
-
-
-
-		/// <summary>
-		/// Inits asset from file
-		/// </summary>
-		/// <param name="path"></param>
-		public void InitFromFile( string path )
-		{
-			AssetPath	=	path;
-			SourceFile	=	path;	
 		}
 
 
