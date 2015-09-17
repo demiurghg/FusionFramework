@@ -58,4 +58,7 @@
     <Compression>RGB</Compression>
     <SourceFile>manul.tga</SourceFile>
   </Asset>
+  <Asset Path="segoe80.bmfc" Type="BMFontSpriteFontAsset">
+    <SourceFile>segoe80.bmfc</SourceFile>
+  </Asset>
 </ContentProject>

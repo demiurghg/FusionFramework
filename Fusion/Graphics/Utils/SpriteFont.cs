@@ -94,7 +94,7 @@ namespace Fusion.Graphics {
 			//	create path for font-image :
 			string fontImagePath	=	input.Pages[0].File;
 
-			fontTexture				=	rs.Game.Content.Load<Texture2D>( fontImagePath );
+			fontTexture				=	new Texture2D( rs, stream, false );
 			
 			//	Fill structure :
 			fontInfo.fontFace		=	input.Info.Face;

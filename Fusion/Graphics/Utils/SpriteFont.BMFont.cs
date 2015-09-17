@@ -359,7 +359,7 @@ namespace Fusion.Graphics {
 				XmlSerializer deserializer = new XmlSerializer( typeof( FontFile ) );
 				TextReader textReader = new StreamReader( stream );
 				FontFile file = (FontFile)deserializer.Deserialize( textReader );
-				textReader.Close();
+				//textReader.Close();
 				return file;
 			}
 
@@ -368,7 +368,7 @@ namespace Fusion.Graphics {
 				XmlSerializer serializer = new XmlSerializer( typeof( FontFile ) );
 				StreamWriter textWriter = new StreamWriter( stream );
 				serializer.Serialize( textWriter, file );
-				textWriter.Close();
+				//textWriter.Close();
 			}
 		}
 	}

@@ -31,7 +31,7 @@
 		<Message Text='Building content projects...' Importance="high" />
 		<Message Text='&quot;%(FusionContent.FullPath)&quot;' Importance="high" />
 
-		<Exec Command='$(FUSION_BIN)\FBuild &quot;%(FusionContent.FullPath)&quot; /out:&quot;$(TargetDir)Content&quot; /temp:&quot;%(FusionContent.RootDir)%(FusionContent.Directory)' />
+		<Exec Command='$(FUSION_BIN)\FBuild &quot;%(FusionContent.FullPath)&quot; /out:&quot;$(TargetDir)Content&quot; /temp:&quot;%(FusionContent.RootDir)%(FusionContent.Directory)\Temp' />
 	
 	</Target>
 
@@ -41,7 +41,7 @@
 		<Message Text='Rebuilding content projects...' Importance="high" />
 		<Message Text='&quot;%(FusionContent.FullPath)&quot;' Importance="high" />
 
-		<Exec Command='$(FUSION_BIN)\FBuild &quot;%(FusionContent.FullPath)&quot; /force /out:$(TargetDir)\Content' />
+		<Exec Command='$(FUSION_BIN)\FBuild &quot;%(FusionContent.FullPath)&quot; /out:&quot;$(TargetDir)Content&quot; /temp:&quot;%(FusionContent.RootDir)%(FusionContent.Directory)\Temp' />
 
 	</Target>
 

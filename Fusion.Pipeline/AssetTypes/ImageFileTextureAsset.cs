@@ -97,6 +97,19 @@ namespace Fusion.Pipeline.AssetTypes {
 
 
 
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="buildContext"></param>
+		/// <param name="src">Source file name</param>
+		/// <param name="dst">Target file name</param>
+		/// <param name="noMips"></param>
+		/// <param name="fast"></param>
+		/// <param name="toNormal"></param>
+		/// <param name="color"></param>
+		/// <param name="alpha"></param>
+		/// <param name="normal"></param>
+		/// <param name="compression"></param>
 		internal static void RunNVCompress( BuildContext buildContext, string src, string dst, bool noMips, bool fast, bool toNormal, bool color, bool alpha, bool normal, TextureCompression compression )
 		{
 			string commandLine = "";

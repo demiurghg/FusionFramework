@@ -44,17 +44,13 @@ namespace Fusion.Pipeline {
 		/// 
 		/// </summary>
 		/// <param name="asset"></param>
-		[Obsolete]
 		public T AddAsset<T>( string keyPath ) where T: Asset
 		{	
-			return null;
-			#if false
 			var existingAsset = assetCollection.FirstOrDefault( a => a.AssetPath == keyPath );
 
 			if (existingAsset==null) {
 
-				var asset = Activator.CreateInstance<T>();
-				asset.AssetPath = keyPath;
+				var asset = (T)Activator.CreateInstance( typeof(T), new object[]{ keyPath } );
 				assetCollection.Add( asset );
 
 				Log.Message("...added: {0}", asset.AssetPath );
@@ -69,18 +65,16 @@ namespace Fusion.Pipeline {
 					throw new ContentException(string.Format("Attempt to add asset of different type: {0}", keyPath ));
 				}
 			}
-			#endif
 		}
 
 
 
 		/// <summary>
-		/// Generates 
+		/// Generates temporary file name for given key with given extension. 
 		/// </summary>
 		/// <param name="key">unique key string value</param>
 		/// <param name="ext">Desired extension with leading dot</param>
-		/// <param name="resolve">Whether returned path is resolved relative to current directory</param>
-		/// <returns></returns>
+		/// <returns>Full path for generated file name.</returns>
 		public string GetTempFileName ( string key, string ext )
 		{
 			var fileName	=	ContentUtils.CalculateMD5Hash( key.ToLower(), true );
@@ -103,7 +97,7 @@ namespace Fusion.Pipeline {
 
 
 		/// <summary>
-		/// 
+		/// Resolves file name and copy file file to stream.
 		/// </summary>
 		/// <param name="sourceFile"></param>
 		/// <param name="targetStream"></param>

@@ -15,11 +15,11 @@ namespace Fusion.Pipeline.AssetTypes {
 	[Asset("Content", "BMFC Sprite Font", "*.bmfc")]
 	public class BMFontSpriteFontAsset : Asset {
 
-		public string SourcePath { get; set; }
+		public string SourceFile { get; set; }
 
 		public override string[] Dependencies
 		{
-			get { return new[]{ SourcePath }; }
+			get { return new[]{ SourceFile }; }
 		}
 
 
@@ -37,16 +37,15 @@ namespace Fusion.Pipeline.AssetTypes {
 		public override void Build ( BuildContext buildContext )
 		{														   
 			string tempFileName		= buildContext.GetTempFileName( AssetPath, ".fnt" );
-			string tempFileNameR	= buildContext.GetTempFileName( AssetPath, ".fnt");
-			string resolvedPath		= buildContext.Resolve( SourcePath );	
+			string resolvedPath		= buildContext.Resolve( SourceFile );	
 
 			//	Launch 'bmfont.com' with temporary output file :
-			buildContext.RunTool( @"bmfont.com",  string.Format("-c \"{0}\" -o \"{1}\"", resolvedPath, tempFileNameR ) );
+			buildContext.RunTool( @"bmfont.com",  string.Format("-c \"{0}\" -o \"{1}\"", resolvedPath, tempFileName ) );
 
 
 			//	load temporary output :
 			SpriteFont.FontFile font;
-			using ( var stream = File.OpenRead( tempFileNameR ) ) {
+			using ( var stream = File.OpenRead( tempFileName ) ) {
 				font = SpriteFont.FontLoader.Load( stream );
 			}
 
@@ -58,27 +57,31 @@ namespace Fusion.Pipeline.AssetTypes {
 
 
 			//	patch font description and add children (e.g. "secondary") content :
-			foreach (var p in font.Pages) {
+			using ( var stream = buildContext.OpenTargetStream( this ) ) {
 
-				var newAssetPath	=	Path.Combine( AssetPath, "Page#" + p.ID.ToString() );
-				var newSrcPath		=	Path.Combine( Path.GetDirectoryName(tempFileName), p.File );
+				
+				//	write font layout data :
+				SpriteFont.FontLoader.Save( stream, font );
 
-				if ( Path.GetExtension( newSrcPath ).ToLower() == ".dds" ) {
 
-					var asset			=	buildContext.AddAsset<RawFileAsset>( newAssetPath );
-					asset.SourceFile	=	newSrcPath;
+				//	write pages :
+				foreach (var p in font.Pages) {
 
-				} else {
+					var pageFile	=	Path.Combine( Path.GetDirectoryName( tempFileName ), p.File );
 
-					var asset			=	buildContext.AddAsset<ImageFileTextureAsset>( newAssetPath );
-					asset.SourceFile	=	newSrcPath;
+					if ( Path.GetExtension( pageFile ).ToLower() == ".dds" ) {
+
+						buildContext.CopyTo( pageFile, stream );
+
+					} else {
+
+						ImageFileTextureAsset.RunNVCompress( buildContext, pageFile, pageFile + ".dds", true, false, false, true, true, false, ImageFileTextureAsset.TextureCompression.RGB );
+
+						buildContext.CopyTo( pageFile + ".dds", stream );
+
+					}
 				}
 
-				p.File	=	newAssetPath;
-			}
-
-			using ( var stream = buildContext.OpenTargetStream( this ) ) {
-				SpriteFont.FontLoader.Save( stream, font );
 			}
 		}
 	} 

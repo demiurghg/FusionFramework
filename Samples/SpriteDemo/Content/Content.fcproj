@@ -1,32 +1,128 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ContentProject>
-
-	<ContentDirectories>
-		<Item>$(FUSION_BIN)</Item>
-		<Item>$(FUSION_BIN)</Item>
-		<Item>$(FUSION_BIN)</Item>
-		<Item>$(FUSION_BIN)</Item>
-	</ContentDirectories>
-
-	<BinaryDirectories>
-		<Item>$(FUSION_BIN)</Item>
-		<Item>$(FUSION_BIN)</Item>
-		<Item>$(FUSION_BIN)</Item>
-		<Item>$(FUSION_BIN)</Item>
-	</BinaryDirectories>
-	
-	<Assemblies>
-		<Item>..\MyContentProcessor.dll</Item>
-	<Assemblies>
-	
-	<Asset Path="lena.tga" Type="ImageFileTextureAsset">
-		<SourceFile>lena.tga</SourceFile>
-		<ToNormal>False</ToNormal>
-	</Asset>
-	
-	<Asset Path="manul.tga">
-		<SourceFile>manul.tga</SourceFile>
-		<ToNormal>False</ToNormal>
-	</Asset>
-
+  <!--Directories to search for content.-->
+  <!--Non-existing directories will be ignored.-->
+  <!--Possible formats:-->
+  <!--  Full path: "C:\MyProject\BinaryDir\"-->
+  <!--  Relative path: "..\MyProject\BinaryDir"-->
+  <!--  Environment variable: "$(MY_ENV_VARIABLE)"-->
+  <!--  Registry variable: "$(HOTKEY_LOCAL_MACHINE\MyVariable)"-->
+  <!--Note: Provide both x86 and x64 registry variables.-->
+  <!--Note: Source directory (project) and current directory have highest priority.-->
+  <ContentDirectories>
+    <Item>$(FUSION_CONTENT)</Item>
+  </ContentDirectories>
+  <!--Directories to search for executable tools and assemblies.-->
+  <!--Non-existing directories will be ignored.-->
+  <!--Possible formats:-->
+  <!--  Full path: "C:\MyProject\ContentDir\"-->
+  <!--  Relative path: "..\MyProject\ContentDir"-->
+  <!--  Environment variable: "$(MY_ENV_VARIABLE)"-->
+  <!--  Registry variable: "$(HOTKEY_LOCAL_MACHINE\MyVariable)"-->
+  <!--Note: Provide both x86 and x64 registry variables.-->
+  <!--Note: Current directory has highest priority.-->
+  <BinaryDirectories>
+    <Item>$(FUSION_BIN)</Item>
+  </BinaryDirectories>
+  <!--Assemblies to load.-->
+  <!--Non-existing assemblies will cause build error.-->
+  <Assemblies />
+  <!--Asset list.-->
+  <!--Attributes 'Path' and 'Type' are required.-->
+  <!--Path is unique asset identifier.-->
+  <!--Type is an asset's class name.-->
+  <!--Each child element is an asset parameter.-->
+  <!--Parameters are parsed using TypeConverter.-->
+  <!--Examples:-->
+  <!--<A>3.14</A>    - float parameter A-->
+  <!--<B>Foo</B>     - string parameter B-->
+  <!--<C>8,8,8,8</C> - vector or color parameter C-->
+  <!--<L>1</L>       - first element of list L-->
+  <!--<L>2</L>       - second element of list L-->
+  <Asset Path="lena.tga" Type="ImageFileTextureAsset">
+    <NoMips>False</NoMips>
+    <Fast>False</Fast>
+    <ToNormal>False</ToNormal>
+    <Color>True</Color>
+    <Alpha>False</Alpha>
+    <Normal>False</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>lena.tga</SourceFile>
+  </Asset>
+  <Asset Path="manul.tga" Type="ImageFileTextureAsset">
+    <NoMips>False</NoMips>
+    <Fast>False</Fast>
+    <ToNormal>True</ToNormal>
+    <Color>False</Color>
+    <Alpha>False</Alpha>
+    <Normal>False</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>manul.tga</SourceFile>
+  </Asset>
+  <Asset Path="debugFont.tga" Type="ImageFileTextureAsset">
+    <NoMips>False</NoMips>
+    <Fast>False</Fast>
+    <ToNormal>True</ToNormal>
+    <Color>False</Color>
+    <Alpha>False</Alpha>
+    <Normal>False</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>debugFont.tga</SourceFile>
+  </Asset>
+  <Asset Path="stereo.hlsl" Type="UbershaderAsset">
+    <GraphicsProfile>HiDef</GraphicsProfile>
+    <DisableOptimization>False</DisableOptimization>
+    <OptimizationLevel>1</OptimizationLevel>
+    <AvoidFlowControl>False</AvoidFlowControl>
+    <PreferFlowControl>False</PreferFlowControl>
+    <MatrixPacking>RowMajor</MatrixPacking>
+    <PSEntryPoint>PSMain</PSEntryPoint>
+    <VSEntryPoint>VSMain</VSEntryPoint>
+    <GSEntryPoint>GSMain</GSEntryPoint>
+    <DSEntryPoint>DSMain</DSEntryPoint>
+    <HSEntryPoint>HSMain</HSEntryPoint>
+    <CSEntryPoint>CSMain</CSEntryPoint>
+    <SourceFile>stereo.hlsl</SourceFile>
+    <ShowPemutations>False</ShowPemutations>
+    <ListingPath>
+    </ListingPath>
+  </Asset>
+  <Asset Path="spriteBatch.hlsl" Type="UbershaderAsset">
+    <GraphicsProfile>HiDef</GraphicsProfile>
+    <DisableOptimization>False</DisableOptimization>
+    <OptimizationLevel>1</OptimizationLevel>
+    <AvoidFlowControl>False</AvoidFlowControl>
+    <PreferFlowControl>False</PreferFlowControl>
+    <MatrixPacking>RowMajor</MatrixPacking>
+    <PSEntryPoint>PSMain</PSEntryPoint>
+    <VSEntryPoint>VSMain</VSEntryPoint>
+    <GSEntryPoint>GSMain</GSEntryPoint>
+    <DSEntryPoint>DSMain</DSEntryPoint>
+    <HSEntryPoint>HSMain</HSEntryPoint>
+    <CSEntryPoint>CSMain</CSEntryPoint>
+    <SourceFile>spriteBatch.hlsl</SourceFile>
+    <ShowPemutations>False</ShowPemutations>
+    <ListingPath>
+    </ListingPath>
+  </Asset>
+  <Asset Path="debugRender.hlsl" Type="UbershaderAsset">
+    <GraphicsProfile>HiDef</GraphicsProfile>
+    <DisableOptimization>False</DisableOptimization>
+    <OptimizationLevel>1</OptimizationLevel>
+    <AvoidFlowControl>False</AvoidFlowControl>
+    <PreferFlowControl>False</PreferFlowControl>
+    <MatrixPacking>RowMajor</MatrixPacking>
+    <PSEntryPoint>PSMain</PSEntryPoint>
+    <VSEntryPoint>VSMain</VSEntryPoint>
+    <GSEntryPoint>GSMain</GSEntryPoint>
+    <DSEntryPoint>DSMain</DSEntryPoint>
+    <HSEntryPoint>HSMain</HSEntryPoint>
+    <CSEntryPoint>CSMain</CSEntryPoint>
+    <SourceFile>debugRender.hlsl</SourceFile>
+    <ShowPemutations>False</ShowPemutations>
+    <ListingPath>
+    </ListingPath>
+  </Asset>
+  <Asset Path="segoe80.bmfc" Type="BMFontSpriteFontAsset">
+    <SourceFile>segoe80.bmfc</SourceFile>
+  </Asset>
 </ContentProject>
