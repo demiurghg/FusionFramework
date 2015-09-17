@@ -18,6 +18,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		public GeoVert[] Dots;
 
 		Texture2D socioClasses;
+		Texture2D palette;
 		Texture2D geoObjects;
 
 		int geoObjectStart	= 25000;
@@ -116,11 +117,12 @@ namespace Fusion.GIS.LayerSpace.Layers
 			dotsBuf.Data.Colors[2] = 1.0f;
 			dotsBuf.Data.Colors[3] = 1.0f;
 
-
+			UpdateColors(new Color[]{new Color(112,65,91,1), new Color(61,105,166,1), new Color(112,65,91,1), new Color(61,105,166,1)});
 			//dotsVB.SetData(Dots, 0, Dots.Length);
 
 			//socioClasses	= Game.Content.Load<Texture2D>("Urban/SocioClasses.tga");
 			socioClasses	= Game.Content.Load<Texture2D>("Urban/circles.tga");
+			palette	= Game.Content.Load<Texture2D>("palette2.tga");
 			geoObjects		= Game.Content.Load<Texture2D>("Urban/geoObjects.tga");
 		}
 
@@ -146,7 +148,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 		}
 
 
-		void UpdateColors(Color[] cols)
+		public  void UpdateColors(Color[] cols)
 		{
 			int count = cols.Length > 15 ? 15  : cols.Length;
 

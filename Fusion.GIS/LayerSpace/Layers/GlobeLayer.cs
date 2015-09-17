@@ -95,6 +95,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 			DRAW_VERTEX_LINES	= 0x00040000,
 			DRAW_VERTEX_DOTS	= 0x00080000,
 			DRAW_VERTEX_POLY	= 0x00100000,
+			DOTS_PAL			= 0x00200000,
 		}
 
 
@@ -349,6 +350,7 @@ namespace Fusion.GIS.LayerSpace.Layers
 					Yaw -= after.X - before.X;
 					Pitch += after.Y - before.Y;
 				}
+
 			}
 			if (Game.InputDevice.IsKeyDown(Keys.RightButton)) {
 				var dif = new Vector2(args.X, args.Y) - previousMousePosition;
@@ -403,6 +405,11 @@ namespace Fusion.GIS.LayerSpace.Layers
 					var lonLat = new DVector2(DMathUtil.RadiansToDegrees(lon), DMathUtil.RadiansToDegrees(lat));
 
 					Console.WriteLine(lonLat);
+					var cart = SphericalToCartesian(lonLat, Config.earthRadius);
+					Console.WriteLine(cart);
+					Vector3 v = new Vector3((float) cart.X, (float) cart.Y, (float) cart.Z);
+					Console.WriteLine();
+					Console.WriteLine(pos);
 				}
 			}
 		}
@@ -691,9 +698,11 @@ namespace Fusion.GIS.LayerSpace.Layers
 
 				Game.GraphicsDevice.PixelShaderResources[0] = socioClasses;
 				Game.GraphicsDevice.PixelShaderSamplers[0]	= SamplerState.LinearClamp;
+				Game.GraphicsDevice.PixelShaderResources[1] = palette;
 
 				Game.GraphicsDevice.PipelineState = myMiniFactory.ProducePipelineState(
-					GlobeFlags.DRAW_VERTEX_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_DOTS | GlobeFlags.DOTS_WORLDSPACE,
+					GlobeFlags.DRAW_VERTEX_LINES | GlobeFlags.USE_GEOCOORDS | GlobeFlags.VERTEX_SHADER | GlobeFlags.DRAW_DOTS | GlobeFlags.DOTS_WORLDSPACE
+					| GlobeFlags.DOTS_PAL,
 					Primitive.PointList,
 					BlendState.AlphaBlend,
 					RasterizerState.CullNone,

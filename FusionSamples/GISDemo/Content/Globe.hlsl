@@ -154,7 +154,7 @@ $ubershader DRAW_VERTEX_LINES USE_GEOCOORDS VERTEX_SHADER DRAW_SEGMENTED_LINES
 $ubershader DRAW_POLY DRAW_VERTEX_POLY USE_CARTCOORDS VERTEX_SHADER DRAW_COLOR
 $ubershader DRAW_VERTEX_DOTS DRAW_DOTS USE_GEOCOORDS VERTEX_SHADER DOTS_SCREENSPACE
 $ubershader DRAW_VERTEX_LINES VERTEX_SHADER USE_GEOCOORDS DRAW_CHARTS
-$ubershader DRAW_VERTEX_LINES USE_GEOCOORDS VERTEX_SHADER DRAW_DOTS DOTS_WORLDSPACE
+$ubershader DRAW_VERTEX_LINES USE_GEOCOORDS VERTEX_SHADER DRAW_DOTS DOTS_WORLDSPACE +DOTS_PAL
 $ubershader DRAW_POLY DRAW_VERTEX_POLY USE_GEOCOORDS VERTEX_SHADER DRAW_HEAT
 $ubershader DRAW_VERTEX_POLY USE_GEOCOORDS VERTEX_SHADER DRAW_ATMOSPHERE
 $ubershader DRAW_VERTEX_LINES USE_GEOCOORDS VERTEX_SHADER DRAW_ARCS
@@ -765,6 +765,9 @@ void GSMain ( point VS_OUTPUT inputArray[1], inout TriangleStream<GS_OUTPUT> str
 	output.Position	=	mul(float4(x + halfWidth, y + halfWidth, z, 1), DotsData.Proj);
 	output.Tex		=	float2(texRight, 0.0f);
 	output.Color	=	color;
+//#ifdef DOTS_PAL
+	
+//#endif
 	output.Normal	=	input.Normal;
 	stream.Append( output );
 	
@@ -783,7 +786,9 @@ void GSMain ( point VS_OUTPUT inputArray[1], inout TriangleStream<GS_OUTPUT> str
 #ifdef DOTS_WORLDSPACE
 	// Plane
 	output.Color	=	color;
-	output.Normal	=	input.Normal;
+	//output.Color = FrameMap.SampleLevel( PointSampler, float2( 0.5f, 0.5f), 0);
+	output.Normal	=	float3(input.Tex.y, 0.5f, 0);
+	//output.Normal	=	input.Normal;
 
 	output.Position	= mul(float4(pos + halfWidth*xAxis - halfWidth*zAxis, 1), Stage.ViewProj);
 	output.Tex		= float2(texRight, 0.0f);
@@ -810,8 +815,16 @@ void GSMain ( point VS_OUTPUT inputArray[1], inout TriangleStream<GS_OUTPUT> str
 float4 PSMain ( GS_OUTPUT input ) : SV_Target
 {
 	float4 color = DiffuseMap.Sample(Sampler, input.Tex);
+		float4 heat = float4(1,1,1,1);
+		if (input.Normal.x > 0){
+		
+			float4 heat = FrameMap.Sample(Sampler, input.Normal.xy);
+				color.rgb *= heat.rgb;
+		} else {
+			color.rgb *=  input.Color.rgb;
 
-	color.rgb *= input.Color.rgb;
+		}
+
 
 	color.a *= input.Color.a;
 
