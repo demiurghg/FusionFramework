@@ -95,7 +95,7 @@ namespace GISDemo {
 		}
 
 
-		Dictionary<String, GlobeLayer.GeoVert[]> allData = new Dictionary<string, GlobeLayer.GeoVert[]>();
+		Dictionary<String, GlobeLayer.GeoVert[]> allDataSubway = new Dictionary<string, GlobeLayer.GeoVert[]>();
 		SpriteFont sf;
 		/// <summary>
 		/// Load content
@@ -107,62 +107,60 @@ namespace GISDemo {
 			int counter = 0;
 			string line;
 
-			GlobeLayer.GeoVert[] basic = new GlobeLayer.GeoVert[870];
+			GlobeLayer.GeoVert[] basic = new GlobeLayer.GeoVert[124];
 			// Read the file and display it line by line.
-			System.IO.StreamReader file = new System.IO.StreamReader(@"d:\narc.txt");
-			while((line = file.ReadLine()) != null)
-			{
-			    var str = line.Split(';');
-				
-					//System.Console.WriteLine(str[0]);
-					basic[counter] =  new GlobeLayer.GeoVert {
-						Lon = DMath.DegreesToRadians(Double.Parse(str[0])),
-						Lat = DMath.DegreesToRadians(Double.Parse(str[1])),
-						Color = new Color(73,97,69),
-						Position = new Vector3(),
-						Tex = new Vector4(3, 0,  0.1f, 0)
-					};
-					
-					counter++;
-				
-			}
-
-			//System.IO.StreamReader file = new System.IO.StreamReader(@"d:\coords.txt");
+			//System.IO.StreamReader file = new System.IO.StreamReader(@"d:\narc.txt");
 			//while((line = file.ReadLine()) != null)
 			//{
-			//	var str = line.Split(',');
-			//	if(!str[1].Equals("0")){
+			//	var str = line.Split(';');
+				
 			//		//System.Console.WriteLine(str[0]);
 			//		basic[counter] =  new GlobeLayer.GeoVert {
-			//			Lon = DMath.DegreesToRadians(Double.Parse(str[2])),
+			//			Lon = DMath.DegreesToRadians(Double.Parse(str[0])),
 			//			Lat = DMath.DegreesToRadians(Double.Parse(str[1])),
-			//			Color = new Color(207,71,60),
+			//			Color = new Color(73,97,69),
 			//			Position = new Vector3(),
-			//			Tex = new Vector4(1, 0, 0.08f, 0)
+			//			Tex = new Vector4(3, 0,  0.1f, 0)
 			//		};
-			//		basic[++counter] =  new GlobeLayer.GeoVert {
-			//			Lon = DMath.DegreesToRadians(Double.Parse(str[2])),
-			//			Lat = DMath.DegreesToRadians(Double.Parse(str[1])),
-			//			Color = new Color(23,60,120),
-			//			Position = new Vector3(),
-			//			Tex = new Vector4(2, 0, 0.08f, 0)
-			//		};
+					
 			//		counter++;
-			//	}
+				
 			//}
+
+			System.IO.StreamReader file = new System.IO.StreamReader( @"d:\coords.txt" );
+			while ( ( line = file.ReadLine() ) != null ) {
+				var str = line.Split( ',' );
+				if ( !str[1].Equals( "0" ) ) {
+					//System.Console.WriteLine(str[0]);
+					basic[counter] = new GlobeLayer.GeoVert {
+						Lon = DMath.DegreesToRadians( Double.Parse( str[2] ) ),
+						Lat = DMath.DegreesToRadians( Double.Parse( str[1] ) ),
+						Color = new Color( 207, 71, 60 ),
+						Position = new Vector3(),
+						Tex = new Vector4( 1, 0, 0.08f, 0 )
+					};
+					basic[++counter] = new GlobeLayer.GeoVert {
+						Lon = DMath.DegreesToRadians( Double.Parse( str[2] ) ),
+						Lat = DMath.DegreesToRadians( Double.Parse( str[1] ) ),
+						Color = new Color( 23, 60, 120 ),
+						Position = new Vector3(),
+						Tex = new Vector4( 2, 0, 0.08f, 0 )
+					};
+					counter++;
+				}
+			}
 			file.Close();
 			
 			Console.WriteLine("There were {0} lines.", counter);
 
-			//System.IO.StreamReader fileTime = new System.IO.StreamReader(@"d:\times.txt");
-			//string[] times = new string[96];
-			//int id = 0;
-			//while((line = fileTime.ReadLine()) != null)
-			//{
-			//	times[id] = line;
-			//	id++;
-			//}
-			//fileTime.Close();
+			System.IO.StreamReader fileTime = new System.IO.StreamReader( @"d:\times.txt" );
+			string[] times = new string[96];
+			int id = 0;
+			while ( ( line = fileTime.ReadLine() ) != null ) {
+				times[id] = line;
+				id++;
+			}
+			fileTime.Close();
 			gl.MaxDotsToDraw = basic.Length;
 
 			for (int i = 0; i < gl.MaxDotsToDraw; i++){
@@ -171,36 +169,36 @@ namespace GISDemo {
 					}
 					gl.DotsUpdate();
 
-			
-			//System.IO.StreamReader data = new System.IO.StreamReader(@"d:\all-data.txt");
 
-			//int c = 0;
-			//string date = "";
-			//int t = 0;
-			//while ( ( line = data.ReadLine() ) != null ) {
+					System.IO.StreamReader data = new System.IO.StreamReader( @"d:\data-01.txt" );
 
-			//	if ( c < counter / 2 ) {
-			//		//if(!str[1].Equals("0")){
-			//	var str = line.Split( ';' );
+					int c = 0;
+					string date = "";
+					int t = 0;
+					while ( ( line = data.ReadLine() ) != null ) {
 
-			//		basic[2 * c].Tex = new Vector4( 2, 0, (float) Double.Parse( str[3] ), 0 );
-			//		basic[2 * c + 1].Tex = new Vector4( 1, 0, (float) Double.Parse( str[4] ) , 0 );
+						if ( c < counter / 2 ) {
+							//if(!str[1].Equals("0")){
+							var str = line.Split( ';' );
 
-			//		c++;
-			//		//}
-			//		date = str[0] ;
-			//	}
-			//	else {
-			//		GlobeLayer.GeoVert[] arr = new GlobeLayer.GeoVert[124];
-			//		basic.CopyTo(arr, 0);
-			//		allData.Add(date.TrimMatchingQuotes('"') + "\n" + times[t] + ":00 ", arr);
-			//		t = t == 95 ? 0 : t + 1;
-			//		c = 0;
-			//		//continue;
-			//	}
+							basic[2 * c].Tex = new Vector4( 2, 0, (float) Double.Parse( str[3] ), 0 );
+							basic[2 * c + 1].Tex = new Vector4( 1, 0, (float) Double.Parse( str[4] ), 0 );
 
-			//}
-			//data.Close();
+							c++;
+							//}
+							date = str[0];
+						}
+						else {
+							GlobeLayer.GeoVert[] arr = new GlobeLayer.GeoVert[basic.Length];
+							basic.CopyTo( arr, 0 );
+							allDataSubway.Add( date.TrimMatchingQuotes( '"' ) + ";" + times[t] + ":00 ", arr );
+							t = t == 95 ? 0 : t + 1;
+							c = 0;
+							//continue;
+						}
+
+					}
+					data.Close();
 		}
 
 
@@ -334,54 +332,55 @@ namespace GISDemo {
 		{
 			base.Draw( gameTime, stereoEye );
 
-			//double step = 900000 / velocity;
-			//var gl = GetService<LayerService>().GlobeLayer;
-						
-			//var sb = GetService<SpriteBatch>();
-			//		sf.DrawString( sb, str, GraphicsDevice.DisplayBounds.Width / 3 - 150, GraphicsDevice.DisplayBounds.Height / 2 + sf.LineHeight, Color.Black );
-			
-			//if (pause) {
-			//	if (index < allData.Count){
-			//		var data = allData.ElementAt(index);
-			//		var dataNext = allData.ElementAt(index + 1);
-			//		//data.Value.CopyTo(gl.Dots, 0);
-			//		for (int i = 0; i < 124; i++){
-			//			var d = data.Value[i];
-			//			var dN = dataNext.Value[i];
-			//			float radD = sizeCoeff( d.Tex.Z);
-			//			float radDN = sizeCoeff( dN.Tex.Z);
-			//			gl.Dots[i] = d;
-			//			gl.Dots[i].Tex.Z = radD + (radDN - radD) * v / velocity;
-			//		}
+			double step = 900000 / velocity;
+			var gl = GetService<LayerService>().GlobeLayer;
+
+			var sb = GetService<SpriteBatch>();
+			sf.DrawString( sb, str, GraphicsDevice.DisplayBounds.Width / 3 - 150, GraphicsDevice.DisplayBounds.Height / 2 + sf.LineHeight, Color.Black );
+
+			if ( pause ) {
+				if ( index < allDataSubway.Count ) {
+					var data = allDataSubway.ElementAt( index );
+					var dataNext = allDataSubway.ElementAt( index + 1 );
+					for ( int i = 0; i < 124; i++ ) {
+						var d = data.Value[i];
+						var dN = dataNext.Value[i];
+						float radD = sizeCoeff( d.Tex.Z );
+						float radDN = sizeCoeff( dN.Tex.Z );
+						gl.Dots[i] = d;
+						gl.Dots[i].Tex.Z = radD + ( radDN - radD ) * v / velocity;
+					}
 
 					
-			//		//for (int i = 0; i< gl.Dots.Length; i++){
-			//		//	//gl.Dots[i].Color = RandomExt.NextColor(r);
-			//		//	//gl.Dots[i].Tex = new Vector4(1, 0, 0.01f, 0);
-			//		//}
-			//		gl.DotsUpdate();
-			//		var t1 = timer.AddMilliseconds(step);
-			//		if (!timer.Day.Equals(t1.Day)){
-			//			str = dates[++idx];
-			//		}
-			//		timer = t1;
-			//		sf.DrawString( sb, timer.ToString("T"), GraphicsDevice.DisplayBounds.Width / 3 - 100, GraphicsDevice.DisplayBounds.Height / 2 + sf.LineHeight * 2, Color.Black );
-					
-			//		//sf.DrawString(sb, data.Key, 0, GraphicsDevice.DisplayBounds.Height - sf.LineHeight, Color.Black);
-			//		if (v==velocity){
-			//			index++;
-			//			velocity = nextVel;
-			//			v = 0;
-			//		} else{
-			//			v++;
-			//		}
-					
-			//	}
+					gl.DotsUpdate();
+					var t1 = timer.AddMilliseconds( step );
+					if ( !timer.Day.Equals( t1.Day ) ) {
+						str = dates[++idx];
+					}
+					timer = t1;
+					sf.DrawString( sb, timer.ToString( "T" ), GraphicsDevice.DisplayBounds.Width / 3 - 100, GraphicsDevice.DisplayBounds.Height / 2 + sf.LineHeight * 2, Color.Black );
 
-			//	//v++;
-				
-			//	//v = v == velocity ? 0 : v + 1;
-			//}
+					//sf.DrawString(sb, data.Key, 0, GraphicsDevice.DisplayBounds.Height - sf.LineHeight, Color.Black);
+					if ( v == velocity ) {
+						index++;
+						velocity = nextVel;
+						v = 0;
+						var stri = data.Key.Split( ';' )[1].Split(':');
+						var hour = (int) Double.Parse( stri[0].TrimMatchingQuotes( '0' ) );
+						var minute = (int) Double.Parse( stri[1] );
+						timer = new DateTime( 2014, 1, 13, hour, minute, 0 );
+
+					}
+					else {
+						v++;
+					}
+
+				}
+
+				//v++;
+
+				//v = v == velocity ? 0 : v + 1;
+			}
 			
 			
 		}

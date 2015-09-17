@@ -38,6 +38,14 @@ namespace Fusion.GIS
 		[Category("HeatMap")] public int	MaxInfectLevel		{ get; set; }
 		[Category("HeatMap")] public bool	ShowInfectHeatMap	{ get; set; }
 
+		[Category( "Data" )]
+		public bool ShowSubway { get; set; }
+		public bool ShowSuicide13 { get; set; }
+		public bool ShowSuicide14 { get; set; }
+		public bool ShowToxic { get; set; }
+		public bool ShowMigrants { get; set; }
+		public bool ShowComplains { get; set; }
+
 
 
 		public double earthRadius		= 6378.137;
@@ -78,6 +86,13 @@ namespace Fusion.GIS
 
 			ShowInfectHeatMap = false;
 			MaxInfectLevel = 50;
+
+			ShowSubway = true;
+			ShowSuicide13 = false;
+			ShowSuicide14 = false;
+			ShowToxic = false;
+			ShowComplains = false;
+			ShowMigrants = false;
 		}
 
 	}
