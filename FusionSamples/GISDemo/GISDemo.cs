@@ -110,10 +110,7 @@ namespace GISDemo {
 			int counter = 0;
 			string line;
 			//Subway
-			GlobeLayer.GeoVert[] basic = new GlobeLayer.GeoVert[124];
-			Tuple<float, float>[] vetv = new Tuple<float, float>[62];
-
-			
+			GlobeLayer.GeoVert[] basic = new GlobeLayer.GeoVert[118];
 
 			System.IO.StreamReader file = new System.IO.StreamReader(@"d:\coords.txt");
 			while ( ( line = file.ReadLine() ) != null ) {
@@ -127,8 +124,7 @@ namespace GISDemo {
 						Position = new Vector3(),
 						Tex = new Vector4(1, 0, 0.08f, (float) Double.Parse(str[3]))
 					};
-					Console.WriteLine(basic[counter].Tex);
-					vetv[(int) counter / 2] = new Tuple<float, float>((float) Double.Parse(str[2]), (float) Double.Parse(str[1]));
+					//Console.WriteLine(basic[counter].Tex);
 					
 					basic[++counter] = new GlobeLayer.GeoVert {
 						Lon = DMath.DegreesToRadians(Double.Parse(str[2])),
@@ -652,80 +648,78 @@ namespace GISDemo {
 
 
 			for ( int i = 0; i < complains.Length; i++ ) {
-				gl.Dots[i + 124] = complains[i];
+				gl.Dots[i + 118] = complains[i];
 				if ( !ShowComplains ) {
-					gl.Dots[i + 124].Color.A = 0;
+					gl.Dots[i + 118].Color.A = 0;
 				}
 			}
 
 			for ( int i = 0; i < suic2013.Length; i++ ) {
-				gl.Dots[i + 124 + complains.Length] = suic2013[i];
+				gl.Dots[i + 118 + complains.Length] = suic2013[i];
 
 				//
 
 				if ( ShowGender13 ) {
-					gl.Dots[i + complains.Length + 124].Tex.Y = 0;
+					gl.Dots[i + complains.Length + 118].Tex.Y = 0;
 					if ( suic2013[i].Tex.W == 1 ) {
-						gl.Dots[i + complains.Length + 124].Color = new Color(112, 65, 91);
+						gl.Dots[i + complains.Length + 118].Color = new Color(112, 65, 91);
 					} else {
-						gl.Dots[i + complains.Length + 124].Color = new Color(61, 105, 166);
+						gl.Dots[i + complains.Length + 118].Color = new Color(61, 105, 166);
 					}
 
 				}
 				if ( !ShowSuicide13 ) {
-					gl.Dots[i + 124 + complains.Length].Color.A = 0;
+					gl.Dots[i + 118 + complains.Length].Color.A = 0;
 				}
 			}
 
 			for ( int i = 0; i < suic2014.Length; i++ ) {
-				gl.Dots[i + 124 + complains.Length + suic2013.Length] = suic2014[i];
+				gl.Dots[i + 118 + complains.Length + suic2013.Length] = suic2014[i];
 
 				//
 
 				if ( ShowGender14 ) {
-					gl.Dots[i + complains.Length + 124 + suic2013.Length].Tex.Y = 0;
+					gl.Dots[i + complains.Length + 118 + suic2013.Length].Tex.Y = 0;
 					if ( suic2014[i].Tex.W == 1 ) {
-						gl.Dots[i + complains.Length + 124 + suic2013.Length].Color = new Color(112, 65, 91);
+						gl.Dots[i + complains.Length + 118 + suic2013.Length].Color = new Color(112, 65, 91);
 					} else {
-						gl.Dots[i + complains.Length + 124 + suic2013.Length].Color = new Color(61, 105, 166);
+						gl.Dots[i + complains.Length + 118 + suic2013.Length].Color = new Color(61, 105, 166);
 					}
 
 				}
 				if ( !ShowSuicide14 ) {
-					gl.Dots[i + 124 + complains.Length + suic2013.Length].Color.A = 0;
+					gl.Dots[i + 118 + complains.Length + suic2013.Length].Color.A = 0;
 				}
 			}
 
 			for ( int i = 0; i < toxic.Length; i++ ) {
-				gl.Dots[i + 124 + complains.Length + suic2013.Length + suic2014.Length] = toxic[i];
+				gl.Dots[i + 118 + complains.Length + suic2013.Length + suic2014.Length] = toxic[i];
 
 				//
 
 				if ( ShowToxicGender ) {
-					gl.Dots[i + complains.Length + 124 + suic2013.Length + suic2014.Length].Tex.Y = 0;
+					gl.Dots[i + complains.Length + 118 + suic2013.Length + suic2014.Length].Tex.Y = 0;
 					if ( toxic[i].Tex.W == 1 ) {
-						gl.Dots[i + complains.Length + 124 + suic2013.Length + suic2014.Length].Color = new Color(112, 65, 91);
+						gl.Dots[i + complains.Length + 118 + suic2013.Length + suic2014.Length].Color = new Color(112, 65, 91);
 					} else {
-						gl.Dots[i + complains.Length + 124 + suic2013.Length + suic2014.Length].Color = new Color(61, 105, 166);
+						gl.Dots[i + complains.Length + 118 + suic2013.Length + suic2014.Length].Color = new Color(61, 105, 166);
 					}
 
 				}
 				if ( !ShowToxic ) {
-					gl.Dots[i + 124 + complains.Length + suic2013.Length + suic2014.Length].Color.A = 0;
+					gl.Dots[i + 118 + complains.Length + suic2013.Length + suic2014.Length].Color.A = 0;
 				}
 			}
 
 			for ( int i = 0; i < migr.Length; i++ ) {
-				gl.Dots[i + 124 + complains.Length + suic2013.Length + suic2014.Length + toxic.Length] = migr[i];
-
-				//
-
-				
+				gl.Dots[i + 118 + complains.Length + suic2013.Length + suic2014.Length + toxic.Length] = migr[i];
+								
 				if ( !ShowMigrants ) {
-					gl.Dots[i + 124 + complains.Length + suic2013.Length + suic2014.Length + toxic.Length].Color.A = 0;
+					gl.Dots[i + 118 + complains.Length + suic2013.Length + suic2014.Length + toxic.Length].Color.A = 0;
 				}
-			//	Console.WriteLine(i);
+				
 			}
+			//Console.WriteLine( gl.Dots[234 + 118 + complains.Length + suic2013.Length + suic2014.Length + toxic.Length].Color );
 			gl.DotsUpdate();
 
 			if ( InputDevice.RelativeMouseOffset == Vector2.Zero ) {
