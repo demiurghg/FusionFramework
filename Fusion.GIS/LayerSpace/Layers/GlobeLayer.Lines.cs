@@ -126,9 +126,15 @@ namespace Fusion.GIS.LayerSpace.Layers
 			vb.SetData(linesPolyBatchVertices.ToArray());
 
 			linesPolyBatch.Add(vb);
-
+			
 			linesPolyBatchVertices.Clear();
 		}
+		public void LinesPolyClear()
+		{
+			linesPolyBatch.Clear();
+			linesPolyBatchVertices.Clear();
+		}
+
 
 
 		void CreateRoadFromLine(RailroadPoint[] line, double width, out VertexBuffer vb, out IndexBuffer ib)

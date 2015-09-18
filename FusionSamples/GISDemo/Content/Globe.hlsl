@@ -825,7 +825,7 @@ float4 PSMain ( GS_OUTPUT input ) : SV_Target
 
 		}
 
-
+	
 	color.a *= input.Color.a;
 
 	return color;
