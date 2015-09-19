@@ -153,11 +153,11 @@ namespace SpriteDemo {
 			font1		=	Content.Load<SpriteFont>("segoe80");
 			font2		=	Content.Load<SpriteFont>("segoe40");
 
-			atlas		=	Content.Load<TextureAtlas>("sprites");
+			//atlas		=	Content.Load<TextureAtlas>("sprites");
 
-			foreach ( var name in atlas.SubImageNames ) {
+			/*foreach ( var name in atlas.SubImageNames ) {
 				Log.Message( "...{0}", name );
-			}
+			} */
 		}
 
 
@@ -325,13 +325,13 @@ namespace SpriteDemo {
 
 			sb.Restart();
 
-				var name = atlas.SubImageNames[ ((int)atlasId) % atlas.SubImageNames.Length ];
+				/*var name = atlas.SubImageNames[ ((int)atlasId) % atlas.SubImageNames.Length ];
 				var ar = atlas.GetSubImageRectangle( name );
 
 				sb.Draw( atlas.Texture, new Rectangle(10,400, ar.Width, ar.Height), ar, Color.White );
 				sb.DrawDebugString( 10, 392, name, Color.White );
 
-				atlasId += gameTime.ElapsedSec * 2;
+				atlasId += gameTime.ElapsedSec * 2;*/
 
 			sb.End();
 

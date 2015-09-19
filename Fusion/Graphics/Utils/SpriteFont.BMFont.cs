@@ -363,11 +363,30 @@ namespace Fusion.Graphics {
 				return file;
 			}
 
+			public static FontFile LoadFromString ( string text )
+			{
+				XmlSerializer deserializer = new XmlSerializer( typeof( FontFile ) );
+				TextReader textReader = new StringReader( text );
+				FontFile file = (FontFile)deserializer.Deserialize( textReader );
+				//textReader.Close();
+				return file;
+			}
+
 			public static void Save ( Stream stream, FontFile file )
 			{
 				XmlSerializer serializer = new XmlSerializer( typeof( FontFile ) );
 				StreamWriter textWriter = new StreamWriter( stream );
 				serializer.Serialize( textWriter, file );
+				//textWriter.Close();
+			}
+
+			public static string SaveToString ( FontFile file )
+			{
+				XmlSerializer serializer = new XmlSerializer( typeof( FontFile ) );
+				var sb = new StringBuilder();
+				TextWriter textWriter = new StringWriter( sb );
+				serializer.Serialize( textWriter, file );
+				return sb.ToString();
 				//textWriter.Close();
 			}
 		}

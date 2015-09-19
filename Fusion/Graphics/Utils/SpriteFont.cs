@@ -10,7 +10,7 @@ using Fusion.Mathematics;
 
 
 namespace Fusion.Graphics {
-	public partial class SpriteFont {
+	public partial class SpriteFont : DisposableBase {
 
 
 		public class Glyph {
@@ -73,76 +73,85 @@ namespace Fusion.Graphics {
 		{
 			this.rs	=	rs;
 
-			FontFile input = FontLoader.Load( stream );
+			using (var br = new BinaryReader(stream)) {
 
-			int numGlyphs	=	input.Chars.Max( ch => ch.ID );
+				var xml = br.ReadString();
+				FontFile input = FontLoader.LoadFromString( xml );
 
-			//	create charInfo and kernings :
-			fontInfo.kernings = new Dictionary<Tuple<char,char>, float>();
-			fontInfo.charInfo = new SpriteFontInfo.CharInfo[numGlyphs+1];
+				int numGlyphs	=	input.Chars.Max( ch => ch.ID );
 
-			//	check UNICODE :
-			/*if (input.Info.Unicode!=0) {
-				throw new SystemException("UNICODE characters are not supported (Remove UNICODE flag)");
-			} */
+				//	create charInfo and kernings :
+				fontInfo.kernings = new Dictionary<Tuple<char,char>, float>();
+				fontInfo.charInfo = new SpriteFontInfo.CharInfo[numGlyphs+1];
 
-			//	check one-page bitmap fonts :
-			if (input.Pages.Count!=1) {
-				throw new GraphicsException("Only one page of font image is supported");
-			}
+				//	check one-page bitmap fonts :
+				if (input.Pages.Count!=1) {
+					throw new GraphicsException("Only one page of font image is supported");
+				}
 
-			//	create path for font-image :
-			string fontImagePath	=	input.Pages[0].File;
+				//	create path for font-image :
+				string fontImagePath	=	input.Pages[0].File;
 
-			fontTexture				=	new Texture2D( rs, stream, false );
+				//	skip two bytes :
+				var texData				=	stream.ReadAllBytes();
+				fontTexture				=	new Texture2D( rs, texData, false );
 			
-			//	Fill structure :
-			fontInfo.fontFace		=	input.Info.Face;
-			fontInfo.baseLine		=	input.Common.Base;
-			fontInfo.lineHeight		=	input.Common.LineHeight;
-			fontInfo.scaleWidth		=	input.Common.ScaleW;
-			fontInfo.scaleHeight	=	input.Common.ScaleH;
+				//	Fill structure :
+				fontInfo.fontFace		=	input.Info.Face;
+				fontInfo.baseLine		=	input.Common.Base;
+				fontInfo.lineHeight		=	input.Common.LineHeight;
+				fontInfo.scaleWidth		=	input.Common.ScaleW;
+				fontInfo.scaleHeight	=	input.Common.ScaleH;
 
-			float scaleWidth = fontInfo.scaleWidth;
-			float scaleHeight = fontInfo.scaleHeight;
+				float scaleWidth = fontInfo.scaleWidth;
+				float scaleHeight = fontInfo.scaleHeight;
 
-			//	process character info :
-			for ( int i=0; i<input.Chars.Count; i++) {
-				FontChar ch = input.Chars[i];
+				//	process character info :
+				for ( int i=0; i<input.Chars.Count; i++) {
+					FontChar ch = input.Chars[i];
 
-				int id = ch.ID;
-				int x = ch.X;
-				int y = ch.Y;
-				int xoffs = ch.XOffset;
-				int yoffs = ch.YOffset;
-				int w = ch.Width;
-				int h = ch.Height;
+					int id = ch.ID;
+					int x = ch.X;
+					int y = ch.Y;
+					int xoffs = ch.XOffset;
+					int yoffs = ch.YOffset;
+					int w = ch.Width;
+					int h = ch.Height;
 
-				fontInfo.charInfo[ ch.ID ].validChar	=	true;
-				fontInfo.charInfo[ ch.ID ].xAdvance		=	ch.XAdvance;
-				fontInfo.charInfo[ ch.ID ].srcRect		=	new RectangleF(x, y, w, h);
-				fontInfo.charInfo[ ch.ID ].dstRect		=	new RectangleF(xoffs, yoffs, w, h);
+					fontInfo.charInfo[ ch.ID ].validChar	=	true;
+					fontInfo.charInfo[ ch.ID ].xAdvance		=	ch.XAdvance;
+					fontInfo.charInfo[ ch.ID ].srcRect		=	new RectangleF(x, y, w, h);
+					fontInfo.charInfo[ ch.ID ].dstRect		=	new RectangleF(xoffs, yoffs, w, h);
+				}
+
+
+				var letterHeights = input.Chars
+						.Where( ch1 => char.IsUpper( (char)(ch1.ID) ) )
+						.Select( ch2 => ch2.Height )
+						.OrderBy( h => h )
+						.ToList();
+				CapHeight	=	letterHeights[ letterHeights.Count/2 ];
+
+
+
+				//	process kerning info :
+				for ( int i=0; i<input.Kernings.Count; i++) {
+					var pair	=	new Tuple<char,char>( (char)input.Kernings[i].First, (char)input.Kernings[i].Second);
+					int kerning =	input.Kernings[i].Amount;
+					fontInfo.kernings.Add( pair, kerning );
+				}
+
+				SpaceWidth	=	MeasureString(" ").Width;
+				LineHeight	=	MeasureString(" ").Height;
 			}
+		}
 
 
-			var letterHeights = input.Chars
-					.Where( ch1 => char.IsUpper( (char)(ch1.ID) ) )
-					.Select( ch2 => ch2.Height )
-					.OrderBy( h => h )
-					.ToList();
-			CapHeight	=	letterHeights[ letterHeights.Count/2 ];
-
-
-
-			//	process kerning info :
-			for ( int i=0; i<input.Kernings.Count; i++) {
-			    var pair	=	new Tuple<char,char>( (char)input.Kernings[i].First, (char)input.Kernings[i].Second);
-			    int kerning =	input.Kernings[i].Amount;
-			    fontInfo.kernings.Add( pair, kerning );
+		protected override void Dispose ( bool disposing )
+		{
+			if (disposing) {
+				SafeDispose( ref fontTexture );
 			}
-
-			SpaceWidth	=	MeasureString(" ").Width;
-			LineHeight	=	MeasureString(" ").Height;
 		}
 
 

@@ -111,6 +111,19 @@ namespace Fusion.Pipeline {
 
 
 		/// <summary>
+		/// Resolves file name and copy file file to stream.
+		/// </summary>
+		/// <param name="sourceFile"></param>
+		/// <param name="targetStream"></param>
+		public void CopyTo( string sourceFile, BinaryWriter writer )
+		{
+			var data = File.ReadAllBytes( Resolve( sourceFile ) ); 
+			writer.Write( data );
+		}
+
+
+
+		/// <summary>
 		/// Opens and returns stream for given asset.
 		/// </summary>
 		/// <param name="asset"></param>
@@ -203,9 +216,9 @@ namespace Fusion.Pipeline {
 			}
 
 
-			/*if (asset!=null /*&& !asset.IgnoreToolChanges) {
+			if (asset!=null /*&& !asset.IgnoreToolChanges*/) {
 				dependencies.Add( asset.GetType().Assembly.Location );
-			} */
+			} //*/
 
 			var dstTime	=	File.GetLastWriteTime( targetFile );
 

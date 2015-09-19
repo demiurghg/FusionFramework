@@ -51,7 +51,7 @@
   <Asset Path="manul.tga" Type="ImageFileTextureAsset">
     <NoMips>False</NoMips>
     <Fast>False</Fast>
-    <ToNormal>True</ToNormal>
+    <ToNormal>False</ToNormal>
     <Color>False</Color>
     <Alpha>False</Alpha>
     <Normal>False</Normal>
@@ -124,5 +124,8 @@
   </Asset>
   <Asset Path="segoe80.bmfc" Type="BMFontSpriteFontAsset">
     <SourceFile>segoe80.bmfc</SourceFile>
+  </Asset>
+  <Asset Path="segoe40.bmfc" Type="BMFontSpriteFontAsset">
+    <SourceFile>segoe40.bmfc</SourceFile>
   </Asset>
 </ContentProject>

@@ -59,29 +59,29 @@ namespace Fusion.Pipeline.AssetTypes {
 			//	patch font description and add children (e.g. "secondary") content :
 			using ( var stream = buildContext.OpenTargetStream( this ) ) {
 
-				
-				//	write font layout data :
-				SpriteFont.FontLoader.Save( stream, font );
+				using ( var sw = new BinaryWriter( stream ) ) {
 
+					var xml = SpriteFont.FontLoader.SaveToString( font );
+					sw.Write( xml );
 
-				//	write pages :
-				foreach (var p in font.Pages) {
+					//	write pages :
+					foreach (var p in font.Pages) {
 
-					var pageFile	=	Path.Combine( Path.GetDirectoryName( tempFileName ), p.File );
+						var pageFile	=	Path.Combine( Path.GetDirectoryName( tempFileName ), p.File );
 
-					if ( Path.GetExtension( pageFile ).ToLower() == ".dds" ) {
+						if ( Path.GetExtension( pageFile ).ToLower() == ".dds" ) {
 
-						buildContext.CopyTo( pageFile, stream );
+							buildContext.CopyTo( pageFile, sw );
 
-					} else {
+						} else {
 
-						ImageFileTextureAsset.RunNVCompress( buildContext, pageFile, pageFile + ".dds", true, false, false, true, true, false, ImageFileTextureAsset.TextureCompression.RGB );
+							ImageFileTextureAsset.RunNVCompress( buildContext, pageFile, pageFile + ".dds", true, false, false, true, true, false, ImageFileTextureAsset.TextureCompression.RGB );
 
-						buildContext.CopyTo( pageFile + ".dds", stream );
+							buildContext.CopyTo( pageFile + ".dds", sw );
 
+						}
 					}
 				}
-
 			}
 		}
 	} 
