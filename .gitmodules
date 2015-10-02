@@ -1,9 +1,3 @@
-[submodule "Dependencies/NvApiWrapper"]
-	path = Dependencies/NvApiWrapper
-	url = https://github.com/demiurghg/NvApiWrapper
-[submodule "Dependencies/BEPUphysics"]
-	path = Dependencies/BEPUphysics
-	url = https://github.com/demiurghg/BEPUphysics
-[submodule "Dependencies/LidgrenNetwork"]
-	path = Dependencies/LidgrenNetwork
-	url = https://github.com/demiurghg/LidgrenNetwork
+[submodule "Dependencies\\NVidiaTextureTools"]
+	path = Dependencies\\NVidiaTextureTools
+	url = https://github.com/demiurghg/nvidia-texture-tools
