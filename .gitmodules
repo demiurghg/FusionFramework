@@ -1,3 +1,6 @@
 [submodule "Dependencies/BMFont"]
 	path = Dependencies/BMFont
 	url = https://github.com/demiurghg/BMFont
+[submodule "Dependencies/NVidiaTextureTools"]
+	path = Dependencies/NVidiaTextureTools
+	url = https://github.com/demiurghg/nvidia-texture-tools
