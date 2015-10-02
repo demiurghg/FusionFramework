@@ -1,3 +1,0 @@
-[submodule ".\\Dependencies\\nvidia-texture-tools"]
-	path = .\\Dependencies\\nvidia-texture-tools
-	url = https://github.com/demiurghg/nvidia-texture-tools
