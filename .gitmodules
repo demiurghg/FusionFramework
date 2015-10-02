@@ -1,0 +1,3 @@
+[submodule "Dependencies/BMFont"]
+	path = Dependencies/BMFont
+	url = https://github.com/demiurghg/BMFont
