@@ -135,6 +135,8 @@ namespace Fusion {
 		{
 			Enabled	=	true;
 
+
+
 			AppDomain currentDomain = AppDomain.CurrentDomain;
 			currentDomain.UnhandledException += currentDomain_UnhandledException;
 
