@@ -52,9 +52,6 @@
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="OculusWrap">
-      <HintPath>..\Libs\OculusWrap\OculusWrap.dll</HintPath>
-    </Reference>
     <Reference Include="SharpDX, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\SDKs\SharpDX\SharpDX.dll</HintPath>
@@ -350,10 +347,6 @@
       <Project>{c0d52c9f-14b8-4008-8ddc-109c27561a5c}</Project>
       <Name>BEPUphysics</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Dependencies\LidgrenNetwork\Lidgren.Network\Lidgren.Network.csproj">
-      <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
-      <Name>Lidgren.Network</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Native.Dds\Native.Dds.vcxproj">
       <Project>{53af2c09-5113-4051-98fb-bb8258e268bd}</Project>
       <Name>Native.Dds</Name>
@@ -384,5 +377,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="$(FUSION_BUILD)\FusionFramework.targets" />
+  <Import Project="..\FusionFramework.targets" />
 </Project>

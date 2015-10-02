@@ -28,9 +28,11 @@ namespace Fusion.Input
 		/// </summary>
 		/// <param name="ovrMatrix4f">ovrMatrix4f to convert to a SharpDX Matrix.</param>
 		/// <returns>SharpDX Matrix, based on the ovrMatrix4f.</returns>
+		#if false
 		internal static Matrix ToMatrix(this OculusWrap.OVR.Matrix4f ovrMatrix4f)
 		{
 			return new Matrix(ovrMatrix4f.M11, ovrMatrix4f.M12, ovrMatrix4f.M13, ovrMatrix4f.M14, ovrMatrix4f.M21, ovrMatrix4f.M22, ovrMatrix4f.M23, ovrMatrix4f.M24, ovrMatrix4f.M31, ovrMatrix4f.M32, ovrMatrix4f.M33, ovrMatrix4f.M34, ovrMatrix4f.M41, ovrMatrix4f.M42, ovrMatrix4f.M43, ovrMatrix4f.M44);
 		}
+		#endif
 	}
 }
