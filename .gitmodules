@@ -4,6 +4,3 @@
 [submodule "Dependencies/BEPUphysics"]
 	path = Dependencies/BEPUphysics
 	url = https://github.com/demiurghg/BEPUphysics
-[submodule "Dependencies/LidgrenNetwork"]
-	path = Dependencies/LidgrenNetwork
-	url = https://github.com/demiurghg/LidgrenNetwork
