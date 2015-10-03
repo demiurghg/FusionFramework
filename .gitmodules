@@ -1,6 +1,3 @@
-[submodule "Dependencies/NVidiaTextureTools"]
-	path = Dependencies/NVidiaTextureTools
-	url = https://github.com/demiurghg/nvidia-texture-tools
 [submodule "Dependencies/LidgrenNetwork"]
 	path = Dependencies/LidgrenNetwork
 	url = https://github.com/demiurghg/lidgren-network-gen3
