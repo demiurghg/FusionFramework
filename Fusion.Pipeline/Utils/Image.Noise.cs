@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using SharpDX;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 
 namespace Fusion.Pipeline.Utils {
 	internal partial class Image {

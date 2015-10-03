@@ -5,8 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Fusion;
-using Fusion.Mathematics;
-using Fusion.Development;
+using Fusion.Core.Mathematics;
+using Fusion.Core.Development;
 
 namespace SpriteDemo {
 	class Program {
@@ -16,7 +16,7 @@ namespace SpriteDemo {
 		{
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
-			Fusion.Test.Tester.Run();
+			Fusion.Core.Test.Tester.Run();
 
 
 			using ( var game = new SpriteDemo() ) {

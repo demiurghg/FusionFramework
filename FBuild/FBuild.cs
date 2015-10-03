@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 using Fusion;
-using Fusion.Shell;
+using Fusion.Core.Shell;
 using Fusion.Pipeline;
 
 

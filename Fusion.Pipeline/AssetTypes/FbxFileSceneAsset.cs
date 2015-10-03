@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 
 
 namespace Fusion.Pipeline.AssetTypes {

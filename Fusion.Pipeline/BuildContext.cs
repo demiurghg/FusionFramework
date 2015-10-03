@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.Diagnostics;
 using System.IO.Compression;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 using Fusion.Content;
 
 

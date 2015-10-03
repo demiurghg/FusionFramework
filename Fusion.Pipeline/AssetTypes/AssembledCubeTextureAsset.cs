@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Fusion;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 using Fusion.Graphics;
 
 

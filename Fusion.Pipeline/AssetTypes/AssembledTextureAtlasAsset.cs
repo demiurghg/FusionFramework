@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using System.IO;
 using Fusion.Graphics;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 using Fusion.Pipeline.Utils;
 
 

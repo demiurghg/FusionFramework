@@ -9,7 +9,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.IO;
 using System.Diagnostics;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 using Fusion.Content;
 
 

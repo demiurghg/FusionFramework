@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fusion;
-using Fusion.Shell;
+using Fusion.Core.Shell;
 using System.Diagnostics;
 
 namespace FBuild {

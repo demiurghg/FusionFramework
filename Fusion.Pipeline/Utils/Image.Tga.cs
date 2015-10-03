@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 
 
 namespace Fusion.Pipeline.Utils {

@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fusion;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 using Fusion.Graphics;
 using Fusion.Input;
 using Fusion.Content;
-using Fusion.Development;
+using Fusion.Core.Development;
 using System.Runtime.InteropServices;
 using System.Web;
 

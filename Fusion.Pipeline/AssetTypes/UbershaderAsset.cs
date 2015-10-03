@@ -10,7 +10,7 @@ using System.Xml.Serialization;
 using SharpDX;
 using Fusion.Graphics;
 using System.Threading;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 using FX = SharpDX.D3DCompiler;
 using SharpDX.D3DCompiler;
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using Fusion;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
 using Fusion.Graphics;
 using System.Xml;
 using System.Diagnostics;
