@@ -5,7 +5,7 @@ using namespace System;
 using namespace Fusion;
 using namespace msclr::interop;
 using namespace Fusion::Graphics;
-using namespace Fusion::Shell;
+using namespace Fusion::Core::Shell;
 
 /*
 **	Options class :

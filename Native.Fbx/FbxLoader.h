@@ -6,7 +6,7 @@ using namespace System;
 using namespace Fusion;
 using namespace msclr::interop;
 using namespace Fusion::Graphics;
-using namespace Fusion::Mathematics;
+using namespace Fusion::Core::Mathematics;
 
 namespace Native {
 	namespace Fbx {

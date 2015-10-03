@@ -343,7 +343,7 @@
     <None Include="fusionSplash.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Dependencies\BEPUPhysics\BEPUphysics\BEPUphysics.csproj">
+    <ProjectReference Include="..\SDKs\BEPUPhysics\BEPUphysics\BEPUphysics.csproj">
       <Project>{c0d52c9f-14b8-4008-8ddc-109c27561a5c}</Project>
       <Name>BEPUphysics</Name>
     </ProjectReference>
