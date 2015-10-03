@@ -4,3 +4,12 @@
 [submodule "Dependencies/BEPUphysics"]
 	path = Dependencies/BEPUphysics
 	url = https://github.com/demiurghg/BEPUphysics
+[submodule "SDKs/LidgrenNetwork"]
+	path = SDKs/LidgrenNetwork
+	url = https://github.com/demiurghg/lidgren-network-gen3
+[submodule "SDKs/BEPUphysics"]
+	path = SDKs/BEPUphysics
+	url = https://github.com/demiurghg/BEPUphysics
+[submodule "SDKs/BMFont"]
+	path = SDKs/BMFont
+	url = https://github.com/demiurghg/BMFont
