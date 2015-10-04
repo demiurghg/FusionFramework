@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Fusion.Core.Mathematics;
+using Fusion.Engine.Common;
+
 
 namespace Fusion.Pipeline {
 	public abstract class ContentLoader {

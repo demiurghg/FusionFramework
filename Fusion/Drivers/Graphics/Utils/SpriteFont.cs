@@ -257,6 +257,7 @@ namespace Fusion.Drivers.Graphics {
 		/// <param name="xPos"></param>
 		/// <param name="yPos"></param>
 		/// <param name="color"></param>
+		#if false
 		public void DrawString( SpriteBatch spriteBatch, string text, float xPos, float yPos, Color color, float tracking = 0, bool bl = true, bool flip = false ) 
 		{
 			if (text==null) {
@@ -340,6 +341,7 @@ namespace Fusion.Drivers.Graphics {
 
 			}
 		}
+		#endif
 
 
 
@@ -350,12 +352,14 @@ namespace Fusion.Drivers.Graphics {
 		/// <param name="glyphs"></param>
 		/// <param name="offsetX"></param>
 		/// <param name="offsetY"></param>
+		#if false
 		static public void DrawGlyphs ( SpriteBatch spriteBatch, IEnumerable<Glyph> glyphs, int offsetX, int offsetY )
 		{
 			foreach ( var glyph in glyphs ) {
 				spriteBatch.Draw( glyph.Texture, glyph.DstRect, glyph.SrcRect, offsetX, offsetY, glyph.Color );
 			}
 		}
+		#endif
 
 
 

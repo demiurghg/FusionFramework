@@ -151,7 +151,6 @@
     <Compile Include="Core\Development\ExceptionDialog.Designer.cs">
       <DependentUpon>ExceptionDialog.cs</DependentUpon>
     </Compile>
-    <Compile Include="Game\GameParameters.cs" />
     <Compile Include="Drivers\Graphics\BytecodeUtils.cs" />
     <Compile Include="Drivers\Graphics\Collections\ConstantBufferCollection.cs" />
     <Compile Include="Drivers\Graphics\Collections\SamplerStateCollection.cs" />
@@ -160,7 +159,6 @@
     <Compile Include="Drivers\Graphics\Resources\FormattedBuffer.cs" />
     <Compile Include="Drivers\Graphics\Resources\VertexBufferOptions.cs" />
     <Compile Include="Drivers\Graphics\Resources\UnorderedAccess.cs" />
-    <Compile Include="Drivers\Graphics\Scene\SceneDrawer.cs" />
     <Compile Include="Drivers\Graphics\States\StateFactory.cs" />
     <Compile Include="Drivers\Graphics\UbershaderLoader.cs" />
     <Compile Include="Drivers\Graphics\Display\BaseDisplay.cs" />
@@ -193,14 +191,6 @@
     <Compile Include="Drivers\Graphics\Enums.cs" />
     <Compile Include="Drivers\Graphics\Resources\StructuredBuffer.cs" />
     <Compile Include="Drivers\Graphics\Resources\Texture2D.cs" />
-    <Compile Include="Drivers\Graphics\Utils\Camera.cs" />
-    <Compile Include="Drivers\Graphics\Utils\CameraConfig.cs" />
-    <Compile Include="Drivers\Graphics\Utils\SpriteBlend.cs" />
-    <Compile Include="Drivers\Graphics\Utils\DebugRender.cs" />
-    <Compile Include="Drivers\Graphics\Utils\DebugRenderConfig.cs" />
-    <Compile Include="Drivers\Graphics\Utils\DebugStrings.cs" />
-    <Compile Include="Drivers\Graphics\Utils\DebugStringsConfig.cs" />
-    <Compile Include="Drivers\Graphics\Utils\SpriteBatch.cs" />
     <Compile Include="Drivers\Graphics\Utils\SpriteFont.BMFCProcessor.cs" />
     <Compile Include="Drivers\Graphics\Utils\SpriteFont.BMFont.cs" />
     <Compile Include="Drivers\Graphics\Utils\SpriteFont.cs" />
@@ -208,7 +198,10 @@
     <Compile Include="Drivers\Graphics\Utils\SpriteVertex.cs" />
     <Compile Include="Drivers\Graphics\Scene\MeshMaterial.cs" />
     <Compile Include="Core\DisposableBase.cs" />
-    <Compile Include="Game\GameException.cs" />
+    <Compile Include="Engine\Common\Game.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Engine\Common\GameException.cs" />
     <Compile Include="Drivers\Graphics\GraphicsException.cs" />
     <Compile Include="Drivers\Graphics\Resources\VertexAttribute.cs" />
     <Compile Include="Drivers\Graphics\Resources\ConstantBuffer.cs" />
@@ -267,6 +260,12 @@
     <Compile Include="Core\Mathematics\Vector4.cs" />
     <Compile Include="Core\Mathematics\Viewport.cs" />
     <Compile Include="Core\Mathematics\ViewportF.cs" />
+    <Compile Include="Engine\Common\GameParameters.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Engine\Common\GameService.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -287,18 +286,6 @@
     <Compile Include="Core\Test\TestAttribute.cs" />
     <Compile Include="Core\Test\Tester.cs" />
     <Compile Include="Core\Test\TestException.cs" />
-    <Compile Include="Engine\UserInterface\Config.cs" />
-    <Compile Include="Engine\UserInterface\Context.cs" />
-    <Compile Include="Engine\UserInterface\Enums.cs" />
-    <Compile Include="Engine\UserInterface\Frame.cs" />
-    <Compile Include="Engine\UserInterface\LayoutEngine.cs" />
-    <Compile Include="Engine\UserInterface\Layouts\QuadLayout.cs" />
-    <Compile Include="Engine\UserInterface\Layouts\QuadLayoutStyle.cs" />
-    <Compile Include="Engine\UserInterface\Layouts\StackLayout.cs" />
-    <Compile Include="Engine\UserInterface\MouseProcessor.cs" />
-    <Compile Include="Engine\UserInterface\Transition.cs" />
-    <Compile Include="Engine\UserInterface\UserInterface.cs" />
-    <Compile Include="Engine\UserInterface\Utils.cs" />
     <Compile Include="Core\Utils\CharStream.cs" />
     <Compile Include="Core\Utils\ColoredTraceListener.cs" />
     <Compile Include="Core\Utils\ColoredTraceListener2.cs" />
@@ -307,9 +294,7 @@
     <Compile Include="Drivers\Graphics\GraphicsDevice.cs" />
     <Compile Include="Drivers\Graphics\Utils\CCD.cs" />
     <Compile Include="Core\Utils\ConsoleExt.cs" />
-    <Compile Include="Game\Game.cs" />
-    <Compile Include="Game\GameService.cs" />
-    <Compile Include="Game\GameTime.cs" />
+    <Compile Include="Engine\Common\GameTime.cs" />
     <Compile Include="Drivers\Input\InputDevice.cs" />
     <Compile Include="Drivers\Input\Keys.cs" />
     <Compile Include="Core\Utils\LinqExt.cs" />
@@ -325,7 +310,6 @@
     <Compile Include="Drivers\Graphics\Scene\Scene.cs" />
     <Compile Include="Core\Utils\Serializer.cs" />
     <Compile Include="Core\Mathematics\Temperature.cs" />
-    <Compile Include="Core\Utils\WebDownloaderService.cs" />
     <Compile Include="Core\Utils\Wildcard.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -366,6 +350,7 @@
     <Folder Include="Engine\Network\" />
     <Folder Include="Engine\Physics\" />
     <Folder Include="Engine\Triggers\" />
+    <Folder Include="Engine\UserInterface\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

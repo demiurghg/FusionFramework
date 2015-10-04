@@ -21,7 +21,7 @@ using Fusion.Core.Shell;
 
 
 
-namespace Fusion {
+namespace Fusion.Engine.Common {
 
 	/// <summary>
 	/// Provides basic graphics device initialization, game logic, and rendering code. 

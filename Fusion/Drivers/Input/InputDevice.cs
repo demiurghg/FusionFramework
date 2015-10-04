@@ -11,6 +11,7 @@ using System.Reflection;
 using System.ComponentModel;
 using Fusion.Core;
 using Fusion.Core.Mathematics;
+using Fusion.Engine.Common;
 //using FRBTouch.MultiTouch;
 //using FRBTouch.MultiTouch.Win32Helper;
 //using SharpDX.DirectInput;

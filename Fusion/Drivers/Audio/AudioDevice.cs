@@ -10,6 +10,7 @@ using SharpDX.XAudio2;
 using SharpDX.X3DAudio;
 using SharpDX.Multimedia;
 using Fusion.Core;
+using Fusion.Engine.Common;
 
 
 namespace Fusion.Drivers.Audio {

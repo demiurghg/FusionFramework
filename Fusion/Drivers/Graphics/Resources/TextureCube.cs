@@ -15,6 +15,7 @@ using Fusion.Core.Mathematics;
 using SharpDX.Direct3D;
 using Native.Dds;
 using Native.Wic;
+using Fusion.Engine.Common;
 
 
 namespace Fusion.Drivers.Graphics {

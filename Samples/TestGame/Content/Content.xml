@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAsset xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Asset xsi:type="ImageFileTextureAsset">
+    <AssetPath>debugFont.tga</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <NoMips>false</NoMips>
+    <Fast>false</Fast>
+    <ToNormal>false</ToNormal>
+    <Color>true</Color>
+    <Alpha>false</Alpha>
+    <Normal>false</Normal>
+    <Compression>RGB</Compression>
+    <SourceFile>debugFont.tga</SourceFile>
+  </Asset>
+  <Asset xsi:type="UbershaderAsset">
+    <AssetPath>debugRender.hlsl</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <HardwareProfile>HiDef</HardwareProfile>
+    <DisableOptimization>false</DisableOptimization>
+    <OptimizationLevel>1</OptimizationLevel>
+    <AvoidFlowControl>false</AvoidFlowControl>
+    <PreferFlowControl>false</PreferFlowControl>
+    <MatrixPacking>RowMajor</MatrixPacking>
+    <PSEntryPoint>PSMain</PSEntryPoint>
+    <VSEntryPoint>VSMain</VSEntryPoint>
+    <GSEntryPoint>GSMain</GSEntryPoint>
+    <DSEntryPoint>DSMain</DSEntryPoint>
+    <HSEntryPoint>HSMain</HSEntryPoint>
+    <CSEntryPoint>CSMain</CSEntryPoint>
+    <SourceFile>debugRender.hlsl</SourceFile>
+  </Asset>
+  <Asset xsi:type="UbershaderAsset">
+    <AssetPath>spriteBatch.hlsl</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <HardwareProfile>HiDef</HardwareProfile>
+    <DisableOptimization>false</DisableOptimization>
+    <OptimizationLevel>1</OptimizationLevel>
+    <AvoidFlowControl>false</AvoidFlowControl>
+    <PreferFlowControl>false</PreferFlowControl>
+    <MatrixPacking>RowMajor</MatrixPacking>
+    <PSEntryPoint>PSMain</PSEntryPoint>
+    <VSEntryPoint>VSMain</VSEntryPoint>
+    <GSEntryPoint>GSMain</GSEntryPoint>
+    <DSEntryPoint>DSMain</DSEntryPoint>
+    <HSEntryPoint>HSMain</HSEntryPoint>
+    <CSEntryPoint>CSMain</CSEntryPoint>
+    <SourceFile>spriteBatch.hlsl</SourceFile>
+  </Asset>
+  <Asset xsi:type="UbershaderAsset">
+    <AssetPath>stereo.hlsl</AssetPath>
+    <BuildOrder>0</BuildOrder>
+    <IgnoreToolChanges>false</IgnoreToolChanges>
+    <HardwareProfile>HiDef</HardwareProfile>
+    <DisableOptimization>false</DisableOptimization>
+    <OptimizationLevel>1</OptimizationLevel>
+    <AvoidFlowControl>false</AvoidFlowControl>
+    <PreferFlowControl>false</PreferFlowControl>
+    <MatrixPacking>RowMajor</MatrixPacking>
+    <PSEntryPoint>PSMain</PSEntryPoint>
+    <VSEntryPoint>VSMain</VSEntryPoint>
+    <GSEntryPoint>GSMain</GSEntryPoint>
+    <DSEntryPoint>DSMain</DSEntryPoint>
+    <HSEntryPoint>HSMain</HSEntryPoint>
+    <CSEntryPoint>CSMain</CSEntryPoint>
+    <SourceFile>stereo.hlsl</SourceFile>
+    <ShowPemutations>true</ShowPemutations>
+  </Asset>
+</ArrayOfAsset>

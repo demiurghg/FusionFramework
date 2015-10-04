@@ -13,6 +13,7 @@ using Fusion.Pipeline;
 using Fusion.Core.Mathematics;
 using SharpDX.Direct3D;
 using Native.Dds;
+using Fusion.Engine.Common;
 
 
 namespace Fusion.Drivers.Graphics {

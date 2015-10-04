@@ -19,6 +19,7 @@ using Fusion.Drivers.Graphics;
 using Fusion.Drivers.Graphics.Display;
 using Fusion.Core;
 using Fusion.Core.Mathematics;
+using Fusion.Engine.Common;
 
 
 namespace Fusion.Drivers.Graphics {

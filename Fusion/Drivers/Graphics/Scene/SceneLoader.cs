@@ -11,6 +11,7 @@ using Fusion;
 using Fusion.Core.Mathematics;
 using Fusion.Drivers.Graphics;
 using Fusion.Pipeline;
+using Fusion.Engine.Common;
 
 
 namespace Fusion.Drivers.Graphics {

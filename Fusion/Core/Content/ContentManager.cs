@@ -8,6 +8,8 @@ using System.IO.Compression;
 using Fusion.Core;
 using Fusion.Core.Mathematics;
 using Fusion.Content;
+using Fusion.Engine.Common;
+
 
 namespace Fusion.Pipeline {
 	

@@ -10,7 +10,7 @@ using Fusion.Drivers.Graphics;
 using Fusion.Core;
 
 
-namespace Fusion {
+namespace Fusion.Engine.Common {
 
 	public enum StereoType {
 		Horizontal, Vertical

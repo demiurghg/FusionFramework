@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Fusion {
+namespace Fusion.Engine.Common {
 
 	[Serializable]
 	public class GameException : System.Exception {

@@ -6,7 +6,7 @@ using System.Diagnostics;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion {
+namespace Fusion.Engine.Common {
 
 	public class GameTime {
 		
@@ -98,29 +98,19 @@ namespace Fusion {
 
 			timeRecord.Add( elapsed );
 
-
-			//	median filter :			
 			#if true
 
 				while ( timeRecord.Count>=AveragingFrameCount ) {
 					timeRecord.RemoveAt(0);
 				}
 
-
 				average	=	timeRecord.Average( t => t.TotalMilliseconds );
-
-				/*timeRecord.Average(
-				average	=	timeRecord
-							.OrderBy( t => t.TotalSeconds )
-							.ElementAt( timeRecord.Count/2 )
-							.TotalSeconds;*/
 
 			#else
 
 				average	=	elapsed.TotalSeconds;
 
 			#endif
-
 
 			total			=	newTotal;
 		}

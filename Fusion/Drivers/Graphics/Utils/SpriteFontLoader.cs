@@ -9,6 +9,7 @@ using Fusion.Drivers.Graphics;
 using System.Diagnostics;
 using System.ComponentModel;
 using Fusion.Pipeline;
+using Fusion.Engine.Common;
 
 
 namespace Fusion.Drivers.Graphics {

@@ -12,6 +12,7 @@ using D3D = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using System.Windows.Forms;
 using Forms = System.Windows.Forms;
+using Fusion.Engine.Common;
 using Fusion.Core.Mathematics;
 
 

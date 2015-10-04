@@ -13,7 +13,7 @@ using Fusion.Core.Mathematics;
 using Fusion.Core.Shell;
 
 
-namespace Fusion {
+namespace Fusion.Engine.Common {
 
 	public class GameParameters {
 
@@ -61,13 +61,6 @@ namespace Fusion {
 		[ReadOnly(true)]
 		[CommandLineParser.Ignore()]
 		public string		FusionContent { get { return Environment.GetEnvironmentVariable("FUSION_CONTENT"); } }
-
-
-		[Category("Development")]
-		[Description("Verbosity level\r\n/verbose")]
-		[CommandLineParser.Name("verbose")]
-		public bool	Verbosity		{ get { return Log.Verbocity; } set { Log.Verbocity = value; } }
-
 
 
 		[Category("Graphics")]
