@@ -17,7 +17,7 @@ using Native.Dds;
 using Native.Wic;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public class TextureCube : ShaderResource {
 
 		D3D.Texture2D	texCube;

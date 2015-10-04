@@ -14,7 +14,7 @@ using D3DAddressMode	=	SharpDX.Direct3D11.TextureAddressMode;
 using D3DComparison		=	SharpDX.Direct3D11.Comparison;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	public enum GraphicsProfile {
 		HiDef,

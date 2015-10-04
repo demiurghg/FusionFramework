@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Fusion.Input {
+namespace Fusion.Drivers.Input {
 	public enum Keys {
 
 		None = 0,

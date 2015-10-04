@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 
-namespace Fusion.Graphics
+namespace Fusion.Drivers.Graphics
 {
 	// This class takes care of wrapping "Connecting and Configuring Displays(CCD) Win32 API"
 	internal static class CCD

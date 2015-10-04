@@ -15,7 +15,7 @@ using Forms = System.Windows.Forms;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics.Display {
+namespace Fusion.Drivers.Graphics.Display {
 	abstract class BaseDisplay : GraphicsResource {
 
 		protected readonly	Game Game;
@@ -245,7 +245,7 @@ namespace Fusion.Graphics.Display {
 
 		void form_KeyUp ( object sender, KeyEventArgs e )
 		{
-			Game.InputDevice.NotifyKeyUp( (Fusion.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
+			Game.InputDevice.NotifyKeyUp( (Fusion.Drivers.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
 		}
 
 
@@ -256,7 +256,7 @@ namespace Fusion.Graphics.Display {
 				Fullscreen = !Fullscreen;
 			}
 
-			Game.InputDevice.NotifyKeyDown( (Fusion.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
+			Game.InputDevice.NotifyKeyDown( (Fusion.Drivers.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
 		}
 
 

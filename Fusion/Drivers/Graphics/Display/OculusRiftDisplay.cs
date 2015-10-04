@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Fusion.Input;
+using Fusion.Drivers.Input;
 using Fusion.Core.Mathematics;
 using SharpDX.DXGI;
 using OculusWrap;
@@ -13,7 +13,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using D3D = SharpDX.Direct3D11;
 
-namespace Fusion.Graphics.Display {
+namespace Fusion.Drivers.Graphics.Display {
 	class OculusRiftDisplay : BaseDisplay {
 
 		StereoEye[] eyeList = new[] { StereoEye.Left, StereoEye.Right };

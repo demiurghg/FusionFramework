@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Fusion;
 using Fusion.Core.Mathematics;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 
 
 namespace Fusion.Pipeline {

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fusion.Graphics.Resources {
+namespace Fusion.Drivers.Graphics.Resources {
 	class UnorderedAccess {
 	}
 }

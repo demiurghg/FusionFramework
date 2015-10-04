@@ -5,12 +5,12 @@ using System.Text;
 using System.IO;
 using System.Xml.Serialization;
 using SharpDX;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using System.Diagnostics;
 using System.ComponentModel;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public partial class SpriteFont {
 
 	}

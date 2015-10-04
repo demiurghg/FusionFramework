@@ -11,7 +11,7 @@ using Fusion.Core.Mathematics;
 using DXGI = SharpDX.DXGI;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public class ShaderResource : GraphicsResource {
 
 		/// <summary>

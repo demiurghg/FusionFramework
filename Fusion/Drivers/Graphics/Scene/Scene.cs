@@ -9,11 +9,11 @@ using System.Runtime.Serialization.Formatters.Binary;
 using SharpDX;
 using Fusion;
 using Fusion.Core.Mathematics;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using Fusion.Pipeline;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public class Scene {
 
 		List<Node>			nodes		= new List<Node>();

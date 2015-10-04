@@ -15,7 +15,7 @@ using System.Runtime.InteropServices;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public struct VertexInputElement {
 
 		public static int AppendAligned { get { return -1; } }

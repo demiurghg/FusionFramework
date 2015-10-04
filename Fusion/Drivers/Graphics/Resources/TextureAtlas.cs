@@ -11,10 +11,11 @@ using SharpDX;
 using SharpDX.Direct3D11;
 using System.Runtime.InteropServices;
 using Fusion.Pipeline;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	[ContentLoader(typeof(TextureAtlas))]
 	public class TextureAtlasLoader : ContentLoader {

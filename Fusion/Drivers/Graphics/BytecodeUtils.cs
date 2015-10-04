@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Fusion.Core.Mathematics;
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	internal class BytecodeUtils {
 
 		public const int	SV_Position		=	1;

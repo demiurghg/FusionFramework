@@ -43,9 +43,10 @@ using System.Collections.Generic;
 using System.Text;
 using System.Linq;
 using Fusion;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
-namespace Fusion.Audio
+namespace Fusion.Drivers.Audio
 {
 	public class AudioEmitter
 	{

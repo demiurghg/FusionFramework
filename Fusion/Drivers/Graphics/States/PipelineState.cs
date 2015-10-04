@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
 using D3DBlendState			=	SharpDX.Direct3D11.BlendState		;
@@ -23,7 +24,7 @@ using D3DComputeShader		=	SharpDX.Direct3D11.ComputeShader	;
 using SharpDX.Mathematics.Interop;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	/// <summary>
 	/// Pipeline state represents all GPU states as single object.

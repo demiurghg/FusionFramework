@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Fusion.Core.Mathematics;
 
-namespace Fusion.Input
+namespace Fusion.Drivers.Input
 {
 	public static class OculusRiftSensors
 	{

@@ -14,7 +14,7 @@ using DXGI = SharpDX.DXGI;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	
 	public class DepthStencil2D : ShaderResource {
 

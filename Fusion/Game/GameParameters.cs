@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
 using System.Windows.Forms;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using System.Reflection;
 using System.ComponentModel;
 using System.IO;

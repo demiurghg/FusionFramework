@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Direct3D11;
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	/// <summary>
 	/// The constant buffer collection.

@@ -8,7 +8,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Xml.Serialization;
 using SharpDX;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using System.Threading;
 using Fusion.Core.Mathematics;
 

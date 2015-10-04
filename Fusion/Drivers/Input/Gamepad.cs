@@ -9,7 +9,7 @@ using XIGamePad = SharpDX.XInput.Gamepad;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Input
+namespace Fusion.Drivers.Input
 {
 	public class Gamepad
 	{

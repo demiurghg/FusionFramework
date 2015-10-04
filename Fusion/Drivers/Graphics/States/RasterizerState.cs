@@ -8,7 +8,7 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	/// <summary>
 	/// Describes rasterizer state.

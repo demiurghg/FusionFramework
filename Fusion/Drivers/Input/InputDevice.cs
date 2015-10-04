@@ -9,13 +9,14 @@ using Drawing = System.Drawing;
 using Forms = System.Windows.Forms;
 using System.Reflection;
 using System.ComponentModel;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 //using FRBTouch.MultiTouch;
 //using FRBTouch.MultiTouch.Win32Helper;
 //using SharpDX.DirectInput;
 
 
-namespace Fusion.Input {
+namespace Fusion.Drivers.Input {
 
 	
 	public class InputDevice : DisposableBase {

@@ -42,7 +42,7 @@ purpose and non-infringement.
 using System;
 using Fusion.Core.Mathematics;
 
-namespace Fusion.Audio
+namespace Fusion.Drivers.Audio
 {
     public enum SoundState
     {

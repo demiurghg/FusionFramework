@@ -12,7 +12,7 @@ using Fusion.Pipeline;
 
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	[Serializable]
 	public class UbershaderException : GraphicsException {

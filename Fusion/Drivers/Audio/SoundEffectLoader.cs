@@ -11,7 +11,7 @@ using SharpDX.X3DAudio;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Audio {
+namespace Fusion.Drivers.Audio {
 	[ContentLoader(typeof(SoundEffect))]
 	public class SoundEffectLoader : ContentLoader {
 

@@ -14,7 +14,7 @@ using DXGI = SharpDX.DXGI;
 using System.Runtime.InteropServices;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public class VertexBuffer : GraphicsResource {
 		
 		/// <summary>

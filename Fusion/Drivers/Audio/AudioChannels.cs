@@ -40,7 +40,7 @@ purpose and non-infringement.
 
 using System;
 
-namespace Fusion.Audio
+namespace Fusion.Drivers.Audio
 {
 	/// <summary>
 	/// 

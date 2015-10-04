@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Fusion.Input;
+using Fusion.Drivers.Input;
 using SharpDX;
 using Fusion;
 using Fusion.Core.Mathematics;

@@ -42,7 +42,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 
-namespace Fusion.Audio
+namespace Fusion.Drivers.Audio
 {
     //[DataContract]
 #if WINRT

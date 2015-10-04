@@ -12,7 +12,7 @@ using Fusion.Pipeline;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	[ContentLoader(typeof(Ubershader))]
 	public class UbershaderLoader : ContentLoader {

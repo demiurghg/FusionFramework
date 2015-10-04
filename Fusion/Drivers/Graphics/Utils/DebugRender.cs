@@ -4,12 +4,13 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using SharpDX;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	#if true
 	public class DebugRender : GameService
 	{

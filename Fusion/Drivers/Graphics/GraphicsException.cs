@@ -16,7 +16,7 @@ using Device = SharpDX.Direct3D11.Device;
 using System.IO;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	[Serializable]
 	public class GraphicsException : Exception {

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	/// <summary>
 	/// A description of a single element for the input-assembler stage.

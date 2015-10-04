@@ -7,7 +7,7 @@ using SharpDX;
 using Fusion;
 using Fusion.Core.Mathematics;
 
-using Fusion.Input;
+using Fusion.Drivers.Input;
 
 
 namespace Fusion.UserInterface {
@@ -193,7 +193,7 @@ namespace Fusion.UserInterface {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void InputDevice_KeyDown ( object sender, Input.InputDevice.KeyEventArgs e )
+		void InputDevice_KeyDown ( object sender, Drivers.Input.InputDevice.KeyEventArgs e )
 		{
 			if (e.Key==Keys.LeftButton || e.Key==Keys.RightButton) {
 				PushFrame( GetHoveredFrame(), e.Key );
@@ -206,7 +206,7 @@ namespace Fusion.UserInterface {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void InputDevice_KeyUp ( object sender, Input.InputDevice.KeyEventArgs e )
+		void InputDevice_KeyUp ( object sender, Drivers.Input.InputDevice.KeyEventArgs e )
 		{
 			if (e.Key==Keys.LeftButton || e.Key==Keys.RightButton) {
 				ReleaseFrame( GetHoveredFrame(), e.Key );

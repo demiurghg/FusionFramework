@@ -5,11 +5,11 @@ using System.Text;
 using SharpDX;
 using Fusion;
 using Fusion.Core.Mathematics;
-using Fusion.Input;
+using Fusion.Drivers.Input;
 using System.ComponentModel;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	public class CameraConfig {
 		[ Category("FreeCamera") ]	

@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using Fusion.Core.Mathematics;
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	public struct SpriteVertex {
 

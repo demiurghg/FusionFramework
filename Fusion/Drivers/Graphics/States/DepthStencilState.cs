@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
+using Fusion.Core;
 
 using D3DBlendState			=	SharpDX.Direct3D11.BlendState		;
 using D3DSamplerState		=	SharpDX.Direct3D11.SamplerState		;
@@ -13,7 +14,7 @@ using D3DRasterizerState	=	SharpDX.Direct3D11.RasterizerState	;
 using D3DDepthStencilState	=	SharpDX.Direct3D11.DepthStencilState;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	public sealed class DepthStencilState : DisposableBase {
 

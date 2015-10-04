@@ -5,12 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 using SharpDX;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using System.Reflection;
 using System.ComponentModel.Design;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	/// <summary>
 	/// 

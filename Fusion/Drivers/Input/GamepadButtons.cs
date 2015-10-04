@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.XInput;
 
-namespace Fusion.Input
+namespace Fusion.Drivers.Input
 {
 	public enum GamepadButtons {
 		Y				= -32768,

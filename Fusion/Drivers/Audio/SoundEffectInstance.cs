@@ -42,10 +42,11 @@ using System;
 using SharpDX.XAudio2;
 using SharpDX.X3DAudio;
 using SharpDX.Multimedia;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Audio
+namespace Fusion.Drivers.Audio
 {
 	public sealed class SoundEffectInstance : IDisposable
 	{

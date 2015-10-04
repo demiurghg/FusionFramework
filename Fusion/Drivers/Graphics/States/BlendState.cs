@@ -9,7 +9,7 @@ using SharpDX.Direct3D11;
 using Fusion.Core.Mathematics;
 		 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	/// <summary>
 	/// Describes blending state.

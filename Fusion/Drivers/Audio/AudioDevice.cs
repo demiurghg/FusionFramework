@@ -9,9 +9,10 @@ using SharpDX;
 using SharpDX.XAudio2;
 using SharpDX.X3DAudio;
 using SharpDX.Multimedia;
+using Fusion.Core;
 
 
-namespace Fusion.Audio {
+namespace Fusion.Drivers.Audio {
 	public class AudioDevice : DisposableBase {
 
 		readonly Game game;

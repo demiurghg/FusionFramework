@@ -15,7 +15,7 @@ using Native.NvApi;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics.Display {
+namespace Fusion.Drivers.Graphics.Display {
 	class NV3DVisionDisplay : BaseDisplay {
 
 		StereoEye[] eyeList = new[]{ StereoEye.Left, StereoEye.Right };

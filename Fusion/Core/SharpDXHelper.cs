@@ -7,7 +7,7 @@ using SharpDX;
 using SharpDX.Mathematics.Interop;
 using Fusion.Core.Mathematics;
 
-namespace Fusion {
+namespace Fusion.Core {
 	internal static class SharpDXHelper {
 		
 		static public RawVector3 Convert( Vector3 v ) 
@@ -46,7 +46,7 @@ namespace Fusion {
 		}
 
 
-        static public SharpDX.X3DAudio.Listener ToListener(this Audio.AudioListener listener)
+        static public SharpDX.X3DAudio.Listener ToListener(this Fusion.Drivers.Audio.AudioListener listener)
         {
             // Pulling out Vector properties for efficiency.
             var pos = listener.Position;
@@ -89,7 +89,7 @@ namespace Fusion {
 		/// </summary>
 		/// <param name="curve"></param>
 		/// <returns></returns>
-		public static SharpDX.X3DAudio.CurvePoint[] Convert ( Audio.CurvePoint[] curve )
+		public static SharpDX.X3DAudio.CurvePoint[] Convert ( Drivers.Audio.CurvePoint[] curve )
 		{
 			if (curve==null) {
 				return null;
@@ -106,14 +106,14 @@ namespace Fusion {
 		/// </summary>
 		/// <param name="curve"></param>
 		/// <returns></returns>
-		public static Audio.CurvePoint[] Convert ( SharpDX.X3DAudio.CurvePoint[] curve )
+		public static Drivers.Audio.CurvePoint[] Convert ( SharpDX.X3DAudio.CurvePoint[] curve )
 		{
 			if (curve==null) {
 				return null;
 			}
 
 			return curve
-				.Select( c => new Audio.CurvePoint{ Distance = c.Distance, DspSetting = c.DspSetting } )
+				.Select( c => new Drivers.Audio.CurvePoint{ Distance = c.Distance, DspSetting = c.DspSetting } )
 				.ToArray();
 		}
 	}

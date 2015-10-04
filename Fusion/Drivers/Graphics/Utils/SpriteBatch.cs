@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	public sealed class SpriteBatch : GameService {
 

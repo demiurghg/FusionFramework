@@ -15,12 +15,13 @@ using Forms = System.Windows.Forms;
 using Native.NvApi;
 using Device = SharpDX.Direct3D11.Device;
 using System.IO;
-using Fusion.Graphics;
-using Fusion.Graphics.Display;
+using Fusion.Core;
+using Fusion.Drivers.Graphics;
+using Fusion.Drivers.Graphics.Display;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	public class GraphicsResource : DisposableBase {
 

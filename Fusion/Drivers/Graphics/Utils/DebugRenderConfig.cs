@@ -4,11 +4,11 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using System.ComponentModel;
 using SharpDX;
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	public class DebugRenderConfig {
 

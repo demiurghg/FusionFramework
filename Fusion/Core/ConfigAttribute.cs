@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Fusion {
+namespace Fusion.Core {
 
 	/// <summary>
 	/// Marks property as config

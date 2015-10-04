@@ -12,7 +12,7 @@ using D3D11 = SharpDX.Direct3D11;
 using System.Runtime.InteropServices;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	/// <summary>
 	/// Wrapper for constant data and buffer

@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using SharpDX;
 using Fusion;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
-using Fusion.Audio;
-using Fusion.Input;
+using Fusion.Drivers.Audio;
+using Fusion.Drivers.Input;
 using System.ComponentModel;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 	public partial class Camera : GameService {
 
@@ -212,7 +213,7 @@ namespace Fusion.Graphics {
 		/// </summary>
 		public AudioListener Listener {
 			get {
-				return new Audio.AudioListener() {
+				return new Drivers.Audio.AudioListener() {
 					Position	=	CameraMatrix.TranslationVector,
 					Up			=	CameraMatrix.Up,
 					Forward		=	CameraMatrix.Forward,

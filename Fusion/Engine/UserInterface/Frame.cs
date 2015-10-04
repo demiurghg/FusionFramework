@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using SharpDX;
 using Fusion;
 using Fusion.Core.Mathematics;
-using Fusion.Input;
-using Fusion.Graphics;
+using Fusion.Drivers.Input;
+using Fusion.Drivers.Graphics;
 using Forms = System.Windows.Forms;
 
 

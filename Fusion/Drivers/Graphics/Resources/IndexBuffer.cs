@@ -10,9 +10,10 @@ using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using D3D11 = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
+using Fusion.Core;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public class IndexBuffer : DisposableBase {
 
 		/// <summary>

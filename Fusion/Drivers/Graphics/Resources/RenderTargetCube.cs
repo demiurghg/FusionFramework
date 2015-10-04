@@ -12,7 +12,7 @@ using D3D = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 
 
 	public class RenderTargetCube : ShaderResource {

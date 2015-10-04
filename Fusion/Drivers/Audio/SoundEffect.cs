@@ -48,7 +48,7 @@ using SharpDX.X3DAudio;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Audio
+namespace Fusion.Drivers.Audio
 {
     public sealed class SoundEffect : IDisposable
     {

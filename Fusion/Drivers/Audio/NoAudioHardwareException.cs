@@ -43,7 +43,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using Fusion.Core.Mathematics;
 
-namespace Fusion.Audio
+namespace Fusion.Drivers.Audio
 {
 
     //[DataContract]

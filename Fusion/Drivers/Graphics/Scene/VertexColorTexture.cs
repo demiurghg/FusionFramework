@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using SharpDX;
 using Fusion;
 using Fusion.Core.Mathematics;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public struct VertexColorTexture {
 
 		[Vertex("POSITION")]	public Vector3	Position;

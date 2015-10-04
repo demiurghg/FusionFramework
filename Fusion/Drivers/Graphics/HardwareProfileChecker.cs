@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	static class HardwareProfileChecker {
 
 		/// <summary>

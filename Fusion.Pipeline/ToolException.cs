@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using Fusion;
 using Fusion.Core.Mathematics;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
 using System.Xml;
 using System.Diagnostics;
 using System.Security.Cryptography;

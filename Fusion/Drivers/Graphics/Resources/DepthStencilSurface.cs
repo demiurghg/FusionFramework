@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.Direct3D11;
+using Fusion.Core;
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public class DepthStencilSurface : DisposableBase {
 
 		public int			Width			{ get; private set; }

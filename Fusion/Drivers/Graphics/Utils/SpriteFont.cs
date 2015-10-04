@@ -5,11 +5,12 @@ using System.Text;
 using System.IO;
 using System.Xml.Serialization;
 using SharpDX;
-using Fusion.Graphics;
+using Fusion.Drivers.Graphics;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
 
-namespace Fusion.Graphics {
+namespace Fusion.Drivers.Graphics {
 	public partial class SpriteFont : DisposableBase {
 
 
