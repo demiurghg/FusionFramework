@@ -191,6 +191,30 @@
     <Compile Include="Drivers\Graphics\Enums.cs" />
     <Compile Include="Drivers\Graphics\Resources\StructuredBuffer.cs" />
     <Compile Include="Drivers\Graphics\Resources\Texture2D.cs" />
+    <Compile Include="Drivers\Graphics\Utils\Camera.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Drivers\Graphics\Utils\CameraConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Drivers\Graphics\Utils\DebugRender.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Drivers\Graphics\Utils\DebugRenderConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Drivers\Graphics\Utils\DebugStrings.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Drivers\Graphics\Utils\DebugStringsConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Drivers\Graphics\Utils\SpriteBatch.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Drivers\Graphics\Utils\SpriteBlend.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Drivers\Graphics\Utils\SpriteFont.BMFCProcessor.cs" />
     <Compile Include="Drivers\Graphics\Utils\SpriteFont.BMFont.cs" />
     <Compile Include="Drivers\Graphics\Utils\SpriteFont.cs" />

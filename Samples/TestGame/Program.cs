@@ -15,8 +15,8 @@ namespace TestGame {
 		{
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
-			using ( var game = new TestGame(parameters) ) {
-				game.Run();
+			using ( var game = new TestGame() ) {
+				game.Run(args);
 			}
 		}
 	}
