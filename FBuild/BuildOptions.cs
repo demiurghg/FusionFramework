@@ -11,9 +11,8 @@ namespace FBuild {
 
 	public class BuildOptions {
 
-		[CommandLineParser.Required]
-		[CommandLineParser.Name("ProjectFile", "Project file")]
-		public string ProjectFile { get; set; }
+		[CommandLineParser.Name("in", "Input directory")]
+		public string InputDirectory { get; set; }
 			
 		[CommandLineParser.Name("out", "Output directory")]
 		public string OutputDirectory { get; set; }

@@ -34,30 +34,47 @@ namespace FBuild {
 					return 1;
 				}
 
-				var contentProject	=	new ContentProject( options.ProjectFile );
-
 				var force		=	options.ForceRebuild;
-				var sourceDir	=	Path.GetDirectoryName( Path.GetFullPath( options.ProjectFile ) );
+				var inputDir	=	options.InputDirectory;
 				var outputDir	=	options.OutputDirectory;
 				var tempDir		=	options.TempDirectory;
 				var items		=	options.Items.Any() ? options.Items : null;	  
+				var inputFile	=	Path.Combine(inputDir, ".content");
 
+				//
+				//	Check arguments 
+				//
+				if ( inputDir==null ) {
+					throw new Exception("Input directory is not specified (/in:)");
+				}
 				if ( outputDir==null ) {
-					parser.ShowError("Output directory is not specified (/out:)");
-					return 1;
+					throw new Exception("Output directory is not specified (/out:)");
 				}
 				if ( tempDir==null ) {
-					parser.ShowError("Temporary directory is not specified (/temp:)");
-					return 1;
+					throw new Exception("Temporary directory is not specified (/temp:)");
 				}
 
-				contentProject.Build( force, sourceDir, tempDir, outputDir, items );
+				if ( !Directory.Exists(inputDir) ) {
+					throw new Exception("Input directory does not exist");
+				}
+				if ( !File.Exists(inputFile) ) {
+					throw new Exception("File '.content' not found");
+				}
+				
+				Log.Message("FBuild Tool");
+				Log.Message("...input  : {0}", Path.GetFullPath(inputDir) );
+				Log.Message("...output : {0}", Path.GetFullPath(outputDir) );
+				Log.Message("...temp   : {0}", Path.GetFullPath(tempDir) );
+				Log.Message("...tools  : {0}", Environment.GetEnvironmentVariable("FUSION_BIN"));
+				///contentProject.Build( force, sourceDir, tempDir, outputDir, items );
+				///
+				var contentParser = new ContentParser( inputFile, inputDir );
 
-				contentProject.SaveToFile( options.ProjectFile );
+				///contentProject.SaveToFile( options.ProjectFile );
 
 
 			} catch ( Exception ex ) {
-				Log.Error( ex.Message );
+				parser.ShowError( ex.Message );
 				return 1;
 			}
 

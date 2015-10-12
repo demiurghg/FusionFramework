@@ -118,7 +118,7 @@ namespace Fusion.Core.Shell
             PropertyInfo missingRequiredOption = requiredOptions.FirstOrDefault(field => !IsList(field) || GetList(field).Count == 0);
 
             if (missingRequiredOption != null) {
-                ShowError("Missing argument '{0}'", GetOptionName(missingRequiredOption));
+                ShowError("Missing argument '{0}' - {1}", GetOptionName(missingRequiredOption), GetOptionDescription(missingRequiredOption));
                 return false;
             }
 

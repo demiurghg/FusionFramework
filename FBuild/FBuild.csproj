@@ -44,7 +44,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder.cs" />
     <Compile Include="BuildOptions.cs" />
+    <Compile Include="ContentParser.cs" />
+    <Compile Include="BuildBunch.cs" />
     <Compile Include="FBuild.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
