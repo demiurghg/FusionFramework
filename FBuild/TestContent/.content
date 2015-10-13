@@ -5,10 +5,10 @@ References\*
 *.tga
 *.png
 *.jpg
-base\Walls\*.tga 				-compression:dxt5
-base\Walls\*_local.tga 			-compression:rgb -normal
-base\Walls\gothicWall*.tga 		-compression:rgb
-base\Walls\superTechWall.tga 	-compression:rgb -resize:0.5
+base\Walls\*.tga 				= -compression:dxt5
+base\Walls\*_local.tga 			= -compression:rgb -normal
+base\Walls\gothicWall*.tga 		= -compression:rgb
+base\Walls\superTechWall.tga 	= -compression:rgb -resize:0.5
 
 [Fonts]
 *.bmfc
@@ -33,3 +33,4 @@ LightsProbes\*.dds
 [Scenes]
 scenes\*.fbx
 scenes\level01.fbx -nogeom -phys -shadow -animation 
+

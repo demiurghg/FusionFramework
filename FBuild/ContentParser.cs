@@ -9,24 +9,49 @@ using Fusion;
 namespace FBuild {
 	class ContentParser {
 
+
 		/// <summary>
+		/// 
+		/// Grammar:
+		///		content = { line }
+		///		line	= comment | header | entry "\r\n"|"\r"|"\n"
+		///		comment	= "#" { anychar }
+		///		header	= "[" {alpha} "]"
+		///		entry	= path {option} 
+		///		path	= {alpha|digit|"\"|"/"|"."|"*"|"?"}
+		///		option	= "-" {alpha|digit} [ ":" string|ident|number ]
+		///		number	= [-] digit {digit} [ "." digit {digit} ]
+		///		ident	= alpha {alpha|digit}
+		///		string	= """ {alpha|digit|space|punct} """
 		/// 
 		/// </summary>
 		/// <param name="fileName"></param>
 		/// <param name="inputDirectory"></param>
-		public ContentParser ( string fileName, string inputDirectory )
+		/*public ContentParser ( string fileName, string inputDirectory )
 		{
-			var lines = File.ReadAllLines(fileName)
-						.Select( line1 => line1.Trim(' ', '\t') )
-						.Where( line2 => !line2.StartsWith("#") )
-						.Where( line3 => !string.IsNullOrWhiteSpace(line3) )
-						.ToArray();
+			data		=	new Dictionary<string,List<lines>>();
 
+			var lines	=	File.ReadAllLines(fileName)
+							.Select( line1 => line1.Trim(' ', '\t') )
+							.ToArray();
+			
 			foreach ( var line in lines ) {
-				Log.Message("{0}" , line );
+				
+				if ( IsCommentOrEmpty( line ) ) {
+					
+					ProcessCommentOrEmpty( line );
+
+				} else if ( IsSectionName( line ) ) {
+					
+					ProcessSectionName( line );
+				
+				} else {
+					
+					ProcessContentDeclaration( line );
+
+				}
 			}
 
-		}
-		
+		}  */
 	}
 }

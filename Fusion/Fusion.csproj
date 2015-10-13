@@ -113,6 +113,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\IniParser\Exceptions\ParsingException.cs" />
+    <Compile Include="Core\IniParser\FileIniParser.cs" />
+    <Compile Include="Core\IniParser\Helpers\Assert.cs" />
+    <Compile Include="Core\IniParser\Model\Configuration\ConcatenateDuplicatedKeysIniParserConfiguration.cs" />
+    <Compile Include="Core\IniParser\Model\Configuration\IniParserConfiguration.cs" />
+    <Compile Include="Core\IniParser\Model\Formatting\DefaultIniDataFormatter.cs" />
+    <Compile Include="Core\IniParser\Model\Formatting\IIniDataFormatter.cs" />
+    <Compile Include="Core\IniParser\Model\IniData.cs" />
+    <Compile Include="Core\IniParser\Model\IniDataCaseInsensitive.cs" />
+    <Compile Include="Core\IniParser\Model\KeyData.cs" />
+    <Compile Include="Core\IniParser\Model\KeyDataCollection.cs" />
+    <Compile Include="Core\IniParser\Model\SectionData.cs" />
+    <Compile Include="Core\IniParser\Model\SectionDataCollection.cs" />
+    <Compile Include="Core\IniParser\Parser\ConcatenateDuplicatedKeysIniDataParser.cs" />
+    <Compile Include="Core\IniParser\Parser\IniDataParser.cs" />
+    <Compile Include="Core\IniParser\StreamIniDataParser.cs" />
+    <Compile Include="Core\IniParser\StringIniParser.cs" />
     <Compile Include="Drivers\Audio\AudioChannels.cs" />
     <Compile Include="Drivers\Audio\AudioDevice.cs" />
     <Compile Include="Drivers\Audio\AudioEmitter.cs" />

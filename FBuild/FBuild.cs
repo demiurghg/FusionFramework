@@ -68,7 +68,10 @@ namespace FBuild {
 				Log.Message("...tools  : {0}", Environment.GetEnvironmentVariable("FUSION_BIN"));
 				///contentProject.Build( force, sourceDir, tempDir, outputDir, items );
 				///
-				var contentParser = new ContentParser( inputFile, inputDir );
+				//var contentParser = new ContentParser( inputFile, inputDir );
+
+
+
 
 				///contentProject.SaveToFile( options.ProjectFile );
 
