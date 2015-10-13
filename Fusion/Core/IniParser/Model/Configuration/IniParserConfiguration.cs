@@ -195,6 +195,16 @@ namespace Fusion.Core.IniParser.Model.Configuration
         public bool AllowKeysWithoutSection { get; set; }
 
         /// <summary>
+        ///     Allows having keys in the file that don't have value.
+        ///     If set to <c>false</c> and keys without a section are defined,
+        ///     the <see cref="IniDataParser"/> will stop with an error.
+        /// </summary>
+        /// <remarks>
+        ///     Defaults to <c>false</c>.
+        /// </remarks>
+        public bool AllowKeysWithoutValues { get; set; }
+
+        /// <summary>
         ///     If set to <c>false</c> and the <see cref="IniDataParser"/> finds duplicate keys in a
         ///     section the parser will stop with an error.
         ///     If set to <c>true</c>, duplicated keys are allowed in the file. The value

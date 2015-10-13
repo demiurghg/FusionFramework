@@ -9,6 +9,7 @@ using System.IO;
 using Fusion;
 using Fusion.Core.Shell;
 using Fusion.Pipeline;
+using Fusion.Core.IniParser;
 
 
 namespace FBuild {
@@ -71,7 +72,16 @@ namespace FBuild {
 				//var contentParser = new ContentParser( inputFile, inputDir );
 
 
+				var ip = new StringIniParser();
+				ip.Parser.Configuration.AllowDuplicateSections	=	true;
+				ip.Parser.Configuration.CommentString			=	"#";
+				ip.Parser.Configuration.OverrideDuplicateKeys	=	true;
+				ip.Parser.Configuration.KeyValueAssigmentChar	=	'=';
+				ip.Parser.Configuration.AllowKeysWithoutValues	=	true;
 
+				var iniData = ip.ParseString( File.ReadAllText( inputFile ) );
+
+				Log.Message( iniData.ToString() );
 
 				///contentProject.SaveToFile( options.ProjectFile );
 

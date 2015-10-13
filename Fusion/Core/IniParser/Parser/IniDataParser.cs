@@ -220,6 +220,20 @@ namespace Fusion.Core.IniParser.Parser
             return !string.IsNullOrEmpty(line) && line.Contains(Configuration.KeyValueAssigmentChar.ToString());
         }
 
+		/// <summary>
+        ///     Checks if a given string represents a key-only line
+        /// </summary>
+        /// <param name="line">
+        ///     The string to be checked.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the string represents a key / value pair, <c>false</c> otherwise.
+        /// </returns>
+        protected virtual bool LineMatchesAKeyOnly(string line)
+        {
+            return !string.IsNullOrEmpty(line);
+        }
+
         /// <summary>
         ///     Removes a comment from a string if exist, and returns the string without
         ///     the comment substring.
@@ -283,6 +297,14 @@ namespace Fusion.Core.IniParser.Parser
                 return;
             }
 
+			if (Configuration.AllowKeysWithoutValues) {
+				if (LineMatchesAKeyOnly(currentLine))
+				{
+					ProcessKeyOnly(currentLine, currentIniData);
+					return;
+				}
+			}
+
             if (Configuration.SkipInvalidLines)
                 return;
 
@@ -345,6 +367,37 @@ namespace Fusion.Core.IniParser.Parser
             // get key and value data
             string key = ExtractKey(line);
             string value = ExtractValue(line);
+
+            // Check if we haven't read any section yet
+            if (string.IsNullOrEmpty(_currentSectionNameTemp))
+            {
+                if (!Configuration.AllowKeysWithoutSection)
+                {
+                    throw new ParsingException("key value pairs must be enclosed in a section");
+                }
+
+                AddKeyToKeyValueCollection(key, value, currentIniData.Global, "global");
+            }
+            else
+            {
+                var currentSection = currentIniData.Sections.GetSectionData(_currentSectionNameTemp);
+
+                AddKeyToKeyValueCollection(key, value, currentSection.Keys, _currentSectionNameTemp);
+            }
+        }
+
+
+        /// <summary>
+        ///     Processes a string containing an ini key/value pair.
+        /// </summary>
+        /// <param name="line">
+        ///     The string to be processed
+        /// </param>
+        protected virtual void ProcessKeyOnly(string line, IniData currentIniData)
+        {
+            // get key and value data
+            string key = line;
+            string value = "";
 
             // Check if we haven't read any section yet
             if (string.IsNullOrEmpty(_currentSectionNameTemp))
