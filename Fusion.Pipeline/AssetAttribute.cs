@@ -78,7 +78,7 @@ namespace Fusion.Pipeline {
 			var extList = Extensions.Split( new[]{';'}, StringSplitOptions.RemoveEmptyEntries );
 						
 			foreach ( var ext in extList ) {
-				if (Wildcard.IsMatch(ext, pathToFile, false)) {
+				if (Wildcard.Match(pathToFile, ext, false)) {
 					return true;
 				}
 			}

@@ -1,36 +1,48 @@
 [Ignore]
 References\*
 
-[Textures]
-*.tga	=	
-*.png	=	
-*.jpg	=	
-base\Walls\*.tga 				= /compression:dxt5
-base\Walls\*_local.tga 			= /compression:rgb -normal
-base\Walls\superTechWall.tga 	= /compression:rgb -resize:0.5
-base\Walls\gothicWall*.tga 		= /compression:rgb
+# [Textures]
+# *.tga
+# *lena.tga
+# *.png
+# *.jpg
+# base\Walls\*.tga 				-compression:dxt5
+# base\Walls\*_local.tga 			-compression:rgb -normal
+# base\Walls\superTechWall.tga 	-compression:rgb -resize:0.5
+#base\Walls\gothicWall*.tga 		-compression:rgb
 
 [Fonts]
 *.bmfc	=
 
+#[Textures]
+#*.wal
+#*.tiff
+
 [Sounds]
-sounds\*.wav =	-resample:22050 -mono
-sounds\*.ogg =	-resample:22050 -mono
-sounds\*.mp3 =	-resample:22050 -mono
+sounds\*.wav -resample:22050 -mono
+sounds\*.ogg -resample:22050 -mono
+sounds\*.mp3 -resample:22050 -mono
 
 [Music]
-music\*.mp3 =	-resample:44100 -stereo
+music\*.mp3 -resample:44100 -stereo
 
 [Scripts]
-*.mtrl		=
-*.sfx      =
-*.trigger  =
-*.entity   =
+*.mtrl
+*.sfx 
+*.trigger
+*.entity
 
 [LightProbes]
-LightsProbes\*.dds	=
+LightsProbes\*.dds
 
 [Scenes]
-scenes\*.fbx	=
-scenes\level01.fbx = -nogeom -phys -shadow -animation 
+*.fbx
+scenes\*.fbx
+scenes\level01.fbx -nogeom -phys -shadow -animation 
 
+[Shaders]
+*.hlsl
+
+[Copy]
+*.cube
+*.tga

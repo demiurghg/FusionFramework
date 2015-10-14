@@ -9,34 +9,7 @@ namespace Fusion {
 	/// Represents a wildcard running on the
 	/// <see cref="System.Text.RegularExpressions"/> engine.
 	/// </summary>
-	[Serializable]
-	public class Wildcard : Regex {
-		/// <summary>
-		/// Initializes a wildcard with the given search pattern.
-		/// </summary>
-		/// <param name="pattern">The wildcard pattern to match.</param>
-		public Wildcard ( string pattern )
-			: base( WildcardToRegex( pattern ) )
-		{
-		}
-
-
-		protected Wildcard( SerializationInfo info, StreamingContext context ) : base(info, context)
-		{
-			throw new NotImplementedException();
-		} 
-
-
-		/// <summary>
-		/// Initializes a wildcard with the given search pattern and options.
-		/// </summary>
-		/// <param name="pattern">The wildcard pattern to match.</param>
-		/// <param name="options">A combination of one or more
-        /// <see cref="System.Text.RegularExpressions.RegexOptions"/>.</param>
-		public Wildcard ( string pattern, RegexOptions options )
-			: base( WildcardToRegex( pattern ), options )
-		{
-		}
+	public static class Wildcard {
 
 		/// <summary>
 		/// Converts a wildcard to a regex.
@@ -57,17 +30,11 @@ namespace Fusion {
 		/// <param name="pattern"></param>
 		/// <param name="value"></param>
 		/// <returns></returns>
-		public static bool IsMatch ( string pattern, string value, bool caseSensitive = true )
+		public static bool Match ( string value, string pattern, bool ignoreCase = false )
 		{
-			Wildcard wildcard;
-			
-			if (!caseSensitive) {
-				wildcard = new Wildcard( pattern, RegexOptions.IgnoreCase );
-			} else {
-				wildcard = new Wildcard( pattern );
-			}
+			Regex regex = new Regex( WildcardToRegex( pattern ), ignoreCase ? RegexOptions.IgnoreCase : RegexOptions.None ); 
 
-			return wildcard.IsMatch( value );
+			return regex.IsMatch( value );
 		}
 	}
 }

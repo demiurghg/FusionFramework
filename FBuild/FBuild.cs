@@ -10,6 +10,7 @@ using Fusion;
 using Fusion.Core.Shell;
 using Fusion.Pipeline;
 using Fusion.Core.IniParser;
+using FBuild.Processors;
 
 
 namespace FBuild {
@@ -30,66 +31,55 @@ namespace FBuild {
 			var parser = new CommandLineParser( options );
 
 
-			try {
+			//try {
 				if ( !parser.ParseCommandLine( args ) ) {
 					return 1;
 				}
 
-				var force		=	options.ForceRebuild;
-				var inputDir	=	options.InputDirectory;
-				var outputDir	=	options.OutputDirectory;
-				var tempDir		=	options.TempDirectory;
-				var items		=	options.Items.Any() ? options.Items : null;	  
-				var inputFile	=	Path.Combine(inputDir, ".content");
+				options.CheckOptionsAndMakeDirs();
+
+				Log.Message("{0}", options.FullInputDirectory );
+
 
 				//
-				//	Check arguments 
+				//	Parse INI file :
 				//
-				if ( inputDir==null ) {
-					throw new Exception("Input directory is not specified (/in:)");
-				}
-				if ( outputDir==null ) {
-					throw new Exception("Output directory is not specified (/out:)");
-				}
-				if ( tempDir==null ) {
-					throw new Exception("Temporary directory is not specified (/temp:)");
-				}
-
-				if ( !Directory.Exists(inputDir) ) {
-					throw new Exception("Input directory does not exist");
-				}
-				if ( !File.Exists(inputFile) ) {
-					throw new Exception("File '.content' not found");
-				}
-				
-				Log.Message("FBuild Tool");
-				Log.Message("...input  : {0}", Path.GetFullPath(inputDir) );
-				Log.Message("...output : {0}", Path.GetFullPath(outputDir) );
-				Log.Message("...temp   : {0}", Path.GetFullPath(tempDir) );
-				Log.Message("...tools  : {0}", Environment.GetEnvironmentVariable("FUSION_BIN"));
-				///contentProject.Build( force, sourceDir, tempDir, outputDir, items );
-				///
-				//var contentParser = new ContentParser( inputFile, inputDir );
-
-
-				var ip = new StringIniParser();
+				var ip = new StreamIniDataParser();
 				ip.Parser.Configuration.AllowDuplicateSections	=	true;
+				ip.Parser.Configuration.AllowDuplicateKeys		=	true;
 				ip.Parser.Configuration.CommentString			=	"#";
 				ip.Parser.Configuration.OverrideDuplicateKeys	=	true;
 				ip.Parser.Configuration.KeyValueAssigmentChar	=	'=';
 				ip.Parser.Configuration.AllowKeysWithoutValues	=	true;
 
-				var iniData = ip.ParseString( File.ReadAllText( inputFile ) );
+				var iniData = ip.ReadData( new StreamReader( options.ContentIniFile ) );
 
-				Log.Message( iniData.ToString() );
-
-				///contentProject.SaveToFile( options.ProjectFile );
+				Log.Message( "{0}", iniData );
 
 
-			} catch ( Exception ex ) {
+				//
+				//	Setup builder :
+				//	
+				var bindings = new[] {
+					new AssetProcessorBinding( "Copy", typeof(CopyProcessor) ),
+				};
+
+				var builder = new Builder( bindings );
+
+				var result  = builder.Build( options, iniData );
+
+				Log.Message("-------- {5} total, {0} succeeded, {1} failed, {2} up-to-date, {3} ignored, {4} unhandled --------", 
+					 result.Succeded,
+					 result.Failed,
+					 result.UpToDate,
+					 result.Ignored,
+					 result.Skipped,
+					 result.Total );
+
+			/*} catch ( Exception ex ) {
 				parser.ShowError( ex.Message );
 				return 1;
-			}
+			}//*/
 
 			return 0;
 		}
