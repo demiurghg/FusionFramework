@@ -7,7 +7,7 @@ using Fusion;
 using Fusion.Core.Mathematics;
 using Fusion.Drivers.Graphics;
 using Fusion.Drivers.Input;
-using Fusion.Content;
+using Fusion.Core.Content;
 using Fusion.Core.Development;
 using Fusion.Engine.Common;
 using System.Runtime.InteropServices;
@@ -27,7 +27,7 @@ namespace SpriteDemo {
 		RenderTarget2D	rt;
 		RenderTarget2D	rtMS;
 		DepthStencil2D	dsMS;
-		TextureAtlas	atlas;
+		TextureAtlas	яatlas;
 
 
 		/// <summary>

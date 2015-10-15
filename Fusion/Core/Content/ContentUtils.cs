@@ -11,7 +11,7 @@ using Fusion.Core.Test;
 using System.Runtime.InteropServices;
 
 
-namespace Fusion.Content {
+namespace Fusion.Core.Content {
 	public static class ContentUtils {
 
 

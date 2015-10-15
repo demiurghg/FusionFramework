@@ -10,7 +10,7 @@ using SharpDX;
 using Fusion;
 using Fusion.Core.Mathematics;
 using Fusion.Drivers.Graphics;
-using Fusion.Pipeline;
+using Fusion.Core.Content;
 
 
 namespace Fusion.Drivers.Graphics {

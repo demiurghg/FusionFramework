@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
 using Fusion;
-using Fusion.Content;
+using Fusion.Core.Content;
 
 namespace FBuild {
 

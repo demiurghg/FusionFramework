@@ -15,7 +15,7 @@ using Fusion.Drivers.Graphics;
 using SharpDX.Windows;
 using Fusion.Core;
 using Fusion.Core.Development;
-using Fusion.Pipeline;
+using Fusion.Core.Content;
 using Fusion.Core.Mathematics;
 using Fusion.Core.Shell;
 

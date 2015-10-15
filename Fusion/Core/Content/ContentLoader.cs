@@ -8,7 +8,7 @@ using Fusion.Core.Mathematics;
 using Fusion.Engine.Common;
 
 
-namespace Fusion.Pipeline {
+namespace Fusion.Core.Content {
 	public abstract class ContentLoader {
 
 		/// <summary>

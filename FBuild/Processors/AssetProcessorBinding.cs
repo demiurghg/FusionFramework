@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Fusion.Core.Shell;
 using Fusion;
-using Fusion.Pipeline;
+using Fusion.Core.Content;
 
 namespace FBuild.Processors {
 

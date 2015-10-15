@@ -57,7 +57,7 @@ namespace FBuild.Processors {
 				ImportGeometry ? "/geom":"" 
 			);
 
-			context.RunTool( "Native.Fbx.exe", cmdLine );
+			context.RunTool( "FScene.exe", cmdLine );
 
 			using ( var target = assetFile.OpenTargetStream() ) {
 				context.CopyFileTo( destPath, target );

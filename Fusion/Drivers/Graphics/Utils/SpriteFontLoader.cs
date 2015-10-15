@@ -8,7 +8,7 @@ using SharpDX;
 using Fusion.Drivers.Graphics;
 using System.Diagnostics;
 using System.ComponentModel;
-using Fusion.Pipeline;
+using Fusion.Core.Content;
 using Fusion.Engine.Common;
 
 

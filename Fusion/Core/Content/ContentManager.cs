@@ -7,11 +7,11 @@ using System.IO;
 using System.IO.Compression;
 using Fusion.Core;
 using Fusion.Core.Mathematics;
-using Fusion.Content;
+using Fusion.Core.Content;
 using Fusion.Engine.Common;
 
 
-namespace Fusion.Pipeline {
+namespace Fusion.Core.Content {
 	
 	public class ContentManager : DisposableBase {
 

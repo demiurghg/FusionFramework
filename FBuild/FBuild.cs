@@ -8,7 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using Fusion;
 using Fusion.Core.Shell;
-using Fusion.Pipeline;
+using Fusion.Core.Content;
 using Fusion.Core.IniParser;
 using FBuild.Processors;
 

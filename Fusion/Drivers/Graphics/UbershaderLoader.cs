@@ -8,7 +8,7 @@ using System.Collections.Specialized;
 using SharpDX.Direct3D;
 using SharpDX.Direct3D11;
 using D3D11 = SharpDX.Direct3D11;
-using Fusion.Pipeline;
+using Fusion.Core.Content;
 using Fusion.Core.Mathematics;
 using Fusion.Engine.Common;
 

@@ -15,7 +15,7 @@ using System.Net;
 
 
 
-namespace Fusion.Content {
+namespace Fusion.Core.Content {
 
 	[Serializable]
 	public class ContentException : System.Exception {

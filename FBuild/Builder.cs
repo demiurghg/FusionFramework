@@ -9,7 +9,7 @@ using Fusion.Core.IniParser;
 using Fusion.Core.IniParser.Model;
 using Fusion;
 using Fusion.Core.Shell;
-using Fusion.Content;
+using Fusion.Core.Content;
 
 namespace FBuild {
 	class Builder {

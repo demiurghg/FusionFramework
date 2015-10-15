@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
-using Fusion.Pipeline;
 using SharpDX.Multimedia;
 using SharpDX.XAudio2;
 using SharpDX.X3DAudio;
+using Fusion.Core.Content;
 using Fusion.Core.Mathematics;
 using Fusion.Engine.Common;
 
