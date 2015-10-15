@@ -7,7 +7,7 @@ using System.IO;
 using Fusion.Core.Shell;
 using Fusion.Drivers.Graphics;
 
-namespace FBuild.Processors {
+namespace Fusion.Build.Processors {
 
 	[AssetProcessor("Fonts", "Converts BMFC files to sprite fonts")]
 	public class FontProcessor : AssetProcessor {

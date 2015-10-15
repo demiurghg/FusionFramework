@@ -4,15 +4,15 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
-using FBuild.Processors;
+using Fusion.Build.Processors;
 using Fusion.Core.IniParser;
 using Fusion.Core.IniParser.Model;
 using Fusion;
 using Fusion.Core.Shell;
 using Fusion.Core.Content;
 
-namespace FBuild {
-	class Builder {
+namespace Fusion.Build {
+	public class Builder {
 
 		Dictionary<string, AssetProcessorBinding> processors;
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Fusion.Core.Shell;
 
-namespace FBuild.Processors {
+namespace Fusion.Build.Processors {
 
 	[AssetProcessor("Textures", "Converts TGA, PNG and JPEG images to DDS. DDS files will be bypassed.")]
 	public class TextureProcessor : AssetProcessor {

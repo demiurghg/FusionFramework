@@ -15,7 +15,7 @@ using System.Net;
 
 
 
-namespace FBuild {
+namespace Fusion.Build {
 
 	[Serializable]
 	public class ToolException : BuildException {

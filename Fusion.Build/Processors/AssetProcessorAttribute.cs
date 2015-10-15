@@ -7,7 +7,7 @@ using System.IO;
 using Fusion.Core.Shell;
 using Fusion;
 
-namespace FBuild.Processors {
+namespace Fusion.Build.Processors {
 
 	public class AssetProcessorAttribute : Attribute {
 

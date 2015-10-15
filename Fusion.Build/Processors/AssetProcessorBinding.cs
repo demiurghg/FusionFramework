@@ -8,7 +8,7 @@ using Fusion.Core.Shell;
 using Fusion;
 using Fusion.Core.Content;
 
-namespace FBuild.Processors {
+namespace Fusion.Build.Processors {
 
 	public class AssetProcessorBinding {
 

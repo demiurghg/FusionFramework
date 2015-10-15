@@ -7,7 +7,7 @@ using System.IO;
 using Fusion.Core.Shell;
 using Fusion.Drivers.Graphics;
 
-namespace FBuild.Processors {
+namespace Fusion.Build.Processors {
 
 	[AssetProcessor("Scenes", "Converts FBX files to scene")]
 	public class SceneProcessor : AssetProcessor {

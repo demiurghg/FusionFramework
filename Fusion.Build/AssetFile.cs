@@ -8,7 +8,7 @@ using System.IO.Compression;
 using Fusion;
 using Fusion.Core.Content;
 
-namespace FBuild {
+namespace Fusion.Build {
 
 	public class AssetFile {
 			

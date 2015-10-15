@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using System.IO;
 using Fusion.Core.Shell;
 
-namespace FBuild.Processors {
+namespace Fusion.Build.Processors {
 
-	[AssetProcessor("Scripts", "No description")]
-	public class ScriptProcessor : AssetProcessor {
+	[AssetProcessor("Copy", "Copies file to target directory without processing")]
+	public class CopyProcessor : AssetProcessor {
 		
 		/// <summary>
 		/// 

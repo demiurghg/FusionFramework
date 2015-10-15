@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Fusion.Core.Shell;
 
-namespace FBuild.Processors {
+namespace Fusion.Build.Processors {
 
 	[AssetProcessor("Sounds", "No description")]
 	public class SoundProcessor : AssetProcessor {

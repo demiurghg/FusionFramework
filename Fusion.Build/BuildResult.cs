@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.IO;
 using System.Threading.Tasks;
-using FBuild.Processors;
+using Fusion.Build.Processors;
 using Fusion.Core.IniParser;
 using Fusion.Core.IniParser.Model;
 using Fusion;
 
-namespace FBuild {
+namespace Fusion.Build {
 
-	class BuildResult {
+	public class BuildResult {
 
 		public int Total	;
 		public int Ignored	;

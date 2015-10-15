@@ -8,7 +8,7 @@ using Fusion;
 using Fusion.Core.Shell;
 using System.Diagnostics;
 
-namespace FBuild {
+namespace Fusion.Build {
 
 	public class BuildOptions {
 
