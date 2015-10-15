@@ -188,7 +188,7 @@ namespace FBuild {
 				buildResult.Succeded ++;
 
 			} catch ( Exception e ) {
-				Log.Error( e.Message );
+				Log.Error( "{0} : {1}", assetFile.KeyPath, e.Message );
 				buildResult.Failed ++;
 			}
 		}

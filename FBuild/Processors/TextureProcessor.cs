@@ -8,7 +8,7 @@ using Fusion.Core.Shell;
 
 namespace FBuild.Processors {
 
-	[AssetProcessor("Textures")]
+	[AssetProcessor("Textures", "Converts TGA, PNG and JPEG images to DDS. DDS files will be bypassed.")]
 	public class TextureProcessor : AssetProcessor {
 
 		public enum TextureCompression {

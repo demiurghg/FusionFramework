@@ -106,7 +106,8 @@ namespace FBuild {
                 }
             }
 
-            Log.Message("");
+	        Log.Message("");
+	        Log.Message("");
 
             Log.Message("Asset Processors:");
 
@@ -116,14 +117,21 @@ namespace FBuild {
 
 			foreach ( var bind in bindings ) {
 				Log.Message( "  {0} - {1}", bind.Name, bind.Type.Name );
+				Log.Message( "    {0}", bind.Type.GetCustomAttribute<AssetProcessorAttribute>().Description );
+	            Log.Message("");
 									 
 				var proc = bind.CreateAssetProcessor();
 				var prs  = new CommandLineParser( proc, bind.Name );
 
-                foreach (string optional in prs.OptionalUsageHelp) {
-                    Log.Message("    {0}", optional);
-                }
+				if (prs.OptionalUsageHelp.Any()) {
+					foreach (string optional in prs.OptionalUsageHelp) {
+						Log.Message("    {0}", optional);
+					}
+				} else {
+					Log.Message("    <no options>");
+				}
 
+	            Log.Message("");
 	            Log.Message("");
 			}
 

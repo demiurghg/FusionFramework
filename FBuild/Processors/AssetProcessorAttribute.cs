@@ -22,13 +22,21 @@ namespace FBuild.Processors {
 			}
 		}
 
+		/// <summary>
+		/// Processor name
+		/// </summary>
+		public string Description {
+			get; private set;
+		}
+
 		
 		/// <summary>
 		/// 
 		/// </summary>
-		public AssetProcessorAttribute ( string assetProcessorName )
+		public AssetProcessorAttribute ( string assetProcessorName, string description )
 		{
 			this.name	=	assetProcessorName;
+			Description	=	description;
 		}
 	}
 }

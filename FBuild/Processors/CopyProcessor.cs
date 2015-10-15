@@ -8,7 +8,7 @@ using Fusion.Core.Shell;
 
 namespace FBuild.Processors {
 
-	[AssetProcessor("Copy")]
+	[AssetProcessor("Copy", "Copies file to target directory without processing")]
 	public class CopyProcessor : AssetProcessor {
 		
 		/// <summary>

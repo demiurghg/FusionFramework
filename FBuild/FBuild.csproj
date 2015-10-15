@@ -54,6 +54,8 @@
     <Compile Include="FBuild.cs" />
     <Compile Include="Processors\AssetProcessorBinding.cs" />
     <Compile Include="Processors\AssetProcessorAttribute.cs" />
+    <Compile Include="Processors\SceneProcessor.cs" />
+    <Compile Include="Processors\FontProcessor.cs" />
     <Compile Include="Processors\SoundProcessor.cs" />
     <Compile Include="Processors\ScriptProcessor.cs" />
     <Compile Include="Processors\TextureProcessor.cs" />

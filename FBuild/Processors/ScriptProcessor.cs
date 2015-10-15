@@ -8,7 +8,7 @@ using Fusion.Core.Shell;
 
 namespace FBuild.Processors {
 
-	[AssetProcessor("Scripts")]
+	[AssetProcessor("Scripts", "No description")]
 	public class ScriptProcessor : AssetProcessor {
 		
 		/// <summary>

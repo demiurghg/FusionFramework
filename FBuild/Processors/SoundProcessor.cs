@@ -8,7 +8,7 @@ using Fusion.Core.Shell;
 
 namespace FBuild.Processors {
 
-	[AssetProcessor("Sounds")]
+	[AssetProcessor("Sounds", "No description")]
 	public class SoundProcessor : AssetProcessor {
 		
 		/// <summary>

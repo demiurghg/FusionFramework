@@ -10,24 +10,18 @@ lena.tga /compression:rgb
 ##RTI/Core/NE2_50M_SR_W_4096.jpg /compression:bc1 /fast
 
 [Fonts]
-*.bmfc	=
+*.bmfc
 
 [Sounds]
 sounds\*.wav -resample:22050 -mono
 sounds\*.ogg -resample:22050 -mono
 sounds\*.mp3 -resample:22050 -mono
 
-[Music]
-music\*.mp3 -resample:44100 -stereo
-
 [Scripts]
 *.mtrl
 *.sfx 
 *.trigger
 *.entity
-
-[LightProbes]
-LightsProbes\*.dds
 
 [Scenes]
 *.fbx

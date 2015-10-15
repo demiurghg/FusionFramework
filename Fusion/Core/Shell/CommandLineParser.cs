@@ -104,7 +104,7 @@ namespace Fusion.Core.Shell
 		string GetEnumValues ( PropertyInfo pi ) 
 		{
 			if (pi.PropertyType.IsEnum) {	
-				return " [" + string.Join(" ", Enum.GetValues(pi.PropertyType).Cast<object>().Select(s => s.ToString().ToLower()).ToArray() ) + "]";
+				return " [" + string.Join(" ", Enum.GetNames(pi.PropertyType).Select(s => s.ToString().ToLower()).ToArray() ) + "]";
 			}
 			return "";
 		}
