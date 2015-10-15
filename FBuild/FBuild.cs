@@ -31,15 +31,17 @@ namespace FBuild {
 			var parser = new CommandLineParser( options );
 
 
-			//try {
+			try {
 				if ( !parser.ParseCommandLine( args ) ) {
 					return 1;
 				}
 
+				if ( options.Help ) {
+					PrintHelp( parser );
+					return 0;
+				}
+
 				options.CheckOptionsAndMakeDirs();
-
-				Log.Message("{0}", options.FullInputDirectory );
-
 
 				//
 				//	Parse INI file :
@@ -54,21 +56,23 @@ namespace FBuild {
 
 				var iniData = ip.ReadData( new StreamReader( options.ContentIniFile ) );
 
-				Log.Message( "{0}", iniData );
-
 
 				//
 				//	Setup builder :
 				//	
-				var bindings = new[] {
-					new AssetProcessorBinding( "Copy", typeof(CopyProcessor) ),
-				};
+				var bindings = AssetProcessorBinding.GatherAssetProcessors();
+
+				Log.Message("Asset processors:");
+				foreach ( var bind in bindings ) {
+					Log.Message("  {0,-20} - {1}", bind.Name, bind.Type.Name );
+				}
+				Log.Message("");
 
 				var builder = new Builder( bindings );
 
 				var result  = builder.Build( options, iniData );
 
-				Log.Message("-------- {5} total, {0} succeeded, {1} failed, {2} up-to-date, {3} ignored, {4} unhandled --------", 
+				Log.Message("-------- {5} total, {0} succeeded, {1} failed, {2} up-to-date, {3} ignored, {4} skipped --------", 
 					 result.Succeded,
 					 result.Failed,
 					 result.UpToDate,
@@ -76,12 +80,53 @@ namespace FBuild {
 					 result.Skipped,
 					 result.Total );
 
-			/*} catch ( Exception ex ) {
+			} catch ( Exception ex ) {
 				parser.ShowError( ex.Message );
 				return 1;
-			}//*/
+			}
 
 			return 0;
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		static void PrintHelp ( CommandLineParser parser )
+		{
+			var name = Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().ProcessName);
+
+            Log.Message("Usage: {0} {1}", name, string.Join(" ", parser.RequiredUsageHelp));
+
+            if ( parser.OptionalUsageHelp.Any() ) {
+                Log.Message("");
+                foreach (string optional in parser.OptionalUsageHelp) {
+                    Log.Message("    {0}", optional);
+                }
+            }
+
+            Log.Message("");
+
+            Log.Message("Asset Processors:");
+
+            Log.Message("");
+
+			var bindings = AssetProcessorBinding.GatherAssetProcessors();
+
+			foreach ( var bind in bindings ) {
+				Log.Message( "  {0} - {1}", bind.Name, bind.Type.Name );
+									 
+				var proc = bind.CreateAssetProcessor();
+				var prs  = new CommandLineParser( proc, bind.Name );
+
+                foreach (string optional in prs.OptionalUsageHelp) {
+                    Log.Message("    {0}", optional);
+                }
+
+	            Log.Message("");
+			}
+
 		}
 	}
 }

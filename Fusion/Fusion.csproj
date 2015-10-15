@@ -130,6 +130,7 @@
     <Compile Include="Core\IniParser\Parser\IniDataParser.cs" />
     <Compile Include="Core\IniParser\StreamIniDataParser.cs" />
     <Compile Include="Core\IniParser\StringIniParser.cs" />
+    <Compile Include="Core\Shell\CommandLineParserConfiguration.cs" />
     <Compile Include="Drivers\Audio\AudioChannels.cs" />
     <Compile Include="Drivers\Audio\AudioDevice.cs" />
     <Compile Include="Drivers\Audio\AudioEmitter.cs" />

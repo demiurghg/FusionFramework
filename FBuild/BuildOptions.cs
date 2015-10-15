@@ -15,31 +15,40 @@ namespace FBuild {
 		/// <summary>
 		/// Input directory
 		/// </summary>
-		[CommandLineParser.Name("in", "Input directory")]
+		[CommandLineParser.Required]
+		[CommandLineParser.Name("inputDir", "input directory")]
 		public string InputDirectory { get; set; }
 			
 		/// <summary>
 		/// Output directory
 		/// </summary>
-		[CommandLineParser.Name("out", "Output directory")]
+		[CommandLineParser.Required]
+		[CommandLineParser.Name("outputDir", "output directory")]
 		public string OutputDirectory { get; set; }
 			
 		/// <summary>
 		/// Temporary directory
 		/// </summary>
-		[CommandLineParser.Name("temp", "Temporary directory")]
+		[CommandLineParser.Name("temp", "temporary directory")]
 		public string TempDirectory { get; set; }
 			
 		/// <summary>
 		/// Force rebuild
 		/// </summary>
-		[CommandLineParser.Name("force", "Force rebuild")]
+		[CommandLineParser.Name("force", "force rebuild")]
 		public bool ForceRebuild { get; set; }
+			
+		/// <summary>
+		/// Force rebuild
+		/// </summary>
+		[CommandLineParser.Name("help", "print detailed help")]
+		public bool Help { get; set; }
 			
 
 		/// <summary>
 		/// Full input directory
 		/// </summary>
+		[CommandLineParser.Ignore]
 		public string FullInputDirectory { 
 			get {
 				return Path.GetFullPath( InputDirectory );
@@ -49,6 +58,7 @@ namespace FBuild {
 		/// <summary>
 		/// Full output directory
 		/// </summary>
+		[CommandLineParser.Ignore]
 		public string FullOutputDirectory { 
 			get {
 				return Path.GetFullPath( OutputDirectory );
@@ -58,6 +68,7 @@ namespace FBuild {
 		/// <summary>
 		/// Full temp directory
 		/// </summary>
+		[CommandLineParser.Ignore]
 		public string FullTempDirectory { 
 			get {
 				return Path.GetFullPath( TempDirectory );
@@ -65,6 +76,7 @@ namespace FBuild {
 		}
 
 
+		[CommandLineParser.Ignore]
 		public string ContentIniFile {
 			get {
 				return Path.Combine( FullInputDirectory, ".content" );
@@ -93,13 +105,12 @@ namespace FBuild {
 				throw new BuildException("Output directory is not specified (/out:)");
 			}
 			if ( TempDirectory==null ) {
-				throw new BuildException("Temporary directory is not specified (/temp:)");
-			}
-
-
-			if ( !Directory.Exists(FullTempDirectory) ) {
-				var dir = Directory.CreateDirectory( FullTempDirectory );
-				dir.Attributes = FileAttributes.Hidden;
+				TempDirectory = Path.GetTempPath();
+			} else {
+				if ( !Directory.Exists(FullTempDirectory) ) {
+					var dir = Directory.CreateDirectory( FullTempDirectory );
+					dir.Attributes = FileAttributes.Hidden;
+				}
 			}
 
 			if ( !Directory.Exists(FullOutputDirectory) ) {

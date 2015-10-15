@@ -5,24 +5,30 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using Fusion.Core.Shell;
+using Fusion;
 
 namespace FBuild.Processors {
 
-	public abstract class AssetProcessor {
+	public class AssetProcessorAttribute : Attribute {
+
+		string	name;
+
+		/// <summary>
+		/// Processor name
+		/// </summary>
+		public string Name {
+			get {
+				return name;
+			}
+		}
+
 		
 		/// <summary>
 		/// 
 		/// </summary>
-		public AssetProcessor ()
+		public AssetProcessorAttribute ( string assetProcessorName )
 		{
+			this.name	=	assetProcessorName;
 		}
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="sourceStream"></param>
-		/// <param name="targetStream"></param>
-		public abstract void Process ( AssetFile assetFile, BuildContext context );
 	}
 }

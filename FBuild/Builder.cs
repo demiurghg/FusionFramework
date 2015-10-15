@@ -9,11 +9,14 @@ using Fusion.Core.IniParser;
 using Fusion.Core.IniParser.Model;
 using Fusion;
 using Fusion.Core.Shell;
+using Fusion.Content;
 
 namespace FBuild {
 	class Builder {
 
 		Dictionary<string, AssetProcessorBinding> processors;
+
+		BuildContext	context;
 
 
 		public int Total { get; private set; }
@@ -45,11 +48,12 @@ namespace FBuild {
 		public BuildResult Build ( BuildOptions options, IniData iniData )
 		{
 			BuildResult result = new BuildResult();
+			context				=	new BuildContext( options );
 
 			//
 			//	gather files on source folder 
 			//
-			var files		=	GatherAssetFiles( options.FullInputDirectory, options.FullOutputDirectory );
+			var files		=	GatherAssetFiles();
 			result.Total	=	files.Count;
 
 			//
@@ -79,6 +83,7 @@ namespace FBuild {
 			//
 			foreach ( var section in iniData.Sections ) {
 
+				//	'Ingore' is a special section.
 				if (section.SectionName=="Ignore") {
 					continue;
 				}
@@ -90,8 +95,10 @@ namespace FBuild {
 
 				var proc = processors[section.SectionName];
 
+				Log.Message("[{0}]", proc.Name );
 
 				var maskArgs = section.Keys
+					.Reverse()
 					.Select( key => new {
 						Mask = key.KeyName.Split(' ', '\t').FirstOrDefault(), 
 						Args = CommandLineParser.SplitCommandLine( key.KeyName ).Skip(1).ToArray()
@@ -108,10 +115,11 @@ namespace FBuild {
 							var processor = proc.CreateAssetProcessor();
 
 							BuildAsset( processor, maskArg.Args, file, ref result );
+
+							break;
 						}
 
 					}
-
 				}
 
 			}
@@ -127,19 +135,56 @@ namespace FBuild {
 		/// <param name="processor"></param>
 		/// <param name="fileName"></param>
 		void BuildAsset ( AssetProcessor processor, string[] args, AssetFile assetFile, ref BuildResult buildResult )
-		{
+		{					
+			if (assetFile.IsProcessed) {
+				Log.Warning("{0} : already proccessed. Skipped.", assetFile.KeyPath );
+				return;
+			}
+
+			// Apply attribute :
 			var parser =	new CommandLineParser( processor );
+			parser.Configuration.OptionLeadingChar = '/';
 			parser.ParseCommandLine( args );
 
-			if (assetFile.IsUpToDate) {
-				buildResult.UpToDate ++;
-				return;
-			} 
+			assetFile.BuildArgs	=	args;
 
+			//	Is up-to-date:
+			//	Write time and 
+			string status	=	"...";
+			bool upToDate	=	false;
+
+			if ( assetFile.IsUpToDate && !context.Options.ForceRebuild ) {
+				if ( assetFile.IsParametersEqual() ) {
+					status = "UTD";
+					buildResult.UpToDate ++;
+					assetFile.IsProcessed = true;
+					upToDate = true;
+					return;
+				} else {
+					status = "HSH";
+				}
+			} 			
+
+
+			var keyPath = assetFile.KeyPath;
+
+			if (keyPath.Length > 40) {
+				keyPath = "..." + keyPath.Substring( keyPath.Length - 40 + 3 );
+			}
+
+			Log.Message("{0,-40} {1,-5} {2}  {3}", keyPath, Path.GetExtension(keyPath), status, string.Join(" ", args) );
+
+			
+			if (upToDate) {
+				return;
+			}
+	
 			try {
 
-				Log.Message("{0}", assetFile.KeyPath );
-				processor.Process( assetFile );
+				processor.Process( assetFile, context );
+
+				assetFile.IsProcessed = true;
+
 				buildResult.Succeded ++;
 
 			} catch ( Exception e ) {
@@ -155,11 +200,13 @@ namespace FBuild {
 		/// </summary>
 		/// <param name="sourceFolder"></param>
 		/// <returns></returns>
-		List<AssetFile> GatherAssetFiles ( string sourceFolder, string targetFolder )
+		List<AssetFile> GatherAssetFiles ()
 		{
+			var sourceFolder	=	context.Options.FullInputDirectory;
+
 			var files = Directory	
 						.EnumerateFiles( Path.GetFullPath(sourceFolder), "*", SearchOption.AllDirectories )
-						.Select( path => new AssetFile( path, sourceFolder, targetFolder ) )
+						.Select( path => new AssetFile( path, context ) )
 						.Where( file => file.KeyPath != ".content" )
 						.ToList();
 

@@ -50,6 +50,21 @@ namespace Fusion.Content {
 
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="input"></param>
+		/// <returns></returns>
+		public static byte[] CalclulateMD5HashBytes( string input )
+		{
+			MD5 md5 = System.Security.Cryptography.MD5.Create();
+			byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
+			byte[] hash = md5.ComputeHash(inputBytes);
+			return hash;
+		}
+
+
+
+		/// <summary>
 		/// Computes MD5 hash for given input string
 		/// </summary>
 		/// <param name="input"></param>
@@ -57,9 +72,7 @@ namespace Fusion.Content {
 		public static string CalculateMD5Hash( string input, bool upperCase=true )
 		{
 			// step 1, calculate MD5 hash from input
-			MD5 md5 = System.Security.Cryptography.MD5.Create();
-			byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-			byte[] hash = md5.ComputeHash(inputBytes);
+			byte[] hash = CalclulateMD5HashBytes( input );
 			string format = upperCase ? "X2" : "x2";
  
 			// step 2, convert byte array to hex string

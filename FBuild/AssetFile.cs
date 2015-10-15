@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.IO.Compression;
 using Fusion;
 using Fusion.Content;
 
@@ -71,6 +72,15 @@ namespace FBuild {
 		}
 
 
+		byte[] argHash;
+
+		public string[] BuildArgs {
+			set {
+				argHash = ContentUtils.CalclulateMD5HashBytes( string.Join(" ", value) );
+			}
+		}
+
+
 		/// <summary>
 		/// Is asset up-to-date.
 		/// </summary>
@@ -92,17 +102,39 @@ namespace FBuild {
 		}
 
 
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="args"></param>
+		/// <returns></returns>
+		public bool IsParametersEqual ()
+		{
+			var newParamHash = argHash;
+			var len = newParamHash.Length;
+			var oldParamHash = new byte[ len ];
+
+			using ( var stream = OpenTargetStreamRead() ) {
+				stream.Read( oldParamHash, 0, len );
+			}
+
+			return Enumerable.SequenceEqual( newParamHash, oldParamHash );
+		}
+
+
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="path"></param>
-		public AssetFile ( string fullPath, string fullInputDirPath, string fullOutputDirPath )
+		public AssetFile ( string fullPath, BuildContext context )
 		{
-			this.fullPath	=	fullPath;
-			this.keyPath	=	ContentUtils.BackslashesToSlashes( ContentUtils.MakeRelativePath( fullInputDirPath + "\\", fullPath ) );
-			this.outputDir	=	fullOutputDirPath;
+			var  fullInputDir	=	context.Options.FullInputDirectory;
+			this.outputDir		=	context.Options.FullOutputDirectory;
+			this.fullPath		=	fullPath;
+			this.keyPath		=	ContentUtils.BackslashesToSlashes( ContentUtils.MakeRelativePath( fullInputDir + "\\", fullPath ) );
 
-			this.processed	=	false;
+			this.processed		=	false;
 		}
 
 
@@ -124,7 +156,28 @@ namespace FBuild {
 		/// <returns></returns>
 		public Stream OpenTargetStream ()
 		{
-			return File.OpenWrite( FullTargetPath );
+			var fileStream	=	File.Open( FullTargetPath, FileMode.Create, FileAccess.Write );
+			var zipStream	=	new DeflateStream( fileStream, CompressionMode.Compress, false );
+
+			var newParamHash = argHash;
+			var len = newParamHash.Length;
+
+			zipStream.Write( newParamHash, 0, len );
+
+			return zipStream;
+		}
+
+
+
+		/// <summary>
+		/// Opens target file stream
+		/// </summary>
+		/// <returns></returns>
+		Stream OpenTargetStreamRead ()
+		{
+			var fileStream	=	File.Open( FullTargetPath, FileMode.Open, FileAccess.Read );
+			var zipStream	=	new DeflateStream( fileStream, CompressionMode.Decompress, false );
+			return zipStream;
 		}
 	}
 }

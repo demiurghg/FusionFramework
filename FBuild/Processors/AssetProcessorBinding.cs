@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.IO;
 using Fusion.Core.Shell;
 using Fusion;
+using Fusion.Pipeline;
 
 namespace FBuild.Processors {
 
@@ -51,6 +52,18 @@ namespace FBuild.Processors {
 		public AssetProcessor CreateAssetProcessor ()
 		{
 			return (AssetProcessor)Activator.CreateInstance( type );
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public static IEnumerable<AssetProcessorBinding> GatherAssetProcessors ()
+		{
+			return Misc.GetAllClassesWithAttribute<AssetProcessorAttribute>()
+							.Where( t1 => t1.IsSubclassOf( typeof(AssetProcessor) ) )
+							.Select( t2 => new AssetProcessorBinding( t2.GetCustomAttribute<AssetProcessorAttribute>().Name, t2 ) )
+							.ToList();
 		}
 	}
 }

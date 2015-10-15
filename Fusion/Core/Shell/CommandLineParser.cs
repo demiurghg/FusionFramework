@@ -15,6 +15,8 @@ namespace Fusion.Core.Shell
     /// </summary>
     public class CommandLineParser
     {
+		public CommandLineParserConfiguration Configuration { get; private set; }
+
         object optionsObject;
 
         Queue<PropertyInfo> requiredOptions = new Queue<PropertyInfo>();
@@ -29,6 +31,9 @@ namespace Fusion.Core.Shell
 		public IEnumerable<string> RequiredUsageHelp { get { return requiredUsageHelp; } }
 		public IEnumerable<string> OptionalUsageHelp { get { return optionalUsageHelp; } }
 
+
+		char LeadingChar { get { return Configuration.OptionLeadingChar; } }
+
         
 		/// <summary>
 		/// 
@@ -37,6 +42,8 @@ namespace Fusion.Core.Shell
 		/// <param name="throwException"></param>
         public CommandLineParser( object optionsObject, string name = null )
         {
+			Configuration = new CommandLineParserConfiguration();
+
             this.optionsObject	= optionsObject;
 
 			this.name = name ?? Path.GetFileNameWithoutExtension(Process.GetCurrentProcess().ProcessName);
@@ -63,19 +70,44 @@ namespace Fusion.Core.Shell
                     // Record an optional option.
                     optionalOptions.Add(fieldName.ToLowerInvariant(), field);
   
-                    if (field.PropertyType == typeof(bool))
-                    {
-                        optionalUsageHelp.Add(string.Format("{0,-16}{1}", "/" + fieldName, fieldDesc));
-                    }
-                    else
-                    {
-                        optionalUsageHelp.Add(string.Format("{0,-16}{1}", "/" + fieldName + ":value", fieldDesc));
-                    }
+                    optionalUsageHelp.Add(string.Format("{0,-20}{1}", LeadingChar + fieldName + GetValueString(field), fieldDesc + GetEnumValues(field)));
                 }
             }
         }
 
 
+		string GetValueString ( PropertyInfo pi ) 
+		{
+			if (pi.PropertyType == typeof(bool)) {
+				return "";
+			}
+
+			if (pi.PropertyType == typeof(string)) {
+				return ":string";
+			}
+
+			if (pi.PropertyType == typeof(float)) {
+				return ":float";
+			}
+
+			if (pi.PropertyType == typeof(int)) {
+				return ":int";
+			}
+
+			if (pi.PropertyType.IsEnum) {	
+				return ":enum";
+			}
+			return ":value";
+		}
+
+
+		string GetEnumValues ( PropertyInfo pi ) 
+		{
+			if (pi.PropertyType.IsEnum) {	
+				return " [" + string.Join(" ", Enum.GetValues(pi.PropertyType).Cast<object>().Select(s => s.ToString().ToLower()).ToArray() ) + "]";
+			}
+			return "";
+		}
 
 
 		/// <summary>
@@ -134,7 +166,7 @@ namespace Fusion.Core.Shell
 		/// <returns></returns>
         bool ParseArgument(string arg)
         {
-            if (arg.StartsWith("/"))
+            if (arg.StartsWith( new string(LeadingChar,1) ))
             {
                 // Parse an optional argument.
                 char[] separators = { ':' };
@@ -320,7 +352,6 @@ namespace Fusion.Core.Shell
             if (optionalUsageHelp.Count > 0)
             {
                 Log.Error("");
-                //Log.Error("Options:");
 
                 foreach (string optional in optionalUsageHelp)
                 {

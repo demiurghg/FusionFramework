@@ -16,17 +16,20 @@ namespace FBuild {
 		public int Total	;
 		public int Ignored	;
 		public int Succeded ;
-		public int Skipped	;
 		public int Failed	;
 		public int UpToDate	;
 
+		public int Skipped {
+			get {
+				return Total - Ignored - Succeded - UpToDate - Failed;
+			}
+		}
 
 		public BuildResult ()
 		{
 			Total		=	0;
 			Ignored		=	0;
 			Succeded	=	0;
-			Skipped		=	0;
 			Failed		=	0;
 		}
 

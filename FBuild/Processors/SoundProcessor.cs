@@ -8,8 +8,8 @@ using Fusion.Core.Shell;
 
 namespace FBuild.Processors {
 
-	[AssetProcessor("Copy")]
-	public class CopyProcessor : AssetProcessor {
+	[AssetProcessor("Sounds")]
+	public class SoundProcessor : AssetProcessor {
 		
 		/// <summary>
 		/// 

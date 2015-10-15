@@ -47,12 +47,16 @@
     <Compile Include="Builder.cs" />
     <Compile Include="AssetFile.cs" />
     <Compile Include="BuildOptions.cs" />
-    <Compile Include="BuildBunch.cs" />
     <Compile Include="BuildResult.cs" />
     <Compile Include="BuildException.cs" />
+    <Compile Include="BuildContext.cs" />
     <Compile Include="Processors\AssetProcessor.cs" />
     <Compile Include="FBuild.cs" />
     <Compile Include="Processors\AssetProcessorBinding.cs" />
+    <Compile Include="Processors\AssetProcessorAttribute.cs" />
+    <Compile Include="Processors\SoundProcessor.cs" />
+    <Compile Include="Processors\ScriptProcessor.cs" />
+    <Compile Include="Processors\TextureProcessor.cs" />
     <Compile Include="Processors\CopyProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolException.cs" />
