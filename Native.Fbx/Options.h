@@ -31,20 +31,20 @@ public ref class Options {
 		geom			=	false;
 	}
 
-	[CommandLineParser::Name("in", "Input FBX file")]
+	[CommandLineParser::Name("in", "input FBX file")]
 	[CommandLineParser::Required()]
 	property string^ Input { 
 		void set(string^ value) { input = value; }
 		string ^get() { return input; }
 	}
 
-	[CommandLineParser::Name("out", "Output scene file")]
+	[CommandLineParser::Name("out", "output scene file")]
 	property string^ Output { 
 		void set(string^ value) { output = value; }
 		string ^get() { return output; }
 	}
 
-	[CommandLineParser::Name("merge", "Merge tolerance (0.0 is default)")]
+	[CommandLineParser::Name("merge", "merge tolerance (0.0 is default)")]
 	property float MergeTolerance { 
 		void set(float value) { mergeTolerance = value; } 
 		float get() { return mergeTolerance; } 
@@ -56,19 +56,19 @@ public ref class Options {
 		string ^get() { return base; } 
 	}
 
-	[CommandLineParser::Name("anim", "Bake and import animation tracks")]
+	[CommandLineParser::Name("anim", "bake and import animation tracks")]
 	property bool ImportAnimation {
 		void set(bool value) { anim = value; } 
 		bool get() { return anim; } 
 	}
 
-	[CommandLineParser::Name("geom", "Import geometry data.")]
+	[CommandLineParser::Name("geom", "import geometry data.")]
 	property bool ImportGeometry {
 		void set(bool value) { geom = value; } 
 		bool get() { return geom; } 
 	}
 
-	[CommandLineParser::Name("wait", "Wait for user input after import")]
+	[CommandLineParser::Name("wait", "wait for user input after import")]
 	property bool Wait {
 		void set(bool value) { wait = value; } 
 		bool get() { return wait; } 

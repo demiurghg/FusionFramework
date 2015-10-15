@@ -28,7 +28,7 @@ namespace FScene {
 
 				//	parse arguments :
 				if (!parser.ParseCommandLine( args )) {
-					throw new Exception("Failed to parse arguments");
+					return 1;
 				}
 
 				//	change extension of output not set :
@@ -56,7 +56,18 @@ namespace FScene {
 
 			} catch ( Exception e ) {
 				parser.ShowError( "{0}", e.Message );
+
+				if (options.Wait) {
+					Log.Message("Press any key to continue...");
+					Console.ReadKey();
+				}
+
 				return 1;
+			}
+
+			if (options.Wait) {
+				Log.Message("Press any key to continue...");
+				Console.ReadKey();
 			}
 
 			return 0;

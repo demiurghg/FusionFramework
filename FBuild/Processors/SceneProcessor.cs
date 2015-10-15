@@ -49,10 +49,9 @@ namespace FBuild.Processors {
 		{
 			var resolvedPath	=	assetFile.FullSourcePath;
 			var destPath		=	context.GetTempFileName( assetFile.KeyPath, ".scene" );
-			var cmdLine			=	string.Format("\"{0}\" /out:\"{1}\" /merge:{2} {4} {5}", 
+			var cmdLine			=	string.Format("\"{0}\" /out:\"{1}\" /merge:{2} {3} {4}", 
 				resolvedPath, destPath, 
 				MergeTolerance, 
-				null, 
 				ImportAnimation ? "/anim":"", 
 				ImportGeometry ? "/geom":"" 
 			);

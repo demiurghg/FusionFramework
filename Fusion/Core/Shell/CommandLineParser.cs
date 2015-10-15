@@ -134,6 +134,7 @@ namespace Fusion.Core.Shell
 
 		/// <summary>
 		/// Parses given args.
+		/// In case of error return false and prints error message.
 		/// </summary>
 		/// <param name="args"></param>
 		/// <returns></returns>

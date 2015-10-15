@@ -24,9 +24,7 @@ sounds\*.mp3 -resample:22050 -mono
 *.entity
 
 [Scenes]
-*.fbx
-scenes\*.fbx
-scenes\level01.fbx -nogeom -phys -shadow -animation 
+*.fbx /geom
 
 [Shaders]
 *.hlsl
