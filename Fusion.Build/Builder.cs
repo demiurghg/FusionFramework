@@ -47,8 +47,9 @@ namespace Fusion.Build {
 		/// <param name="force"></param>
 		public BuildResult Build ( BuildOptions options, IniData iniData )
 		{
-			BuildResult result = new BuildResult();
-			context				=	new BuildContext( options );
+			BuildResult result	=	new BuildResult();
+	
+			context				=	new BuildContext( options, iniData );
 
 			//
 			//	gather files on source folder 
@@ -85,6 +86,12 @@ namespace Fusion.Build {
 
 				//	'Ingore' is a special section.
 				if (section.SectionName=="Ignore") {
+					continue;
+				}
+				if (section.SectionName=="ContentDirectories") {
+					continue;
+				}
+				if (section.SectionName=="BinaryDirectories") {
 					continue;
 				}
 
@@ -202,15 +209,20 @@ namespace Fusion.Build {
 		/// <returns></returns>
 		List<AssetFile> GatherAssetFiles ()
 		{
-			var sourceFolder	=	context.Options.FullInputDirectory;
+			var list = new List<AssetFile>();
 
-			var files = Directory	
-						.EnumerateFiles( Path.GetFullPath(sourceFolder), "*", SearchOption.AllDirectories )
-						.Select( path => new AssetFile( path, context ) )
-						.Where( file => file.KeyPath != ".content" )
-						.ToList();
+			foreach ( var contentDir in context.ContentDirectories ) {
 
-			return files;
+				var files = Directory	
+							.EnumerateFiles( contentDir, "*", SearchOption.AllDirectories )
+							.Select( path => new AssetFile( path, contentDir, context ) )
+							.Where( file => file.KeyPath != ".content" )
+							.ToList();
+
+				list.AddRange( files );
+			}
+
+			return list.DistinctBy( file => file.KeyPath ).ToList();
 		}
 
 	}

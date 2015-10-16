@@ -2,6 +2,12 @@
 References\*
 RTI/Core/NE2_50M_SR_W_4096.jpg
 
+[BinaryDirectories]
+%FUSION_BIN%
+
+[ContentDirectories]
+%FUSION_CONTENT%
+
 [Textures]
 *.tga /compression:bc2	
 *.png /fast /compression:bc2

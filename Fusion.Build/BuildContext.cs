@@ -10,6 +10,7 @@ using Fusion.Core.IniParser;
 using Fusion.Core.IniParser.Model;
 using Fusion;
 using Fusion.Core.Content;
+using Microsoft.Win32;
 
 namespace Fusion.Build {
 
@@ -23,7 +24,18 @@ namespace Fusion.Build {
 		}
 
 
-		IEnumerable<string> toolPaths;
+		List<string> toolPaths		;
+		List<string> contentPaths	;
+		List<string> binaryPaths	;
+
+		/// <summary>
+		/// All content directories
+		/// </summary>
+		public IEnumerable<string> ContentDirectories {
+			get {
+				return contentPaths;
+			}
+		}
 
 
 
@@ -31,13 +43,32 @@ namespace Fusion.Build {
 		/// 
 		/// </summary>
 		/// <param name="options"></param>
-		public BuildContext ( BuildOptions options )
+		public BuildContext ( BuildOptions options, IniData iniData )
 		{
 			this.Options	=	options;
 
-			Log.Message("Source directory:");
-			Log.Message("  {0}", options.FullInputDirectory );
+			Log.Message("Source directories:");
+
+				contentPaths	=	new List<string>();
+				contentPaths.Add( options.FullInputDirectory );
+				contentPaths.AddRange( GetAllKeysFromSection( iniData, "ContentDirectories" ).Select( p => ResolveDirectory( p )).Where( p1 => p1!=null ) );
+
+				foreach ( var dir in contentPaths ) {
+					Log.Message("  {0}", dir );
+				}
+
 			Log.Message("");
+
+
+			Log.Message("Tool directories:");
+				toolPaths	=	new List<string>();
+				toolPaths.AddRange( GetAllKeysFromSection( iniData, "BinaryDirectories" ).Select( p => ResolveDirectory( p )).Where( p1 => p1!=null ) );
+
+				foreach ( var dir in toolPaths ) {
+					Log.Message("  {0}", dir );
+				}
+			Log.Message("");
+
 
 			
 			Log.Message("Target directory:");
@@ -47,18 +78,91 @@ namespace Fusion.Build {
 			
 			Log.Message("Temp directory:");
 			Log.Message("  {0}", options.FullTempDirectory );
-			Log.Message("");
-
-
-			Log.Message("Tool paths:");
-			toolPaths		=	GetToolPaths();
-
-			foreach ( var toolPath in toolPaths ) {
-				Log.Message("  {0}", toolPath );
-			}
 
 			Log.Message("");
 			 
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="iniData"></param>
+		/// <param name="sectionName"></param>
+		/// <returns></returns>
+		string[] GetAllKeysFromSection ( IniData iniData, string sectionName )
+		{
+			if (!iniData.Sections.ContainsSection(sectionName)) {
+				return new string[0];
+			}
+
+			return iniData.Sections[ sectionName ]
+					.Select( key => key.KeyName )
+					.ToArray();
+		}
+
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="dir"></param>
+		/// <returns></returns>
+		string ResolveDirectory ( string dir )
+		{
+			if ( dir.StartsWith("%") && dir.EndsWith("%") ) {
+				var envVar = Environment.GetEnvironmentVariable( dir.Substring(1, dir.Length-2) );
+				if (envVar==null) {
+					Log.Warning("  {0} : environment variable not found", dir);
+					return null;
+				}
+				if (!Directory.Exists( envVar )) {
+					Log.Warning("  {0} = {1} : path not found", dir, envVar );
+					return null;
+				}
+				return envVar;
+			}
+
+			if ( dir.StartsWith("HKEY_") ) {
+
+				var keyValue	=	dir.Split(new[]{':'}, 2);
+				var key			=	keyValue[0];
+				var value		=	keyValue.Length == 2 ? keyValue[1] : "";
+
+				var regValue	=	Registry.GetValue(key, value, null);
+
+				if (regValue==null) {
+					Log.Warning("  {0} : registry variable not found", dir);
+					return null;
+				}
+				if (!(regValue is string)) {
+					Log.Warning("  {0} : registry variable must be string", dir);
+					return null;
+				}
+				
+				if (!Directory.Exists( (string)regValue )) {
+					Log.Warning("  {0} = {1} : path not found", dir, (string)regValue );
+					return null;
+				}
+
+				return (string)regValue;
+			}
+
+			if (Path.IsPathRooted( dir )) {
+				if (Directory.Exists( dir )) {
+					return dir;
+				}
+			} else {
+				var fullDir = Path.GetFullPath( dir );
+				if (Directory.Exists( fullDir )) {
+					return fullDir;
+				}
+			}
+
+			Log.Warning("  {0} : not resolved", dir);
+			return null;
 		}
 
 		
@@ -137,23 +241,6 @@ namespace Fusion.Build {
 		{
 			var data = File.ReadAllBytes( fullSourceFileName ); 
 			writer.Write( data );
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		IEnumerable<string> GetToolPaths ()
-		{
-			var fusionBin	=	Environment.GetEnvironmentVariable("FUSION_BIN");
-
-			if (fusionBin==null) {
-				Log.Warning("FUSION_BIN environment variable is not set.");
-			}
-
-			return new[]{ fusionBin };
 		}
 
 

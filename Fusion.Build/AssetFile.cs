@@ -126,13 +126,14 @@ namespace Fusion.Build {
 		/// <summary>
 		/// 
 		/// </summary>
-		/// <param name="path"></param>
-		public AssetFile ( string fullPath, BuildContext context )
+		/// <param name="fullPath">Full path to this asset file</param>
+		/// <param name="contentDir">Directory where file had been found.</param>
+		/// <param name="context">Build context</param>
+		public AssetFile ( string fullPath, string contentDir, BuildContext context )
 		{
-			var  fullInputDir	=	context.Options.FullInputDirectory;
 			this.outputDir		=	context.Options.FullOutputDirectory;
 			this.fullPath		=	fullPath;
-			this.keyPath		=	ContentUtils.BackslashesToSlashes( ContentUtils.MakeRelativePath( fullInputDir + "\\", fullPath ) );
+			this.keyPath		=	ContentUtils.BackslashesToSlashes( ContentUtils.MakeRelativePath( contentDir + "\\", fullPath ) );
 
 			this.processed		=	false;
 		}
