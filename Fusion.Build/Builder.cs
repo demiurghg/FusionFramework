@@ -39,6 +39,88 @@ namespace Fusion.Build {
 
 
 
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="inputDirectory"></param>
+		/// <param name="outputDirectory"></param>
+		/// <param name="temporaryDirectory"></param>
+		/// <param name="force"></param>
+		public static void Build ( string inputDirectory, string outputDirectory, string temporaryDirectory, bool force )
+		{
+			var options = new BuildOptions();
+			options.InputDirectory	=	inputDirectory;
+			options.OutputDirectory	=	outputDirectory;
+			options.TempDirectory	=	temporaryDirectory;
+			options.ForceRebuild	=	force;
+
+			Build( options );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="options"></param>
+		public static void Build ( BuildOptions options )
+		{
+			Log.Message("");
+			Log.Message("-------- Build started : {0} --------", options.InputDirectory );
+
+			options.CheckOptionsAndMakeDirs();
+
+			Log.Message("Reading '.content'...");
+			//
+			//	Parse INI file :
+			//
+			var ip = new StreamIniDataParser();
+			ip.Parser.Configuration.AllowDuplicateSections	=	true;
+			ip.Parser.Configuration.AllowDuplicateKeys		=	true;
+			ip.Parser.Configuration.CommentString			=	"#";
+			ip.Parser.Configuration.OverrideDuplicateKeys	=	true;
+			ip.Parser.Configuration.KeyValueAssigmentChar	=	'=';
+			ip.Parser.Configuration.AllowKeysWithoutValues	=	true;
+
+			var iniData = ip.ReadData( new StreamReader( options.ContentIniFile ) );
+
+
+			//
+			//	Setup builder :
+			//	
+			var bindings = AssetProcessorBinding.GatherAssetProcessors();
+
+			Log.Message("Asset processors:");
+			foreach ( var bind in bindings ) {
+				Log.Message("  {0,-20} - {1}", bind.Name, bind.Type.Name );
+			}
+			Log.Message("");
+
+			var builder = new Builder( bindings );
+
+			var result  = builder.Build( options, iniData );
+
+			Log.Message("-------- {5} total, {0} succeeded, {1} failed, {2} up-to-date, {3} ignored, {4} skipped --------", 
+				result.Succeded,
+				result.Failed,
+				result.UpToDate,
+				result.Ignored,
+				result.Skipped,
+				result.Total );
+
+			Log.Message("");
+
+			if (result.Failed>0) {
+				throw new BuildException("Build errors");
+			}
+		}
+
+
+
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -54,8 +136,22 @@ namespace Fusion.Build {
 			//
 			//	gather files on source folder 
 			//
+			Log.Message("Gathering files...");
 			var files		=	GatherAssetFiles();
 			result.Total	=	files.Count;
+			Log.Message("");
+
+
+			//
+			//	Check hash collisions :
+			//
+			var collisions	=	files
+								.GroupBy( file0 => file0.TargetName )
+								.Where( fileGroup1 => fileGroup1.Count() > 1 )
+								.Select( fileGroup2 => fileGroup2.ToArray() )
+								.Distinct()
+								.ToArray();
+
 
 			//
 			//	ignore some of them :
@@ -78,7 +174,16 @@ namespace Fusion.Build {
 			}
 
 
-			
+			if (collisions.Any()) {
+				Log.Error("Hash collisions detected:");
+				foreach ( var collision in collisions ) {
+					Log.Error( "  {0} - {1}", collision[0].KeyPath, collision[1].KeyPath );
+				}
+				throw new BuildException("Hash collisions detected");
+			}
+
+
+
 			//
 			//	Build everything :
 			//
@@ -95,14 +200,15 @@ namespace Fusion.Build {
 					continue;
 				}
 
+				Log.Message("-------- {0} --------", section.SectionName );
+
 				if (!processors.ContainsKey(section.SectionName)) {
 					Log.Warning("Asset processor '{0}' not found. Files will be skipped.", section.SectionName );
+					Log.Message("");
 					continue;
 				}
 
 				var proc = processors[section.SectionName];
-
-				Log.Message("[{0}]", proc.Name );
 
 				var maskArgs = section.Keys
 					.Reverse()
@@ -129,6 +235,7 @@ namespace Fusion.Build {
 					}
 				}
 
+				Log.Message("");
 			}
 
 			return result;
@@ -148,46 +255,43 @@ namespace Fusion.Build {
 				return;
 			}
 
-			// Apply attribute :
-			var parser =	new CommandLineParser( processor );
-			parser.Configuration.OptionLeadingChar = '/';
-			parser.ParseCommandLine( args );
-
-			assetFile.BuildArgs	=	args;
-
-			//	Is up-to-date:
-			//	Write time and 
-			string status	=	"...";
-			bool upToDate	=	false;
-
-			if ( assetFile.IsUpToDate && !context.Options.ForceRebuild ) {
-				if ( assetFile.IsParametersEqual() ) {
-					status = "UTD";
-					buildResult.UpToDate ++;
-					assetFile.IsProcessed = true;
-					upToDate = true;
-					return;
-				} else {
-					status = "HSH";
-				}
-			} 			
-
-
-			var keyPath = assetFile.KeyPath;
-
-			if (keyPath.Length > 40) {
-				keyPath = "..." + keyPath.Substring( keyPath.Length - 40 + 3 );
-			}
-
-			Log.Message("{0,-40} {1,-5} {2}  {3}", keyPath, Path.GetExtension(keyPath), status, string.Join(" ", args) );
-
-			
-			if (upToDate) {
-				return;
-			}
-	
 			try {
+				assetFile.BuildArgs	=	args;
 
+				//	Is up-to-date:
+				//	Write time and 
+				string status	=	"...";
+
+				if ( assetFile.IsUpToDate && !context.Options.ForceRebuild ) {
+					if ( assetFile.IsParametersEqual() ) {
+						status = "UTD";
+						buildResult.UpToDate ++;
+						assetFile.IsProcessed = true;
+						return;
+					} else {
+						status = "HSH";
+					}
+				} 																   
+
+
+				var keyPath = assetFile.KeyPath;
+
+				if (keyPath.Length > 40) {
+					keyPath = "..." + keyPath.Substring( keyPath.Length - 40 + 3 );
+				}
+
+				Log.Message("{0,-40} {1,-5} {2}  {3}", keyPath, Path.GetExtension(keyPath), status, string.Join(" ", args) );
+
+				// Apply attribute :
+				var parser =	new CommandLineParser( processor );
+				parser.Configuration.OptionLeadingChar = '/';
+				parser.Configuration.ThrowExceptionOnShowError = true;
+
+				parser.ParseCommandLine( args );
+
+				//
+				//	Build :
+				//
 				processor.Process( assetFile, context );
 
 				assetFile.IsProcessed = true;
@@ -199,7 +303,6 @@ namespace Fusion.Build {
 				buildResult.Failed ++;
 			}
 		}
-
 
 
 		/// <summary>
@@ -221,6 +324,7 @@ namespace Fusion.Build {
 
 				list.AddRange( files );
 			}
+
 
 			return list.DistinctBy( file => file.KeyPath ).ToList();
 		}

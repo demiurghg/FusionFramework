@@ -8,8 +8,12 @@ RTI/Core/NE2_50M_SR_W_4096.jpg
 [ContentDirectories]
 %FUSION_CONTENT%
 
+[Shaders]
+*.hlsl
+stereo.hlsl /nopt
+
 [Textures]
-*.tga /compression:bc2	
+*.tga /compression:bc3
 *.png /fast /compression:bc2
 *.jpg /fast
 lena.tga /compression:rgb
@@ -31,9 +35,6 @@ sounds\*.mp3 -resample:22050 -mono
 
 [Scenes]
 *.fbx /geom
-
-[Shaders]
-*.hlsl
 
 [Copy]
 *.cube

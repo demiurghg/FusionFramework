@@ -72,6 +72,15 @@
     <Compile Include="Processors\ScriptProcessor.cs" />
     <Compile Include="Processors\SoundProcessor.cs" />
     <Compile Include="Processors\TextureProcessor.cs" />
+    <Compile Include="Processors\UbershaderEnumerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Processors\UbershaderProcessor.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Processors\UbershaderProcessor.Parser.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ToolException.cs" />
   </ItemGroup>

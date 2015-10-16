@@ -58,6 +58,12 @@
   <ItemGroup>
     <Folder Include="Content\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Fusion.Build\Fusion.Build.csproj">
+      <Project>{ebdd2fd0-ec00-45d9-b38b-c7e674016fab}</Project>
+      <Name>Fusion.Build</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(FUSION_BUILD)\FusionProject.targets" />
   <PropertyGroup>

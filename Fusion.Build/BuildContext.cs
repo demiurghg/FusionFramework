@@ -24,7 +24,6 @@ namespace Fusion.Build {
 		}
 
 
-		List<string> toolPaths		;
 		List<string> contentPaths	;
 		List<string> binaryPaths	;
 
@@ -60,11 +59,11 @@ namespace Fusion.Build {
 			Log.Message("");
 
 
-			Log.Message("Tool directories:");
-				toolPaths	=	new List<string>();
-				toolPaths.AddRange( GetAllKeysFromSection( iniData, "BinaryDirectories" ).Select( p => ResolveDirectory( p )).Where( p1 => p1!=null ) );
+			Log.Message("Binary directories:");
+				binaryPaths	=	new List<string>();
+				binaryPaths.AddRange( GetAllKeysFromSection( iniData, "BinaryDirectories" ).Select( p => ResolveDirectory( p )).Where( p1 => p1!=null ) );
 
-				foreach ( var dir in toolPaths ) {
+				foreach ( var dir in binaryPaths ) {
 					Log.Message("  {0}", dir );
 				}
 			Log.Message("");
@@ -165,6 +164,18 @@ namespace Fusion.Build {
 			return null;
 		}
 
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="path"></param>
+		/// <returns></returns>
+		public string ResolveContentPath ( string path )
+		{
+			return ResolvePath( path, ContentDirectories );
+		}
+
 		
 
 		/// <summary>
@@ -259,7 +270,7 @@ namespace Fusion.Build {
 			psi.RedirectStandardInput	=	true;
 			psi.RedirectStandardOutput	=	true;
 			psi.RedirectStandardError	=	true;
-			psi.FileName				=	ResolvePath( exePath, toolPaths );
+			psi.FileName				=	ResolvePath( exePath, binaryPaths );
 			psi.Arguments				=	commandLine;
 			psi.UseShellExecute			=	false;
 			psi.CreateNoWindow			=	true;

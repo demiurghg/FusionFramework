@@ -1,3 +1,12 @@
+[Ignore]
+sprites\*
+
+[BinaryDirectories]
+%FUSION_BIN%
+
+[ContentDirectories]
+%FUSION_CONTENT%
+
 [Textures]
 *.tga
 *.png
@@ -6,3 +15,5 @@
 [Fonts]
 *.bmfc
 
+[Shaders]
+*.hlsl

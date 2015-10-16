@@ -346,6 +346,10 @@ namespace Fusion.Core.Shell
 		/// <param name="args"></param>
         public void ShowError(string message, params object[] args)
         {
+			if (Configuration.ThrowExceptionOnShowError) {
+				throw new CommandLineParserException( string.Format( message, args ) );
+			}
+
             Log.Error(message, args);
             Log.Error("");
             Log.Error("Usage: {0} {1}", name, string.Join(" ", requiredUsageHelp));

@@ -16,6 +16,7 @@ namespace Fusion.Core.Shell
     public class CommandLineParserConfiguration
     {
 		public char OptionLeadingChar { get; set; }
+		public bool ThrowExceptionOnShowError { get; set; }
 
 		public CommandLineParserConfiguration ()
 		{

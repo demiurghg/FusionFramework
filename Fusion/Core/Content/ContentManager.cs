@@ -143,9 +143,13 @@ namespace Fusion.Core.Content {
 		{
 			var realName =  GetRealAssetFileName( assetPath );
 
+			var leadingHash = new byte[16];
+
 			try {
 				var fileStream	=	File.OpenRead( realName );
 				var zipStream	=	new DeflateStream( fileStream, CompressionMode.Decompress, false );
+
+				zipStream.Read( leadingHash, 0, 16 );
 
 				return zipStream;
 

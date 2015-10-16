@@ -33,53 +33,18 @@ namespace FBuild {
 
 
 			try {
-				if ( !parser.ParseCommandLine( args ) ) {
-					return 1;
-				}
 
-				if ( options.Help ) {
+				if ( args.Any( a => a=="/help" )) {
 					PrintHelp( parser );
 					return 0;
 				}
 
-				options.CheckOptionsAndMakeDirs();
-
-				//
-				//	Parse INI file :
-				//
-				var ip = new StreamIniDataParser();
-				ip.Parser.Configuration.AllowDuplicateSections	=	true;
-				ip.Parser.Configuration.AllowDuplicateKeys		=	true;
-				ip.Parser.Configuration.CommentString			=	"#";
-				ip.Parser.Configuration.OverrideDuplicateKeys	=	true;
-				ip.Parser.Configuration.KeyValueAssigmentChar	=	'=';
-				ip.Parser.Configuration.AllowKeysWithoutValues	=	true;
-
-				var iniData = ip.ReadData( new StreamReader( options.ContentIniFile ) );
-
-
-				//
-				//	Setup builder :
-				//	
-				var bindings = AssetProcessorBinding.GatherAssetProcessors();
-
-				Log.Message("Asset processors:");
-				foreach ( var bind in bindings ) {
-					Log.Message("  {0,-20} - {1}", bind.Name, bind.Type.Name );
+				if ( !parser.ParseCommandLine( args ) ) {
+					return 1;
 				}
-				Log.Message("");
 
-				var builder = new Builder( bindings );
+				Builder.Build( options );
 
-				var result  = builder.Build( options, iniData );
-
-				Log.Message("-------- {5} total, {0} succeeded, {1} failed, {2} up-to-date, {3} ignored, {4} skipped --------", 
-					 result.Succeded,
-					 result.Failed,
-					 result.UpToDate,
-					 result.Ignored,
-					 result.Skipped,
-					 result.Total );
 
 			} catch ( Exception ex ) {
 				parser.ShowError( ex.Message );

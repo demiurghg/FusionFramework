@@ -7,6 +7,7 @@ using System.Diagnostics;
 using Fusion;
 using Fusion.Core.Mathematics;
 using Fusion.Core.Development;
+using Fusion.Build;
 
 namespace SpriteDemo {
 	class Program {
@@ -18,6 +19,12 @@ namespace SpriteDemo {
 
 			Fusion.Core.Test.Tester.Run();
 
+			try {
+				Builder.Build( @"..\..\..\Content", @"Content", @"..\..\..\Temp", false );
+			} catch ( Exception e ) {
+				Log.Error( e.Message );
+				return;
+			}
 
 			using ( var game = new SpriteDemo() ) {
 				game.Run(args);
