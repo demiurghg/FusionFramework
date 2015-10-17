@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Fusion;
-using Fusion;
 using Fusion.Core;
 using Fusion.Core.Mathematics;
 using Fusion.Core.Development;

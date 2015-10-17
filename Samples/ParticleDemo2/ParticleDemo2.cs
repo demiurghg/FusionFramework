@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fusion;
-using Fusion.Mathematics;
-
-using Fusion.Audio;
-using Fusion.Content;
-using Fusion.Graphics;
-using Fusion.Input;
-using Fusion.Development;
+using Fusion.Core.Mathematics;
+using Fusion.Drivers.Graphics;
+using Fusion.Drivers.Input;
+using Fusion.Core.Content;
+using Fusion.Core.Development;
+using Fusion.Engine.Common;
 
 namespace ParticleDemo2 {
 	public class ParticleDemo2 : Game {
@@ -58,7 +57,7 @@ namespace ParticleDemo2 {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void InputDevice_KeyDown ( object sender, Fusion.Input.InputDevice.KeyEventArgs e )
+		void InputDevice_KeyDown ( object sender, InputDevice.KeyEventArgs e )
 		{
 			if (e.Key == Keys.F1) {
 				//DevCon.Show(this);

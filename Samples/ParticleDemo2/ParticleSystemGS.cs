@@ -5,8 +5,12 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Fusion;
-using Fusion.Graphics;
-using Fusion.Mathematics;
+using Fusion.Core.Mathematics;
+using Fusion.Drivers.Graphics;
+using Fusion.Drivers.Input;
+using Fusion.Core.Content;
+using Fusion.Core.Development;
+using Fusion.Engine.Common;
 
 namespace ParticleDemo2 {
 	public class ParticleSystemGS : GameService {
@@ -241,7 +245,7 @@ namespace ParticleDemo2 {
 		/// </summary>
 		/// <param name="gameTime"></param>
 		/// <param name="stereoEye"></param>
-		public override void Draw ( GameTime gameTime, Fusion.Graphics.StereoEye stereoEye )
+		public override void Draw ( GameTime gameTime, StereoEye stereoEye )
 		{
 			var ds		=	Game.GetService<DebugStrings>();
 			ds.Add("{0}", injectionCount );

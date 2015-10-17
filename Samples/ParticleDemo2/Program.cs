@@ -5,8 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Fusion;
-using Fusion.Mathematics;
-using Fusion.Development;
+using Fusion.Core.Mathematics;
+using Fusion.Drivers.Graphics;
+using Fusion.Drivers.Input;
+using Fusion.Core.Content;
+using Fusion.Core.Development;
+using Fusion.Build;
+using Fusion.Engine.Common;
 
 namespace ParticleDemo2 {
 	class Program {
@@ -14,6 +19,13 @@ namespace ParticleDemo2 {
 		static void Main ( string[] args )
 		{
 			Trace.Listeners.Add( new ColoredTraceListener() );
+
+			try {
+				Builder.Build( @"..\..\..\Content", @"Content", @"..\..\..\Temp", false );
+			} catch ( Exception e ) {
+				Log.Error( e.Message );
+				return;
+			}
 
 			using (var game = new ParticleDemo2()) {
 				//if (DevCon.Prepare( game, @"..\..\..\Content\Content.xml", "Content" )) {
