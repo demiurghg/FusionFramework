@@ -4,13 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fusion;
-using Fusion.Mathematics;
-
-using Fusion.Graphics;
-using Fusion.Audio;
-using Fusion.Input;
-using Fusion.Content;
-using Fusion.Development;
+using Fusion.Core;
+using Fusion.Core.Mathematics;
+using Fusion.Core.Development;
+using Fusion.Drivers.Graphics;
+using Fusion.Drivers.Input;
+using Fusion.Engine.Common;
 
 namespace AnimationDemo {
 	public class AnimationDemo : Game {

@@ -5,7 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using Fusion;
-using Fusion.Mathematics;
+using Fusion;
+using Fusion.Core;
+using Fusion.Core.Mathematics;
+using Fusion.Core.Development;
+using Fusion.Drivers.Graphics;
+using Fusion.Drivers.Input;
+using Fusion.Engine.Common;
+using Fusion.Build;
+
 
 namespace InputDemo {
 	class Program {
@@ -14,6 +22,13 @@ namespace InputDemo {
 		static void Main ( string[] args )
 		{
 			Trace.Listeners.Add( new ColoredTraceListener() );
+
+			try {
+				Builder.Build( @"..\..\..\Content", @"Content", @"..\..\..\Temp", false );
+			} catch ( Exception e ) {
+				Log.Error( e.Message );
+				return;
+			}
 
 			using ( var game = new InputDemo() ) {
 				game.Run(args);
