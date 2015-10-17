@@ -132,12 +132,21 @@ namespace Fusion.Build {
 			BuildResult result	=	new BuildResult();
 	
 			context				=	new BuildContext( options, iniData );
+			var ignorePatterns	=	new string[0];
+
+			if ( iniData.Sections.ContainsSection("Ignore") ) {
+				ignorePatterns	=	iniData.Sections["Ignore"]
+									.Select( element => element.KeyName )
+									.Select( key => ContentUtils.BackslashesToSlashes( key ) )
+									.ToArray();
+			}
+
 
 			//
 			//	gather files on source folder 
 			//
 			Log.Message("Gathering files...");
-			var files		=	GatherAssetFiles();
+			var files		=	GatherAssetFiles( ignorePatterns, ref result );
 			Log.Message("");
 
 
@@ -155,25 +164,6 @@ namespace Fusion.Build {
 			//
 			//	ignore some of them :
 			//	
-			if ( iniData.Sections.ContainsSection("Ignore") ) {
-
-				var ignorePatterns =	iniData.Sections["Ignore"]
-								.Select( element => element.KeyName )
-								.ToArray();
-
-				result.Ignored = files.RemoveAll( file => {
-
-					foreach ( var ignore in ignorePatterns ) {
-
-						var pattern = ContentUtils.BackslashesToSlashes( ignore );
-
-						if ( Wildcard.Match( file.KeyPath, pattern, false ) ) {
-							return true;
-						}
-					}
-					return false;
-				});
-			}
 
 
 			if (collisions.Any()) {
@@ -313,7 +303,7 @@ namespace Fusion.Build {
 		/// </summary>
 		/// <param name="sourceFolder"></param>
 		/// <returns></returns>
-		List<AssetFile> GatherAssetFiles ()
+		List<AssetFile> GatherAssetFiles ( string[] ignorePatterns, ref BuildResult result )
 		{
 			var list = new List<AssetFile>();
 
@@ -324,6 +314,18 @@ namespace Fusion.Build {
 							.Select( path => new AssetFile( path, contentDir, context ) )
 							.Where( file => file.KeyPath != ".content" )
 							.ToList();
+
+				int ignored = files.RemoveAll( file => {
+
+						foreach ( var patten in ignorePatterns ) {
+							if (Wildcard.Match( file.KeyPath, patten )) {
+								return true;
+							}
+						}
+						return false;
+					} );
+
+				result.Ignored += ignored;
 
 				list.AddRange( files );
 			}

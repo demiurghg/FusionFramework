@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fusion;
-using Fusion.Mathematics;
-using Fusion.Audio;
-using Fusion.Content;
-using Fusion.Graphics;
-using Fusion.Input;
-using Fusion.Development;
+using Fusion.Core.Mathematics;
+using Fusion.Drivers.Graphics;
+using Fusion.Drivers.Input;
+using Fusion.Core.Content;
+using Fusion.Core.Development;
+using Fusion.Engine.Common;
 
 namespace SceneDemo {
 	public class SceneDemo : Game {
@@ -166,7 +166,7 @@ namespace SceneDemo {
 		/// </summary>
 		/// <param name="sender"></param>
 		/// <param name="e"></param>
-		void InputDevice_KeyDown ( object sender, Fusion.Input.InputDevice.KeyEventArgs e )
+		void InputDevice_KeyDown ( object sender, InputDevice.KeyEventArgs e )
 		{
 			if (e.Key == Keys.F1) {
 				//DevCon.Show(this);
@@ -241,6 +241,7 @@ namespace SceneDemo {
 		protected override void Draw ( GameTime gameTime, StereoEye stereoEye )
 		{
 			var cam	=	GetService<Camera>();
+			cam.Config.FreeCamEnabled =  false;
 
 			GraphicsDevice.ClearBackbuffer( Color.CornflowerBlue, 1, 0 );
 
