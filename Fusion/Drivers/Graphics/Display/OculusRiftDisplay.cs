@@ -44,7 +44,7 @@ namespace Fusion.Drivers.Graphics.Display {
 		/// 
 		/// </summary>
 		/// <param name="parameters"></param>
-		public OculusRiftDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
+		public OculusRiftDisplay( GameEngine game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
 		{
 			window = CreateForm(parameters, null);
 

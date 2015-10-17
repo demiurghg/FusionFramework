@@ -16,7 +16,7 @@ namespace Fusion.Drivers.Audio {
 	[ContentLoader(typeof(SoundEffect))]
 	public class SoundEffectLoader : ContentLoader {
 
-		public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
+		public override object Load ( GameEngine game, Stream stream, Type requestedType, string assetPath )
 		{
 		#if false
 			return new SoundEffect( stream );

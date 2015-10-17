@@ -21,7 +21,7 @@ namespace Fusion.Drivers.Graphics {
 	[ContentLoader(typeof(TextureAtlas))]
 	public class TextureAtlasLoader : ContentLoader {
 
-		public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
+		public override object Load ( GameEngine game, Stream stream, Type requestedType, string assetPath )
 		{
 			bool srgb = assetPath.ToLowerInvariant().Contains("|srgb");
 			return new TextureAtlas( game.GraphicsDevice, stream, srgb );

@@ -24,7 +24,7 @@ namespace Fusion.Engine.Common {
 		public	TimeSpan	DrawTime;
 
 
-		public Game Game { get; protected set; }
+		public GameEngine GameEngine { get; protected set; }
 
 		/// <summary>
 		/// Wether service should be updates
@@ -38,15 +38,15 @@ namespace Fusion.Engine.Common {
 		
 		/// <summary>
 		/// Update order from minimal value to maximum value.
-		/// Negative values means that service will be updated before Game
-		/// Positive or zero values means that service will be updates after Game
+		/// Negative values means that service will be updated before GameEngine
+		/// Positive or zero values means that service will be updates after GameEngine
 		/// </summary>
 		public int	UpdateOrder { get; set; }
 
 		/// <summary>
 		/// Draw order from minimal value to maximum value.
-		/// Negative values means that service will be drawn before Game
-		/// Positive or zero values means that service will be drawn after Game
+		/// Negative values means that service will be drawn before GameEngine
+		/// Positive or zero values means that service will be drawn after GameEngine
 		/// </summary>
 		public int	DrawOrder { get; set; }
 
@@ -56,13 +56,13 @@ namespace Fusion.Engine.Common {
 		/// Constructor
 		/// </summary>
 		/// <param name="game"></param>
-		public GameService ( Game game )
+		public GameService ( GameEngine game )
 		{
 			Enabled			=	false;
 			Visible			=	false;
 			UpdateOrder		=	0;
 			DrawOrder		=	0;
-			Game = game;
+			GameEngine = game;
 		}
 
 
@@ -116,7 +116,7 @@ namespace Fusion.Engine.Common {
 		/// <typeparam name="T"></typeparam>
 		public void RequireService<T>() where T : GameService 
 		{
-			if ( !Game.IsServiceExist<T>() ) {
+			if ( !GameEngine.IsServiceExist<T>() ) {
 				throw new InvalidOperationException( string.Format("Service '{0}' requires service '{1}' to run.", GetType().ToString(), typeof(T).ToString() ) );
 			}
 		}

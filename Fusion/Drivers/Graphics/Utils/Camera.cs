@@ -47,7 +47,7 @@ namespace Fusion.Drivers.Graphics {
 		/// Constrcutor
 		/// </summary>
 		/// <param name="game"></param>
-		public Camera ( Game game ) : base(game)
+		public Camera ( GameEngine game ) : base(game)
 		{
 			Config		=	new CameraConfig();
 			/*Listener	=	new Listener {
@@ -86,7 +86,7 @@ namespace Fusion.Drivers.Graphics {
 		/// <param name="gameTime"></param>
 		public override void Update ( GameTime gameTime )
 		{
-			var input	=	Game.InputDevice;
+			var input	=	GameEngine.InputDevice;
 			var vel		=	Config.FreeCamVelocity;
 			var dt		=	gameTime.ElapsedSec;
 
@@ -108,7 +108,7 @@ namespace Fusion.Drivers.Graphics {
 
 				Vector3 relVelocity	=	Vector3.Zero;
 
-				var gamepad	=	Game.InputDevice.GetGamepad(0);
+				var gamepad	=	GameEngine.InputDevice.GetGamepad(0);
 
 				relVelocity += rotation.Forward * gamepad.LeftStick.Y * vel;
 				relVelocity += rotation.Right   * gamepad.LeftStick.X * vel;
@@ -238,7 +238,7 @@ namespace Fusion.Drivers.Graphics {
 		/// <param name="separation">Stereo separation or distance between eyes.</param>
 		public void SetupCamera ( Matrix viewMatrix, Vector3 velocity, float height, float width, float near, float far, float convergence, float separation )
 		{
-			if (Game.Parameters.StereoMode == StereoMode.OculusRift)
+			/*if (GameEngine.Parameters.StereoMode == StereoMode.OculusRift)
 			{
 				//ProjMatrixL = Input.OculusRiftSensors.LeftEye.Projection;
 				width = 0.75f;
@@ -249,7 +249,7 @@ namespace Fusion.Drivers.Graphics {
 				viewMatrix = viewMatrix * Matrix.Invert(Matrix.RotationQuaternion(OculusRiftSensors.HeadRotation)  * Matrix.Translation(OculusRiftSensors.HeadPosition) );
 
 				//Log.Information("{0}", OculusRiftSensors.HeadPosition);
-			}
+			} */
 
 
 			float offset		=	separation / convergence * near / 2;
@@ -295,7 +295,7 @@ namespace Fusion.Drivers.Graphics {
 		/// <param name="separation"></param>
 		public void SetupCameraFromViewAndFov ( Matrix viewMatrix, Vector3 velocity, float fov, float near, float far, float convergence, float separation )
 		{
-			var bounds	=	Game.GraphicsDevice.DisplayBounds;
+			var bounds	=	GameEngine.GraphicsDevice.DisplayBounds;
 			var aspect	=	((float)bounds.Width) / (float)bounds.Height;
 
 			var nearHeight	=	near * (float)Math.Tan( fov/2 ) * 2;
@@ -324,7 +324,7 @@ namespace Fusion.Drivers.Graphics {
 			float aspect		=	0;
 			
 			if (aspectRatio<0) {
-				var bounds	=	Game.GraphicsDevice.DisplayBounds;
+				var bounds	=	GameEngine.GraphicsDevice.DisplayBounds;
 				aspect		=	((float)bounds.Width) / (float)bounds.Height;
 			} else {
 				aspect	=	aspectRatio;

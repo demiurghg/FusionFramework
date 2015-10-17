@@ -30,7 +30,7 @@ namespace Fusion.Drivers.Graphics {
 		/// <param name="stream"></param>
 		/// <param name="requestedType"></param>
 		/// <returns></returns>
-		public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
+		public override object Load ( GameEngine game, Stream stream, Type requestedType, string assetPath )
 		{																			
 			var scene = Scene.Load( stream );
 

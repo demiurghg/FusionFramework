@@ -40,7 +40,7 @@ namespace Fusion.Drivers.Graphics.Display {
 		/// 
 		/// </summary>
 		/// <param name="parameters"></param>
-		public StereoInterlacedDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
+		public StereoInterlacedDisplay( GameEngine game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
 		{
 			try {
 				NvApi.Initialize();
@@ -182,21 +182,23 @@ namespace Fusion.Drivers.Graphics.Display {
 			Flags flag = Flags.HORIZONTAL_LR;
 
 			var location	=	window.ClientRectangle.Location;
+
+			var interlacingMode	=	InterlacingMode.VerticalLR;
 			
 			if (location.X%2==0) {
-				if (Game.Parameters.InterlacingMode==InterlacingMode.VerticalLR)   flag = Flags.VERTICAL_LR;
-				if (Game.Parameters.InterlacingMode==InterlacingMode.VerticalRL)   flag = Flags.VERTICAL_RL;
+				if (interlacingMode==InterlacingMode.VerticalLR)   flag = Flags.VERTICAL_LR;
+				if (interlacingMode==InterlacingMode.VerticalRL)   flag = Flags.VERTICAL_RL;
 			} else {
-				if (Game.Parameters.InterlacingMode==InterlacingMode.VerticalLR)   flag = Flags.VERTICAL_RL;
-				if (Game.Parameters.InterlacingMode==InterlacingMode.VerticalRL)   flag = Flags.VERTICAL_LR;
+				if (interlacingMode==InterlacingMode.VerticalLR)   flag = Flags.VERTICAL_RL;
+				if (interlacingMode==InterlacingMode.VerticalRL)   flag = Flags.VERTICAL_LR;
 			}
 
 			if (location.Y%2==0) {
-				if (Game.Parameters.InterlacingMode==InterlacingMode.HorizontalLR) flag = Flags.HORIZONTAL_LR;
-				if (Game.Parameters.InterlacingMode==InterlacingMode.HorizontalRL) flag = Flags.HORIZONTAL_RL;
+				if (interlacingMode==InterlacingMode.HorizontalLR) flag = Flags.HORIZONTAL_LR;
+				if (interlacingMode==InterlacingMode.HorizontalRL) flag = Flags.HORIZONTAL_RL;
 			} else {
-				if (Game.Parameters.InterlacingMode==InterlacingMode.HorizontalLR) flag = Flags.HORIZONTAL_RL;
-				if (Game.Parameters.InterlacingMode==InterlacingMode.HorizontalRL) flag = Flags.HORIZONTAL_LR;
+				if (interlacingMode==InterlacingMode.HorizontalLR) flag = Flags.HORIZONTAL_RL;
+				if (interlacingMode==InterlacingMode.HorizontalRL) flag = Flags.HORIZONTAL_LR;
 			}
 			
 			MergeStereoBuffers( backbufferColor1, backbufferColor2, backbufferColor1Resolved, backbufferColor2Resolved, backbufferColor, flag );

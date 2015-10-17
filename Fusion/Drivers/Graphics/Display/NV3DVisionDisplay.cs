@@ -36,7 +36,7 @@ namespace Fusion.Drivers.Graphics.Display {
 		/// 
 		/// </summary>
 		/// <param name="parameters"></param>
-		public NV3DVisionDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
+		public NV3DVisionDisplay( GameEngine game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
 		{
 			Log.Message("Using NVidia 3D Vision");
 

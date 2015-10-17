@@ -33,7 +33,7 @@ namespace Fusion.Drivers.Graphics {
 		/// </summary>
 		/// <param name="device"></param>
 		/// <param name="fontPath"></param>
-		public DebugStrings ( Game game ) : base ( game )
+		public DebugStrings ( GameEngine game ) : base ( game )
 		{
 			Config	=	new DebugStringsConfig();
 			RequireService<SpriteBatch>();
@@ -121,7 +121,7 @@ namespace Fusion.Drivers.Graphics {
 				return;
 			}
 			
-			var sb = Game.GetService<SpriteBatch>();
+			var sb = GameEngine.GetService<SpriteBatch>();
 
 			sb.Begin();
 			

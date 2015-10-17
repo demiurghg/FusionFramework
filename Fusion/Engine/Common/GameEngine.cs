@@ -26,15 +26,15 @@ namespace Fusion.Engine.Common {
 	/// <summary>
 	/// Provides basic graphics device initialization, game logic, and rendering code. 
 	/// </summary>
-	public class Game : DisposableBase {
+	public class GameEngine : DisposableBase {
 
 
 
 
 		/// <summary>
-		/// Game instance.
+		/// GameEngine instance.
 		/// </summary>
-		public static Game Instance = null;
+		public static GameEngine Instance = null;
 
 		/// <summary>
 		/// Gets the current audio device
@@ -67,14 +67,9 @@ namespace Fusion.Engine.Common {
 		public	bool IsInitialized { get { return initialized; } }
 
 		/// <summary>
-		/// Indicates whether Game.Update and Game.Draw should be called on each frame.
+		/// Indicates whether GameEngine.Update and GameEngine.Draw should be called on each frame.
 		/// </summary>
 		public	bool Enabled { get; set; }
-
-		/// <summary>
-		/// Gets game parameters
-		/// </summary>
-		public	GameParameters Parameters { get { return gameParams; } }
 
 		/// <summary>
 		/// Raised when the game exiting before disposing
@@ -82,7 +77,7 @@ namespace Fusion.Engine.Common {
 		public event	EventHandler Exiting;
 
 		/// <summary>
-		/// Raised after Game.Reload() called.
+		/// Raised after GameEngine.Reload() called.
 		/// This event used primarily for developement puprpose.
 		/// </summary>
 		public event	EventHandler Reloading;
@@ -112,7 +107,6 @@ namespace Fusion.Engine.Common {
 		List<GameService>	serviceList	=	new List<GameService>();
 		GameTime	gameTimeInternal;
 
-		GameParameters	gameParams = new GameParameters();
 
 		IGameServer	sv;
 		IGameClient cl;
@@ -143,13 +137,9 @@ namespace Fusion.Engine.Common {
 		/// Initializes a new instance of this class, which provides 
 		/// basic graphics device initialization, game logic, rendering code, and a game loop.
 		/// </summary>
-		public Game (GameParameters p, IGameServer sv, IGameClient cl, IGameInterface gi)
+		public GameEngine ()
 		{
-			this.gameParams	=	p;
-
 			Enabled	=	true;
-
-
 
 			AppDomain currentDomain = AppDomain.CurrentDomain;
 			currentDomain.UnhandledException += currentDomain_UnhandledException;
@@ -205,7 +195,7 @@ namespace Fusion.Engine.Common {
 		public void Reload()
 		{
 			if (!IsInitialized) {
-				throw new InvalidOperationException("Game is not initialized");
+				throw new InvalidOperationException("GameEngine is not initialized");
 			}
 			requestReload = true;
 		}
@@ -214,12 +204,12 @@ namespace Fusion.Engine.Common {
 
 		/// <summary>
 		/// Request game to exit.
-		/// Game will quit when update & draw loop will be completed.
+		/// GameEngine will quit when update & draw loop will be completed.
 		/// </summary>
 		public void Exit ()
 		{
 			if (!IsInitialized) {
-				Log.Warning("Game is not initialized");
+				Log.Warning("GameEngine is not initialized");
 				return;
 			}
 			requestExit	=	true;
@@ -238,7 +228,7 @@ namespace Fusion.Engine.Common {
 			}
 
 			Log.Message("");
-			Log.Message("---------- Game Shutting Down ----------");
+			Log.Message("---------- GameEngine Shutting Down ----------");
 
 			if (Exiting!=null) {
 				Exiting(this, EventArgs.Empty);
@@ -316,13 +306,16 @@ namespace Fusion.Engine.Common {
 		internal bool InitInternal ()
 		{
 			Log.Message("");
-			Log.Message("---------- Game Initializing ----------");
+			Log.Message("---------- GameEngine Initializing ----------");
 
-			GraphicsDevice.Initialize( Parameters );
+			var p = new GameParameters();
+			p.Width	=	1024;
+			p.Height =	768;
+			GraphicsDevice.Initialize( p );
 			InputDevice.Initialize();
 			AudioDevice.Initialize();
 
-			GraphicsDevice.FullScreen = Parameters.FullScreen;
+			GraphicsDevice.FullScreen = false;
 
 			//	init game :
 			Log.Message("");
@@ -352,11 +345,11 @@ namespace Fusion.Engine.Common {
 		internal void UpdateInternal ()
 		{
 			if (IsDisposed) {
-				throw new ObjectDisposedException("Game");
+				throw new ObjectDisposedException("GameEngine");
 			}
 
 			if (!IsInitialized) {
-				throw new InvalidOperationException("Game is not initialized");
+				throw new InvalidOperationException("GameEngine is not initialized");
 			}
 
 			bool isActive = IsActive;  // to reduce access to winforms.
@@ -427,7 +420,7 @@ namespace Fusion.Engine.Common {
 
 
 		/// <summary>
-		/// Called after the Game and GraphicsDevice are created.
+		/// Called after the GameEngine and GraphicsDevice are created.
 		/// Initializes all registerd services
 		/// </summary>
 		protected virtual void Initialize ()
@@ -588,7 +581,7 @@ namespace Fusion.Engine.Common {
 					}
 				}
 
-				throw new InvalidOperationException(string.Format("Game service of type \"{0}\" is not added", typeof(T).ToString()));
+				throw new InvalidOperationException(string.Format("GameEngine service of type \"{0}\" is not added", typeof(T).ToString()));
 			}
 		}
 

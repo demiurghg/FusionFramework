@@ -14,7 +14,7 @@ namespace Fusion.Core.Shell {
 	public abstract class Command {
 
 		[CommandLineParser.Ignore]
-		public Game Game { get; private set; }
+		public GameEngine GameEngine { get; private set; }
 
 		[CommandLineParser.Ignore]
 		public Invoker Invoker { get; private set; }
@@ -86,7 +86,7 @@ namespace Fusion.Core.Shell {
 		public Command ( Invoker invoker )
 		{
 			Invoker		=	invoker;
-			Game		=	invoker.Game;
+			GameEngine		=	invoker.GameEngine;
 			Delay		=	0;
 			NoRollback	=	false;
 			Terminal	=	false;

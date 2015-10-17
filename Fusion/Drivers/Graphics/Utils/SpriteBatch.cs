@@ -94,10 +94,10 @@ namespace Fusion.Drivers.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="device"></param>
-		public SpriteBatch ( Game game ) : base( game )
+		public SpriteBatch ( GameEngine game ) : base( game )
 		{
 			Cfg				=	new Config();
-			this.device		=	Game.GraphicsDevice;
+			this.device		=	GameEngine.GraphicsDevice;
 		}
 
 
@@ -109,8 +109,8 @@ namespace Fusion.Drivers.Graphics {
 		/// </summary>
 		public override void Initialize ()
 		{
-			vertexBuffer	=	new VertexBuffer( Game.GraphicsDevice, typeof(SpriteVertex), MaxVertices, VertexBufferOptions.Dynamic );
-			indexBuffer		=	new IndexBuffer( Game.GraphicsDevice, MaxIndices );
+			vertexBuffer	=	new VertexBuffer( GameEngine.GraphicsDevice, typeof(SpriteVertex), MaxVertices, VertexBufferOptions.Dynamic );
+			indexBuffer		=	new IndexBuffer( GameEngine.GraphicsDevice, MaxIndices );
 
 			var indices = new int[MaxIndices];
 
@@ -132,13 +132,13 @@ namespace Fusion.Drivers.Graphics {
 			LoadContent();
 
 			vertices		=	new SpriteVertex[MaxVertices];
-			constBuffer		=	new ConstantBuffer(Game.GraphicsDevice, typeof(ConstData));
+			constBuffer		=	new ConstantBuffer(GameEngine.GraphicsDevice, typeof(ConstData));
 
-			TextureWhite	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
-			TextureBlack	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
-			TextureRed		=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
-			TextureGreen	=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
-			TextureBlue		=	new Texture2D( Game.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
+			TextureWhite	=	new Texture2D( GameEngine.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
+			TextureBlack	=	new Texture2D( GameEngine.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
+			TextureRed		=	new Texture2D( GameEngine.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
+			TextureGreen	=	new Texture2D( GameEngine.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
+			TextureBlue		=	new Texture2D( GameEngine.GraphicsDevice, 8, 8, ColorFormat.Rgba8, false, false );
 
 			var range = Enumerable.Range(0, 8*8);
 			TextureWhite	.SetData( range.Select( i => Color.White ).ToArray() ); 
@@ -147,22 +147,22 @@ namespace Fusion.Drivers.Graphics {
 			TextureGreen	.SetData( range.Select( i => Color.Green ).ToArray() );  
 			TextureBlue		.SetData( range.Select( i => Color.Blue  ).ToArray() );  
 
-			Game.Reloading	+= (s,e) => LoadContent();
+			GameEngine.Reloading	+= (s,e) => LoadContent();
 		}
 
 
 
 		void LoadContent ()
 		{
-			fontTexture		=	device.Game.Content.Load<Texture2D>( @"debugFont.tga" );
+			fontTexture		=	device.GameEngine.Content.Load<Texture2D>( @"debugFont.tga" );
 
- 			shader			=	Game.Content.Load<Ubershader>(@"spriteBatch.hlsl");
+ 			shader			=	GameEngine.Content.Load<Ubershader>(@"spriteBatch.hlsl");
 
 			DisposePSO();
 
 			foreach (SpriteBlend blend in Enum.GetValues(typeof(SpriteBlend))) {
 
-				var ps = new PipelineState( Game.GraphicsDevice );
+				var ps = new PipelineState( GameEngine.GraphicsDevice );
 
 				ps.RasterizerState		=	RasterizerState.CullNone;
 				ps.DepthStencilState	=	DepthStencilState.None;

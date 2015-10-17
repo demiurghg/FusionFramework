@@ -19,7 +19,7 @@ using Fusion.Core.Mathematics;
 namespace Fusion.Drivers.Graphics.Display {
 	abstract class BaseDisplay : GraphicsResource {
 
-		protected readonly	Game Game;
+		protected readonly	GameEngine GameEngine;
 		public 		D3D.Device d3dDevice = null;
 
 		protected Ubershader	stereo;
@@ -39,9 +39,9 @@ namespace Fusion.Drivers.Graphics.Display {
 		/// 
 		/// </summary>
 		/// <param name="parameters"></param>
-		public BaseDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base(device)
+		public BaseDisplay( GameEngine game, GraphicsDevice device, GameParameters parameters ) : base(device)
 		{
-			this.Game	=	game;
+			this.GameEngine	=	game;
 
 			ShowAdapterInfo( parameters );
 		}
@@ -53,7 +53,7 @@ namespace Fusion.Drivers.Graphics.Display {
 		/// </summary>
 		public virtual void CreateDisplayResources ()
 		{
-			Game.Reloading += (s,e) => LoadContent();
+			GameEngine.Reloading += (s,e) => LoadContent();
 			LoadContent();
 		}
 
@@ -64,7 +64,7 @@ namespace Fusion.Drivers.Graphics.Display {
 		/// </summary>
 		void LoadContent ()
 		{
-			stereo	=	Game.Content.Load<Ubershader>("stereo");
+			stereo	=	GameEngine.Content.Load<Ubershader>("stereo");
 			factory	=	new StateFactory( stereo, typeof(Flags), Primitive.TriangleList, VertexInputElement.Empty, BlendState.Opaque, RasterizerState.CullNone, DepthStencilState.None );
 		}
 
@@ -229,8 +229,8 @@ namespace Fusion.Drivers.Graphics.Display {
 			form.KeyDown += form_KeyDown;
 			form.KeyUp += form_KeyUp;
 			form.KeyPress += form_KeyPress;
-			form.Resize += (s,e) => Game.InputDevice.RemoveAllPressedKey();
-			form.Move += (s,e) => Game.InputDevice.RemoveAllPressedKey();
+			form.Resize += (s,e) => GameEngine.InputDevice.RemoveAllPressedKey();
+			form.Move += (s,e) => GameEngine.InputDevice.RemoveAllPressedKey();
 
 			return form;
 		}
@@ -239,14 +239,14 @@ namespace Fusion.Drivers.Graphics.Display {
 
 		void form_KeyPress ( object sender, KeyPressEventArgs e )
 		{
-			Game.InputDevice.NotifyKeyPress( e.KeyChar );
+			GameEngine.InputDevice.NotifyKeyPress( e.KeyChar );
 		}
 
 
 
 		void form_KeyUp ( object sender, KeyEventArgs e )
 		{
-			Game.InputDevice.NotifyKeyUp( (Fusion.Drivers.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
+			GameEngine.InputDevice.NotifyKeyUp( (Fusion.Drivers.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
 		}
 
 
@@ -257,7 +257,7 @@ namespace Fusion.Drivers.Graphics.Display {
 				Fullscreen = !Fullscreen;
 			}
 
-			Game.InputDevice.NotifyKeyDown( (Fusion.Drivers.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
+			GameEngine.InputDevice.NotifyKeyDown( (Fusion.Drivers.Input.Keys)(int)e.KeyCode, e.Alt, e.Shift, e.Control );
 		}
 
 

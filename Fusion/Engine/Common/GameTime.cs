@@ -59,7 +59,7 @@ namespace Fusion.Engine.Common {
 		public	long FrameID		{ get; private set; }
 
 		/// <summary>
-		/// Subframe index. For stereo rendering Game.Draw and GameService.Draw are called twice for each eye.
+		/// Subframe index. For stereo rendering GameEngine.Draw and GameService.Draw are called twice for each eye.
 		/// </summary>
 		public	int	SubframeID	{ get; private set; }
 

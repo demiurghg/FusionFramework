@@ -17,8 +17,8 @@ namespace Fusion.Engine.Common {
 
 	public class GameParameters {
 
-		[Category("Game")]
-		[Description("Game window caption\r\n/title:<title>")]
+		[Category("GameEngine")]
+		[Description("GameEngine window caption\r\n/title:<title>")]
 		[CommandLineParser.Name("title")]
 		public string		Title			{ get; set; }
 
@@ -40,28 +40,6 @@ namespace Fusion.Engine.Common {
 		[Description("Enable graphics device debugging\r\n/dxdebug")]
 		[CommandLineParser.Name("dxdebug")]
 		public bool 	UseDebugDevice	{ get; set; }
-
-
-		[Category("Development")]
-		[Description("Current directory")]
-		[ReadOnly(true)]
-		[CommandLineParser.Ignore()]
-		public string		CurrentDirectory { get { return Directory.GetCurrentDirectory(); } }
-
-
-		[Category("Development")]
-		[Description("FUSION_BIN environment variable.")]
-		[ReadOnly(true)]
-		[CommandLineParser.Ignore()]
-		public string		FusionBinary { get { return Environment.GetEnvironmentVariable("FUSION_BIN"); } }
-
-
-		[Category("Development")]
-		[Description("FUSION_CONTENT environment variable.")]
-		[ReadOnly(true)]
-		[CommandLineParser.Ignore()]
-		public string		FusionContent { get { return Environment.GetEnvironmentVariable("FUSION_CONTENT"); } }
-
 
 		[Category("Graphics")]
 		[Description("Display width\r\n/width:<value>")]

@@ -10,9 +10,9 @@ namespace Fusion.Core.Shell {
 	public class Invoker {
 
 		/// <summary>
-		/// Game reference.
+		/// GameEngine reference.
 		/// </summary>
-		public Game Game { get; private set; }
+		public GameEngine GameEngine { get; private set; }
 
 
 		/// <summary>
@@ -33,8 +33,8 @@ namespace Fusion.Core.Shell {
 		/// <summary>
 		/// Creates instance of Invoker.
 		/// </summary>
-		/// <param name="game">Game instance</param>
-		public Invoker ( Game game )
+		/// <param name="game">GameEngine instance</param>
+		public Invoker ( GameEngine game )
 		{
 			Initialize( game, Command.GatherCommands() );
 		}
@@ -44,10 +44,10 @@ namespace Fusion.Core.Shell {
 		/// <summary>
 		/// Creates instance of Invoker with specified command types.
 		/// </summary>
-		/// <param name="game">Game instance</param>
+		/// <param name="game">GameEngine instance</param>
 		/// <param name="types">Specified Command types</param>
 		/// <param name="context">Invoker's context</param>
-		public Invoker ( Game game, Type[] types, object context = null )
+		public Invoker ( GameEngine game, Type[] types, object context = null )
 		{
 			Initialize( game, types );
 			Context = context;
@@ -60,10 +60,10 @@ namespace Fusion.Core.Shell {
 		/// </summary>
 		/// <param name="game"></param>
 		/// <param name="types"></param>
-		void Initialize ( Game game, Type[] types )
+		void Initialize ( GameEngine game, Type[] types )
 		{
 			Context		=	null;
-			Game		=	game;
+			GameEngine		=	game;
 			commands	=	types
 						.Where( t1 => t1.IsSubclassOf(typeof(Command)) )
 						.Where( t2 => t2.HasAttribute<CommandAttribute>() )

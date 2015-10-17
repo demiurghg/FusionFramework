@@ -240,9 +240,11 @@
     <Compile Include="Drivers\Graphics\Utils\SpriteVertex.cs" />
     <Compile Include="Drivers\Graphics\Scene\MeshMaterial.cs" />
     <Compile Include="Core\DisposableBase.cs" />
-    <Compile Include="Engine\Common\Game.cs">
+    <Compile Include="Engine\Common\GameEngine.cs" />
+    <Compile Include="Engine\Common\GameParameters.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Engine\Common\UserCmd.cs" />
     <Compile Include="Engine\Common\GameException.cs" />
     <Compile Include="Drivers\Graphics\GraphicsException.cs" />
     <Compile Include="Drivers\Graphics\Resources\VertexAttribute.cs" />
@@ -302,12 +304,12 @@
     <Compile Include="Core\Mathematics\Vector4.cs" />
     <Compile Include="Core\Mathematics\Viewport.cs" />
     <Compile Include="Core\Mathematics\ViewportF.cs" />
-    <Compile Include="Engine\Common\GameParameters.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Engine\Common\GameService.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Engine\Common\IGameClient.cs" />
+    <Compile Include="Engine\Common\IGameServer.cs" />
+    <Compile Include="Engine\Common\IGameInterface.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

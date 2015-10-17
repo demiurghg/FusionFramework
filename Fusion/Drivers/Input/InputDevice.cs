@@ -93,15 +93,15 @@ namespace Fusion.Drivers.Input {
 
 
 
-		public readonly Game Game;
+		public readonly GameEngine GameEngine;
 
 
 		/// <summary>
 		/// Constrcutor
 		/// </summary>
-		internal InputDevice ( Game game )
+		internal InputDevice ( GameEngine game )
 		{
-			this.Game		=	game;
+			this.GameEngine		=	game;
 		}
 
 
@@ -118,8 +118,8 @@ namespace Fusion.Drivers.Input {
             Device.RegisterDevice(UsagePage.Generic, UsageId.GenericKeyboard, DeviceFlags.None);
             Device.KeyboardInput += new EventHandler<KeyboardInputEventArgs>(KeyboardHandle);
 
-			if (Game.GraphicsDevice.Display.Window != null && !Game.GraphicsDevice.Display.Window.IsDisposed) {
-				var p				= Game.GraphicsDevice.Display.Window.PointToClient(Forms.Cursor.Position);
+			if (GameEngine.GraphicsDevice.Display.Window != null && !GameEngine.GraphicsDevice.Display.Window.IsDisposed) {
+				var p				= GameEngine.GraphicsDevice.Display.Window.PointToClient(Forms.Cursor.Position);
 				GlobalMouseOffset	= new Vector2(p.X, p.Y);
 			}
 		}
@@ -149,7 +149,7 @@ namespace Fusion.Drivers.Input {
 		/// <param name="key"></param>
 		void AddPressedKey ( Keys key )
 		{
-			if (!Game.IsActive) {
+			if (!GameEngine.IsActive) {
 				return;
 			}
 
@@ -209,9 +209,9 @@ namespace Fusion.Drivers.Input {
 		/// <param name="e"></param>
 		void MouseHandler ( object sender, MouseInputEventArgs e )
 		{
-			if (Game.GraphicsDevice.Display.Window != null && !Game.GraphicsDevice.Display.Window.IsDisposed) {
+			if (GameEngine.GraphicsDevice.Display.Window != null && !GameEngine.GraphicsDevice.Display.Window.IsDisposed) {
 
-				var p				= Game.GraphicsDevice.Display.Window.PointToClient(Forms.Cursor.Position);
+				var p				= GameEngine.GraphicsDevice.Display.Window.PointToClient(Forms.Cursor.Position);
 			
 				GlobalMouseOffset	= new Vector2(p.X, p.Y);
 				
@@ -236,7 +236,7 @@ namespace Fusion.Drivers.Input {
 			if ( e.ButtonFlags.HasFlag( MouseButtonFlags.Button4Up			) )	RemovePressedKey( Keys.MouseButtonX1 );
 			if ( e.ButtonFlags.HasFlag( MouseButtonFlags.Button5Up			) )	RemovePressedKey( Keys.MouseButtonX2 );
 
-			if ( Game.IsActive ) {
+			if ( GameEngine.IsActive ) {
 				if ( MouseScroll!=null && e.WheelDelta!=0 ) {
 					MouseScroll( this, new MouseScrollEventArgs(){ WheelDelta = e.WheelDelta } );
 				}
@@ -327,18 +327,18 @@ namespace Fusion.Drivers.Input {
 		/// </summary>
 		internal void UpdateInput ()
 		{
-			if ( Game.GraphicsDevice.Display.Window!=null ) {
+			if ( GameEngine.GraphicsDevice.Display.Window!=null ) {
 
-			    if ( Game.IsActive ) {
+			    if ( GameEngine.IsActive ) {
 
-			        System.Drawing.Rectangle rect = Game.GraphicsDevice.Display.Window.ClientRectangle;
+			        System.Drawing.Rectangle rect = GameEngine.GraphicsDevice.Display.Window.ClientRectangle;
 
 					if (IsMouseCentered) {
-						Forms.Cursor.Position	=	Game.GraphicsDevice.Display.Window.PointToScreen( new Drawing.Point( rect.Width/2, rect.Height/2 ) );
+						Forms.Cursor.Position	=	GameEngine.GraphicsDevice.Display.Window.PointToScreen( new Drawing.Point( rect.Width/2, rect.Height/2 ) );
 					}
 
 					if (IsMouseClipped) {
-						Forms.Cursor.Clip		=	Game.GraphicsDevice.Display.Window.RectangleToScreen( rect );
+						Forms.Cursor.Clip		=	GameEngine.GraphicsDevice.Display.Window.RectangleToScreen( rect );
 					}
 
 					SetCursorVisibility( !IsMouseHidden );

@@ -14,12 +14,12 @@ namespace Fusion.Core.Content {
 		/// <summary>
 		/// Loads asset.
 		/// </summary>
-		/// <param name="game">Game</param>
+		/// <param name="game">GameEngine</param>
 		/// <param name="stream">Stream to read asset from.</param>
 		/// <param name="requestedType">Requested asset type. Type specified by ContentLoaderAttribute and requested type may differ.</param>
 		/// <param name="assetPath">Path to asset. This is requested asset path but not actual path to asset's file.</param>
 		/// <returns></returns>
-		public abstract object	Load ( Game game, Stream stream, Type requestedType, string assetPath );
+		public abstract object	Load ( GameEngine game, Stream stream, Type requestedType, string assetPath );
 
 
 		public Type TargetType {

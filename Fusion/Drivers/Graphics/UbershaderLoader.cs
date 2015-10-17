@@ -18,7 +18,7 @@ namespace Fusion.Drivers.Graphics {
 	[ContentLoader(typeof(Ubershader))]
 	public class UbershaderLoader : ContentLoader {
 
-		public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
+		public override object Load ( GameEngine game, Stream stream, Type requestedType, string assetPath )
 		{
 			return new Ubershader( game.GraphicsDevice, stream );
 		}

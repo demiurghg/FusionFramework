@@ -37,7 +37,7 @@ namespace Fusion.Core.Shell.Commands {
 		/// </summary>
 		public override void Execute ()
 		{
-			var cfg = Game.GetConfigObjectByServiceName( Service );
+			var cfg = GameEngine.GetConfigObjectByServiceName( Service );
 			
 			var prop = cfg.GetType().GetProperty( Variable );
 
@@ -74,7 +74,7 @@ namespace Fusion.Core.Shell.Commands {
 		/// </summary>
 		public override void Rollback ()
 		{
-			var cfg = Game.GetConfigObjectByServiceName( Service );
+			var cfg = GameEngine.GetConfigObjectByServiceName( Service );
 			var prop = cfg.GetType().GetProperty( Variable );
 
 			prop.SetValue( cfg, oldValue );

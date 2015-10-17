@@ -26,7 +26,7 @@ namespace Fusion.Drivers.Graphics {
 		[ContentLoader(typeof(Texture3D))]
 		public class Loader : ContentLoader {
 
-			public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
+			public override object Load ( GameEngine game, Stream stream, Type requestedType, string assetPath )
 			{
 				bool srgb = assetPath.ToLowerInvariant().Contains("|srgb");
 				return new Texture3D( game.GraphicsDevice, stream, srgb );

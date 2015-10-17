@@ -6,24 +6,42 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using Fusion;
 using Fusion.Build;
+using Fusion.Engine.Common;
+using Fusion.Core.Shell;
 
 namespace TestGame2 {
+
 	class Program {
 		[STAThread]
-		static void Main ( string[] args )
+		static int Main ( string[] args )
 		{
 			Trace.Listeners.Add( new ColoredTraceListener() );
 
+			//
+			//	Build content on startup :
+			//
 			try {
 				Builder.Build( @"..\..\..\Content", @"Content", @"..\..\..\Temp", false );
 			} catch ( Exception e ) {
 				Log.Error( e.Message );
-				return;
+				return 1;
 			}
 
-			using (var game = new TestGame2()) {
-				game.Run( args );
+
+			//
+			//	Parse command line :
+			//
+
+			using ( var engine = new GameEngine() ) {
+
+				var sv	=	new GameServer(engine);
+				var cl	=	new GameClient(engine);
+				var ui	=	new GameInterface(engine);
+
+				engine.Run( sv, cl, ui );				
 			}
+
+			return 0;
 		}
 	}
 }

@@ -65,7 +65,7 @@ namespace Fusion.Drivers.Graphics {
 		/// <summary>
 		/// Constructor
 		/// </summary>
-		public DebugRender(Game game) : base(game)
+		public DebugRender(GameEngine game) : base(game)
 		{
 			RenderTarget	= null;
 			Config	=	new DebugRenderConfig();
@@ -80,9 +80,9 @@ namespace Fusion.Drivers.Graphics {
 		{
 			base.Initialize();
 
-			var dev		= Game.GraphicsDevice;
+			var dev		= GameEngine.GraphicsDevice;
 
-			effect		= Game.Content.Load<Ubershader>("debugRender.hlsl");
+			effect		= GameEngine.Content.Load<Ubershader>("debugRender.hlsl");
 			factory		= new StateFactory( effect, typeof(RenderFlags), Primitive.LineList, VertexInputElement.FromStructure( typeof(LineVertex) ), BlendState.AlphaBlend, RasterizerState.CullNone );
 
 			constData	= new ConstData();
@@ -154,7 +154,7 @@ namespace Fusion.Drivers.Graphics {
 				vertexDataAccum.Clear();
 			}
 
-			var dev = Game.GraphicsDevice;
+			var dev = GameEngine.GraphicsDevice;
 
 
 			if (RenderTarget!=null) {

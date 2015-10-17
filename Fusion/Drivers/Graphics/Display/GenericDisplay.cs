@@ -35,7 +35,7 @@ namespace Fusion.Drivers.Graphics.Display {
 		/// 
 		/// </summary>
 		/// <param name="parameters"></param>
-		public GenericDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
+		public GenericDisplay( GameEngine game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
 		{
 			window	=	CreateForm( parameters, null );
 

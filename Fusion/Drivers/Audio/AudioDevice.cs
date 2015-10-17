@@ -16,7 +16,7 @@ using Fusion.Engine.Common;
 namespace Fusion.Drivers.Audio {
 	public class AudioDevice : DisposableBase {
 
-		readonly Game game;
+		readonly GameEngine game;
         internal XAudio2 Device { get; private set; }
         internal MasteringVoice MasterVoice { get; private set; }
         
@@ -24,7 +24,7 @@ namespace Fusion.Drivers.Audio {
 		/// <summary>
 		/// 
 		/// </summary>
-		internal AudioDevice ( Game game )
+		internal AudioDevice ( GameEngine game )
 		{
 			this.game	=	game;
 		}

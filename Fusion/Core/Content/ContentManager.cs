@@ -22,7 +22,7 @@ namespace Fusion.Core.Content {
 
 		object lockObject =  new object();
 
-		public readonly Game Game;
+		public readonly GameEngine GameEngine;
 		Dictionary<string, Item> content;
 		List<object> toDispose = new List<object>();
 		List<ContentLoader> loaders;
@@ -34,9 +34,9 @@ namespace Fusion.Core.Content {
 		/// Overloaded. Initializes a new instance of ContentManager. 
 		/// </summary>
 		/// <param name="game"></param>
-		public ContentManager ( Game game, string contentDirectory = "Content" )
+		public ContentManager ( GameEngine game, string contentDirectory = "Content" )
 		{
-			this.Game = game;
+			this.GameEngine = game;
 
 			this.contentDirectory = contentDirectory;
 
@@ -233,7 +233,7 @@ namespace Fusion.Core.Content {
 			Log.Message("Loading : {0}", assetPath );
 			using (var stream = OpenStream(assetPath) ) {
 				item = new Item() {
-					Object		= loader.Load( Game, stream, typeof(T), assetPath ),
+					Object		= loader.Load( GameEngine, stream, typeof(T), assetPath ),
 					LoadTime	= File.GetLastWriteTime( GetRealAssetFileName( assetPath ) ),
 				};
 			}

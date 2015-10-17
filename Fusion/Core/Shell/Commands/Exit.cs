@@ -23,7 +23,7 @@ namespace Fusion.Core.Shell.Commands {
 		/// </summary>
 		public override void Execute ()
 		{
-			Game.Exit();
+			GameEngine.Exit();
 		}
 
 

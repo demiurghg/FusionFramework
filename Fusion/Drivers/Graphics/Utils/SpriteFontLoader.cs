@@ -16,7 +16,7 @@ namespace Fusion.Drivers.Graphics {
 	[ContentLoader(typeof(SpriteFont))]
 	public class SpriteFontLoader : ContentLoader {
 
-		public override object Load ( Game game, Stream stream, Type requestedType, string assetPath )
+		public override object Load ( GameEngine game, Stream stream, Type requestedType, string assetPath )
 		{
 			return new SpriteFont( game.GraphicsDevice, stream );
 		}
