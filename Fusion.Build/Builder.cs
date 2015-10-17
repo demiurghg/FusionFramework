@@ -138,7 +138,6 @@ namespace Fusion.Build {
 			//
 			Log.Message("Gathering files...");
 			var files		=	GatherAssetFiles();
-			result.Total	=	files.Count;
 			Log.Message("");
 
 
@@ -165,7 +164,10 @@ namespace Fusion.Build {
 				result.Ignored = files.RemoveAll( file => {
 
 					foreach ( var ignore in ignorePatterns ) {
-						if ( Wildcard.Match( file.KeyPath, ignore, false ) ) {
+
+						var pattern = ContentUtils.BackslashesToSlashes( ignore );
+
+						if ( Wildcard.Match( file.KeyPath, pattern, false ) ) {
 							return true;
 						}
 					}
@@ -183,6 +185,7 @@ namespace Fusion.Build {
 			}
 
 
+			result.Total	=	files.Count;
 
 			//
 			//	Build everything :

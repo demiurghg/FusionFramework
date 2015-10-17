@@ -21,7 +21,7 @@ namespace Fusion.Build {
 
 		public int Skipped {
 			get {
-				return Total - Ignored - Succeded - UpToDate - Failed;
+				return Total /*- Ignored*/ - Succeded - UpToDate - Failed;
 			}
 		}
 
