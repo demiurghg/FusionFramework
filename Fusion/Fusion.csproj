@@ -310,6 +310,22 @@
     <Compile Include="Engine\Common\IGameClient.cs" />
     <Compile Include="Engine\Common\IGameServer.cs" />
     <Compile Include="Engine\Common\IGameInterface.cs" />
+    <Compile Include="Engine\Graphics\Camera.cs" />
+    <Compile Include="Engine\Graphics\Enums.cs" />
+    <Compile Include="Engine\Graphics\GraphicsEngine.cs" />
+    <Compile Include="Engine\Graphics\Sprite.cs" />
+    <Compile Include="Engine\Graphics\SpriteFont.cs" />
+    <Compile Include="Engine\Graphics\Textures\DiscTexture.cs" />
+    <Compile Include="Engine\Graphics\Textures\DynamicTexture.cs" />
+    <Compile Include="Engine\Graphics\Textures\LightProbe.cs" />
+    <Compile Include="Engine\Graphics\Material.cs" />
+    <Compile Include="Engine\Graphics\Mesh.cs" />
+    <Compile Include="Engine\Graphics\MeshInstance.cs" />
+    <Compile Include="Engine\Graphics\Lights\OmniLight.cs" />
+    <Compile Include="Engine\Graphics\Lights\SpotLight.cs" />
+    <Compile Include="Engine\Graphics\Textures\RenderFrame.cs" />
+    <Compile Include="Engine\Graphics\Textures\Texture.cs" />
+    <Compile Include="Engine\Graphics\Textures\UserTexture.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -390,7 +406,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Engine\Audio\" />
-    <Folder Include="Engine\Graphics\" />
     <Folder Include="Engine\Network\" />
     <Folder Include="Engine\Physics\" />
     <Folder Include="Engine\Triggers\" />
