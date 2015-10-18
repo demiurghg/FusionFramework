@@ -46,6 +46,7 @@ namespace TestGame2 {
 		/// <param name="gameTime"></param>
 		public void Update ( GameTime gameTime )
 		{
+			
 		}
 
 		/// <summary>

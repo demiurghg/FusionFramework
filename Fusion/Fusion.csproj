@@ -311,9 +311,11 @@
     <Compile Include="Engine\Common\IGameServer.cs" />
     <Compile Include="Engine\Common\IGameInterface.cs" />
     <Compile Include="Engine\Graphics\Camera.cs" />
+    <Compile Include="Engine\Graphics\SpriteEngine.cs" />
+    <Compile Include="Engine\Graphics\SpriteVertex.cs" />
     <Compile Include="Engine\Graphics\Enums.cs" />
     <Compile Include="Engine\Graphics\GraphicsEngine.cs" />
-    <Compile Include="Engine\Graphics\Sprite.cs" />
+    <Compile Include="Engine\Graphics\SpriteLayer.cs" />
     <Compile Include="Engine\Graphics\SpriteFont.cs" />
     <Compile Include="Engine\Graphics\Textures\DiscTexture.cs" />
     <Compile Include="Engine\Graphics\Textures\DynamicTexture.cs" />

@@ -3,8 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fusion.Core;
+using Fusion.Drivers.Graphics;
 
 namespace Fusion.Engine.Graphics {
-	class Texture {
+	public class Texture : DisposableBase {
+
+		public int Width;
+		public int Height;
+
+		public ShaderResource Srv = null;
+		
 	}
 }

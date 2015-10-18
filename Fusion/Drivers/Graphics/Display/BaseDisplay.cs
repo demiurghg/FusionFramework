@@ -70,6 +70,7 @@ namespace Fusion.Drivers.Graphics.Display {
 
 
 
+
 		/// <summary>
 		/// 
 		/// </summary>

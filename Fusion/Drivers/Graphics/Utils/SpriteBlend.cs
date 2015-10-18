@@ -16,7 +16,7 @@ namespace Fusion.Drivers.Graphics {
 	public enum SpriteBlend {
 		Opaque				,
 		AlphaBlend			,
-		AlphaBlendPreMul	,
+		AlphaBlendPremul	,
 		Additive			,
 		Screen				,
 		Multiply			,

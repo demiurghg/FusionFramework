@@ -3,11 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fusion.Core;
 using Fusion.Engine.Common;
+using Fusion.Drivers.Graphics;
 
 namespace Fusion.Engine.Graphics {
 
-	class GraphicsEngine {
+	public class GraphicsEngine : DisposableBase {
+
+		internal readonly GraphicsDevice Device;
+
+		SpriteEngine	spriteEngine;
 
 		/// <summary>
 		/// 
@@ -15,6 +21,45 @@ namespace Fusion.Engine.Graphics {
 		/// <param name="engine"></param>
 		public GraphicsEngine ( GameEngine engine )
 		{
+			this.Device	=	engine.GraphicsDevice;
+
+			SpriteLayers	=	new List<SpriteLayer>();
+		}
+
+
+
+		/// <summary>
+		/// Intializes graphics engine.
+		/// </summary>
+		public void Initialize ()
+		{
+			spriteEngine	=	new SpriteEngine( this );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="disposing"></param>
+		protected override void Dispose ( bool disposing )
+		{
+			if (disposing) {
+				SafeDispose( ref spriteEngine );
+			}
+			base.Dispose( disposing );
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="gameTime"></param>
+		/// <param name="stereoEye"></param>
+		internal void Draw ( GameTime gameTime, StereoEye stereoEye )
+		{
+			spriteEngine.DrawSprites( gameTime, stereoEye, SpriteLayers );
 		}
 
 
@@ -40,8 +85,9 @@ namespace Fusion.Engine.Graphics {
 		/// <summary>
 		/// Clears all instances, sprites and lights.
 		/// </summary>
-		public void Clear ()
+		public void ClearAll ()
 		{
+			SpriteLayers.Clear();
 		}
 
 
@@ -54,7 +100,7 @@ namespace Fusion.Engine.Graphics {
 		/// <summary>
 		/// Sprites 
 		/// </summary>
-		ICollection<Sprite> Sprites { get; set; }
+		public ICollection<SpriteLayer> SpriteLayers { get; set; }
 
 
 		/// <summary>

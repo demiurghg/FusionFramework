@@ -10,6 +10,17 @@ namespace Fusion.Engine.Common {
 	public interface IGameInterface {
 
 		/// <summary>
+		/// Called after all the systems have been initialized.
+		/// </summary>
+		void Initialize ();
+
+		/// <summary>
+		/// Shuts down user interface. 
+		/// Dispose disposable objects here.
+		/// </summary>
+		void Shutdown ();
+
+		/// <summary>
 		/// Updates internal state of interface.
 		/// </summary>
 		/// <param name="gameTime"></param>
@@ -20,14 +31,14 @@ namespace Fusion.Engine.Common {
 		/// </summary>
 		/// <param name="gameTime"></param>
 		/// <param name="stereoEye"></param>
-		void DrawInterface ( GameTime gameTime, StereoEye stereoEye );
+		void DrawInterfaceREMOVE ( GameTime gameTime, StereoEye stereoEye );
 
 		/// <summary>
 		/// Draws splash screen.
 		/// </summary>
 		/// <param name="gameTime"></param>
 		/// <param name="stereoEye"></param>
-		void DrawSplashScreen ( GameTime gameTime, StereoEye stereoEye );
+		void DrawSplashScreenREMOVE ( GameTime gameTime, StereoEye stereoEye );
 
 		/// <summary>
 		/// Draws loading screen.
@@ -35,7 +46,7 @@ namespace Fusion.Engine.Common {
 		/// <param name="gameTime"></param>
 		/// <param name="stereoEye"></param>
 		/// <param name="progress"></param>
-		void DrawLoadingScreen ( GameTime gameTime, StereoEye stereoEye, float progress );
+		void DrawLoadingScreenREMOVE ( GameTime gameTime, StereoEye stereoEye, float progress );
 
 
 		/// <summary>

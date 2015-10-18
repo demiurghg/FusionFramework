@@ -6,6 +6,7 @@
 %FUSION_BIN%
 
 [ContentDirectories]
+..\..\..\..\..\FusionContent
 %FUSION_CONTENT%
 
 [Textures]

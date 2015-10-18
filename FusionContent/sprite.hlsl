@@ -39,7 +39,7 @@ PS_IN VSMain( VS_IN input )
 	PS_IN output = (PS_IN)0;
 
 	output.pos = mul( float4(input.pos,1), Batch.Transform);
-	output.col = input.col;
+	output.col = input.col * Batch.MasterColor;
 	output.tc  = input.tc;
 
 	return output;
@@ -53,6 +53,7 @@ float4 PSMain( PS_IN input ) : SV_Target
 	//float3	bw	=	dot( tex.rgb, float3(0.3f, 0.5f, 0.2f) );
 	
 	// clip stiff :
+	/*
 	float4 clipRect 	= Batch.ClipRectangle;
 	float  clipVal 	= 1;
 	
@@ -65,6 +66,7 @@ float4 PSMain( PS_IN input ) : SV_Target
 	}
 	
 	clip( clipVal );
+	*/
 	
 	return input.col * tex;
 }

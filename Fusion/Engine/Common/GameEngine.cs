@@ -18,6 +18,7 @@ using Fusion.Core.Development;
 using Fusion.Core.Content;
 using Fusion.Core.Mathematics;
 using Fusion.Core.Shell;
+using Fusion.Engine.Graphics;
 
 
 
@@ -50,6 +51,11 @@ namespace Fusion.Engine.Common {
 		/// Gets the current graphics device
 		/// </summary>
 		public	GraphicsDevice GraphicsDevice { get { return graphicsDevice; } }
+
+		/// <summary>
+		/// Gets the current graphics engine
+		/// </summary>
+		public	GraphicsEngine GraphicsEngine { get { return graphicsEngine; } }
 
 		/// <summary>
 		/// Gets current content manager
@@ -101,6 +107,9 @@ namespace Fusion.Engine.Common {
 		AudioDevice			audioDevice		;
 		InputDevice			inputDevice		;
 		GraphicsDevice		graphicsDevice	;
+		//AudioEngine			audioEngine		;
+		//InputEngine			inputEngine		;
+		GraphicsEngine		graphicsEngine	;
 		ContentManager		content			;
 		Invoker				invoker			;
 
@@ -127,6 +136,9 @@ namespace Fusion.Engine.Common {
 		/// <param name="gi"></param>
 		public void Run ( IGameServer sv, IGameClient cl, IGameInterface gi )
 		{
+			this.gi	=	gi;
+			this.sv	=	sv;
+			this.cl	=	cl;
 			InitInternal();
 			RenderLoop.Run( GraphicsDevice.Display.Window, UpdateInternal );
 		}
@@ -173,6 +185,7 @@ namespace Fusion.Engine.Common {
 			audioDevice			=	new AudioDevice( this );
 			inputDevice			=	new InputDevice( this );
 			graphicsDevice		=	new GraphicsDevice( this );
+			graphicsEngine		=	new GraphicsEngine( this );
 			content				=	new ContentManager( this );
 			gameTimeInternal	=	new GameTime();
 			invoker				=	new Invoker(this);
@@ -235,17 +248,23 @@ namespace Fusion.Engine.Common {
 			}
 
 			if (disposing) {
-				
-				lock ( serviceList ) {
-					//	shutdown registered services in reverse order:
-					serviceList.Reverse();
 
-					foreach ( var svc in serviceList ) {
-						Log.Message("Disposing : {0}", svc.GetType().Name );
-						svc.Dispose();
-					}
-					serviceList.Clear();
-				}
+				Log.Message("Shutting down : Game User Interface");
+				gi.Shutdown();
+
+				Log.Message("Disposing : Graphics Engine");
+				SafeDispose( ref graphicsEngine );
+				
+				//lock ( serviceList ) {
+				//	//	shutdown registered services in reverse order:
+				//	serviceList.Reverse();
+
+				//	foreach ( var svc in serviceList ) {
+				//		Log.Message("Disposing : {0}", svc.GetType().Name );
+				//		svc.Dispose();
+				//	}
+				//	serviceList.Clear();
+				//}
 
 				content.Dispose();
 
@@ -326,6 +345,12 @@ namespace Fusion.Engine.Common {
 				initialized = true;
 			}
 
+
+			GraphicsEngine.Initialize();
+
+
+			Log.Message("UI initialization...");
+			gi.Initialize();
 
 			Log.Message("---------------------------------------");
 			Log.Message("");
@@ -440,18 +465,20 @@ namespace Fusion.Engine.Common {
 		/// <param name="gameTime"></param>
 		protected virtual void Update ( GameTime gameTime )
 		{
-			GameService[] svcList;
+			gi.Update( gameTime );
 
-			lock (serviceList) {
-				svcList = serviceList.OrderBy( a => a.UpdateOrder ).ToArray();
-			}
+			//GameService[] svcList;
 
-			foreach ( var svc in svcList ) {
+			//lock (serviceList) {
+			//	svcList = serviceList.OrderBy( a => a.UpdateOrder ).ToArray();
+			//}
+
+			//foreach ( var svc in svcList ) {
 					
-				if ( svc.Enabled ) {
-					svc.Update( gameTime );
-				}
-			}
+			//	if ( svc.Enabled ) {
+			//		svc.Update( gameTime );
+			//	}
+			//}
 		}
 
 
@@ -464,21 +491,21 @@ namespace Fusion.Engine.Common {
 		/// <param name="stereoEye"></param>
 		protected virtual void Draw ( GameTime gameTime, StereoEye stereoEye )
 		{
-			GameService[] svcList;
+			GraphicsEngine.Draw( gameTime, stereoEye );
 
-			lock (serviceList) {
-				svcList = serviceList.OrderBy( a => a.DrawOrder ).ToArray();
-			}
+			//lock (serviceList) {
+			//	svcList = serviceList.OrderBy( a => a.DrawOrder ).ToArray();
+			//}
 
 
-			foreach ( var svc in svcList ) {
+			//foreach ( var svc in svcList ) {
 
-				if ( svc.Visible ) {
-					GraphicsDevice.ResetStates();
-					GraphicsDevice.RestoreBackbuffer();
-					svc.Draw( gameTime, stereoEye );
-				}
-			}
+			//	if ( svc.Visible ) {
+			//		GraphicsDevice.ResetStates();
+			//		GraphicsDevice.RestoreBackbuffer();
+			//		svc.Draw( gameTime, stereoEye );
+			//	}
+			//}
 
 			GraphicsDevice.ResetStates();
 			GraphicsDevice.RestoreBackbuffer();

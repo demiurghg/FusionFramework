@@ -30,7 +30,7 @@ namespace Fusion.Drivers.Graphics {
 		public static  BlendState	Opaque			 { get; private set; }
 		public static  BlendState	NoWrite			 { get; private set; }
 		public static  BlendState	AlphaBlend		 { get; private set; }
-		public static  BlendState	AlphaBlendPreMul { get; private set; }
+		public static  BlendState	AlphaBlendPremul { get; private set; }
 		public static  BlendState	AlphaMaskWrite	 { get; private set; }
 		public static  BlendState	Additive		 { get; private set; }
 		public static  BlendState	Screen			 { get; private set; }
@@ -45,7 +45,7 @@ namespace Fusion.Drivers.Graphics {
 			Opaque				=	Create();
 			NoWrite				=	Create( ColorChannels.None ); 
 			AlphaBlend			=	Create( ColorChannels.All, Blend.SrcAlpha,		Blend.InvSrcAlpha	);
-			AlphaBlendPreMul	=	Create( ColorChannels.All, Blend.One,			Blend.InvSrcAlpha	);						
+			AlphaBlendPremul	=	Create( ColorChannels.All, Blend.One,			Blend.InvSrcAlpha	);						
 			AlphaMaskWrite		=	Create( ColorChannels.Alpha);
 			Additive			=	Create( ColorChannels.All, Blend.One,			Blend.One,			Blend.One, Blend.One );	
 			Screen				=	Create( ColorChannels.All, Blend.InvDstColor,	Blend.One			);						

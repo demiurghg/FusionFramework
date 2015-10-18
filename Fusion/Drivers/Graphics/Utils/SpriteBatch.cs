@@ -86,7 +86,7 @@ namespace Fusion.Drivers.Graphics {
 			[FieldOffset(64)]	public Vector4	ClipRectangle;
 		}
 
-		ConstData	constData;
+		ConstData		constData;
 		ConstantBuffer	constBuffer;
 
 		
@@ -169,7 +169,7 @@ namespace Fusion.Drivers.Graphics {
 
 				if (blend==SpriteBlend.Opaque			) ps.BlendState	=	BlendState.Opaque;
 				if (blend==SpriteBlend.AlphaBlend		) ps.BlendState	=	BlendState.AlphaBlend;
-				if (blend==SpriteBlend.AlphaBlendPreMul	) ps.BlendState	=	BlendState.AlphaBlendPreMul;
+				if (blend==SpriteBlend.AlphaBlendPremul	) ps.BlendState	=	BlendState.AlphaBlendPremul;
 				if (blend==SpriteBlend.Additive			) ps.BlendState	=	BlendState.Additive;
 				if (blend==SpriteBlend.Screen			) ps.BlendState	=	BlendState.Screen;
 				if (blend==SpriteBlend.Multiply			) ps.BlendState	=	BlendState.Multiply;

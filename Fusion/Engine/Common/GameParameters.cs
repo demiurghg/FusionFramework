@@ -106,6 +106,8 @@ namespace Fusion.Engine.Common {
 			FullScreen		=	false;
 			VSyncInterval	=	1;
 			StereoMode		=	StereoMode.Disabled;
+
+			TrackObjects	=	true;
 		}
 	}
 }

@@ -5,6 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Fusion.Engine.Graphics {
-	class RenderFrame {
+	public class RenderFrame {
 	}
 }

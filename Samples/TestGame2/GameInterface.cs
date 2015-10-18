@@ -3,24 +3,65 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fusion.Core.Mathematics;
 using Fusion.Drivers.Graphics;
+using Fusion.Drivers.Input;
 using Fusion.Engine.Common;
+using Fusion.Engine.Graphics;
+using Fusion.Core;
 
 namespace TestGame2 {
 	class GameInterface : IGameInterface {
 
-		public GameEngine Engine { get { return engine; } }
-		readonly GameEngine engine;
+		readonly GameEngine gameEngine;
 
 			
+		SpriteLayer testLayer;
+		DiscTexture	texture;
+		DiscTexture	debugFont;
+
+
 		/// <summary>
 		/// Ctor
 		/// </summary>
 		/// <param name="engine"></param>
-		public GameInterface ( GameEngine engine )
+		public GameInterface ( GameEngine gameEngine )
 		{
-			this.engine	=	engine;
+			this.gameEngine	=	gameEngine;
 		}
+
+
+
+		float angle = 0;
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void Initialize ()
+		{
+			testLayer	=	new SpriteLayer( gameEngine.GraphicsEngine, 1024 );
+			texture		=	gameEngine.Content.Load<DiscTexture>( "lena" );
+			debugFont	=	gameEngine.Content.Load<DiscTexture>( "debugFont" );
+
+			testLayer.Clear();
+			testLayer.Draw( texture, 10,10,256,256, Color.White );
+
+			testLayer.DrawDebugString( debugFont, 10,276, "Lenna Soderberg", Color.White );
+
+			gameEngine.GraphicsEngine.SpriteLayers.Clear();
+			gameEngine.GraphicsEngine.SpriteLayers.Add( testLayer );
+		}
+
+
+
+		public void Shutdown ()
+		{
+			DisposableBase.SafeDispose( ref testLayer );
+		}
+
+
+		Random rand = new Random();
 
 
 		/// <summary>
@@ -29,6 +70,26 @@ namespace TestGame2 {
 		/// <param name="gameTime"></param>
 		public void Update ( GameTime gameTime )
 		{
+			if ( gameEngine.InputDevice.IsKeyDown(Keys.R) ) {
+				testLayer.Clear();
+				testLayer.DrawDebugString( debugFont, 10, 276, rand.Next().ToString(), Color.White );
+			} 
+
+			if ( gameEngine.InputDevice.IsKeyDown(Keys.C) ) {
+				testLayer.Color = rand.NextColor(0,1,1);
+			} 
+			if ( gameEngine.InputDevice.IsKeyDown(Keys.W) ) {
+				testLayer.Color = Color.White;
+			} 
+
+			if ( gameEngine.InputDevice.IsKeyDown(Keys.Left) ) {
+				angle -= 0.01f;
+			}
+			if ( gameEngine.InputDevice.IsKeyDown(Keys.Right) ) {
+				angle += 0.01f;
+			}
+
+			testLayer.SetTransform( new Vector2(100,0), new Vector2(128+5,128+5), angle );
 		}
 
 		/// <summary>
@@ -36,7 +97,7 @@ namespace TestGame2 {
 		/// </summary>
 		/// <param name="gameTime"></param>
 		/// <param name="stereoEye"></param>
-		public void DrawInterface ( GameTime gameTime, StereoEye stereoEye )
+		public void DrawInterfaceREMOVE ( GameTime gameTime, StereoEye stereoEye )
 		{
 		}
 
@@ -45,7 +106,7 @@ namespace TestGame2 {
 		/// </summary>
 		/// <param name="gameTime"></param>
 		/// <param name="stereoEye"></param>
-		public void DrawSplashScreen ( GameTime gameTime, StereoEye stereoEye )
+		public void DrawSplashScreenREMOVE ( GameTime gameTime, StereoEye stereoEye )
 		{
 		}
 
@@ -55,7 +116,7 @@ namespace TestGame2 {
 		/// <param name="gameTime"></param>
 		/// <param name="stereoEye"></param>
 		/// <param name="progress"></param>
-		public void DrawLoadingScreen ( GameTime gameTime, StereoEye stereoEye, float progress )
+		public void DrawLoadingScreenREMOVE ( GameTime gameTime, StereoEye stereoEye, float progress )
 		{
 		}
 
