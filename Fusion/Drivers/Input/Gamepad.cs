@@ -11,7 +11,7 @@ using Fusion.Core.Mathematics;
 
 namespace Fusion.Drivers.Input
 {
-	public class Gamepad
+	internal class Gamepad
 	{
 		public bool	IsConnected { get { return controller.IsConnected;	} }
 		Controller	controller;

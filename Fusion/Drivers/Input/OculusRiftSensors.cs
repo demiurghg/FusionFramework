@@ -7,7 +7,7 @@ using Fusion.Core.Mathematics;
 
 namespace Fusion.Drivers.Input
 {
-	public static class OculusRiftSensors
+	internal static class OculusRiftSensors
 	{
 		public class Eye
 		{

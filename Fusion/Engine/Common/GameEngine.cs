@@ -19,6 +19,7 @@ using Fusion.Core.Content;
 using Fusion.Core.Mathematics;
 using Fusion.Core.Shell;
 using Fusion.Engine.Graphics;
+using Fusion.Engine.Input;
 
 
 
@@ -40,17 +41,17 @@ namespace Fusion.Engine.Common {
 		/// <summary>
 		/// Gets the current audio device
 		/// </summary>
-		public	AudioDevice	AudioDevice { get { return audioDevice; } }
+		internal	AudioDevice	AudioDevice { get { return audioDevice; } }
 
 		/// <summary>
 		/// Gets the current input device
 		/// </summary>
-		public	InputDevice	InputDevice { get { return inputDevice; } }
+		internal	InputDevice	InputDevice { get { return inputDevice; } }
 
 		/// <summary>
 		/// Gets the current graphics device
 		/// </summary>
-		public	GraphicsDevice GraphicsDevice { get { return graphicsDevice; } }
+		internal	GraphicsDevice GraphicsDevice { get { return graphicsDevice; } }
 
 		/// <summary>
 		/// Gets the current graphics engine
@@ -61,6 +62,21 @@ namespace Fusion.Engine.Common {
 		/// Gets current content manager
 		/// </summary>
 		public	ContentManager Content { get { return content; } }
+
+		/// <summary>
+		/// Gets keyboard.
+		/// </summary>
+		public Keyboard Keyboard { get { return keyboard; } }
+
+		/// <summary>
+		/// Gets mouse.
+		/// </summary>
+		public Mouse Mouse { get { return mouse; } }
+
+		/// <summary>
+		/// Gets gamepads
+		/// </summary>
+		public GamepadCollection Gamepads { get { return gamepads; } }
 
 		/// <summary>
 		/// Gets current content manager
@@ -112,6 +128,9 @@ namespace Fusion.Engine.Common {
 		GraphicsEngine		graphicsEngine	;
 		ContentManager		content			;
 		Invoker				invoker			;
+		Keyboard			keyboard		;
+		Mouse				mouse			;
+		GamepadCollection	gamepads		;
 
 		List<GameService>	serviceList	=	new List<GameService>();
 		GameTime	gameTimeInternal;
@@ -231,6 +250,53 @@ namespace Fusion.Engine.Common {
 
 
 		/// <summary>
+		/// InitInternal
+		/// </summary>
+		internal bool InitInternal ()
+		{
+			Log.Message("");
+			Log.Message("---------- GameEngine Initializing ----------");
+
+			var p = new GameParameters();
+			p.Width	=	1024;
+			p.Height =	768;
+
+			GraphicsDevice.Initialize( p );
+			InputDevice.Initialize();
+			AudioDevice.Initialize();
+
+			keyboard	=	new Keyboard(this);
+			mouse		=	new Mouse(this);
+			gamepads	=	new GamepadCollection(this);
+
+			GraphicsDevice.FullScreen = false;
+
+			//	init game :
+			Log.Message("");
+
+
+			lock ( serviceList ) {
+				Initialize();
+				initialized = true;
+			}
+
+			GraphicsEngine.Initialize();
+
+
+			Log.Message("UI initialization...");
+			gi.Initialize();
+
+			Log.Message("---------------------------------------");
+			Log.Message("");
+
+			return true;
+		}
+
+
+
+
+
+		/// <summary>
 		/// Overloaded. Immediately releases the unmanaged resources used by this object. 
 		/// </summary>
 		/// <param name="disposing"></param>
@@ -254,6 +320,12 @@ namespace Fusion.Engine.Common {
 
 				Log.Message("Disposing : Graphics Engine");
 				SafeDispose( ref graphicsEngine );
+
+				Log.Message("Disposing : Keyboard");
+				SafeDispose( ref keyboard );
+
+				Log.Message("Disposing : Mouse");
+				SafeDispose( ref mouse );
 				
 				//lock ( serviceList ) {
 				//	//	shutdown registered services in reverse order:
@@ -315,47 +387,6 @@ namespace Fusion.Engine.Common {
 			get {
 				return GraphicsDevice.Display.Window.Focused;
 			}
-		}
-
-
-
-		/// <summary>
-		/// InitInternal
-		/// </summary>
-		internal bool InitInternal ()
-		{
-			Log.Message("");
-			Log.Message("---------- GameEngine Initializing ----------");
-
-			var p = new GameParameters();
-			p.Width	=	1024;
-			p.Height =	768;
-			GraphicsDevice.Initialize( p );
-			InputDevice.Initialize();
-			AudioDevice.Initialize();
-
-			GraphicsDevice.FullScreen = false;
-
-			//	init game :
-			Log.Message("");
-
-
-			lock ( serviceList ) {
-				Initialize();
-				initialized = true;
-			}
-
-
-			GraphicsEngine.Initialize();
-
-
-			Log.Message("UI initialization...");
-			gi.Initialize();
-
-			Log.Message("---------------------------------------");
-			Log.Message("");
-
-			return true;
 		}
 
 

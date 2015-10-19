@@ -9,9 +9,9 @@ using Fusion.Core.Utils;
 using Fusion.Core.Mathematics;
 using Fusion.Engine.Common;
 using Fusion.Engine.Graphics;
-using Fusion.Drivers.Input;
+using Fusion.Engine.Input;
 
-namespace Fusion.Utilities {
+namespace Fusion.Framework {
 	
 	public class GameConsole : DisposableBase {
 
@@ -85,12 +85,19 @@ namespace Fusion.Utilities {
 			gameEngine.GraphicsDevice.DisplayBoundsChanged += GraphicsDevice_DisplayBoundsChanged;
 			TraceRecorder.TraceRecorded += TraceRecorder_TraceRecorded;
 
-			gameEngine.InputDevice.KeyDown += InputDevice_KeyDown;
+			gameEngine.Keyboard.KeyDown += Keyboard_KeyDown;
+
+			gameEngine.Mouse.Move += Mouse_Move;
 
 			Refresh();
 		}
 
-		void InputDevice_KeyDown ( object sender, InputDevice.KeyEventArgs e )
+		void Mouse_Move ( object sender, MouseMoveEventArgs e )
+		{
+			Log.Message("{0} {1}", e.Position.X, e.Position.Y );
+		}
+
+		void Keyboard_KeyDown ( object sender, KeyEventArgs e )
 		{
 			if (e.Key==Keys.OemTilde) {
 				Show = !Show;

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.XInput;
 
-namespace Fusion.Drivers.Input
+namespace Fusion.Engine.Input
 {
-	internal enum GamepadButtons {
+	public enum GamepadButtons {
 		Y				= -32768,
 		None			= 0,
 		DPadUp			= 1,

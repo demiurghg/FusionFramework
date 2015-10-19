@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using Fusion.Core.Mathematics;
 using Fusion.Drivers.Graphics;
-using Fusion.Drivers.Input;
 using Fusion.Engine.Common;
+using Fusion.Engine.Input;
 using Fusion.Engine.Graphics;
 using Fusion.Core;
-using Fusion.Utilities;
+using Fusion.Framework;
 
 namespace TestGame2 {
 	class GameInterface : IGameInterface {
@@ -77,22 +77,22 @@ namespace TestGame2 {
 		{
 			gameConsole.Update( gameTime );
 
-			if ( gameEngine.InputDevice.IsKeyDown(Keys.R) ) {
+			if ( gameEngine.Keyboard.IsKeyDown(Keys.R) ) {
 				testLayer.Clear();
 				testLayer.DrawDebugString( debugFont, 10, 276, rand.Next().ToString(), Color.White );
 			} 
 
-			if ( gameEngine.InputDevice.IsKeyDown(Keys.C) ) {
+			if ( gameEngine.Keyboard.IsKeyDown(Keys.C) ) {
 				testLayer.Color = rand.NextColor(0,1,1);
 			} 
-			if ( gameEngine.InputDevice.IsKeyDown(Keys.W) ) {
+			if ( gameEngine.Keyboard.IsKeyDown(Keys.W) ) {
 				testLayer.Color = Color.White;
 			} 
 
-			if ( gameEngine.InputDevice.IsKeyDown(Keys.Left) ) {
+			if ( gameEngine.Keyboard.IsKeyDown(Keys.Left) ) {
 				angle -= 0.01f;
 			}
-			if ( gameEngine.InputDevice.IsKeyDown(Keys.Right) ) {
+			if ( gameEngine.Keyboard.IsKeyDown(Keys.Right) ) {
 				angle += 0.01f;
 			}
 

@@ -20,7 +20,7 @@ using Fusion.Engine.Common;
 namespace Fusion.Drivers.Input {
 
 	
-	public class InputDevice : DisposableBase {
+	internal class InputDevice : DisposableBase {
 
 		public	Vector2		RelativeMouseOffset		{ get; protected set; }
 		public	Vector2		GlobalMouseOffset		{ get; protected set; }

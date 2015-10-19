@@ -209,12 +209,6 @@
     <Compile Include="Drivers\Graphics\Enums.cs" />
     <Compile Include="Drivers\Graphics\Resources\StructuredBuffer.cs" />
     <Compile Include="Drivers\Graphics\Resources\Texture2D.cs" />
-    <Compile Include="Drivers\Graphics\Utils\Camera.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Drivers\Graphics\Utils\CameraConfig.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Drivers\Graphics\Utils\DebugRender.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -328,6 +322,13 @@
     <Compile Include="Engine\Graphics\Textures\RenderFrame.cs" />
     <Compile Include="Engine\Graphics\Textures\Texture.cs" />
     <Compile Include="Engine\Graphics\Textures\UserTexture.cs" />
+    <Compile Include="Engine\Input\GamepadButtons.cs" />
+    <Compile Include="Engine\Input\GamepadCollection.cs" />
+    <Compile Include="Engine\Input\Gamepad.cs" />
+    <Compile Include="Engine\Input\Keyboard.cs" />
+    <Compile Include="Engine\Input\Events.cs" />
+    <Compile Include="Engine\Input\Keys.cs" />
+    <Compile Include="Engine\Input\Mouse.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -374,7 +375,7 @@
     <Compile Include="Core\Mathematics\Temperature.cs" />
     <Compile Include="Core\Utils\Wildcard.cs" />
     <Compile Include="Core\Utils\TraceRecorder.cs" />
-    <Compile Include="Utilities\GameConsole.cs" />
+    <Compile Include="Framework\GameConsole.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\Development\ExceptionDialog.resx">
