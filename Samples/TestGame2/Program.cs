@@ -8,6 +8,7 @@ using Fusion;
 using Fusion.Build;
 using Fusion.Engine.Common;
 using Fusion.Core.Shell;
+using Fusion.Core.Utils;
 
 namespace TestGame2 {
 
@@ -16,6 +17,7 @@ namespace TestGame2 {
 		static int Main ( string[] args )
 		{
 			Trace.Listeners.Add( new ColoredTraceListener() );
+			Trace.Listeners.Add( new TraceRecorder() );
 
 			//
 			//	Build content on startup :

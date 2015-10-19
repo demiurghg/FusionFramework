@@ -10,6 +10,7 @@ using Fusion;
 using Fusion.Core.Shell;
 using Fusion.Core.Content;
 using Fusion.Core.IniParser;
+using Fusion.Core.Utils;
 using Fusion.Build;
 using Fusion.Build.Processors;
 

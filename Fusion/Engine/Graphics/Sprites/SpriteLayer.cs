@@ -44,6 +44,16 @@ namespace Fusion.Engine.Graphics {
 		/// </summary>
 		public SpriteStereoMode StereoMode { get; set; }
 
+		/// <summary>
+		/// Draw order
+		/// </summary>
+		public int Order { get; set; }
+
+		/// <summary>
+		/// Sprite layer name. For debugging purposes only.
+		/// </summary>
+		public string Name { get; set; }
+
 
 		VertexBuffer	vertexBuffer;
 		int				capacity	=	0;
@@ -58,7 +68,9 @@ namespace Fusion.Engine.Graphics {
 		/// <param name="capacity">Number of sprites</param>
 		public SpriteLayer ( GraphicsEngine ge, int capacity )
 		{
-			this.ge	=	ge;
+			this.ge		=	ge;
+
+			Order		=	0;
 
 			Visible		=	true;
 			Transform	=	Matrix.Identity;

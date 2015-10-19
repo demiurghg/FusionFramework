@@ -112,8 +112,9 @@ namespace Fusion.Engine.Graphics {
 
 			var projection = Matrix.OrthoOffCenterRH(ofs, w + ofs, h + ofs, ofs, -9999, 9999);
 
+			var orderedLayers	=	layers.OrderBy( layer => layer.Order );
 
-			foreach ( var layer in layers ) {
+			foreach ( var layer in orderedLayers ) {
 				
 				if (!layer.Visible) {
 					continue;

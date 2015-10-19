@@ -311,12 +311,12 @@
     <Compile Include="Engine\Common\IGameServer.cs" />
     <Compile Include="Engine\Common\IGameInterface.cs" />
     <Compile Include="Engine\Graphics\Camera.cs" />
-    <Compile Include="Engine\Graphics\SpriteEngine.cs" />
-    <Compile Include="Engine\Graphics\SpriteVertex.cs" />
+    <Compile Include="Engine\Graphics\Sprites\SpriteEngine.cs" />
+    <Compile Include="Engine\Graphics\Sprites\SpriteVertex.cs" />
     <Compile Include="Engine\Graphics\Enums.cs" />
     <Compile Include="Engine\Graphics\GraphicsEngine.cs" />
-    <Compile Include="Engine\Graphics\SpriteLayer.cs" />
-    <Compile Include="Engine\Graphics\SpriteFont.cs" />
+    <Compile Include="Engine\Graphics\Sprites\SpriteLayer.cs" />
+    <Compile Include="Engine\Graphics\Sprites\SpriteFont.cs" />
     <Compile Include="Engine\Graphics\Textures\DiscTexture.cs" />
     <Compile Include="Engine\Graphics\Textures\DynamicTexture.cs" />
     <Compile Include="Engine\Graphics\Textures\LightProbe.cs" />
@@ -350,7 +350,7 @@
     <Compile Include="Core\Test\TestException.cs" />
     <Compile Include="Core\Utils\CharStream.cs" />
     <Compile Include="Core\Utils\ColoredTraceListener.cs" />
-    <Compile Include="Core\Utils\ColoredTraceListener2.cs" />
+    <Compile Include="Core\Utils\StdTraceListener.cs" />
     <Compile Include="Core\Utils\KdTree3.cs" />
     <Compile Include="Core\Utils\KdTree2.cs" />
     <Compile Include="Drivers\Graphics\GraphicsDevice.cs" />
@@ -373,6 +373,8 @@
     <Compile Include="Core\Utils\Serializer.cs" />
     <Compile Include="Core\Mathematics\Temperature.cs" />
     <Compile Include="Core\Utils\Wildcard.cs" />
+    <Compile Include="Core\Utils\TraceRecorder.cs" />
+    <Compile Include="Utilities\GameConsole.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Core\Development\ExceptionDialog.resx">

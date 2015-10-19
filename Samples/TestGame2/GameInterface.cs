@@ -9,6 +9,7 @@ using Fusion.Drivers.Input;
 using Fusion.Engine.Common;
 using Fusion.Engine.Graphics;
 using Fusion.Core;
+using Fusion.Utilities;
 
 namespace TestGame2 {
 	class GameInterface : IGameInterface {
@@ -19,6 +20,7 @@ namespace TestGame2 {
 		SpriteLayer testLayer;
 		DiscTexture	texture;
 		DiscTexture	debugFont;
+		GameConsole	gameConsole;
 
 
 		/// <summary>
@@ -27,7 +29,8 @@ namespace TestGame2 {
 		/// <param name="engine"></param>
 		public GameInterface ( GameEngine gameEngine )
 		{
-			this.gameEngine	=	gameEngine;
+			this.gameEngine		=	gameEngine;
+			this.gameConsole	=	new GameConsole( gameEngine, "debugFont", "conback", 10);
 		}
 
 
@@ -40,6 +43,8 @@ namespace TestGame2 {
 		/// </summary>
 		public void Initialize ()
 		{
+			gameConsole.Initialize();
+
 			testLayer	=	new SpriteLayer( gameEngine.GraphicsEngine, 1024 );
 			texture		=	gameEngine.Content.Load<DiscTexture>( "lena" );
 			debugFont	=	gameEngine.Content.Load<DiscTexture>( "debugFont" );
@@ -49,7 +54,6 @@ namespace TestGame2 {
 
 			testLayer.DrawDebugString( debugFont, 10,276, "Lenna Soderberg", Color.White );
 
-			gameEngine.GraphicsEngine.SpriteLayers.Clear();
 			gameEngine.GraphicsEngine.SpriteLayers.Add( testLayer );
 		}
 
@@ -57,6 +61,7 @@ namespace TestGame2 {
 
 		public void Shutdown ()
 		{
+			DisposableBase.SafeDispose( ref gameConsole );
 			DisposableBase.SafeDispose( ref testLayer );
 		}
 
@@ -70,6 +75,8 @@ namespace TestGame2 {
 		/// <param name="gameTime"></param>
 		public void Update ( GameTime gameTime )
 		{
+			gameConsole.Update( gameTime );
+
 			if ( gameEngine.InputDevice.IsKeyDown(Keys.R) ) {
 				testLayer.Clear();
 				testLayer.DrawDebugString( debugFont, 10, 276, rand.Next().ToString(), Color.White );

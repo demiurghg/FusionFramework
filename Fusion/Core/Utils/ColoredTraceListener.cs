@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 
-namespace Fusion {
+namespace Fusion.Core.Utils {
 
 	public class ColoredTraceListener : TraceListener {
 
