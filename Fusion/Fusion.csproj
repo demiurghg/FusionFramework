@@ -113,6 +113,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Configuration\ConfigSerializer.cs" />
     <Compile Include="Core\IniParser\Exceptions\ParsingException.cs" />
     <Compile Include="Core\IniParser\FileIniParser.cs" />
     <Compile Include="Core\IniParser\Helpers\Assert.cs" />
@@ -144,7 +145,7 @@
     <Compile Include="Drivers\Audio\SoundEffectLoader.cs" />
     <Compile Include="Drivers\Audio\SoundState.cs" />
     <Compile Include="Core\CommandAttribute.cs" />
-    <Compile Include="Core\ConfigAttribute.cs" />
+    <Compile Include="Core\Configuration\ConfigAttribute.cs" />
     <Compile Include="Core\Content\ContentException.cs" />
     <Compile Include="Core\Content\ContentLoader.cs" />
     <Compile Include="Core\Content\ContentManager.cs" />

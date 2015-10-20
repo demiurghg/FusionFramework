@@ -18,9 +18,10 @@ using Fusion.Core.Development;
 using Fusion.Core.Content;
 using Fusion.Core.Mathematics;
 using Fusion.Core.Shell;
+using Fusion.Core.IniParser;
 using Fusion.Engine.Graphics;
 using Fusion.Engine.Input;
-
+using Fusion.Core.Configuration;
 
 
 namespace Fusion.Engine.Common {
@@ -140,9 +141,54 @@ namespace Fusion.Engine.Common {
 		IGameClient cl;
 		IGameInterface gi;
 
-		public IGameServer		GameServer { get { return sv; } }
-		public IGameClient		GameClient { get { return cl; } }
-		public IGameInterface	GameInterface { get { return gi; } }
+
+		/// <summary>
+		/// Current game server.
+		/// </summary>
+		public IGameServer GameServer { 
+			get { 
+				return sv; 
+			} 
+			set { 
+				if (sv==null) { 
+					sv = value; 
+				} else {
+					throw new GameException("GameServer could be assigned only once");
+				}
+			}
+		}
+		
+		/// <summary>
+		/// Current game client.
+		/// </summary>
+		public IGameClient GameClient { 
+			get { 
+				return cl; 
+			} 
+			set { 
+				if (cl==null) { 
+					cl = value;
+				} else {
+					throw new GameException("GameClient could be assigned only once");
+				}
+			}
+		}
+
+		/// <summary>
+		/// Current game interface.
+		/// </summary>
+		public IGameInterface GameInterface { 
+			get { 
+				return gi; 
+			} 
+			set { 
+				if (gi==null) { 
+					gi = value; 
+				} else {
+					throw new GameException("GameInterface could be assigned only once");
+				}
+			}
+		}
 
 
 
@@ -153,11 +199,8 @@ namespace Fusion.Engine.Common {
 		/// <param name="sv"></param>
 		/// <param name="cl"></param>
 		/// <param name="gi"></param>
-		public void Run ( IGameServer sv, IGameClient cl, IGameInterface gi )
+		public void Run ()
 		{
-			this.gi	=	gi;
-			this.sv	=	sv;
-			this.cl	=	cl;
 			InitInternal();
 			RenderLoop.Run( GraphicsDevice.Display.Window, UpdateInternal );
 		}
@@ -178,8 +221,8 @@ namespace Fusion.Engine.Common {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault( false );
 			CultureInfo.DefaultThreadCurrentCulture	=	CultureInfo.InvariantCulture;
-			Thread.CurrentThread.CurrentCulture		= CultureInfo.InvariantCulture;
-			Thread.CurrentThread.CurrentUICulture	= CultureInfo.InvariantCulture;
+			Thread.CurrentThread.CurrentCulture		=	CultureInfo.InvariantCulture;
+			Thread.CurrentThread.CurrentUICulture	=	CultureInfo.InvariantCulture;
 
 			Debug.Assert( Instance == null );
 
@@ -704,84 +747,19 @@ namespace Fusion.Engine.Common {
 		 * 
 		-----------------------------------------------------------------------------------------*/
 
-		static void SaveToXml ( object obj, Type type, string fileName ) 
-		{
-			XmlSerializer serializer = new XmlSerializer( type );
-			TextWriter textWriter = new StreamWriter( fileName );
-			serializer.Serialize( textWriter, obj );
-			textWriter.Close();
-		}
-
-
-		static object LoadFromXml( Type type, string fileName )
-		{
-			XmlSerializer serializer = new XmlSerializer( type );
-			TextReader textReader = new StreamReader( fileName );
-			object obj = serializer.Deserialize( textReader );
-			textReader.Close();
-			return obj;
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns></returns>
-		internal KeyValuePair<string, object>[] GetConfiguration ()
-		{
-			return serviceList
-				.Select( svc => new KeyValuePair<string,object>( svc.GetType().Name, GameService.GetConfigObject( svc ) ) )
-				.ToArray();
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="fileName"></param>
-		/// <returns></returns>
-		string GetConfigPath ( string fileName )
-		{
-			string myDocs	=	Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-			string appName	=	Path.GetFileNameWithoutExtension( AppDomain.CurrentDomain.FriendlyName.Replace(".vshost","") );
-			return Path.Combine( myDocs, appName, fileName );
-		}
-
-
-
 		/// <summary>
 		/// Saves configuration to XML file	for each subsystem
 		/// </summary>
 		/// <param name="path"></param>
-		[UICommand("Save Configuration", 1)]
 		public void SaveConfiguration ()
 		{	
 			Log.Message("Saving configuration...");
 
-			foreach ( var svc in serviceList ) {
-
-				string name = GetConfigPath( string.Format("Config.{0}.xml", svc.GetType().Name ) );
-				var cfgProp = GameService.GetConfigProperty( svc.GetType() );
-
-				if (cfgProp==null) {
-					continue;
-				}
-
-				Log.Message("Saving : {0}", name );
-
-				Directory.CreateDirectory( Path.GetDirectoryName(name) );
-
-				try {
-					SaveToXml( cfgProp.GetValue(svc), cfgProp.PropertyType, name );
-				} catch ( Exception ex ) {
-					Log.Error("Failed to save configuration:");
-					Log.Error( ex.Message );
-				}
-			}
+			ConfigSerializer.SaveToFile( gi,				ConfigSerializer.GetConfigPath("Interface.ini") );
+			ConfigSerializer.SaveToFile( sv,				ConfigSerializer.GetConfigPath("Server.ini") );
+			ConfigSerializer.SaveToFile( cl,				ConfigSerializer.GetConfigPath("Client.ini") );
+			ConfigSerializer.SaveToFile( graphicsEngine,	ConfigSerializer.GetConfigPath("Graphics.ini") );
 		}
-
 
 
 
@@ -789,34 +767,14 @@ namespace Fusion.Engine.Common {
 		/// Loads configuration for each subsystem
 		/// </summary>
 		/// <param name="path"></param>
-		[UICommand("Load Configuration", 1)]
 		public void LoadConfiguration ()
 		{
 			Log.Message("Loading configuration...");
 
-			foreach ( var svc in serviceList ) {
-
-				string name = GetConfigPath( string.Format("Config.{0}.xml", svc.GetType().Name ) );
-				var cfgProp = GameService.GetConfigProperty( svc.GetType() );
-
-				if (cfgProp==null) {
-					continue;
-				}
-
-				Log.Message("Loading : {0}", name );
-
-				Directory.CreateDirectory( Path.GetDirectoryName(name) );
-
-				try {
-						
-					var cfg = LoadFromXml( cfgProp.PropertyType, name );
-					cfgProp.SetValue( svc, cfg );
-
-				} catch ( Exception ex ) {
-					Log.Warning("Failed to load configuration:");
-					Log.Warning( ex.Message );
-				}
-			}
+			ConfigSerializer.LoadFromFile( gi,				ConfigSerializer.GetConfigPath("Interface.ini") );
+			ConfigSerializer.LoadFromFile( sv,				ConfigSerializer.GetConfigPath("Server.ini") );
+			ConfigSerializer.LoadFromFile( cl,				ConfigSerializer.GetConfigPath("Client.ini") );
+			ConfigSerializer.LoadFromFile( graphicsEngine,	ConfigSerializer.GetConfigPath("Graphics.ini") );
 		}
 	}
 }

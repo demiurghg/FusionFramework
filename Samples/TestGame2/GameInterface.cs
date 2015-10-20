@@ -9,10 +9,21 @@ using Fusion.Engine.Common;
 using Fusion.Engine.Input;
 using Fusion.Engine.Graphics;
 using Fusion.Core;
+using Fusion.Core.Configuration;
 using Fusion.Framework;
 
 namespace TestGame2 {
 	class GameInterface : IGameInterface {
+
+		
+		[Config("UIConfig")]
+		public UIConfig	UIConfig { get; set; }
+		
+		[Config("UIConfig2")]
+		public UIConfig	UIConfig2 { get; set; }
+		
+		[Config("QQQQQQ")]
+		public UIConfig	Global { get; set; }
 
 		readonly GameEngine gameEngine;
 
@@ -29,6 +40,9 @@ namespace TestGame2 {
 		/// <param name="engine"></param>
 		public GameInterface ( GameEngine gameEngine )
 		{
+			UIConfig			=	new UIConfig();
+			UIConfig2			=	new UIConfig();
+			Global				=	new UIConfig();
 			this.gameEngine		=	gameEngine;
 			this.gameConsole	=	new GameConsole( gameEngine, "debugFont", "conback", 10);
 		}
@@ -76,6 +90,8 @@ namespace TestGame2 {
 		public void Update ( GameTime gameTime )
 		{
 			gameConsole.Update( gameTime );
+
+			testLayer.Color	=	UIConfig.LenaColor;
 
 			if ( gameEngine.Keyboard.IsKeyDown(Keys.R) ) {
 				testLayer.Clear();

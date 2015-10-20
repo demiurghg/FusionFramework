@@ -8,6 +8,7 @@ using Fusion.Drivers.Graphics;
 using System.Runtime.InteropServices;
 using System.Diagnostics;
 using Fusion.Core;
+using Fusion.Core.Configuration;
 using Fusion.Core.Mathematics;
 using Fusion.Engine.Common;
 

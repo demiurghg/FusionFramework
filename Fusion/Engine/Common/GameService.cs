@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Diagnostics;
 using Fusion;
 using Fusion.Core.Mathematics;
+using Fusion.Core.Configuration;
 using Fusion.Drivers.Graphics;
 using Fusion.Core;
 

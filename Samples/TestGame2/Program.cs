@@ -36,11 +36,18 @@ namespace TestGame2 {
 
 			using ( var engine = new GameEngine() ) {
 
-				var sv	=	new GameServer(engine);
-				var cl	=	new GameClient(engine);
-				var ui	=	new GameInterface(engine);
+				engine.GameServer		=	new GameServer(engine);
+				engine.GameClient		=	new GameClient(engine);
+				engine.GameInterface	=	new GameInterface(engine);
 
-				engine.Run( sv, cl, ui );				
+				engine.LoadConfiguration();
+
+				//	apply command-line options here:
+				//	...
+
+				engine.Run();
+				
+				engine.SaveConfiguration(); 				
 			}
 
 			return 0;
