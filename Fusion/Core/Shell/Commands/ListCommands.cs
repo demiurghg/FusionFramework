@@ -25,7 +25,7 @@ namespace Fusion.Core.Shell.Commands {
 		{
 			Log.Message("Commands:");
 
-			var list = Invoker.GetCommandList();
+			var list = Invoker.CommandList;
 			
 			foreach ( var name in list ) {
 				Log.Message("  {0}", name );

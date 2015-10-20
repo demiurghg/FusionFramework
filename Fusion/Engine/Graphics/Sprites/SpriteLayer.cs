@@ -55,6 +55,13 @@ namespace Fusion.Engine.Graphics {
 		public string Name { get; set; }
 
 
+		/// <summary>
+		/// Layer's child layers.
+		/// </summary>
+		public ICollection<SpriteLayer> Layers { get { return layers; } }
+		List<SpriteLayer> layers = new List<SpriteLayer>();
+
+
 		VertexBuffer	vertexBuffer;
 		int				capacity	=	0;
 
@@ -168,6 +175,19 @@ namespace Fusion.Engine.Graphics {
 						*	Matrix.Translation( pivot.X, pivot.Y, 0 )
 						*	Matrix.Translation( offset.X, offset.Y, 0 )
 						;
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="offset"></param>
+		/// <param name="pivot"></param>
+		/// <param name="angle"></param>
+		public void SetTransform ( float x, float y )
+		{
+			Transform	=	Matrix.Translation( x, y, 0 );
 		}
 
 		/*-----------------------------------------------------------------------------------------

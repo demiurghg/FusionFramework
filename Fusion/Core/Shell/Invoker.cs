@@ -29,6 +29,11 @@ namespace Fusion.Core.Shell {
 		Stack<Command> history	= new Stack<Command>(10000);
 
 
+		/// <summary>
+		/// Alphabetically sorted array of command names
+		/// </summary>
+		public string[] CommandList { get; private set; }
+
 
 		/// <summary>
 		/// Creates instance of Invoker.
@@ -68,6 +73,8 @@ namespace Fusion.Core.Shell {
 						.Where( t1 => t1.IsSubclassOf(typeof(Command)) )
 						.Where( t2 => t2.HasAttribute<CommandAttribute>() )
 						.ToDictionary( t3 => t3.GetCustomAttribute<CommandAttribute>().Name );
+
+			CommandList	=	commands.Select( cmd => cmd.Key ).OrderBy( name => name ).ToArray();
 						
 			Log.Message("Invoker: {0} commands found", commands.Count);
 		}
@@ -196,17 +203,6 @@ namespace Fusion.Core.Shell {
 
 				Misc.Swap( ref delayed, ref queue );
 			}
-		}
-
-
-
-		/// <summary>
-		/// Gets alphabetically sorted command list.
-		/// </summary>
-		/// <returns></returns>
-		public IEnumerable<string> GetCommandList ()
-		{
-			return commands.Select( e => e.Key ).OrderBy( n => n ).ToList();
 		}
 
 

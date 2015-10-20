@@ -27,7 +27,7 @@ namespace Fusion.Engine.Graphics {
 		struct ConstData {
 			[FieldOffset( 0)]	public Matrix	Transform;
 			[FieldOffset(64)]	public Vector4	ClipRectangle;
-			[FieldOffset(80)]	public Vector4	MasterColor;
+			[FieldOffset(80)]	public Color4	MasterColor;
 		}
 
 		StateFactory	factory;
@@ -92,6 +92,19 @@ namespace Fusion.Engine.Graphics {
 		}
 
 
+		/// <summary>
+		/// Draws sprite laters and all sublayers.
+		/// </summary>
+		/// <param name="gameTime"></param>
+		/// <param name="stereoEye"></param>
+		public void DrawSprites ( GameTime gameTime, StereoEye stereoEye, IEnumerable<SpriteLayer> layers )
+		{
+			device.ResetStates();
+			device.RestoreBackbuffer();
+
+			DrawSpritesRecursive( gameTime, stereoEye, layers, Matrix.Identity, new Color4(1f,1f,1f,1f) );
+		}
+
 
 		/// <summary>
 		/// Draw sprite layers
@@ -99,13 +112,8 @@ namespace Fusion.Engine.Graphics {
 		/// <param name="gameTime"></param>
 		/// <param name="stereoEye"></param>
 		/// <param name="layers"></param>
-		public void DrawSprites ( GameTime gameTime, StereoEye stereoEye, IEnumerable<SpriteLayer> layers )
+		public void DrawSpritesRecursive ( GameTime gameTime, StereoEye stereoEye, IEnumerable<SpriteLayer> layers, Matrix parentTransform, Color4 parentColor )
 		{
-			device.ResetStates();
-
-			device.RestoreBackbuffer();
-
-
 			int	w	=	device.DisplayBounds.Width;
 			int h	=	device.DisplayBounds.Height;
 			var ofs	=	0f;
@@ -120,9 +128,12 @@ namespace Fusion.Engine.Graphics {
 					continue;
 				}
 
-				constData.Transform		=	layer.Transform * projection;
+				Matrix absTransform	=	parentTransform * layer.Transform;
+				Color4 absColor		=	parentColor * layer.Color.ToColor4();
+
+				constData.Transform		=	absTransform * projection;
 				constData.ClipRectangle	=	new Vector4(0,0,0,0);
-				constData.MasterColor	=	layer.Color.ToVector4();
+				constData.MasterColor	=	absColor;
 
 				constBuffer.SetData( constData );
 
@@ -155,6 +166,8 @@ namespace Fusion.Engine.Graphics {
 				device.PixelShaderSamplers[0]	=	ss;
 
 				layer.Draw( gameTime, stereoEye );
+
+				DrawSpritesRecursive( gameTime, stereoEye, layer.Layers, absTransform, absColor );
 			}
 		}
 	}

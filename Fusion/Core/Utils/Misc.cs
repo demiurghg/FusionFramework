@@ -14,6 +14,69 @@ namespace Fusion {
 
 
 		/// <summary>
+		/// https://en.wikibooks.org/wiki/Algorithm_Implementation/Strings/Longest_common_substring#Retrieve_the_Longest_Substring
+		/// + special case when one of the args is null.
+		/// </summary>
+		/// <param name="str1"></param>
+		/// <param name="str2"></param>
+		/// <param name="sequence"></param>
+		/// <returns></returns>
+		public static int LongestCommonSubstring(string str1, string str2, out string sequence)
+		{
+			if (str1==null) {
+				sequence = str2;
+				return str2.Length;
+			}
+			if (str2==null) {
+				sequence = str1;
+				return str1.Length;
+			}
+			sequence = string.Empty;
+			if (String.IsNullOrEmpty(str1) || String.IsNullOrEmpty(str2))
+				return 0;
+
+			int[,] num = new int[str1.Length, str2.Length];
+			int maxlen = 0;
+			int lastSubsBegin = 0;
+			StringBuilder sequenceBuilder = new StringBuilder();
+
+			for (int i = 0; i < str1.Length; i++)
+			{
+				for (int j = 0; j < str2.Length; j++)
+				{
+					if (str1[i] != str2[j])
+						num[i, j] = 0;
+					else
+					{
+						if ((i == 0) || (j == 0))
+							num[i, j] = 1;
+						else
+							num[i, j] = 1 + num[i - 1, j - 1];
+
+						if (num[i, j] > maxlen)
+						{
+							maxlen = num[i, j];
+							int thisSubsBegin = i - num[i, j] + 1;
+							if (lastSubsBegin == thisSubsBegin)
+							{//if the current LCS is the same as the last time this block ran
+								sequenceBuilder.Append(str1[i]);
+							}
+							else //this block resets the string builder if a different LCS is found
+							{
+								lastSubsBegin = thisSubsBegin;
+								sequenceBuilder.Length = 0; //clear it
+								sequenceBuilder.Append(str1.Substring(lastSubsBegin, (i + 1) - lastSubsBegin));
+							}
+						}
+					}
+				}
+			}
+			sequence = sequenceBuilder.ToString();
+			return maxlen;
+		}
+
+
+		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="value"></param>
@@ -344,10 +407,10 @@ namespace Fusion {
 		public static T GetCustomAttribute<T>( this Type type ) where T : Attribute 
 		{
 			var ca = type.GetCustomAttributes( typeof(T), true );
-			if (ca.Count()!=1) {
-				throw new InvalidOperationException("Type has more than one attribute of type \"" + type.Name + "\"" );
+			if (ca.Count()<1) {
+				return null;
 			}
-			return (T)ca.Single(); 
+			return (T)ca.First(); 
 		}
 
 
