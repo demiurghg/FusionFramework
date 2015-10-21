@@ -148,7 +148,7 @@ namespace Fusion.Core.Content {
 			try {
 				var fileStream	=	File.OpenRead( realName );
 				var zipStream	=	new DeflateStream( fileStream, CompressionMode.Decompress, false );
-
+				
 				zipStream.Read( leadingHash, 0, 16 );
 
 				return zipStream;

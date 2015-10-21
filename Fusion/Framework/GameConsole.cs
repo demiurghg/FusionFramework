@@ -32,7 +32,7 @@ namespace Fusion.Framework {
 		List<string> lines = new List<string>();
 
 
-		DiscTexture	consoleFont;
+		SpriteFont	consoleFont;
 		DiscTexture consoleBackground;
 		SpriteLayer consoleLayer;
 		SpriteLayer editLayer;
@@ -43,6 +43,9 @@ namespace Fusion.Framework {
 		string conback;
 
 		EditBox	editBox;
+
+
+		int scroll = 0;
 
 		/// <summary>
 		/// Console fall speed.
@@ -115,12 +118,16 @@ namespace Fusion.Framework {
 		}
 
 
+		int charHeight { get { return consoleFont.LineHeight; } }
+		int charWidth { get { return consoleFont.SpaceWidth; } }
+
+
 		/// <summary>
 		/// 
 		/// </summary>
 		void LoadContent ()
 		{
-			consoleFont			=	gameEngine.Content.Load<DiscTexture>(font);
+			consoleFont			=	gameEngine.Content.Load<SpriteFont>(font);
 			consoleBackground	=	gameEngine.Content.Load<DiscTexture>(conback);
 		}
 
@@ -160,17 +167,18 @@ namespace Fusion.Framework {
 			}
 
 			//Log.Message("{0} {1}", showFactor, Show);
-			float offset	=	(int)(- vp.Height / 2 * (1 - showFactor));
+			float offset	=	(int)(- (vp.Height / 2) * (1 - showFactor));
 
 			consoleLayer.SetTransform( new Vector2(0, offset), Vector2.Zero, 0 );
 			editLayer.SetTransform( 0, vp.Height/2 - 8 );
 
 			Color cursorColor = CmdLineColor;
-			cursorColor.A = (byte)( cursorColor.A * (0.5 + 0.5 * Math.Cos( 2 * CursorBlinkRate * Math.PI * gameTime.Total.TotalSeconds ) ) );
+			cursorColor.A = (byte)( cursorColor.A * (0.5 + 0.5 * Math.Cos( 2 * CursorBlinkRate * Math.PI * gameTime.Total.TotalSeconds ) > 0.5 ? 1 : 0 ) );
 
 			editLayer.Clear();
-			editLayer.DrawDebugString( consoleFont, 0,0, "]" + editBox.Text, CmdLineColor );
-			editLayer.DrawDebugString( consoleFont, 8 + 8 * editBox.Cursor, 0, "\xB", cursorColor );
+
+			consoleFont.DrawString( editLayer, "]" + editBox.Text, 0,0, CmdLineColor );
+			consoleFont.DrawString( editLayer, "_", charWidth + charWidth * editBox.Cursor, 0, cursorColor );
 		}
 
 
@@ -190,16 +198,18 @@ namespace Fusion.Framework {
 		{
 			var vp		=	gameEngine.GraphicsDevice.DisplayBounds;
 
-			int cols	=	vp.Width / 8;
-			int rows	=	vp.Height / 16;
+			int cols	=	vp.Width / charWidth;
+			int rows	=	vp.Height / charHeight / 2;
 
 			int count = 1;
 
 			consoleLayer.Clear();
 
-			consoleLayer.Draw( consoleBackground, 0,0, vp.Width, vp.Height/2+2, Color.White );
+			consoleLayer.Draw( consoleBackground, 0,0, vp.Width, vp.Height/2, Color.White );
 
-			foreach ( var line in TraceRecorder.Lines.Reverse() ) {
+			scroll	=	MathUtil.Clamp( scroll, 0, TraceRecorder.Lines.Count() );
+
+			foreach ( var line in TraceRecorder.Lines.Reverse().Skip(scroll) ) {
 
 				Color color = Color.Gray;
 
@@ -209,7 +219,8 @@ namespace Fusion.Framework {
 					case TraceEventType.Warning		: color = WarningColor; break;
 				}
 				
-				consoleLayer.DrawDebugString( consoleFont, 0, vp.Height/2 - (count + 2) * 8, line.Message, color );
+
+				consoleFont.DrawString( consoleLayer, line.Message, 0, vp.Height/2 - (count+2) * charHeight, color );
 
 				if (count>rows) {
 					break;
@@ -268,13 +279,15 @@ namespace Fusion.Framework {
 				return;
 			}
 			switch (e.Key) {
-				case Keys.End	 : editBox.Move(int.MaxValue/2); break;
-				case Keys.Home	 : editBox.Move(int.MinValue/2); break;
-				case Keys.Left   : editBox.Move(-1); break;
-				case Keys.Right  : editBox.Move( 1); break;
-				case Keys.Delete : editBox.Delete(); break;
-				case Keys.Up	 : editBox.Prev(); break;
-				case Keys.Down   : editBox.Next(); break;
+				case Keys.End		: editBox.Move(int.MaxValue/2); break;
+				case Keys.Home		: editBox.Move(int.MinValue/2); break;
+				case Keys.Left		: editBox.Move(-1); break;
+				case Keys.Right		: editBox.Move( 1); break;
+				case Keys.Delete	: editBox.Delete(); break;
+				case Keys.Up		: editBox.Prev(); break;
+				case Keys.Down		: editBox.Next(); break;
+				case Keys.PageUp	: scroll += 2; dirty = true; break;
+				case Keys.PageDown	: scroll -= 2; dirty = true; break;
 			}
 
 			RefreshEdit();
@@ -313,6 +326,7 @@ namespace Fusion.Framework {
 		void TraceRecorder_TraceRecorded ( object sender, EventArgs e )
 		{
 			RefreshConsole();
+			scroll	=	0;
 		}
 
 

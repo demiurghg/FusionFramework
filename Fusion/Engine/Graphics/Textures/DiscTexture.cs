@@ -34,7 +34,7 @@ namespace Fusion.Engine.Graphics {
 		/// </summary>
 		/// <param name="ge"></param>
 		/// <param name="texture"></param>
-		public DiscTexture ( GraphicsEngine ge, Texture2D texture )
+		internal DiscTexture ( GraphicsEngine ge, Texture2D texture )
 		{
 			this.texture	=	texture;
 			this.Width		=	texture.Width;

@@ -36,7 +36,7 @@ namespace TestGame2 {
 		{
 			UIConfig			=	new UIConfig();
 			this.gameEngine		=	gameEngine;
-			this.gameConsole	=	new GameConsole( gameEngine, "debugFont", "conback", 10);
+			this.gameConsole	=	new GameConsole( gameEngine, "courier", "conback", 10);
 		}
 
 

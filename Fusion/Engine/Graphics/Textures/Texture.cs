@@ -12,7 +12,7 @@ namespace Fusion.Engine.Graphics {
 		public int Width;
 		public int Height;
 
-		public ShaderResource Srv = null;
+		internal ShaderResource Srv = null;
 		
 	}
 }

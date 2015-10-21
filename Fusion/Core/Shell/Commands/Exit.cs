@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Fusion.Core.Shell.Commands {
 	
-	[Command("exit", "Exit")]
+	[Command("quit", "Exit")]
 	public class Exit : Command {
 
 		/// <summary>

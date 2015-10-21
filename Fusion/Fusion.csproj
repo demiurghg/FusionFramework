@@ -309,6 +309,8 @@
     <Compile Include="Engine\Common\IGameInterface.cs" />
     <Compile Include="Engine\Graphics\Camera.cs" />
     <Compile Include="Engine\Graphics\Sprites\SpriteEngine.cs" />
+    <Compile Include="Engine\Graphics\Sprites\SpriteFont.BMFont.cs" />
+    <Compile Include="Engine\Graphics\Sprites\SpriteFontLoader.cs" />
     <Compile Include="Engine\Graphics\Sprites\SpriteVertex.cs" />
     <Compile Include="Engine\Graphics\Enums.cs" />
     <Compile Include="Engine\Graphics\GraphicsEngine.cs" />

@@ -54,6 +54,7 @@ namespace Fusion.Build.Processors {
 				using ( var sw = new BinaryWriter( stream ) ) {
 
 					var xml = SpriteFont.FontLoader.SaveToString( font );
+
 					sw.Write( xml );
 
 					//	write pages :
