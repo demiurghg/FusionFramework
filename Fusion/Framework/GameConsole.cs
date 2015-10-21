@@ -151,6 +151,8 @@ namespace Fusion.Framework {
 		{
 			var vp		=	gameEngine.GraphicsDevice.DisplayBounds;
 
+			RefreshConsoleLayer();
+
 			if (Show) {
 				showFactor = MathUtil.Clamp( showFactor + Speed * gameTime.ElapsedSec, 0,1 );
 			} else {															   
@@ -181,11 +183,10 @@ namespace Fusion.Framework {
 		}
 
 
+		bool dirty = true;
 
-		/// <summary>
-		/// Refreshes console layer.
-		/// </summary>
-		void RefreshConsole ()
+
+		void RefreshConsoleLayer ()
 		{
 			var vp		=	gameEngine.GraphicsDevice.DisplayBounds;
 
@@ -208,7 +209,7 @@ namespace Fusion.Framework {
 					case TraceEventType.Warning		: color = WarningColor; break;
 				}
 				
-				consoleLayer.DrawDebugString( consoleFont, 0, vp.Height/2 - (count + 1) * 8, line.Message, color );
+				consoleLayer.DrawDebugString( consoleFont, 0, vp.Height/2 - (count + 2) * 8, line.Message, color );
 
 				if (count>rows) {
 					break;
@@ -216,6 +217,17 @@ namespace Fusion.Framework {
 
 				count++;
 			}
+
+			dirty = false;
+		}
+
+
+		/// <summary>
+		/// Refreshes console layer.
+		/// </summary>
+		void RefreshConsole ()
+		{
+			dirty	=	true;
 		}
 
 
@@ -225,6 +237,7 @@ namespace Fusion.Framework {
 		{
 			try {
 				var cmd  = editBox.Text;
+				Log.Message("]{0}", cmd);
 				gameEngine.Invoker.Push(cmd);
 			} catch ( Exception e ) {
 				Log.Error(e.Message);

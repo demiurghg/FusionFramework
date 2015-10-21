@@ -118,12 +118,12 @@ namespace Fusion.Core.Shell {
 		/// Immediatly executes command line.
 		/// </summary>
 		/// <param name="commandLine"></param>
-		public string Execute ( string commandLine )
+		/*public string Execute ( string commandLine )
 		{
 			var cmd = Push( commandLine );
 			ExecuteQueue( new GameTime(), false );
 			return cmd.GetStringResult();
-		}
+		} */
 
 
 
@@ -140,11 +140,24 @@ namespace Fusion.Core.Shell {
 				throw new CommandLineParserException("Empty command line.");
 			} 
 
+
+
 			var cmdName	=	argList[0];
 			argList		=	argList.Skip(1).ToArray();
 			
 
 			lock (lockObject) {
+
+				ConfigVariable variable;
+
+				if (Variables.TryGetValue( cmdName, out variable )) {
+					if (argList.Count()==0) {
+						Log.Message("{0}{1}{2} = {3}", variable.Prefix, variable.Section, variable.Name, variable.Get() );
+						return null;
+					} else {
+						return Push( string.Format("set {0} {1}", cmdName, string.Join(" ", argList) ) );
+					}
+				}
 				var command	=	GetCommand( cmdName );
 
 				var parser	=	new CommandLineParser( command, cmdName );
@@ -175,6 +188,8 @@ namespace Fusion.Core.Shell {
 				queue.Enqueue( command );
 			}
 		}
+
+
 
 
 
