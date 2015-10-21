@@ -19,12 +19,6 @@ namespace TestGame2 {
 		[Config("UIConfig")]
 		public UIConfig	UIConfig { get; set; }
 		
-		[Config("UIConfig2")]
-		public UIConfig	UIConfig2 { get; set; }
-		
-		[Config("QQQQQQ")]
-		public UIConfig	Global { get; set; }
-
 		readonly GameEngine gameEngine;
 
 			
@@ -41,8 +35,6 @@ namespace TestGame2 {
 		public GameInterface ( GameEngine gameEngine )
 		{
 			UIConfig			=	new UIConfig();
-			UIConfig2			=	new UIConfig();
-			Global				=	new UIConfig();
 			this.gameEngine		=	gameEngine;
 			this.gameConsole	=	new GameConsole( gameEngine, "debugFont", "conback", 10);
 		}
@@ -64,7 +56,7 @@ namespace TestGame2 {
 			debugFont	=	gameEngine.Content.Load<DiscTexture>( "debugFont" );
 
 			testLayer.Clear();
-			testLayer.Draw( texture, 10,10,256,256, Color.White );
+			testLayer.Draw( texture, 10,10 + 384,256,256, Color.White );
 
 			testLayer.DrawDebugString( debugFont, 10,276, "Lenna Soderberg", Color.White );
 
@@ -93,17 +85,10 @@ namespace TestGame2 {
 
 			testLayer.Color	=	UIConfig.LenaColor;
 
-			if ( gameEngine.Keyboard.IsKeyDown(Keys.R) ) {
+			/*if ( gameEngine.Keyboard.IsKeyDown(Keys.R) ) {
 				testLayer.Clear();
 				testLayer.DrawDebugString( debugFont, 10, 276, rand.Next().ToString(), Color.White );
-			} 
-
-			if ( gameEngine.Keyboard.IsKeyDown(Keys.C) ) {
-				testLayer.Color = rand.NextColor(0,1,1);
-			} 
-			if ( gameEngine.Keyboard.IsKeyDown(Keys.W) ) {
-				testLayer.Color = Color.White;
-			} 
+			} */
 
 			if ( gameEngine.Keyboard.IsKeyDown(Keys.Left) ) {
 				angle -= 0.01f;

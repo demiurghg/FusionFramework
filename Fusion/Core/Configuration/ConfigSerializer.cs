@@ -188,5 +188,34 @@ namespace Fusion.Core.Configuration {
 
 			return configProps.ToArray();
 		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <returns></returns>
+		public static IEnumerable<ConfigVariable> GetConfigVariables ( object obj, string prefix )
+		{
+			var list = new List<ConfigVariable>();
+
+			var cfgProps	=	GetConfigProperties(obj);
+
+			foreach ( var cfgProp in cfgProps ) {
+
+				var cfgName		=	cfgProp.GetCustomAttribute<ConfigAttribute>().Name;
+				var cfgValue	=	cfgProp.GetValue(obj);
+
+				foreach ( var prop in cfgValue.GetType().GetProperties() ) {
+
+					var cfgVar	=	new ConfigVariable( prefix, cfgName, prop.Name, prop, cfgValue );
+					
+					list.Add( cfgVar ); 
+				}
+			}
+
+			return list;
+		}
 	}
 }

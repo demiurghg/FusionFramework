@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Fusion.Core.Configuration;
 using Fusion.Engine.Common;
 
 
 namespace Fusion.Core.Shell {
-	public class Invoker {
+	public partial class Invoker {
 
 		/// <summary>
 		/// GameEngine reference.
@@ -21,6 +22,7 @@ namespace Fusion.Core.Shell {
 		public object Context { get; private set; }
 
 		Dictionary<string, Type> commands;
+		Dictionary<string, ConfigVariable> variables;
 
 		object lockObject = new object();
 
@@ -33,6 +35,16 @@ namespace Fusion.Core.Shell {
 		/// Alphabetically sorted array of command names
 		/// </summary>
 		public string[] CommandList { get; private set; }
+
+		/// <summary>
+		/// Gets dictionary of all available variables.
+		/// </summary>
+		public Dictionary<string, ConfigVariable> Variables {
+			get {
+				return variables;
+			}
+		}
+
 
 
 		/// <summary>
@@ -82,6 +94,27 @@ namespace Fusion.Core.Shell {
 
 
 		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="obj"></param>
+		/// <param name="name"></param>
+		internal void FeedConfigs ()
+		{
+			lock (lockObject) {
+				
+				variables	=	GameEngine.Services
+					.Select( svc => ConfigSerializer.GetConfigVariables( svc.Value, svc.Key ) )
+					.SelectMany( var0 => var0 )
+					.ToDictionary( var1 => var1.Prefix + "." + var1.Section + "." + var1.Name );
+
+			}
+		}
+
+
+		
+
+
+		/// <summary>
 		/// Immediatly executes command line.
 		/// </summary>
 		/// <param name="commandLine"></param>
@@ -93,7 +126,7 @@ namespace Fusion.Core.Shell {
 		}
 
 
-		
+
 		/// <summary>
 		/// Parses and pushes command to the queue.
 		/// </summary>

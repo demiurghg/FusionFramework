@@ -4,14 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel;
+using Fusion.Core.Configuration;
 
 namespace Fusion.Core.Shell.Commands {
 	
 	[Command("set")]
 	public class Set : Command {
-
-		[CommandLineParser.Required]
-		public string Service { get; set; }
 
 		[CommandLineParser.Required]
 		public string Variable { get; set; }
@@ -20,7 +18,7 @@ namespace Fusion.Core.Shell.Commands {
 		public string Value { get; set; }
 
 
-		object oldValue;
+		string oldValue;
 
 
 		/// <summary>
@@ -37,19 +35,14 @@ namespace Fusion.Core.Shell.Commands {
 		/// </summary>
 		public override void Execute ()
 		{
-			var cfg = GameEngine.GetConfigObjectByServiceName( Service );
-			
-			var prop = cfg.GetType().GetProperty( Variable );
+			ConfigVariable variable;
 
-			if (prop==null) {
-				throw new Exception(string.Format("Service '{0}' does not have config variable '{1}'", Service, Variable));
+			if (!Invoker.Variables.TryGetValue( Variable, out variable )) {
+				throw new Exception(string.Format("Variable '{0}' does not exist", Variable) );
 			}
 
-			oldValue	=	prop.GetValue( cfg );
-
-			prop.SetValue( cfg, ChangeType( Value, prop.PropertyType ) );
-
-			Result = prop.GetValue( cfg );
+			oldValue	= variable.Get();
+			variable.Set( Value );
 		}
 
 
@@ -74,10 +67,13 @@ namespace Fusion.Core.Shell.Commands {
 		/// </summary>
 		public override void Rollback ()
 		{
-			var cfg = GameEngine.GetConfigObjectByServiceName( Service );
-			var prop = cfg.GetType().GetProperty( Variable );
+			ConfigVariable variable;
 
-			prop.SetValue( cfg, oldValue );
+			if (!Invoker.Variables.TryGetValue( Variable, out variable )) {
+				throw new Exception(string.Format("Variable '{0}' does not exist", Variable) );
+			}
+
+			variable.Set( oldValue );
 		}
 	}
 }

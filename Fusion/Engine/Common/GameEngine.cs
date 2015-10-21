@@ -605,6 +605,8 @@ namespace Fusion.Engine.Common {
 		 * 
 		-----------------------------------------------------------------------------------------*/
 
+
+
 		/// <summary>
 		/// Returns service list
 		/// </summary>
@@ -747,6 +749,37 @@ namespace Fusion.Engine.Common {
 		 * 
 		-----------------------------------------------------------------------------------------*/
 
+		public IEnumerable<KeyValuePair<string,object>> Services {
+			get {
+				return new KeyValuePair<string,object>[] {
+					new KeyValuePair<string, object>( "Interface",	gi ),
+					new KeyValuePair<string, object>( "Server",		sv ),
+					new KeyValuePair<string, object>( "Client",		cl ),
+					new KeyValuePair<string, object>( "Graphics",	graphicsEngine ),
+				};
+			}
+		}
+
+
+		/// <summary>
+		/// Loads configuration for each subsystem
+		/// </summary>
+		/// <param name="path"></param>
+		public void LoadConfiguration ()
+		{
+			Log.Message("Loading configuration...");
+
+			Invoker.FeedConfigs();
+
+			ConfigSerializer.LoadFromFile( gi,				ConfigSerializer.GetConfigPath("Interface.ini") );
+			ConfigSerializer.LoadFromFile( sv,				ConfigSerializer.GetConfigPath("Server.ini") );
+			ConfigSerializer.LoadFromFile( cl,				ConfigSerializer.GetConfigPath("Client.ini") );
+			ConfigSerializer.LoadFromFile( graphicsEngine,	ConfigSerializer.GetConfigPath("Graphics.ini") );
+
+
+		}
+
+
 		/// <summary>
 		/// Saves configuration to XML file	for each subsystem
 		/// </summary>
@@ -759,22 +792,6 @@ namespace Fusion.Engine.Common {
 			ConfigSerializer.SaveToFile( sv,				ConfigSerializer.GetConfigPath("Server.ini") );
 			ConfigSerializer.SaveToFile( cl,				ConfigSerializer.GetConfigPath("Client.ini") );
 			ConfigSerializer.SaveToFile( graphicsEngine,	ConfigSerializer.GetConfigPath("Graphics.ini") );
-		}
-
-
-
-		/// <summary>
-		/// Loads configuration for each subsystem
-		/// </summary>
-		/// <param name="path"></param>
-		public void LoadConfiguration ()
-		{
-			Log.Message("Loading configuration...");
-
-			ConfigSerializer.LoadFromFile( gi,				ConfigSerializer.GetConfigPath("Interface.ini") );
-			ConfigSerializer.LoadFromFile( sv,				ConfigSerializer.GetConfigPath("Server.ini") );
-			ConfigSerializer.LoadFromFile( cl,				ConfigSerializer.GetConfigPath("Client.ini") );
-			ConfigSerializer.LoadFromFile( graphicsEngine,	ConfigSerializer.GetConfigPath("Graphics.ini") );
 		}
 	}
 }

@@ -220,6 +220,7 @@ namespace Fusion.Framework {
 
 
 
+
 		void ExecCmd ()
 		{
 			try {
@@ -234,35 +235,7 @@ namespace Fusion.Framework {
 
 		void TabCmd ()
 		{
-			var cmd  =	editBox.Text.Trim().ToLower();
-			var list =	gameEngine.Invoker.CommandList
-						.Select( n => n.ToLower() )
-						.ToList();
-
-
-			//list.Add("r_fullscr");
-			//list.Add("r_screenwidth");
-			//list.Add("r_screenheight");
-
-			string longestCommon = null;
-			int count = 0;
-
-			foreach ( var name in list ) {
-				if (cmd==name) {
-					editBox.Text = name + " ";
-					return;
-				}
-				if (name.StartsWith(cmd)) {
-					Misc.LongestCommonSubstring( longestCommon, name, out longestCommon );
-					editBox.Text = longestCommon;
-					count++;
-					Log.Message(" {0} -> {1}", name, longestCommon);
-				}
-			}
-
-			if (count==1) {
-				editBox.Text = editBox.Text + " ";
-			}
+			editBox.Text = gameEngine.Invoker.AutoComplete( editBox.Text );
 		}
 
 

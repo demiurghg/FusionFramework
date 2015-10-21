@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Configuration\ConfigSerializer.cs" />
+    <Compile Include="Core\Configuration\ConfigVariable.cs" />
     <Compile Include="Core\IniParser\Exceptions\ParsingException.cs" />
     <Compile Include="Core\IniParser\FileIniParser.cs" />
     <Compile Include="Core\IniParser\Helpers\Assert.cs" />
@@ -132,6 +133,7 @@
     <Compile Include="Core\IniParser\StreamIniDataParser.cs" />
     <Compile Include="Core\IniParser\StringIniParser.cs" />
     <Compile Include="Core\Shell\CommandLineParserConfiguration.cs" />
+    <Compile Include="Core\Shell\Invoker.Helper.cs" />
     <Compile Include="Drivers\Audio\AudioChannels.cs" />
     <Compile Include="Drivers\Audio\AudioDevice.cs" />
     <Compile Include="Drivers\Audio\AudioEmitter.cs" />
