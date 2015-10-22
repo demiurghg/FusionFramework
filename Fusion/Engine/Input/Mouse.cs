@@ -10,7 +10,7 @@ using Fusion.Engine.Common;
 
 namespace Fusion.Engine.Input {
 
-	public class Mouse : DisposableBase {
+	public class Mouse : GameModule {
 		
 		InputDevice device;
 
@@ -21,12 +21,21 @@ namespace Fusion.Engine.Input {
 		/// 
 		/// </summary>
 		/// <param name="gameEngine"></param>
-		internal Mouse ( GameEngine gameEngine )
+		internal Mouse ( GameEngine gameEngine ) : base(gameEngine)
 		{
 			this.device	=	gameEngine.InputDevice;
 
 			device.MouseScroll += device_MouseScroll;
 			device.MouseMove += device_MouseMove;
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public override void Initialize ()
+		{
 		}
 
 

@@ -31,9 +31,6 @@ namespace Fusion.Engine.Common {
 	/// </summary>
 	public class GameEngine : DisposableBase {
 
-
-
-
 		/// <summary>
 		/// GameEngine instance.
 		/// </summary>
@@ -57,6 +54,7 @@ namespace Fusion.Engine.Common {
 		/// <summary>
 		/// Gets the current graphics engine
 		/// </summary>
+		[GameModule("Graphics", "ge")]
 		public	GraphicsEngine GraphicsEngine { get { return graphicsEngine; } }
 
 		/// <summary>
@@ -67,11 +65,13 @@ namespace Fusion.Engine.Common {
 		/// <summary>
 		/// Gets keyboard.
 		/// </summary>
+		[GameModule("Keyboard", "kb")]
 		public Keyboard Keyboard { get { return keyboard; } }
 
 		/// <summary>
 		/// Gets mouse.
 		/// </summary>
+		[GameModule("Mouse", "mouse")]
 		public Mouse Mouse { get { return mouse; } }
 
 		/// <summary>
@@ -133,62 +133,30 @@ namespace Fusion.Engine.Common {
 		Mouse				mouse			;
 		GamepadCollection	gamepads		;
 
-		List<GameService>	serviceList	=	new List<GameService>();
 		GameTime	gameTimeInternal;
 
-
-		IGameServer	sv;
-		IGameClient cl;
-		IGameInterface gi;
+		GameServer	sv;
+		GameClient cl;
+		GameInterface gi;
 
 
 		/// <summary>
 		/// Current game server.
 		/// </summary>
-		public IGameServer GameServer { 
-			get { 
-				return sv; 
-			} 
-			set { 
-				if (sv==null) { 
-					sv = value; 
-				} else {
-					throw new GameException("GameServer could be assigned only once");
-				}
-			}
-		}
+		[GameModule("Server", "sv")]
+		public GameServer GameServer { get { return sv; } set { sv = value; } }
 		
 		/// <summary>
 		/// Current game client.
 		/// </summary>
-		public IGameClient GameClient { 
-			get { 
-				return cl; 
-			} 
-			set { 
-				if (cl==null) { 
-					cl = value;
-				} else {
-					throw new GameException("GameClient could be assigned only once");
-				}
-			}
-		}
+		[GameModule("Client", "cl")]
+		public GameClient GameClient { get { return cl; } set { cl = value; } }
 
 		/// <summary>
 		/// Current game interface.
 		/// </summary>
-		public IGameInterface GameInterface { 
-			get { 
-				return gi; 
-			} 
-			set { 
-				if (gi==null) { 
-					gi = value; 
-				} else {
-					throw new GameException("GameInterface could be assigned only once");
-				}
-			}
-		}
+		[GameModule("Interface", "ui")]
+		public GameInterface GameInterface { get { return gi; } set { gi = value; } }
 
 
 
@@ -203,6 +171,21 @@ namespace Fusion.Engine.Common {
 		{
 			InitInternal();
 			RenderLoop.Run( GraphicsDevice.Display.Window, UpdateInternal );
+		}
+
+
+
+		public string GetReleaseInfo ()
+		{
+			return string.Format("{0} {1} {2}", 
+				Assembly.GetExecutingAssembly().GetName().Name, 
+				Assembly.GetExecutingAssembly().GetName().Version,
+				#if DEBUG
+					"debug"
+				#else
+					"release"
+				#endif
+			);
 		}
 
 
@@ -228,15 +211,7 @@ namespace Fusion.Engine.Common {
 
 			Instance	=	this;
 
-			Log.Message("{0} {1} {2}", 
-				Assembly.GetExecutingAssembly().GetName().Name, 
-				Assembly.GetExecutingAssembly().GetName().Version,
-				#if DEBUG
-					"debug"
-				#else
-					"release"
-				#endif
-				);
+			Log.Message(GetReleaseInfo());
 			Log.Message("Startup directory : {0}", AppDomain.CurrentDomain.BaseDirectory );
 			Log.Message("Current directory : {0}", Directory.GetCurrentDirectory() );
 
@@ -251,6 +226,10 @@ namespace Fusion.Engine.Common {
 			content				=	new ContentManager( this );
 			gameTimeInternal	=	new GameTime();
 			invoker				=	new Invoker(this);
+
+			keyboard			=	new Keyboard(this);
+			mouse				=	new Mouse(this);
+			gamepads			=	new GamepadCollection(this);
 
 		}
 
@@ -301,33 +280,21 @@ namespace Fusion.Engine.Common {
 			Log.Message("---------- GameEngine Initializing ----------");
 
 			var p = new GameParameters();
-			p.Width	=	1024;
-			p.Height =	768;
+			p.Width	=	800;
+			p.Height =	600;
 
 			GraphicsDevice.Initialize( p );
 			InputDevice.Initialize();
 			AudioDevice.Initialize();
-
-			keyboard	=	new Keyboard(this);
-			mouse		=	new Mouse(this);
-			gamepads	=	new GamepadCollection(this);
 
 			GraphicsDevice.FullScreen = false;
 
 			//	init game :
 			Log.Message("");
 
+			GameModule.InitializeAll( this );
 
-			lock ( serviceList ) {
-				Initialize();
-				initialized = true;
-			}
-
-			GraphicsEngine.Initialize();
-
-
-			Log.Message("UI initialization...");
-			gi.Initialize();
+			initialized	=	true;
 
 			Log.Message("---------------------------------------");
 			Log.Message("");
@@ -358,28 +325,7 @@ namespace Fusion.Engine.Common {
 
 			if (disposing) {
 
-				Log.Message("Shutting down : Game User Interface");
-				gi.Shutdown();
-
-				Log.Message("Disposing : Graphics Engine");
-				SafeDispose( ref graphicsEngine );
-
-				Log.Message("Disposing : Keyboard");
-				SafeDispose( ref keyboard );
-
-				Log.Message("Disposing : Mouse");
-				SafeDispose( ref mouse );
-				
-				//lock ( serviceList ) {
-				//	//	shutdown registered services in reverse order:
-				//	serviceList.Reverse();
-
-				//	foreach ( var svc in serviceList ) {
-				//		Log.Message("Disposing : {0}", svc.GetType().Name );
-				//		svc.Dispose();
-				//	}
-				//	serviceList.Clear();
-				//}
+				GameModule.DisposeAll( this );
 
 				content.Dispose();
 
@@ -477,10 +423,9 @@ namespace Fusion.Engine.Common {
 
 				InputDevice.UpdateInput();
 
-				//
-				//	Update :
-				//
-				this.Update( gameTimeInternal );
+
+				gi.Update( gameTimeInternal );
+
 
 				//
 				//	Render :
@@ -519,45 +464,6 @@ namespace Fusion.Engine.Common {
 
 
 		/// <summary>
-		/// Called after the GameEngine and GraphicsDevice are created.
-		/// Initializes all registerd services
-		/// </summary>
-		protected virtual void Initialize ()
-		{
-			//	init registered services :
-			foreach ( var svc in serviceList ) {
-				Log.Message("Initializing : {0}", svc.GetType().Name );
-				svc.Initialize();
-			}
-		}
-
-
-
-		/// <summary>
-		/// Called when the game has determined that game logic needs to be processed.
-		/// </summary>
-		/// <param name="gameTime"></param>
-		protected virtual void Update ( GameTime gameTime )
-		{
-			gi.Update( gameTime );
-
-			//GameService[] svcList;
-
-			//lock (serviceList) {
-			//	svcList = serviceList.OrderBy( a => a.UpdateOrder ).ToArray();
-			//}
-
-			//foreach ( var svc in svcList ) {
-					
-			//	if ( svc.Enabled ) {
-			//		svc.Update( gameTime );
-			//	}
-			//}
-		}
-
-
-
-		/// <summary>
 		/// Called when the game determines it is time to draw a frame.
 		/// In stereo mode this method will be called twice to render left and right parts of stereo image.
 		/// </summary>
@@ -566,20 +472,6 @@ namespace Fusion.Engine.Common {
 		protected virtual void Draw ( GameTime gameTime, StereoEye stereoEye )
 		{
 			GraphicsEngine.Draw( gameTime, stereoEye );
-
-			//lock (serviceList) {
-			//	svcList = serviceList.OrderBy( a => a.DrawOrder ).ToArray();
-			//}
-
-
-			//foreach ( var svc in svcList ) {
-
-			//	if ( svc.Visible ) {
-			//		GraphicsDevice.ResetStates();
-			//		GraphicsDevice.RestoreBackbuffer();
-			//		svc.Draw( gameTime, stereoEye );
-			//	}
-			//}
 
 			GraphicsDevice.ResetStates();
 			GraphicsDevice.RestoreBackbuffer();
@@ -606,7 +498,7 @@ namespace Fusion.Engine.Common {
 		-----------------------------------------------------------------------------------------*/
 
 
-
+		#if false
 		/// <summary>
 		/// Returns service list
 		/// </summary>
@@ -742,6 +634,7 @@ namespace Fusion.Engine.Common {
 				return false;
 			}
 		}
+		#endif
 
 		/*-----------------------------------------------------------------------------------------
 		 * 
@@ -749,34 +642,18 @@ namespace Fusion.Engine.Common {
 		 * 
 		-----------------------------------------------------------------------------------------*/
 
-		public IEnumerable<KeyValuePair<string,object>> Services {
-			get {
-				return new KeyValuePair<string,object>[] {
-					new KeyValuePair<string, object>( "Interface",	gi ),
-					new KeyValuePair<string, object>( "Server",		sv ),
-					new KeyValuePair<string, object>( "Client",		cl ),
-					new KeyValuePair<string, object>( "Graphics",	graphicsEngine ),
-				};
-			}
-		}
-
 
 		/// <summary>
 		/// Loads configuration for each subsystem
 		/// </summary>
 		/// <param name="path"></param>
-		public void LoadConfiguration ()
+		public void LoadConfiguration ( string filename )
 		{
 			Log.Message("Loading configuration...");
 
-			Invoker.FeedConfigs();
+			Invoker.FeedConfigs( ConfigSerializer.GetConfigVariables( GameModule.Enumerate(this) ) );
 
-			ConfigSerializer.LoadFromFile( gi,				ConfigSerializer.GetConfigPath("Interface.ini") );
-			ConfigSerializer.LoadFromFile( sv,				ConfigSerializer.GetConfigPath("Server.ini") );
-			ConfigSerializer.LoadFromFile( cl,				ConfigSerializer.GetConfigPath("Client.ini") );
-			ConfigSerializer.LoadFromFile( graphicsEngine,	ConfigSerializer.GetConfigPath("Graphics.ini") );
-
-
+			ConfigSerializer.LoadFromFile( GameModule.Enumerate(this), ConfigSerializer.GetConfigPath(filename) );
 		}
 
 
@@ -784,14 +661,11 @@ namespace Fusion.Engine.Common {
 		/// Saves configuration to XML file	for each subsystem
 		/// </summary>
 		/// <param name="path"></param>
-		public void SaveConfiguration ()
+		public void SaveConfiguration ( string filename )
 		{	
 			Log.Message("Saving configuration...");
 
-			ConfigSerializer.SaveToFile( gi,				ConfigSerializer.GetConfigPath("Interface.ini") );
-			ConfigSerializer.SaveToFile( sv,				ConfigSerializer.GetConfigPath("Server.ini") );
-			ConfigSerializer.SaveToFile( cl,				ConfigSerializer.GetConfigPath("Client.ini") );
-			ConfigSerializer.SaveToFile( graphicsEngine,	ConfigSerializer.GetConfigPath("Graphics.ini") );
+			ConfigSerializer.SaveToFile( GameModule.Enumerate(this), ConfigSerializer.GetConfigPath(filename) );
 		}
 	}
 }

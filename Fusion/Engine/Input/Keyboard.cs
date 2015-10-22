@@ -9,7 +9,7 @@ using Fusion.Drivers.Input;
 using Fusion.Engine.Common;
 
 namespace Fusion.Engine.Input {
-	public class Keyboard : DisposableBase {
+	public class Keyboard : GameModule {
 
 		InputDevice device;
 
@@ -17,7 +17,7 @@ namespace Fusion.Engine.Input {
 		/// ctor
 		/// </summary>
 		/// <param name="gameEngine"></param>
-		internal Keyboard ( GameEngine gameEngine )
+		internal Keyboard ( GameEngine gameEngine ) : base(gameEngine)
 		{
 			this.device	=	gameEngine.InputDevice;
 
@@ -29,6 +29,14 @@ namespace Fusion.Engine.Input {
 			device.FormKeyPress += device_FormKeyPress;
 		}
 
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public override void Initialize ()
+		{
+		}
 
 
 		/// <summary>

@@ -40,14 +40,14 @@ namespace TestGame2 {
 				engine.GameClient		=	new GameClient(engine);
 				engine.GameInterface	=	new GameInterface(engine);
 
-				engine.LoadConfiguration();
+				engine.LoadConfiguration("Config.ini");
 
 				//	apply command-line options here:
 				//	...
 
 				engine.Run();
 				
-				engine.SaveConfiguration(); 				
+				engine.SaveConfiguration("Config.ini"); 				
 			}
 
 			return 0;

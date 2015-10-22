@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using Drawing = System.Drawing;
 using Fusion.Core.Mathematics;
 using Native.NvApi;
+using Fusion.Core;
 using Fusion.Engine.Common;
 
 

@@ -12,6 +12,7 @@ using DXGI = SharpDX.DXGI;
 using SharpDX.DXGI;
 using SharpDX.Windows;
 using System.Runtime.InteropServices;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
 

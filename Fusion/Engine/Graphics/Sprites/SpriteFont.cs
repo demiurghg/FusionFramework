@@ -350,12 +350,12 @@ namespace Fusion.Engine.Graphics {
 		/// <param name="glyphs"></param>
 		/// <param name="offsetX"></param>
 		/// <param name="offsetY"></param>
-		static public void DrawGlyphs ( SpriteBatch spriteBatch, IEnumerable<Glyph> glyphs, int offsetX, int offsetY )
+		/*static public void DrawGlyphs ( SpriteBatch spriteBatch, IEnumerable<Glyph> glyphs, int offsetX, int offsetY )
 		{
 			foreach ( var glyph in glyphs ) {
 				spriteBatch.Draw( glyph.Texture, glyph.DstRect, glyph.SrcRect, offsetX, offsetY, glyph.Color );
 			}
-		}
+		} */
 
 
 

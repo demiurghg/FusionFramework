@@ -11,7 +11,6 @@ namespace Fusion.Core.Configuration {
 	public class ConfigVariable {
 
 		public readonly string Prefix;
-		public readonly string Section;
 		public readonly string Name;
 		public readonly PropertyInfo Property;
 		public readonly object Object;
@@ -25,10 +24,9 @@ namespace Fusion.Core.Configuration {
 		/// <param name="name"></param>
 		/// <param name="pi"></param>
 		/// <param name="obj"></param>
-		public ConfigVariable ( string prefix, string section, string name, PropertyInfo pi, object obj )
+		public ConfigVariable ( string prefix, string name, PropertyInfo pi, object obj )
 		{
 			Prefix		=	prefix;
-			Section		=	section;
 			Name		=	name;
 			Property	=	pi;
 			Object		=	obj;

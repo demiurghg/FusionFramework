@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using SharpDX;
 using Fusion.Drivers.Graphics;
+using Fusion.Core;
 using Fusion.Core.Mathematics;
 
 

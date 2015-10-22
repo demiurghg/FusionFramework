@@ -6,19 +6,22 @@ using System.Threading.Tasks;
 using Fusion.Engine.Common;
 
 namespace TestGame2 {
-	class GameClient : IGameClient {
+	class GameClient : Fusion.Engine.Common.GameClient {
 
-		public GameEngine Engine { get { return engine; } }
-		readonly GameEngine engine;
-
-			
 		/// <summary>
 		/// Ctor
 		/// </summary>
 		/// <param name="engine"></param>
-		public GameClient ( GameEngine engine )
+		public GameClient ( GameEngine gameEngine )	: base(gameEngine)
 		{
-			this.engine	=	engine;
+		}
+
+
+		/// <summary>
+		/// Initializes game
+		/// </summary>
+		public override void Initialize ()
+		{
 		}
 
 
@@ -27,7 +30,7 @@ namespace TestGame2 {
 		/// Client could start loading models, textures, models etc.
 		/// </summary>
 		/// <param name="map"></param>
-		public void Connect ( string map )
+		public override void Connect ( string map )
 		{
 		}
 
@@ -36,7 +39,7 @@ namespace TestGame2 {
 		///	Client must purge all level-associated content.
 		///	Reason???
 		/// </summary>
-		public void Disconnect ()
+		public override void Disconnect ()
 		{
 		}
 
@@ -44,7 +47,7 @@ namespace TestGame2 {
 		/// Runs one step of client-side simulation and render world state.
 		/// </summary>
 		/// <param name="gameTime"></param>
-		public void Update ( GameTime gameTime )
+		public override void Update ( GameTime gameTime )
 		{
 			
 		}
@@ -54,7 +57,7 @@ namespace TestGame2 {
 		/// Called when fresh snapshot arrived.
 		/// </summary>
 		/// <param name="snapshot"></param>
-		public void FeedSnapshot ( byte[] snapshot ) 
+		public override void FeedSnapshot ( byte[] snapshot ) 
 		{
 		}
 
@@ -66,7 +69,7 @@ namespace TestGame2 {
 		/// i.e. after call command must be purged.
 		/// </summary>
 		/// <returns></returns>
-		public UserCmd[] GetCommands ()
+		public override UserCmd[] GetCommands ()
 		{
 			return null;
 		}

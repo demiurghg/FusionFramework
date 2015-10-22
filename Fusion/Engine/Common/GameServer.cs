@@ -5,33 +5,48 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Fusion.Engine.Common {
-	public interface IGameServer {
+
+	public abstract class GameServer : GameModule {
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="gameEngine"></param>
+		public GameServer ( GameEngine gameEngine ) : base(gameEngine)
+		{
+		}
 
 		/// <summary>
 		/// Starts server with given map/level.
 		/// </summary>
 		/// <param name="map"></param>
-		void Start ( string map );
+		public abstract void Start ( string map );
+
+		/// <summary>
+		/// Kills server, stops the game
+		/// </summary>
+		/// <param name="map"></param>
+		public abstract void Kill ();
 
 		/// <summary>
 		/// Runs one step of server-side world simulation.
 		/// </summary>
 		/// <param name="gameTime"></param>
-		void Update ( GameTime gameTime );
+		public abstract void Update ( GameTime gameTime );
 
 		/// <summary>
 		/// Gets world snapshot for particular client.
 		/// </summary>
 		/// <param name="clientId"></param>
 		/// <returns></returns>
-		byte[] GetSnapshot ( int clientId = -1 );
+		public abstract byte[] GetSnapshot ( int clientId = -1 );
 
 		/// <summary>
 		/// Feed client commands from particular client.
 		/// </summary>
 		/// <param name="command"></param>
 		/// <param name="clientId"></param>
-		void FeedCommand ( UserCmd[] commands, int clientId );
+		public abstract void FeedCommand ( UserCmd[] commands, int clientId );
 
 	}
 }

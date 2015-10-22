@@ -8,14 +8,17 @@ using Fusion.Core;
 using Fusion.Core.Utils;
 using Fusion.Core.Mathematics;
 using Fusion.Engine.Common;
+using Fusion.Core.Configuration;
 using Fusion.Engine.Graphics;
 using Fusion.Engine.Input;
 
 namespace Fusion.Framework {
 	
-	public class GameConsole : DisposableBase {
+	public class GameConsole : GameModule {
 
-		readonly GameEngine gameEngine;
+		//readonly GameEngine gameEngine;
+		[Config]
+		public GameConsoleConfig Config { get; set; }
 
 
 		class Line {
@@ -48,22 +51,11 @@ namespace Fusion.Framework {
 		int scroll = 0;
 
 		/// <summary>
-		/// Console fall speed.
-		/// </summary>
-		public float Speed { get; set; }
-
-		/// <summary>
 		/// Show/Hide console.
 		/// </summary>
 		public bool Show { get; set; }
 
 
-		public float CursorBlinkRate { get; set; }
-
-		public Color MessageColor	{ get; set; }
-		public Color ErrorColor		{ get; set; }
-		public Color WarningColor	{ get; set; }
-		public Color CmdLineColor	{ get; set; }
 
 
 
@@ -74,20 +66,14 @@ namespace Fusion.Framework {
 		/// <param name="font">Font texture. Must be 128x128.</param>
 		/// <param name="conback">Console background texture</param>
 		/// <param name="speed">Console fall speed</param>
-		public GameConsole ( GameEngine gameEngine, string font, string conback, float speed )
+		public GameConsole ( GameEngine gameEngine, string font, string conback ) : base(gameEngine)
 		{
-			this.gameEngine	=	gameEngine;
+			Config			=	new GameConsoleConfig();
+			
 			this.font		=	font;
 			this.conback	=	conback;
-			this.Speed		=	speed;
-			CursorBlinkRate	=	2.0f;
 
 			editBox		=	new EditBox();
-
-			MessageColor	=	Color.White;
-			ErrorColor		=	Color.Red;
-			WarningColor	=	Color.Yellow;
-			CmdLineColor	=	Color.Orange;
 		}
 
 
@@ -95,23 +81,23 @@ namespace Fusion.Framework {
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Initialize ()
+		public override void Initialize ()
 		{
-			consoleLayer	=	new SpriteLayer( gameEngine.GraphicsEngine, 1024 );
-			editLayer		=	new SpriteLayer( gameEngine.GraphicsEngine, 1024 );
+			consoleLayer	=	new SpriteLayer( GameEngine.GraphicsEngine, 1024 );
+			editLayer		=	new SpriteLayer( GameEngine.GraphicsEngine, 1024 );
 			consoleLayer.Order = 9999;
 			consoleLayer.Layers.Add( editLayer );
 
-			gameEngine.GraphicsEngine.SpriteLayers.Add( consoleLayer );
+			GameEngine.GraphicsEngine.SpriteLayers.Add( consoleLayer );
 
 			LoadContent();
-			gameEngine.Reloading += (s,e) => LoadContent();
+			GameEngine.Reloading += (s,e) => LoadContent();
 
-			gameEngine.GraphicsDevice.DisplayBoundsChanged += GraphicsDevice_DisplayBoundsChanged;
+			GameEngine.GraphicsDevice.DisplayBoundsChanged += GraphicsDevice_DisplayBoundsChanged;
 			TraceRecorder.TraceRecorded += TraceRecorder_TraceRecorded;
-			gameEngine.Keyboard.KeyDown += Keyboard_KeyDown;
-			gameEngine.Keyboard.FormKeyPress += Keyboard_FormKeyPress;
-			gameEngine.Keyboard.FormKeyDown += Keyboard_FormKeyDown;
+			GameEngine.Keyboard.KeyDown += Keyboard_KeyDown;
+			GameEngine.Keyboard.FormKeyPress += Keyboard_FormKeyPress;
+			GameEngine.Keyboard.FormKeyDown += Keyboard_FormKeyDown;
 
 			RefreshConsole();
 			RefreshEdit();
@@ -127,8 +113,8 @@ namespace Fusion.Framework {
 		/// </summary>
 		void LoadContent ()
 		{
-			consoleFont			=	gameEngine.Content.Load<SpriteFont>(font);
-			consoleBackground	=	gameEngine.Content.Load<DiscTexture>(conback);
+			consoleFont			=	GameEngine.Content.Load<SpriteFont>(font);
+			consoleBackground	=	GameEngine.Content.Load<DiscTexture>(conback);
 		}
 
 
@@ -156,14 +142,14 @@ namespace Fusion.Framework {
 		/// <param name="gameTime"></param>
 		public void Update ( GameTime gameTime )
 		{
-			var vp		=	gameEngine.GraphicsDevice.DisplayBounds;
+			var vp		=	GameEngine.GraphicsDevice.DisplayBounds;
 
 			RefreshConsoleLayer();
 
 			if (Show) {
-				showFactor = MathUtil.Clamp( showFactor + Speed * gameTime.ElapsedSec, 0,1 );
+				showFactor = MathUtil.Clamp( showFactor + Config.FallSpeed * gameTime.ElapsedSec, 0,1 );
 			} else {															   
-				showFactor = MathUtil.Clamp( showFactor - Speed * gameTime.ElapsedSec, 0,1 );
+				showFactor = MathUtil.Clamp( showFactor - Config.FallSpeed * gameTime.ElapsedSec, 0,1 );
 			}
 
 			//Log.Message("{0} {1}", showFactor, Show);
@@ -172,12 +158,12 @@ namespace Fusion.Framework {
 			consoleLayer.SetTransform( new Vector2(0, offset), Vector2.Zero, 0 );
 			editLayer.SetTransform( 0, vp.Height/2 - 8 );
 
-			Color cursorColor = CmdLineColor;
-			cursorColor.A = (byte)( cursorColor.A * (0.5 + 0.5 * Math.Cos( 2 * CursorBlinkRate * Math.PI * gameTime.Total.TotalSeconds ) > 0.5 ? 1 : 0 ) );
+			Color cursorColor = Config.CmdLineColor;
+			cursorColor.A = (byte)( cursorColor.A * (0.5 + 0.5 * Math.Cos( 2 * Config.CursorBlinkRate * Math.PI * gameTime.Total.TotalSeconds ) > 0.5 ? 1 : 0 ) );
 
 			editLayer.Clear();
 
-			consoleFont.DrawString( editLayer, "]" + editBox.Text, 0,0, CmdLineColor );
+			consoleFont.DrawString( editLayer, "]" + editBox.Text, 0,0, Config.CmdLineColor );
 			consoleFont.DrawString( editLayer, "_", charWidth + charWidth * editBox.Cursor, 0, cursorColor );
 		}
 
@@ -196,7 +182,11 @@ namespace Fusion.Framework {
 
 		void RefreshConsoleLayer ()
 		{
-			var vp		=	gameEngine.GraphicsDevice.DisplayBounds;
+			if (!dirty) {
+				return;
+			}
+
+			var vp		=	GameEngine.GraphicsDevice.DisplayBounds;
 
 			int cols	=	vp.Width / charWidth;
 			int rows	=	vp.Height / charHeight / 2;
@@ -209,14 +199,18 @@ namespace Fusion.Framework {
 
 			scroll	=	MathUtil.Clamp( scroll, 0, TraceRecorder.Lines.Count() );
 
+			/*var info = gameEngine.GetReleaseInfo();
+			consoleFont.DrawString( consoleLayer, info, vp.Width - consoleFont.MeasureString(info).Width, vp.Height/2 - 1 * charHeight, ErrorColor );*/
+
+
 			foreach ( var line in TraceRecorder.Lines.Reverse().Skip(scroll) ) {
 
 				Color color = Color.Gray;
 
 				switch (line.EventType) {
-					case TraceEventType.Information : color = MessageColor; break;
-					case TraceEventType.Error		: color = ErrorColor;	break;
-					case TraceEventType.Warning		: color = WarningColor; break;
+					case TraceEventType.Information : color = Config.MessageColor; break;
+					case TraceEventType.Error		: color = Config.ErrorColor;   break;
+					case TraceEventType.Warning		: color = Config.WarningColor; break;
 				}
 				
 
@@ -249,7 +243,7 @@ namespace Fusion.Framework {
 			try {
 				var cmd  = editBox.Text;
 				Log.Message("]{0}", cmd);
-				gameEngine.Invoker.Push(cmd);
+				GameEngine.Invoker.Push(cmd);
 			} catch ( Exception e ) {
 				Log.Error(e.Message);
 			}
@@ -259,7 +253,7 @@ namespace Fusion.Framework {
 
 		void TabCmd ()
 		{
-			editBox.Text = gameEngine.Invoker.AutoComplete( editBox.Text );
+			editBox.Text = GameEngine.Invoker.AutoComplete( editBox.Text );
 		}
 
 

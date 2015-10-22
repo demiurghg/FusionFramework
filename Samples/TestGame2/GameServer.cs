@@ -6,20 +6,22 @@ using System.Threading.Tasks;
 using Fusion.Engine.Common;
 
 namespace TestGame2 {
-	class GameServer : IGameServer {
-
-
-		public GameEngine Engine { get { return engine; } }
-		readonly GameEngine engine;
-
+	class GameServer : Fusion.Engine.Common.GameServer {
 			
 		/// <summary>
 		/// Ctor
 		/// </summary>
 		/// <param name="engine"></param>
-		public GameServer ( GameEngine engine )
+		public GameServer ( GameEngine gameEngine ) : base(gameEngine)
 		{
-			this.engine	=	engine;
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public override void Initialize ()
+		{
 		}
 
 
@@ -27,15 +29,24 @@ namespace TestGame2 {
 		/// Starts server with given map/level.
 		/// </summary>
 		/// <param name="map"></param>
-		public void Start ( string map )
+		public override void Start ( string map )
 		{
 		}
+
+
+		/// <summary>
+		/// Kills server
+		/// </summary>
+		public override void Kill ()
+		{
+		}
+
 
 		/// <summary>
 		/// Runs one step of server-side world simulation.
 		/// </summary>
 		/// <param name="gameTime"></param>
-		public void Update ( GameTime gameTime )
+		public override void Update ( GameTime gameTime )
 		{
 		}
 
@@ -44,7 +55,7 @@ namespace TestGame2 {
 		/// </summary>
 		/// <param name="clientId"></param>
 		/// <returns></returns>
-		public byte[] GetSnapshot ( int clientId = -1 )
+		public override byte[] GetSnapshot ( int clientId = -1 )
 		{
 			return null;
 		}
@@ -54,7 +65,7 @@ namespace TestGame2 {
 		/// </summary>
 		/// <param name="command"></param>
 		/// <param name="clientId"></param>
-		public void FeedCommand ( UserCmd[] commands, int clientId )
+		public override void FeedCommand ( UserCmd[] commands, int clientId )
 		{
 		}
 	}

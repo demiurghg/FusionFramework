@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.ComponentModel;
 
-namespace Fusion {
+namespace Fusion.Core {
 	public static class Misc {
 
 
@@ -423,7 +423,7 @@ namespace Fusion {
 		public static bool HasAttribute<T> ( this Type type ) where T : Attribute
 		{
 			return type.GetCustomAttributes( typeof(T), true ).Any();
-		}
+		}	  
 
 
 

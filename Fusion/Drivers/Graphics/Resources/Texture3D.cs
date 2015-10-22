@@ -13,6 +13,7 @@ using Fusion.Core.Content;
 using Fusion.Core.Mathematics;
 using SharpDX.Direct3D;
 using Native.Dds;
+using Fusion.Core;
 using Fusion.Engine.Common;
 
 

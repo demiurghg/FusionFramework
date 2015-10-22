@@ -98,15 +98,10 @@ namespace Fusion.Core.Shell {
 		/// </summary>
 		/// <param name="obj"></param>
 		/// <param name="name"></param>
-		internal void FeedConfigs ()
+		internal void FeedConfigs ( IEnumerable<ConfigVariable> variables )
 		{
 			lock (lockObject) {
-				
-				variables	=	GameEngine.Services
-					.Select( svc => ConfigSerializer.GetConfigVariables( svc.Value, svc.Key ) )
-					.SelectMany( var0 => var0 )
-					.ToDictionary( var1 => var1.Prefix + "." + var1.Section + "." + var1.Name );
-
+				this.variables	=	variables.ToDictionary( var1 => var1.Prefix + "." + var1.Name );
 			}
 		}
 
@@ -152,7 +147,7 @@ namespace Fusion.Core.Shell {
 
 				if (Variables.TryGetValue( cmdName, out variable )) {
 					if (argList.Count()==0) {
-						Log.Message("{0}{1}{2} = {3}", variable.Prefix, variable.Section, variable.Name, variable.Get() );
+						Log.Message("{0}{1} = {2}", variable.Prefix, variable.Name, variable.Get() );
 						return null;
 					} else {
 						return Push( string.Format("set {0} {1}", cmdName, string.Join(" ", argList) ) );

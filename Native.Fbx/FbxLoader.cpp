@@ -8,6 +8,8 @@
 #include "FbxLoader.h"
 
 using namespace Fusion;
+using namespace Fusion::Core::Mathematics;
+using namespace Fusion::Core::Utils;
 using namespace Native::Fbx;
 using namespace System::IO;
 using namespace System::Collections;

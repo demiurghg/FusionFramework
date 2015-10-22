@@ -212,31 +212,9 @@
     <Compile Include="Drivers\Graphics\Enums.cs" />
     <Compile Include="Drivers\Graphics\Resources\StructuredBuffer.cs" />
     <Compile Include="Drivers\Graphics\Resources\Texture2D.cs" />
-    <Compile Include="Drivers\Graphics\Utils\DebugRender.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Drivers\Graphics\Utils\DebugRenderConfig.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Drivers\Graphics\Utils\DebugStrings.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Drivers\Graphics\Utils\DebugStringsConfig.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Drivers\Graphics\Utils\SpriteBatch.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Drivers\Graphics\Utils\SpriteBlend.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Drivers\Graphics\Utils\SpriteFont.BMFCProcessor.cs" />
-    <Compile Include="Drivers\Graphics\Utils\SpriteFont.BMFont.cs" />
-    <Compile Include="Drivers\Graphics\Utils\SpriteFont.cs" />
-    <Compile Include="Drivers\Graphics\Utils\SpriteFontLoader.cs" />
-    <Compile Include="Drivers\Graphics\Utils\SpriteVertex.cs" />
     <Compile Include="Drivers\Graphics\Scene\MeshMaterial.cs" />
     <Compile Include="Core\DisposableBase.cs" />
+    <Compile Include="Engine\Common\GameModuleAttribute.cs" />
     <Compile Include="Engine\Common\GameEngine.cs" />
     <Compile Include="Engine\Common\GameParameters.cs">
       <SubType>Code</SubType>
@@ -301,12 +279,12 @@
     <Compile Include="Core\Mathematics\Vector4.cs" />
     <Compile Include="Core\Mathematics\Viewport.cs" />
     <Compile Include="Core\Mathematics\ViewportF.cs" />
-    <Compile Include="Engine\Common\GameService.cs">
+    <Compile Include="Engine\Common\GameModule.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Engine\Common\IGameClient.cs" />
-    <Compile Include="Engine\Common\IGameServer.cs" />
-    <Compile Include="Engine\Common\IGameInterface.cs" />
+    <Compile Include="Engine\Common\GameClient.cs" />
+    <Compile Include="Engine\Common\GameServer.cs" />
+    <Compile Include="Engine\Common\GameInterface.cs" />
     <Compile Include="Engine\Graphics\Camera.cs" />
     <Compile Include="Engine\Graphics\Sprites\SpriteEngine.cs" />
     <Compile Include="Engine\Graphics\Sprites\SpriteFont.BMFont.cs" />
@@ -334,6 +312,8 @@
     <Compile Include="Engine\Input\Events.cs" />
     <Compile Include="Engine\Input\Keys.cs" />
     <Compile Include="Engine\Input\Mouse.cs" />
+    <Compile Include="Engine\Network\NetChannel.cs" />
+    <Compile Include="Framework\GameConsoleConfig.cs" />
     <Compile Include="Framework\EditBox.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -361,7 +341,6 @@
     <Compile Include="Core\Utils\KdTree3.cs" />
     <Compile Include="Core\Utils\KdTree2.cs" />
     <Compile Include="Drivers\Graphics\GraphicsDevice.cs" />
-    <Compile Include="Drivers\Graphics\Utils\CCD.cs" />
     <Compile Include="Core\Utils\ConsoleExt.cs" />
     <Compile Include="Engine\Common\GameTime.cs" />
     <Compile Include="Drivers\Input\InputDevice.cs" />
@@ -417,7 +396,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Engine\Audio\" />
-    <Folder Include="Engine\Network\" />
     <Folder Include="Engine\Physics\" />
     <Folder Include="Engine\Triggers\" />
     <Folder Include="Engine\UserInterface\" />

@@ -13,30 +13,31 @@ using Fusion.Core.Configuration;
 using Fusion.Framework;
 
 namespace TestGame2 {
-	class GameInterface : IGameInterface {
+	class GameInterface : Fusion.Engine.Common.GameInterface {
 
 		
-		[Config("UIConfig")]
+		[Config]
 		public UIConfig	UIConfig { get; set; }
-		
-		readonly GameEngine gameEngine;
 
-			
+		[GameModule("Console", "con")]
+		public GameConsole Console { get { return console; } }
+		public GameConsole console;
+		
 		SpriteLayer testLayer;
 		DiscTexture	texture;
 		DiscTexture	debugFont;
-		GameConsole	gameConsole;
+
+
 
 
 		/// <summary>
 		/// Ctor
 		/// </summary>
 		/// <param name="engine"></param>
-		public GameInterface ( GameEngine gameEngine )
+		public GameInterface ( GameEngine gameEngine ) : base(gameEngine)
 		{
 			UIConfig			=	new UIConfig();
-			this.gameEngine		=	gameEngine;
-			this.gameConsole	=	new GameConsole( gameEngine, "courier", "conback", 10);
+			console				=	new GameConsole( gameEngine, "courier", "conback");
 		}
 
 
@@ -47,28 +48,28 @@ namespace TestGame2 {
 		/// <summary>
 		/// 
 		/// </summary>
-		public void Initialize ()
+		public override void Initialize ()
 		{
-			gameConsole.Initialize();
-
-			testLayer	=	new SpriteLayer( gameEngine.GraphicsEngine, 1024 );
-			texture		=	gameEngine.Content.Load<DiscTexture>( "lena" );
-			debugFont	=	gameEngine.Content.Load<DiscTexture>( "debugFont" );
+			testLayer	=	new SpriteLayer( GameEngine.GraphicsEngine, 1024 );
+			texture		=	GameEngine.Content.Load<DiscTexture>( "lena" );
+			debugFont	=	GameEngine.Content.Load<DiscTexture>( "debugFont" );
 
 			testLayer.Clear();
 			testLayer.Draw( texture, 10,10 + 384,256,256, Color.White );
 
 			testLayer.DrawDebugString( debugFont, 10,276, "Lenna Soderberg", Color.White );
 
-			gameEngine.GraphicsEngine.SpriteLayers.Add( testLayer );
+			GameEngine.GraphicsEngine.SpriteLayers.Add( testLayer );
 		}
 
 
 
-		public void Shutdown ()
+		protected override void Dispose ( bool disposing )
 		{
-			DisposableBase.SafeDispose( ref gameConsole );
-			DisposableBase.SafeDispose( ref testLayer );
+			if (disposing) {
+				SafeDispose( ref testLayer );
+			}
+			base.Dispose( disposing );
 		}
 
 
@@ -79,9 +80,9 @@ namespace TestGame2 {
 		/// Updates internal state of interface.
 		/// </summary>
 		/// <param name="gameTime"></param>
-		public void Update ( GameTime gameTime )
+		public override void Update ( GameTime gameTime )
 		{
-			gameConsole.Update( gameTime );
+			console.Update( gameTime );
 
 			testLayer.Color	=	UIConfig.LenaColor;
 
@@ -90,50 +91,22 @@ namespace TestGame2 {
 				testLayer.DrawDebugString( debugFont, 10, 276, rand.Next().ToString(), Color.White );
 			} */
 
-			if ( gameEngine.Keyboard.IsKeyDown(Keys.Left) ) {
+			if ( GameEngine.Keyboard.IsKeyDown(Keys.Left) ) {
 				angle -= 0.01f;
 			}
-			if ( gameEngine.Keyboard.IsKeyDown(Keys.Right) ) {
+			if ( GameEngine.Keyboard.IsKeyDown(Keys.Right) ) {
 				angle += 0.01f;
 			}
 
 			testLayer.SetTransform( new Vector2(100,0), new Vector2(128+5,128+5), angle );
 		}
 
-		/// <summary>
-		/// Draws interface.
-		/// </summary>
-		/// <param name="gameTime"></param>
-		/// <param name="stereoEye"></param>
-		public void DrawInterfaceREMOVE ( GameTime gameTime, StereoEye stereoEye )
-		{
-		}
-
-		/// <summary>
-		/// Draws splash screen.
-		/// </summary>
-		/// <param name="gameTime"></param>
-		/// <param name="stereoEye"></param>
-		public void DrawSplashScreenREMOVE ( GameTime gameTime, StereoEye stereoEye )
-		{
-		}
-
-		/// <summary>
-		/// Draws loading screen.
-		/// </summary>
-		/// <param name="gameTime"></param>
-		/// <param name="stereoEye"></param>
-		/// <param name="progress"></param>
-		public void DrawLoadingScreenREMOVE ( GameTime gameTime, StereoEye stereoEye, float progress )
-		{
-		}
-
 
 		/// <summary>
 		/// Shows message to user.
 		/// </summary>
 		/// <param name="message"></param>
-		public void ShowMessage ( string message )
+		public override void ShowMessage ( string message )
 		{
 		}
 
@@ -141,7 +114,7 @@ namespace TestGame2 {
 		/// Shows message to user.
 		/// </summary>
 		/// <param name="message"></param>
-		public void ShowWarning ( string message )
+		public override void ShowWarning ( string message )
 		{
 		}
 
@@ -149,7 +122,7 @@ namespace TestGame2 {
 		/// Shows message to user.
 		/// </summary>
 		/// <param name="message"></param>
-		public void ShowError ( string message )
+		public override void ShowError ( string message )
 		{
 		}
 
@@ -157,7 +130,7 @@ namespace TestGame2 {
 		/// Shows message to user.
 		/// </summary>
 		/// <param name="message"></param>
-		public void ChatMessage ( string message )
+		public override void ChatMessage ( string message )
 		{
 		}
 	}

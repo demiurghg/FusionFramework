@@ -10,16 +10,5 @@ namespace Fusion.Core.Configuration {
 	/// Marks property as config
 	/// </summary>
 	public sealed class ConfigAttribute : Attribute {
-
-		public string Name { get; private set; }
-		public bool Unnamed { get { return Name==null; } }
-
-		public ConfigAttribute ( string name ) {
-			Name = name;
-		}
-		
-		public ConfigAttribute () {
-			Name = null;
-		}
 	}
 }
