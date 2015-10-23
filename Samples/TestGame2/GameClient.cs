@@ -30,7 +30,7 @@ namespace TestGame2 {
 		/// Client could start loading models, textures, models etc.
 		/// </summary>
 		/// <param name="map"></param>
-		public override void Connect ( string map )
+		public override void Connect ( string host, int port )
 		{
 		}
 

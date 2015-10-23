@@ -5,6 +5,7 @@ using System.Runtime;
 using System.Windows.Forms;
 using System.Xml.Serialization;
 using System.Reflection;
+using System.Threading.Tasks;
 using Fusion.Drivers.Audio;
 using System.Globalization;
 using System.Threading;
@@ -17,11 +18,13 @@ using Fusion.Core;
 using Fusion.Core.Development;
 using Fusion.Core.Content;
 using Fusion.Core.Mathematics;
+using Fusion.Core.Configuration;
 using Fusion.Core.Shell;
 using Fusion.Core.IniParser;
 using Fusion.Engine.Graphics;
 using Fusion.Engine.Input;
-using Fusion.Core.Configuration;
+using Fusion.Engine.Network;
+using Lidgren.Network;
 
 
 namespace Fusion.Engine.Common {
@@ -56,6 +59,9 @@ namespace Fusion.Engine.Common {
 		/// </summary>
 		[GameModule("Graphics", "ge")]
 		public	GraphicsEngine GraphicsEngine { get { return graphicsEngine; } }
+
+		[GameModule("Network", "net")]
+		public NetworkEngine Network { get { return network; } }
 
 		/// <summary>
 		/// Gets current content manager
@@ -127,6 +133,7 @@ namespace Fusion.Engine.Common {
 		//AudioEngine			audioEngine		;
 		//InputEngine			inputEngine		;
 		GraphicsEngine		graphicsEngine	;
+		NetworkEngine		network			;
 		ContentManager		content			;
 		Invoker				invoker			;
 		Keyboard			keyboard		;
@@ -223,6 +230,7 @@ namespace Fusion.Engine.Common {
 			inputDevice			=	new InputDevice( this );
 			graphicsDevice		=	new GraphicsDevice( this );
 			graphicsEngine		=	new GraphicsEngine( this );
+			network				=	new NetworkEngine( this );
 			content				=	new ContentManager( this );
 			gameTimeInternal	=	new GameTime();
 			invoker				=	new Invoker(this);
@@ -318,6 +326,8 @@ namespace Fusion.Engine.Common {
 
 			Log.Message("");
 			Log.Message("---------- GameEngine Shutting Down ----------");
+
+			sv.KillInternal(true);
 
 			if (Exiting!=null) {
 				Exiting(this, EventArgs.Empty);
@@ -423,8 +433,7 @@ namespace Fusion.Engine.Common {
 
 				InputDevice.UpdateInput();
 
-
-				gi.Update( gameTimeInternal );
+				UpdateClientServerGame( gameTimeInternal );
 
 
 				//
@@ -490,152 +499,6 @@ namespace Fusion.Engine.Common {
 		}
 
 
-
-		/*-----------------------------------------------------------------------------------------
-		 * 
-		 *	Service stuff :
-		 * 
-		-----------------------------------------------------------------------------------------*/
-
-
-		#if false
-		/// <summary>
-		/// Returns service list
-		/// </summary>
-		/// <returns></returns>
-		public List<GameService> GetServiceList ()
-		{
-			return serviceList.ToList();
-		}
-
-
-	
-		/// <summary>
-		/// Adds service. Note, services are initialized and updated in order of addition,
-		/// and shutted down in reverse order. Services can'not be removed.
-		/// </summary>
-		/// <param name="service"></param>
-		public void AddService ( GameService service )
-		{
-			lock (serviceList) {
-				if (IsInitialized) {
-					service.Initialize();
-				}
-
-				serviceList.Add( service );	
-			}
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public void RemoveService ( GameService service )
-		{
-			lock (serviceList) {
-
-				service.Dispose();
-
-				serviceList.Remove( service );	
-			}
-		}
-
-
-
-		/// <summary>
-		/// Adds service. Forces IsUpdateable and IsDrawable properties.
-		/// </summary>
-		/// <param name="service"></param>
-		/// <param name="updateable"></param>
-		/// <param name="drawable"></param>
-		public void AddService ( GameService service, bool enabled, bool visible, int updateOrder, int drawOrder )
-		{
-			service.Enabled		=	enabled;
-			service.Visible		=	visible;
-			service.DrawOrder	=	drawOrder;
-			service.UpdateOrder	=	updateOrder;
-
-			AddService ( service );
-		}
-
-
-
-		/// <summary>
-		/// Get service of specified type
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		public T GetService<T> () where T : GameService
-		{
-			lock (serviceList) {
-				
-				foreach ( var svc in serviceList ) {
-					if (svc is T) {
-						return (T)svc;
-					}
-				}
-
-				throw new InvalidOperationException(string.Format("GameEngine service of type \"{0}\" is not added", typeof(T).ToString()));
-			}
-		}
-
-
-
-		/// <summary>
-		/// Gets service by name.
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		internal GameService GetServiceByName( string name )
-		{
-			lock (serviceList) {
-
-				var obj = serviceList.FirstOrDefault( svc => svc.GetType().Name.ToLower() == name.ToLower() );
-
-				if (obj==null) {
-					throw new InvalidOperationException(string.Format("Service '{0}' not found", name) );
-				}
-
-				return (GameService)obj;
-			}
-		}
-
-
-
-		/// <summary>
-		/// Gets service by name.
-		/// </summary>
-		/// <param name="name"></param>
-		/// <returns></returns>
-		internal object GetConfigObjectByServiceName( string name )
-		{
-			var svc = GetServiceByName( name );
-			return GameService.GetConfigObject( svc );
-		}
-
-
-
-		/// <summary>
-		/// Checks wether service of given type exist?
-		/// </summary>
-		/// <typeparam name="T"></typeparam>
-		/// <returns></returns>
-		public bool IsServiceExist<T>() where T : GameService 
-		{
-			lock (serviceList) {
-				
-				foreach ( var svc in serviceList ) {
-					if (svc is T) {
-						return true;
-					}
-				}
-
-				return false;
-			}
-		}
-		#endif
-
 		/*-----------------------------------------------------------------------------------------
 		 * 
 		 *	Configuration stuff :
@@ -666,6 +529,120 @@ namespace Fusion.Engine.Common {
 			Log.Message("Saving configuration...");
 
 			ConfigSerializer.SaveToFile( GameModule.Enumerate(this), ConfigSerializer.GetConfigPath(filename) );
+		}
+
+
+
+
+		/*-----------------------------------------------------------------------------------------
+		 * 
+		 *	Client-server stuff :
+		 * 
+		-----------------------------------------------------------------------------------------*/
+
+		[Command("map")]
+		public class MapCommand : NoRollbackCommand {
+
+			[CommandLineParser.Required()]
+			[CommandLineParser.Name("mapname")]
+			public string MapName { get; set; }
+			
+			public MapCommand ( Invoker invoker ) : base(invoker) 
+			{
+			}
+
+			public override void Execute ()
+			{
+				Invoker.GameEngine.StartServer( MapName );
+			}
+		}
+
+
+		[Command("killServer")]
+		public class KillServerCommand : NoRollbackCommand {
+			
+			public KillServerCommand ( Invoker invoker ) : base(invoker) 
+			{
+			}
+
+			public override void Execute ()
+			{
+				Invoker.GameEngine.KillServer();
+			}
+		}
+
+
+		[Command("connect")]
+		public class ConnectCommand : NoRollbackCommand {
+
+			[CommandLineParser.Required()]
+			[CommandLineParser.Name("host")]
+			public string Host { get; set; }
+
+			[CommandLineParser.Required()]
+			[CommandLineParser.Name("port")]
+			public int Port { get; set; }
+			
+			public ConnectCommand ( Invoker invoker ) : base(invoker) 
+			{
+			}
+
+			public override void Execute ()
+			{
+				Invoker.GameEngine.Connect( Host, Port );
+			}
+		}
+
+
+		[Command("disconnect")]
+		public class DisconnectCommand : NoRollbackCommand {
+
+			public DisconnectCommand ( Invoker invoker ) : base(invoker) 
+			{
+			}
+
+			public override void Execute ()
+			{
+				Invoker.GameEngine.Disconnect();
+			}
+		}
+
+
+
+		
+		/// <summary>
+		/// Updates game logic and client-server interaction.
+		/// </summary>
+		/// <param name="gameTime"></param>
+		void UpdateClientServerGame ( GameTime gameTime )
+		{
+			gi.Update( gameTime );
+		}
+
+
+
+		void StartServer ( string map )
+		{
+			GameServer.StartInternal( map, null );
+		}
+
+
+		void KillServer ()
+		{
+			GameServer.KillInternal(false);
+		}
+
+
+
+		void Connect ( string host, int port )
+		{
+			GameClient.ConnectInternal(host, port);
+		}
+
+
+		void Disconnect ()
+		{
+			GameClient.DisconnectInternal();
 		}
 	}
 }

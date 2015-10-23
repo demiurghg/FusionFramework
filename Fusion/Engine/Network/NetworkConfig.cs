@@ -11,18 +11,17 @@ using Fusion.Engine.Common;
 
 namespace Fusion.Engine.Network {
 
-	public class NetChannel : DisposableBase {
+	public class NetworkConfig {
 
-		//Game
+		public int Port { get; set; }
+		public int MaxClients { get; set; }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="gameEngine"></param>
-		internal NetChannel ( GameEngine gameEngine )
+
+		public NetworkConfig ()
 		{
-			
+			Port		=	28100;
+			MaxClients	=	8;
 		}
-		
+
 	}
 }

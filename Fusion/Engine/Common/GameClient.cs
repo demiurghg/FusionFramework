@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Lidgren.Network;
+using System.Threading;
+
 
 namespace Fusion.Engine.Common {
 	public abstract class GameClient : GameModule {
@@ -20,7 +23,7 @@ namespace Fusion.Engine.Common {
 		/// Client could start loading models, textures, models etc.
 		/// </summary>
 		/// <param name="host"></param>
-		public abstract void Connect ( string host );
+		public abstract void Connect ( string host, int port );
 
 		/// <summary>
 		///	Called when client disconnected, dropped, kicked or timeouted.
@@ -51,6 +54,39 @@ namespace Fusion.Engine.Common {
 		/// </summary>
 		/// <returns></returns>
 		public abstract UserCmd[] GetCommands ();
+
+
+		/*---------------------------------------------------------------------
+		 * 
+		 *	Internal client stuff :
+		 * 
+		---------------------------------------------------------------------*/
+		
+		NetClient client;
+
+
+		internal void ConnectInternal ( string host, int port )
+		{
+			var	peerCfg = new NetPeerConfiguration("Client");
+
+			client	=	new NetClient(peerCfg);
+			client.Start();
+			client.Connect( host, port );
+
+			var om = client.CreateMessage();
+			om.Write( "BLAH!!" );
+
+			client.SendMessage( om, NetDeliveryMethod.ReliableOrdered );
+
+			Connect( host, port );
+		}
+
+
+		internal void DisconnectInternal ()
+		{
+			client.Disconnect("disconnect!!!!!!");
+		}
+		
 
 	}
 }

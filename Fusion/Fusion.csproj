@@ -133,6 +133,7 @@
     <Compile Include="Core\IniParser\StreamIniDataParser.cs" />
     <Compile Include="Core\IniParser\StringIniParser.cs" />
     <Compile Include="Core\Shell\CommandLineParserConfiguration.cs" />
+    <Compile Include="Core\Shell\NoRollbackCommand.cs" />
     <Compile Include="Core\Shell\Invoker.Helper.cs" />
     <Compile Include="Drivers\Audio\AudioChannels.cs" />
     <Compile Include="Drivers\Audio\AudioDevice.cs" />
@@ -312,7 +313,8 @@
     <Compile Include="Engine\Input\Events.cs" />
     <Compile Include="Engine\Input\Keys.cs" />
     <Compile Include="Engine\Input\Mouse.cs" />
-    <Compile Include="Engine\Network\NetChannel.cs" />
+    <Compile Include="Engine\Network\NetworkConfig.cs" />
+    <Compile Include="Engine\Network\NetworkEngine.cs" />
     <Compile Include="Framework\GameConsoleConfig.cs" />
     <Compile Include="Framework\EditBox.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -392,6 +394,10 @@
     <ProjectReference Include="..\Native.Wic\Native.Wic.vcxproj">
       <Project>{34d2ae22-ea1f-481e-b9f7-15ad914f4208}</Project>
       <Name>Native.Wic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SDKs\LidgrenNetwork\Lidgren.Network\Lidgren.Network.csproj">
+      <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
+      <Name>Lidgren.Network</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

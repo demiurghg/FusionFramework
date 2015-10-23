@@ -4,9 +4,41 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Fusion.Engine.Common;
+using Fusion;
+using System.ComponentModel;
+using System.Threading;
 
 namespace TestGame2 {
 	class GameServer : Fusion.Engine.Common.GameServer {
+
+		string[] messages = new[] {
+			"Locating hamsters"								,
+			"Greasing wheels"								,
+			"Filling foodbowls"								,
+			"Spinning up the warp drive"					,
+			"Waiter... there's a pixel in my soup"			,
+			"Don't touch that cable!"						,
+			"What made that noise?"							,
+			"Tomorrow's lottery numbers are..."				,
+			"Searching for marbles"							,
+			"Tightening loose screws"						,
+			"Brushing your hair"							,
+			"Engaging warp drive"							,
+			"Paying your parking tickets"					,
+			"Putting the square peg in a round hole"		,
+			"Pixelating the pixels"							,
+			"Watering the plants"							,
+			"Scanning for schadenfreude"					,
+			"Polishing the servers"							,
+			"Shooing away rain clouds"						,
+			"Tuning up air guitars"							,
+			"Anti gravity zone; remain seated"				,
+			"Waterproofing swimming pools"					,
+			"Weighing pound cakes"							,
+			"Watering sidewalks"							,
+			"Planetary alignment complete"					,
+			"Painting the lawn"								,
+		};
 			
 		/// <summary>
 		/// Ctor
@@ -31,6 +63,15 @@ namespace TestGame2 {
 		/// <param name="map"></param>
 		public override void Start ( string map )
 		{
+			var rand = new Random();
+
+			foreach ( var msg in messages ) {
+				Log.Message("SV: {0}...", msg);
+				Thread.Sleep( rand.Next(10,50) );
+			}
+
+
+			Log.Message("[SERVER STARTED]");
 		}
 
 
@@ -39,6 +80,7 @@ namespace TestGame2 {
 		/// </summary>
 		public override void Kill ()
 		{
+			Log.Message("[SERVER WAS KILLED]");
 		}
 
 
@@ -57,7 +99,7 @@ namespace TestGame2 {
 		/// <returns></returns>
 		public override byte[] GetSnapshot ( int clientId = -1 )
 		{
-			return null;
+			return Encoding.ASCII.GetBytes("[SNAPSHOT]");
 		}
 
 		/// <summary>
