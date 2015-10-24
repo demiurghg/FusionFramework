@@ -13,7 +13,7 @@ using Fusion.Core.Configuration;
 using Fusion.Framework;
 
 namespace TestGame2 {
-	class GameInterface : Fusion.Engine.Common.GameInterface {
+	class CustomGameInterface : Fusion.Engine.Common.GameInterface {
 
 		
 		[Config]
@@ -34,7 +34,7 @@ namespace TestGame2 {
 		/// Ctor
 		/// </summary>
 		/// <param name="engine"></param>
-		public GameInterface ( GameEngine gameEngine ) : base(gameEngine)
+		public CustomGameInterface ( GameEngine gameEngine ) : base(gameEngine)
 		{
 			UIConfig			=	new UIConfig();
 			console				=	new GameConsole( gameEngine, "courier", "conback");

@@ -8,7 +8,7 @@ using System.Threading;
 
 namespace Fusion.Engine.Common {
 
-	public abstract class GameServer : GameModule {
+	public abstract partial class GameServer : GameModule {
 
 		/// <summary>
 		/// 
@@ -50,114 +50,5 @@ namespace Fusion.Engine.Common {
 		/// <param name="clientId"></param>
 		public abstract void FeedCommand ( UserCmd[] commands, int clientId );
 
-
-		/*---------------------------------------------------------------------
-		 * 
-		 *	Internal server stuff :
-		 * 
-		---------------------------------------------------------------------*/
-
-		NetServer server;
-
-		Task serverTask;
-		CancellationTokenSource cancelToken;
-
-
-
-		internal void StartInternal ( string map, string postCommand )
-		{
-			if (serverTask!=null) {
-				throw new GameException("Server is running or initializing");
-			}
-
-			serverTask = new Task( () => ServerTaskFunc(map, postCommand) );
-			serverTask.Start();
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		internal void KillInternal (bool wait)
-		{
-			if (cancelToken==null) {
-				return;
-			}
-
-			cancelToken.Cancel();
-
-			if (wait) {
-				Log.Message("Waiting for server task...");
-				serverTask.Wait();
-			}
-		}
-
-
-
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="map"></param>
-		void ServerTaskFunc ( string map, string postCommand )
-		{
-			//
-			//	configure & start server :
-			//
-			var	peerCfg = new NetPeerConfiguration("Server");
-
-			peerCfg.Port				=	GameEngine.Network.Config.Port;
-			peerCfg.MaximumConnections	=	GameEngine.Network.Config.MaxClients;
-
-			server	=	new NetServer( peerCfg );
-			server.Start();
-
-			//
-			//	start game specific stuff :
-			//
-			Start( map );
-
-
-			Log.Message("Server started : port = {0}", peerCfg.Port );
-
-
-			//
-			//	invoke post-start command :
-			//
-			if (postCommand!=null) {
-				GameEngine.Invoker.Push( postCommand );
-			}
-
-			cancelToken	=	new CancellationTokenSource();
-
-			var incomingMessages = new List<NetIncomingMessage>();
-
-			//
-			//	do stuff :
-			//	
-			while ( !cancelToken.IsCancellationRequested ) {
-
-				Thread.Sleep(500);
-				Log.Message(".");
-
-				int newIM = server.ReadMessages( incomingMessages );
-
-				foreach ( var im in incomingMessages ) {
-					Log.Message("SV: {0}", im.ToString() );
-				}
-
-				incomingMessages.Clear();
-
-			}
-
-			server.Shutdown("kill");
-
-			//
-			//	kill game specific stuff
-			//
-			Kill();
-
-			serverTask	=	null;
-		}
 	}
 }

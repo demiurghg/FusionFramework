@@ -9,7 +9,7 @@ using System.ComponentModel;
 using System.Threading;
 
 namespace TestGame2 {
-	class GameServer : Fusion.Engine.Common.GameServer {
+	class CustomGameServer : Fusion.Engine.Common.GameServer {
 
 		string[] messages = new[] {
 			"Locating hamsters"								,
@@ -44,7 +44,7 @@ namespace TestGame2 {
 		/// Ctor
 		/// </summary>
 		/// <param name="engine"></param>
-		public GameServer ( GameEngine gameEngine ) : base(gameEngine)
+		public CustomGameServer ( GameEngine gameEngine ) : base(gameEngine)
 		{
 		}
 
@@ -80,7 +80,17 @@ namespace TestGame2 {
 		/// </summary>
 		public override void Kill ()
 		{
-			Log.Message("[SERVER WAS KILLED]");
+			var rand = new Random();
+
+			Log.Message("SV: [SERVER IS GONNA DIE]");
+
+			foreach ( var msg in messages ) {
+				Log.Message("SV: {0}...", msg);
+				Thread.Sleep( rand.Next(100,250) );
+			}
+
+
+			Log.Message("SV: [SERVER WAS KILLED]");
 		}
 
 
@@ -90,6 +100,8 @@ namespace TestGame2 {
 		/// <param name="gameTime"></param>
 		public override void Update ( GameTime gameTime )
 		{
+			Thread.Sleep(333);
+			Log.Message("SV: [{0}]", gameTime.ElapsedSec );
 		}
 
 		/// <summary>

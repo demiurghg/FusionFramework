@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Fusion.Engine.Common;
 
 namespace TestGame2 {
-	class GameClient : Fusion.Engine.Common.GameClient {
+	class CustomGameClient : Fusion.Engine.Common.GameClient {
 
 		/// <summary>
 		/// Ctor
 		/// </summary>
 		/// <param name="engine"></param>
-		public GameClient ( GameEngine gameEngine )	: base(gameEngine)
+		public CustomGameClient ( GameEngine gameEngine )	: base(gameEngine)
 		{
 		}
 

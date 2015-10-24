@@ -327,7 +327,7 @@ namespace Fusion.Engine.Common {
 			Log.Message("");
 			Log.Message("---------- GameEngine Shutting Down ----------");
 
-			sv.KillInternal(true);
+			sv.Wait();
 
 			if (Exiting!=null) {
 				Exiting(this, EventArgs.Empty);
@@ -629,7 +629,7 @@ namespace Fusion.Engine.Common {
 
 		void KillServer ()
 		{
-			GameServer.KillInternal(false);
+			GameServer.KillInternal();
 		}
 
 
@@ -642,7 +642,7 @@ namespace Fusion.Engine.Common {
 
 		void Disconnect ()
 		{
-			GameClient.DisconnectInternal();
+			GameClient.DisconnectInternal(false);
 		}
 	}
 }

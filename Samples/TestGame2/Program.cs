@@ -36,9 +36,9 @@ namespace TestGame2 {
 
 			using ( var engine = new GameEngine() ) {
 
-				engine.GameServer		=	new GameServer(engine);
-				engine.GameClient		=	new GameClient(engine);
-				engine.GameInterface	=	new GameInterface(engine);
+				engine.GameServer		=	new CustomGameServer(engine);
+				engine.GameClient		=	new CustomGameClient(engine);
+				engine.GameInterface	=	new CustomGameInterface(engine);
 
 				engine.LoadConfiguration("Config.ini");
 

@@ -215,6 +215,8 @@
     <Compile Include="Drivers\Graphics\Resources\Texture2D.cs" />
     <Compile Include="Drivers\Graphics\Scene\MeshMaterial.cs" />
     <Compile Include="Core\DisposableBase.cs" />
+    <Compile Include="Engine\Common\GameClient.Internal.cs" />
+    <Compile Include="Engine\Common\GameServer.Internal.cs" />
     <Compile Include="Engine\Common\GameModuleAttribute.cs" />
     <Compile Include="Engine\Common\GameEngine.cs" />
     <Compile Include="Engine\Common\GameParameters.cs">

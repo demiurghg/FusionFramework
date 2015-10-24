@@ -8,7 +8,7 @@ using System.Threading;
 
 
 namespace Fusion.Engine.Common {
-	public abstract class GameClient : GameModule {
+	public abstract partial class GameClient : GameModule {
 
 		/// <summary>
 		/// 
@@ -54,39 +54,5 @@ namespace Fusion.Engine.Common {
 		/// </summary>
 		/// <returns></returns>
 		public abstract UserCmd[] GetCommands ();
-
-
-		/*---------------------------------------------------------------------
-		 * 
-		 *	Internal client stuff :
-		 * 
-		---------------------------------------------------------------------*/
-		
-		NetClient client;
-
-
-		internal void ConnectInternal ( string host, int port )
-		{
-			var	peerCfg = new NetPeerConfiguration("Client");
-
-			client	=	new NetClient(peerCfg);
-			client.Start();
-			client.Connect( host, port );
-
-			var om = client.CreateMessage();
-			om.Write( "BLAH!!" );
-
-			client.SendMessage( om, NetDeliveryMethod.ReliableOrdered );
-
-			Connect( host, port );
-		}
-
-
-		internal void DisconnectInternal ()
-		{
-			client.Disconnect("disconnect!!!!!!");
-		}
-		
-
 	}
 }
