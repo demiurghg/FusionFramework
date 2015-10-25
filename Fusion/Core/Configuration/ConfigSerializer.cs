@@ -13,7 +13,12 @@ using Fusion.Engine.Common;
 namespace Fusion.Core.Configuration {
 
 	/// <summary>
-	/// Saves and loads configuration to file
+	/// Saves and loads configuration to file.
+	/// 
+	/// Note on multi-threading:
+	///		Be sure that all structure properties 
+	///		larger than 4 (32-bit) or 8 (64-bit) bytes in config classes 
+	///		have lock on set and get.
 	/// </summary>
 	internal static class ConfigSerializer {
 

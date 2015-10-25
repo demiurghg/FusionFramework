@@ -37,7 +37,7 @@ namespace Fusion.Engine.Common {
 		{
 			lock (lockObj) {
 				if (IsAlive) {
-					Log.Warning("Server is already running");
+					Log.Warning("Can not start server, it is already running");
 					return;
 				}
 
@@ -157,14 +157,18 @@ namespace Fusion.Engine.Common {
 				if (server!=null) {
 					server.Shutdown("shutdown");
 				}
-				serverTask	=	null;
+
 				killToken	=	null;
+				serverTask	=	null;
 			}
 		}
 
 
 
-
+		/// <summary>
+		/// Dispatches input messages from all the clients.
+		/// </summary>
+		/// <param name="server"></param>
 		void DispatchIM (NetServer server)
 		{
 			NetIncomingMessage im;

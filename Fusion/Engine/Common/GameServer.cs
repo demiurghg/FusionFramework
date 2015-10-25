@@ -25,7 +25,8 @@ namespace Fusion.Engine.Common {
 		public abstract void Start ( string map );
 
 		/// <summary>
-		/// Kills server, stops the game
+		/// Kills server, stops the game.
+		/// This method will be also called when server crashes to clean-up.
 		/// </summary>
 		/// <param name="map"></param>
 		public abstract void Kill ();
