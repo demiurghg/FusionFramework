@@ -66,7 +66,7 @@ namespace TestGame2 {
 			var rand = new Random();
 
 			foreach ( var msg in messages ) {
-				Log.Message("SV: {0}...", msg);
+				Log.Message("INIT: {0}...", msg);
 				Thread.Sleep( rand.Next(10,50) );
 			}
 
@@ -85,7 +85,7 @@ namespace TestGame2 {
 			Log.Message("SV: [SERVER IS GONNA DIE]");
 
 			foreach ( var msg in messages ) {
-				Log.Message("SV: {0}...", msg);
+				Log.Message("KILL: {0}...", msg);
 				Thread.Sleep( rand.Next(100,250) );
 			}
 

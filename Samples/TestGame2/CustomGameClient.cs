@@ -52,6 +52,18 @@ namespace TestGame2 {
 			
 		}
 
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public override void UpdateGfx (GameTime gameTime )
+		{
+		}
+
+
+
 		/// <summary>
 		/// Feed server snapshot to client.
 		/// Called when fresh snapshot arrived.

@@ -39,6 +39,13 @@ namespace Fusion.Engine.Common {
 		public abstract void Update ( GameTime gameTime );
 
 		/// <summary>
+		/// Performs update of visual and audial objects.
+		/// The method is synchronized with UI/Graphics thread.
+		/// </summary>
+		/// <param name="gameTime"></param>
+		public abstract void UpdateGfx ( GameTime gameTime );
+
+		/// <summary>
 		/// Feed server snapshot to client.
 		/// Called when fresh snapshot arrived.
 		/// </summary>

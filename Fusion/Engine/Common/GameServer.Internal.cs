@@ -10,8 +10,6 @@ namespace Fusion.Engine.Common {
 
 	public abstract partial class GameServer : GameModule {
 
-		NetServer server;
-
 		Task serverTask;
 		CancellationTokenSource killToken;
 
@@ -39,10 +37,12 @@ namespace Fusion.Engine.Common {
 		{
 			lock (lockObj) {
 				if (IsAlive) {
-					Log.Warning("Server is still running");
+					Log.Warning("Server is already running");
+					return;
 				}
 
-				serverTask = new Task( () => ServerTaskFunc(map, postCommand) );
+				killToken	=	new CancellationTokenSource();
+				serverTask	=	new Task( () => ServerTaskFunc(map, postCommand), killToken.Token );
 				serverTask.Start();
 			}
 		}
@@ -93,38 +93,39 @@ namespace Fusion.Engine.Common {
 		/// <param name="map"></param>
 		void ServerTaskFunc ( string map, string postCommand )
 		{
+			NetServer server = null;
 			//
 			//	configure & start server :
 			//
-			var	peerCfg = new NetPeerConfiguration("Server");
+			try {
 
-			peerCfg.Port				=	GameEngine.Network.Config.Port;
-			peerCfg.MaximumConnections	=	GameEngine.Network.Config.MaxClients;
+				var	peerCfg = new NetPeerConfiguration("Server");
 
-			server	=	new NetServer( peerCfg );
-			server.Start();
+				peerCfg.Port				=	GameEngine.Network.Config.Port;
+				peerCfg.MaximumConnections	=	GameEngine.Network.Config.MaxClients;
 
-			//
-			//	start game specific stuff :
-			//
-			Start( map );
+				server	=	new NetServer( peerCfg );
+				server.Start();
 
-			Log.Message("Server started : port = {0}", peerCfg.Port );
+				//
+				//	start game specific stuff :
+				//
+				Start( map );
 
-
-			//
-			//	invoke post-start command :
-			//
-			if (postCommand!=null) {
-				GameEngine.Invoker.Push( postCommand );
-			}
+				Log.Message("Server started : port = {0}", peerCfg.Port );
 
 
-			//
-			//	start server loop :
-			//
-			using ( killToken = new CancellationTokenSource() ) {
+				//
+				//	invoke post-start command :
+				//
+				if (postCommand!=null) {
+					GameEngine.Invoker.Push( postCommand );
+				}
 
+
+				//
+				//	start server loop :
+				//
 				var svTime = new GameTime();
 
 				//
@@ -134,30 +135,37 @@ namespace Fusion.Engine.Common {
 
 					svTime.Update();
 
-					Thread.Sleep(50);
-
-					DispatchIM();
+					DispatchIM(server);
 
 					Update( svTime );
 
 				}
 
-				server.Shutdown("kill");
+			} catch ( Exception e ) {
+				Log.Error("Server error: {0}", e.ToString());
+				
+			} finally {
 
 				//
-				//	kill game specific stuff
+				//	kill game specific stuff :
 				//
 				Kill();
-			}
 
-			serverTask	=	null;
-			killToken	=	null;
+				//
+				//	shutdown connection :
+				//
+				if (server!=null) {
+					server.Shutdown("shutdown");
+				}
+				serverTask	=	null;
+				killToken	=	null;
+			}
 		}
 
 
 
 
-		void DispatchIM ()
+		void DispatchIM (NetServer server)
 		{
 			NetIncomingMessage im;
 			while ((im = server.ReadMessage()) != null)
