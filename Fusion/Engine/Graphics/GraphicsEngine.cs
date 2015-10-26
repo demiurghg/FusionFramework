@@ -9,21 +9,24 @@ using Fusion.Drivers.Graphics;
 
 namespace Fusion.Engine.Graphics {
 
-	public class GraphicsEngine : DisposableBase {
+	public class GraphicsEngine : GameModule {
 
 		internal readonly GraphicsDevice Device;
 
+		[GameModule("Sprites", "sprite")]
+		public SpriteEngine	SpriteEngine { get { return spriteEngine; } }
 		SpriteEngine	spriteEngine;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="engine"></param>
-		public GraphicsEngine ( GameEngine engine )
+		public GraphicsEngine ( GameEngine gameEngine ) : base(gameEngine)
 		{
-			this.Device	=	engine.GraphicsDevice;
+			this.Device	=	gameEngine.GraphicsDevice;
 
 			SpriteLayers	=	new List<SpriteLayer>();
+			spriteEngine	=	new SpriteEngine( this );
 		}
 
 
@@ -31,9 +34,8 @@ namespace Fusion.Engine.Graphics {
 		/// <summary>
 		/// Intializes graphics engine.
 		/// </summary>
-		public void Initialize ()
+		public override void Initialize ()
 		{
-			spriteEngine	=	new SpriteEngine( this );
 		}
 
 

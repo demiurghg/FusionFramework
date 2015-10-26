@@ -10,7 +10,7 @@ using Fusion.Core;
 using Fusion.Engine.Common;
 
 namespace Fusion.Engine.Graphics {
-	class SpriteEngine : DisposableBase {
+	public class SpriteEngine : GameModule {
 
 		enum Flags {
 			OPAQUE				=	0x0001, 
@@ -32,7 +32,6 @@ namespace Fusion.Engine.Graphics {
 
 		StateFactory	factory;
 		Ubershader		shader;
-		GraphicsEngine	ge;
 		GraphicsDevice	device;
 		ConstData		constData;
 		ConstantBuffer	constBuffer;
@@ -41,16 +40,23 @@ namespace Fusion.Engine.Graphics {
 		/// 
 		/// </summary>
 		/// <param name="ge"></param>
-		public SpriteEngine( GraphicsEngine ge )
+		public SpriteEngine( GraphicsEngine ge ) : base(ge.GameEngine)
 		{
-			this.ge		=	ge;
 			this.device	=	ge.Device;
-			shader		=	ge.Device.GameEngine.Content.Load<Ubershader>("sprite");
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public override void Initialize()
+		{
+			shader		=	device.GameEngine.Content.Load<Ubershader>("sprite");
 			factory		=	new StateFactory( shader, typeof(Flags), (ps,i) => StateEnum( ps, (Flags)i) );
 			constBuffer	=	new ConstantBuffer( device, typeof(ConstData) );
 			constData	=	new ConstData();
 		}
-
 
 
 		/// <summary>

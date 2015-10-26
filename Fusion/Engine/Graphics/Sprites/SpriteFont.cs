@@ -112,6 +112,9 @@ namespace Fusion.Engine.Graphics {
 					FontChar ch = input.Chars[i];
 
 					int id = ch.ID;
+
+					if (id<0) continue;
+
 					int x = ch.X;
 					int y = ch.Y;
 					int xoffs = ch.XOffset;

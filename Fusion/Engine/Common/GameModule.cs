@@ -38,11 +38,11 @@ namespace Fusion.Engine.Common {
 		internal class ModuleBinding {
 			public readonly string NiceName;
 			public readonly string ShortName;
-			public readonly object Object;
+			public readonly GameModule Module;
 			
-			public ModuleBinding ( object obj, string niceName, string shortName )
+			public ModuleBinding ( GameModule module, string niceName, string shortName )
 			{
-				Object		=	obj;
+				Module		=	module;
 				NiceName	=	niceName;
 				ShortName	=	shortName;
 			}
@@ -63,7 +63,7 @@ namespace Fusion.Engine.Common {
 			var binds = rootObj.GetType()
 						.GetProperties()
 						.Where( prop => prop.GetCustomAttribute<GameModuleAttribute>() != null )
-						.Select( prop1 => new ModuleBinding(prop1.GetValue( rootObj ), 
+						.Select( prop1 => new ModuleBinding((GameModule)prop1.GetValue( rootObj ), 
 							prop1.GetCustomAttribute<GameModuleAttribute>().NiceName, 
 							prop1.GetCustomAttribute<GameModuleAttribute>().ShortName ) )
 						.ToList();
@@ -71,7 +71,7 @@ namespace Fusion.Engine.Common {
 			bindings.AddRange( binds );
 
 			foreach ( var bind in binds ) {
-				GetAllR( bind.Object, ref bindings );
+				GetAllR( bind.Module, ref bindings );
 			}
 		}
 
@@ -94,11 +94,7 @@ namespace Fusion.Engine.Common {
 			foreach ( var bind in Enumerate(rootObj) ) {
 				Log.Message( "---- Init : {0} ----", bind.NiceName );
 
-				var initialize = bind.Object.GetType().GetMethod("Initialize");
-
-				if (initialize!=null) {
-					initialize.Invoke( bind.Object, null );
-				}
+				bind.Module.Initialize();
 			}
 		}
 
@@ -109,11 +105,7 @@ namespace Fusion.Engine.Common {
 			foreach ( var bind in Enumerate(rootObj).Reverse() ) {
 				Log.Message( "---- Dispose : {0} ----", bind.NiceName );
 
-				var initialize = bind.Object.GetType().GetMethod("Dispose");
-
-				if (initialize!=null) {
-					initialize.Invoke( bind.Object, null );
-				}
+				bind.Module.Dispose();
 			}
 		}
 	}

@@ -36,7 +36,7 @@ namespace Fusion.Core.Configuration {
 				foreach ( var bind in bindings ) {
 
 					var sectionName		=	bind.NiceName;
-					var configObject	=	GetConfigObject( bind.Object );
+					var configObject	=	GetConfigObject( bind.Module );
 
 					iniData.Sections.AddSection( sectionName );
 
@@ -108,7 +108,7 @@ namespace Fusion.Core.Configuration {
 						Log.Warning("Module {0} does not exist. Section ignored.", section.SectionName );
 					}
 
-					var configObject	=	GetConfigObject( bind.Object );
+					var configObject	=	GetConfigObject( bind.Module );
 
 					foreach ( var keyData in section.Keys ) {
 						
@@ -177,7 +177,7 @@ namespace Fusion.Core.Configuration {
 			foreach ( var bind in bindings ) {
 
 				var prefix			=	bind.ShortName;
-				var configObject	=	GetConfigObject( bind.Object );
+				var configObject	=	GetConfigObject( bind.Module );
 
 				if (configObject==null) {
 					continue;

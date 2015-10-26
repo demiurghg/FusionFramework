@@ -11,7 +11,7 @@ scaleH=100
 useSmoothing=1
 isBold=0
 isItalic=0
-useUnicode=0
+useUnicode=1
 disableBoxChars=1
 outputInvalidCharGlyph=0
 dontIncludeKerningPairs=0
@@ -50,6 +50,6 @@ invB=0
 outlineThickness=0
 
 # selected chars
-chars=32-255
+chars=32-127,152,160,164,166-167,169,171-174,176-177,181-183,187
 
 # imported icon images
