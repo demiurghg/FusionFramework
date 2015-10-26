@@ -1,4 +1,5 @@
 # FusionFramework
+## [DEPRECATED]
 
 Fusion Framework is free and open-source (MIT License) set of managed libraries devloped game and graphics application development based on Microsoft .NET Framework 4.0.
 
