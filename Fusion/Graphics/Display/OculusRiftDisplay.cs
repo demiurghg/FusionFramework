@@ -51,7 +51,7 @@ namespace Fusion.Graphics.Display {
 
 			// Initialize the Oculus runtime.
 			oculus.Initialize();
-
+			
 			// Use the head mounted display, if it's available, otherwise use the debug HMD.
 			int numberOfHeadMountedDisplays = oculus.Hmd_Detect();
 			if (numberOfHeadMountedDisplays > 0)
@@ -77,7 +77,7 @@ namespace Fusion.Graphics.Display {
 			backBufferSize.Width	= hmd.Resolution.Width;
 			backBufferSize.Height	= hmd.Resolution.Height;
 
-
+			Input.OculusRiftSensors.RecenterPosition = hmd.RecenterPose;
 
 			var deviceFlags = DeviceCreationFlags.None;
 			deviceFlags |= parameters.UseDebugDevice ? DeviceCreationFlags.Debug : DeviceCreationFlags.None;

@@ -67,6 +67,12 @@ namespace Fusion.Input {
 		public event KeyPressEventHandler		FormKeyPress;
 
 
+		public event Action<Vector2>					TouchGestureTap;
+		public event Action<Vector2>					TouchGestureDoubleTap;
+		public event Action<Vector2>					TouchGestureSecondaryTap;
+		public event Action<Vector2, Vector2, float>	TouchGestureManipulate;
+
+
 
 		static class NativeMethods {
 			public static Forms.Cursor LoadCustomCursor(string path) 
@@ -420,6 +426,37 @@ namespace Fusion.Input {
 		public bool IsKeyUp ( Keys key )
 		{
 			return !IsKeyDown( key );
+		}
+
+
+		public void NotifyTouchTap(Vector2 tapPosition)
+		{
+			if (TouchGestureTap != null) {
+				TouchGestureTap(tapPosition);
+			}
+		}
+
+		public void NotifyTouchDoubleTap(Vector2 tapPosition)
+		{
+			if (TouchGestureDoubleTap != null) {
+				TouchGestureDoubleTap(tapPosition);
+			}
+		}
+
+
+		public void NotifyTouchSecondaryTap(Vector2 tapPosition)
+		{
+			if (TouchGestureSecondaryTap != null) {
+				TouchGestureSecondaryTap(tapPosition);
+			}
+		}
+
+
+		public void NotifyTouchManipulation(Vector2 center, Vector2 delta, float scale)
+		{
+			if (TouchGestureManipulate != null) {
+				TouchGestureManipulate(center, delta, scale);
+			}
 		}
 
 

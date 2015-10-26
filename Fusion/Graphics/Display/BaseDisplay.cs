@@ -11,6 +11,7 @@ using SharpDX.DXGI;
 using D3D = SharpDX.Direct3D11;
 using DXGI = SharpDX.DXGI;
 using System.Windows.Forms;
+using Fusion.Input.Touch;
 using Forms = System.Windows.Forms;
 using Fusion.Mathematics;
 
@@ -230,6 +231,50 @@ namespace Fusion.Graphics.Display {
 			form.KeyPress += form_KeyPress;
 			form.Resize += (s,e) => Game.InputDevice.RemoveAllPressedKey();
 			form.Move += (s,e) => Game.InputDevice.RemoveAllPressedKey();
+
+			return form;
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="parameters"></param>
+		/// <returns></returns>
+		public Form CreateTouchForm(GameParameters parameters, Output output)
+		{
+			var form = new TouchForm()
+			{
+				Text		= parameters.Title,
+				BackColor	= System.Drawing.Color.Black,
+				ClientSize	= new System.Drawing.Size(parameters.Width, parameters.Height),
+				Icon		= parameters.Icon ?? Fusion.Properties.Resources.fusionIcon,
+				ControlBox	= false,
+				StartPosition = output == null ? FormStartPosition.CenterScreen : FormStartPosition.Manual,
+			};
+
+
+			if (output != null)
+			{
+
+				var bounds = output.Description.DesktopBounds;
+				var scrW = bounds.Right - bounds.Left;
+				var scrH = bounds.Bottom - bounds.Top;
+
+				form.Location = new System.Drawing.Point(bounds.Left + (scrW - form.Width) / 2, bounds.Top + (scrH - form.Height) / 2);
+				form.Text += " - [" + output.Description.DeviceName + "]";
+			}
+
+			form.KeyDown += form_KeyDown;
+			form.KeyUp += form_KeyUp;
+			form.KeyPress += form_KeyPress;
+			form.Resize += (s, e) => Game.InputDevice.RemoveAllPressedKey();
+			form.Move += (s, e) => Game.InputDevice.RemoveAllPressedKey();
+
+			form.TouchTap		+= (pos) => Game.InputDevice.NotifyTouchTap(pos);
+			form.TouchDoubleTap += (pos) => Game.InputDevice.NotifyTouchDoubleTap(pos);
+			form.TouchSecondaryTap += (pos) => Game.InputDevice.NotifyTouchSecondaryTap(pos);
+			form.TouchManipulation += (center, delta, scale) => Game.InputDevice.NotifyTouchManipulation(center, delta, scale);
 
 			return form;
 		}

@@ -277,6 +277,12 @@
     <Compile Include="Input\GamepadButtons.cs" />
     <Compile Include="Input\Gamepad.cs" />
     <Compile Include="Input\OculusRiftSensors.cs" />
+    <Compile Include="Input\Touch\BackgroundTouch.cs" />
+    <Compile Include="Input\Touch\BaseTouchHandler.cs" />
+    <Compile Include="Input\Touch\TouchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Input\Touch\Win32TouchFunctions.cs" />
     <Compile Include="Mathematics\Angle.cs" />
     <Compile Include="Mathematics\Bool.cs" />
     <Compile Include="Mathematics\Bool4.cs" />
@@ -385,6 +391,11 @@
     <Compile Include="Utils\TexturePumpStatus.cs" />
     <Compile Include="Utils\WebDownloaderService.cs" />
     <Compile Include="Utils\Wildcard.cs" />
+    <Compile Include="Video\Video.cs" />
+    <Compile Include="Video\Video.WMS.cs" />
+    <Compile Include="Video\VideoPlayer.cs" />
+    <Compile Include="Video\VideoPlayer.WMS.cs" />
+    <Compile Include="Video\VideoSampleGrabber.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Development\ExceptionDialog.resx">

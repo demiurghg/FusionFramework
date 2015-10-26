@@ -14,6 +14,8 @@ using System.Windows.Forms;
 using Fusion.Mathematics;
 using NvApiWrapper;
 
+using SharpDX.MediaFoundation;
+
 
 namespace Fusion.Graphics.Display {
 	class GenericDisplay : BaseDisplay {
@@ -36,7 +38,7 @@ namespace Fusion.Graphics.Display {
 		/// <param name="parameters"></param>
 		public GenericDisplay( Game game, GraphicsDevice device, GameParameters parameters ) : base( game, device, parameters )
 		{
-			window	=	CreateForm( parameters, null );
+			window = CreateTouchForm(parameters, null);
 
 			try {
 				NvApi.Initialize();
@@ -49,6 +51,7 @@ namespace Fusion.Graphics.Display {
 			//var deviceFlags			=	DeviceCreationFlags.SingleThreaded;
 			var deviceFlags			=	DeviceCreationFlags.None;
 				deviceFlags			|=	parameters.UseDebugDevice ? DeviceCreationFlags.Debug : DeviceCreationFlags.None;
+				deviceFlags			|=	parameters.SupportVideo ? DeviceCreationFlags.BgraSupport | (DeviceCreationFlags)2048 : DeviceCreationFlags.None;
 
 			var driverType			=	DriverType.Hardware;
 

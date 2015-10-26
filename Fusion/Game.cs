@@ -17,6 +17,7 @@ using Fusion.Development;
 using Fusion.Content;
 using Fusion.Mathematics;
 using Fusion.Shell;
+using Fusion.Video;
 using NLua;
 
 
@@ -38,6 +39,10 @@ namespace Fusion {
 		/// Gets the current audio device
 		/// </summary>
 		public	AudioDevice	AudioDevice { get { return audioDevice; } }
+
+
+		public VideoPlayer VideoPlayer { get { return videoPlayer;} }
+
 
 		/// <summary>
 		/// Gets the current input device
@@ -113,6 +118,8 @@ namespace Fusion {
 		Invoker				invoker			;
 		Lua					lua				;
 
+		VideoPlayer			videoPlayer		;
+
 		List<GameService>	serviceList	=	new List<GameService>();
 		GameTime	gameTimeInternal;
 
@@ -178,6 +185,8 @@ namespace Fusion {
 			gameTimeInternal	=	new GameTime();
 			lua					=	new Lua();
 			invoker				=	new Invoker(this);
+
+			videoPlayer			=	new VideoPlayer();
 
 			lua.LoadCLRPackage();
 			lua.DoString (@" import ('Fusion', 'System', 'System.Drawing', 'System.Windows.Forms'); import ('System.Web');");

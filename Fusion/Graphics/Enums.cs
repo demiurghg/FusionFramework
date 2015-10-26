@@ -88,6 +88,7 @@ namespace Fusion.Graphics {
 		Dxt1,
 		Dxt3,
 		Dxt5,
+		Bgra8,
 	}
 
 
@@ -343,6 +344,7 @@ namespace Fusion.Graphics {
 				case ColorFormat.Dxt1		: return -1;
 				case ColorFormat.Dxt3		: return -1;
 				case ColorFormat.Dxt5		: return -1;
+				case ColorFormat.Bgra8		: return 4;
 			}
 
 			throw new ArgumentException("bad format");
@@ -388,6 +390,7 @@ namespace Fusion.Graphics {
 				case ColorFormat.Dxt1		: return Format.BC1_UNorm;
 				case ColorFormat.Dxt3		: return Format.BC2_UNorm;
 				case ColorFormat.Dxt5		: return Format.BC3_UNorm;
+				case ColorFormat.Bgra8		: return Format.B8G8R8A8_UNorm;
 			}
 
 			throw new ArgumentException("bad format");
@@ -570,6 +573,11 @@ namespace Fusion.Graphics {
 				case Format.R8G8B8A8_UNorm		:
 				case Format.R8G8B8A8_UNorm_SRgb :
 					return ColorFormat.Rgba8;
+
+				case Format.B8G8R8A8_UNorm		:
+				case Format.B8G8R8A8_Typeless	:
+				case Format.B8G8R8A8_UNorm_SRgb :
+					return ColorFormat.Bgra8;
 
 				case Format.R10G10B10A2_Typeless	:
 				case Format.R10G10B10A2_UNorm		:

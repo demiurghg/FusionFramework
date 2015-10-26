@@ -1,4 +1,4 @@
-﻿//#define USE_DYNAMIC_CB
+﻿#define USE_DYNAMIC_CB
 
 using System;
 using System.Collections.Generic;

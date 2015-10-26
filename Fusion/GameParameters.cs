@@ -71,6 +71,12 @@ namespace Fusion {
 
 
 		[Category("Graphics")]
+		[Description("Enable video support in graphics device\r\n/video")]
+		[CommandLineParser.Name("video")]
+		public bool SupportVideo { get; set; }
+		
+
+		[Category("Graphics")]
 		[Description("Display width\r\n/width:<value>")]
 		[CommandLineParser.Name("width")]
 		public int			Width			{ get; set; }

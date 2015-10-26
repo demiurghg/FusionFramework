@@ -23,6 +23,10 @@ namespace Fusion.Input
 		public static Quaternion	HeadRotation { internal set; get; }
 
 
+		public delegate void Recenter();
+
+		public static Recenter RecenterPosition { set; get; }
+
 		/// <summary>
 		/// Convert an ovrMatrix4f to a SharpDX Matrix.
 		/// </summary>
